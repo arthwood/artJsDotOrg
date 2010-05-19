@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  color: #333;
+  font-family: Verdana;
+  font-size: 11px;
+  background: #EFEFEF;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+h1 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+h2 {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+a {
+  text-decoration: none;
+  color: #40A0CF;
+}
+a:hover {
+  color: #2083AF;
+}
+p {
+  margin: 0 0 10px;
+  line-height: 14px;
+}
+.main {
+  padding: 20px;
+}
+.sidebar {
+  float: left;
+  width: 200px;
+}
+.content {
+  float: left;
+}
+ul {
+  padding-left: 20px;
+  margin: 0;
+}
+.sidebar li {
+  line-height: 16px;
+}
+.sidebar > ul li ul {
+  margin: 4px 0;
+}
