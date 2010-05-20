@@ -2,14 +2,16 @@ var Main = function () {
   ArtJs.globalize();
   ArtJs.doInjection();
   
-  this.onNodeDC = this.onNode.bind(this);
-  this.onLeafDC = this.onLeaf.bind(this);
+  this.onNodeDC = this.onNode.bind(this, true);
+  this.onLeafDC = this.onLeaf.bind(this, true);
   this.onContentSuccessD = $D(this, this.onContentSuccess);
   
   $$('.node').each(this.eachNode.bind(this));
   $$('.leaf').each(this.eachLeaf.bind(this));
   
   this.content = $$('.content').first();
+  
+  this.load('main.html');
 };
 
 Main.prototype = {
@@ -17,9 +19,7 @@ Main.prototype = {
     i.onclick = this.onNodeDC;
   },
   
-  onNode: function(e) {
-    var a = e.currentTarget;
-    
+  onNode: function(a) {
     a.next().toggle();
     
     return false;
@@ -29,18 +29,24 @@ Main.prototype = {
     i.onclick = this.onLeafDC;
   },
   
-  onLeaf: function(e) {
-    var a = e.currentTarget;
-    
-    $get(a.href, null, this.onContentSuccessD);
+  onLeaf: function(a) {
+    this.load(a.href);
     
     return false;
+  },
+  
+  load: function(url) {
+    $get(url, null, this.onContentSuccessD);
   },
   
   onContentSuccess: function(ajax) {
     var content = ajax.getResponseText();
     
     this.content.setContent(content);
+    
+    var last = this.content.down('li').last();
+    
+    last && (last.style.borderBottom = 'none');
   }
 };
 

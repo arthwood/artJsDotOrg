@@ -1,0 +1,58 @@
+<p>
+  ArtJs is JavaScript framework of general purpose. It allows you to select or manipulate DOM elements,
+  perform AJAX requests, provides load of helper methods for String, Date and other native classes, etc.
+</p>
+<p>
+  For now there is no one package of ArtJs library classes. Just include files in specific order:
+</p>
+<ul>
+  <li>Initialize</li>
+  <li>utils/Log</li>
+  <li>events/Delegate</li>
+  <li>utils/MathUtils</li>
+  <li>utils/ObjectUtils</li>
+  <li>utils/ArrayUtils</li>
+  <li>utils/ClassUtils</li>
+  <li>utils/StringUtils</li>
+  <li>utils/DateUtils</li>
+  <li>utils/ElementUtils</li>
+  <li>events/DelegateCollection</li>
+  <li>events/CustomEvent</li>
+  <li>events/EventUtils</li>
+  <li>events/MouseController</li>
+  <li>math/Point</li>
+  <li>math/Rectangle</li>
+  <li>dom/ElementBuilder</li>
+  <li>dom/Selector</li>
+  <li>events/Clock</li>
+  <li>ui/DatePicker</li>
+  <li>ui/Flash</li>
+  <li>data/List</li>
+  <li>data/Queue</li>
+  <li>events/QueuedClock</li>
+  <li>net/Ajax</li>
+  <li>ui/containers/ModalBox</li>
+  <li>tween/Fade</li>
+  <li>Finalize</li>
+</ul>
+
+<p>
+  Some of the classes are optional (DatePicker), other are core classes on which other might depend (Delegate),
+  but until there is no clean distinction between those two groups I recommend to include all above classes.
+</p>
+<p>
+  There are two methods that you may want to use:
+</p>
+<p class="code">ArtJs.globalize()</p>
+<p class="code">ArtJs.doInjection()</p>
+<p>
+ArtJs.globalize() makes all the classes globally accessible in window object, as well as shorthand utility methods like:
+$, $$, $P, $B, $D, $DC, $E.
+</p>
+<p>
+<span class="code">ArtJs.doInjection()</span> makes an extensions on native classes like Object, Array, Date, Element etc.
+so that you can use:
+</p>
+<p class="code">arr.first();</p>
+<p>otherwise you are still able to call the method using:</p>
+<p class="code">ArtJs.ArrayUtils.first(arr);</p>

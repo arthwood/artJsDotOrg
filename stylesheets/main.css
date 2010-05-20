@@ -1,9 +1,9 @@
 body {
   margin: 0;
-  color: #333;
+  color: #555;
   font-family: Verdana;
   font-size: 11px;
-  background: #EFEFEF;
+  background: #000;
 }
 .clearfix:after {
   content: ".";
@@ -20,34 +20,83 @@ h2 {
   margin: 0 0 10px;
   font-size: 14px;
 }
+h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+}
 a {
   text-decoration: none;
-  color: #40A0CF;
+  color: #16c;
 }
 a:hover {
-  color: #2083AF;
+  color: #05b;
 }
 p {
   margin: 0 0 10px;
   line-height: 14px;
 }
+ul {
+  padding-left: 20px;
+  margin: 0;
+}
+.label {
+  width: 70px;
+  font-weight: bold;
+}
+.label,
+.package {
+  float: left;
+}
 .main {
+  margin: 0 auto;
   padding: 20px;
+  width: 1024px;
+  background: #223;
+  border-style: solid;
+  border-width: 0 1px 1px;
+  border-color: #333 #888;
 }
 .sidebar {
   float: left;
   width: 200px;
+  padding: 20px;
+  border: 1px solid #000;
+  background: #eee;
 }
 .content {
-  float: left;
+  float: right;
+  padding: 20px;
+  border: 1px solid #000;
+  background: #eee;
+  width: 720px;
 }
-ul {
-  padding-left: 20px;
-  margin: 0;
+.content ul {
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  border: 1px solid #BBB;
+  background: #FFF;
+  list-style: none;
+}
+.content ul li {
+  padding: 8px 0;
+  border-bottom: 1px solid #EEE;
+}
+.content ul li a {
+  font-size: 12px;
+}
+.content ul li p {
+  margin-bottom: 0px;
 }
 .sidebar li {
   line-height: 16px;
 }
 .sidebar > ul li ul {
   margin: 4px 0;
+}
+span.code {
+  font-family: Courier New;
 }

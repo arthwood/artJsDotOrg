@@ -1,0 +1,74 @@
+<h2>ObjectUtils</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.utils</p>
+</div>
+
+<h3>Description</h3>
+<p>Provides set of methods that operates on any Date instance.</p>
+
+<h3>Properties</h3>
+<p>None.</p>
+
+<h3>Methods</h3>
+<ul>
+  <li>
+    <h4><a href="#monthDaysNum">monthDaysNum(date:Date):Number</a></h4>
+    <p>Returns number of days in <span class="code">date</span>'s month</p>
+  </li>
+  <li>
+    <h4><a href="#firstDate">firstDate(date:Date):Date</a></h4>
+    <p>Returns date of first day in <span class="code">date</span>'s month</p>
+  </li>
+  <li>
+    <h4><a href="#firstDay">firstDay(date:Date):Number</a></h4>
+    <p>Returns week day of first day in <span class="code">date</span>'s month</p>
+  </li>
+  <li>
+    <h4><a href="#toHFM">toHFM(date:Date, separator:String = ':'):String</a></h4>
+    <p>Returns <span class="code">date</span>'s string representation of hour, minute, second</p>
+  </li>
+  <li>
+    <h4><a href="#toYMD">toYMD(date:Date, separator:String = '/'):String</a></h4>
+    <p>Returns <span class="code">date</span>'s string representation of year, month, day</p>
+  </li>
+  <li>
+    <h4><a href="#toDMY">toDMY(date:Date, separator:String = '/'):String</a></h4>
+    <p>Returns <span class="code">date</span>'s string representation of day, month, year</p>
+  </li>
+  <li>
+    <h4><a href="#fromDMY">toDMY(dmy:String, separator:String = '/'):Date</a></h4>
+    <p>Parses <span class="code">dmy</span> (&lt;day&gt;/&lt;month&gt;/&lt;year&gt;) expression and returns Date object</p>
+  </li>
+  <li>
+    <h4><a href="#minutesToHM">minutesToHM(minutes:Number, separator:String = ':'):String</a></h4>
+    <p>Returns &lt;hours&gt;:&lt;minutes&gt; format for given amount of <span class="code">minutes</span></p>
+  </li>
+  <li>
+    <h4><a href="#hmToMinutes">hmToMinutes(hm:String):Number</a></h4>
+    <p>Parses <span class="code">hm</span> (&lt;hours&gt;:&lt;minutes&gt;) expression and returns Number of minutes</p>
+  </li>
+  <li>
+    <h4><a href="#secondsToMS">secondsToMS(seconds:Number, separator:String = ':'):String</a></h4>
+    <p>Returns &lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="code">seconds</span></p>
+  </li>
+  <li>
+    <h4><a href="#secondsToHMS">secondsToHMS(seconds:Number, separator:String = ':'):String</a></h4>
+    <p>Returns &lt;hours&gt;:&lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="code">seconds</span></p>
+  </li>
+  <li>
+    <h4><a href="#copy">copy(date:Date):Date</a></h4>
+    <p>Returns <span class="code">date</span> copy</p>
+  </li>
+  <li>
+    <h4><a href="#getDateShifted">getDateShifted(date:Date, days:Number):Date</a></h4>
+    <p>Returns date <span class="code">days</span> after (before if negative) <span class="code">date</span></p>
+  </li>
+  <li>
+    <h4><a href="#stripDayTime">stripDayTime(date:Date):Date</a></h4>
+    <p>Returns date without time part</p>
+  </li>
+</ul>
+
+<h4>Events</h4>
+<p>None.</p>
