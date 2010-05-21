@@ -1,0 +1,166 @@
+<h2>EventUtils</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.utils</p>
+</div>
+
+<h3>Description</h3>
+<p>Provides set of methods that operates on any Element instance.</p>
+
+<h3>Properties</h3>
+<p>None.</p>
+
+<h3>Methods</h3>
+<ul>
+  <li>
+    <h4><a href="#">show(element:Element):Void</a></h4>
+    <p>Shows the <span class="code">element</span></p>
+  </li>
+  <li>
+    <h4><a href="#">hide(element:Element):Void</a></h4>
+    <p>Hides the <span class="code">element</span></p>
+  </li>
+  <li>
+    <h4><a href="#">toggle(element:Element):Void</a></h4>
+    <p>Shows the <span class="code">element</span> if it's hidden; hides otherwise</p>
+  </li>
+  <li>
+    <h4><a href="#">setVisible(element:Element, visible:Boolean):Void</a></h4>
+    <p>Shows the <span class="code">element</span> if <span class="code">visible</span> argument is set to true; 
+      hides otherwise</p>
+  </li>
+  <li>
+    <h4><a href="#">isHidden(element:Element):Boolean</a></h4>
+    <p>Returns true if the <span class="code">element</span> is hidden; true otherwise</p>
+  </li>
+  <li>
+    <h4><a href="#">setAlpha(element:Element, value:Number):Void</a></h4>
+    <p>Sets <span class="code">element</span>'s transparency; 
+      <span class="code">value</span> 0 means transparent, 1 means opaque</p>
+  </li>
+  <li>
+    <h4><a href="#">getSize(element:Element):Point</a></h4>
+    <p>Returns size of the <span class="code">element</span> as a com.arthwood.math.Point object 
+      which x property is width and y property is height</p>
+  </li>
+  <li>
+    <h4><a href="#">elements(element:Element):Array</a></h4>
+    <p>Returns array of immediate descendants (Elements) of <span class="code">element</span></p>
+  </li>
+  <li>
+    <h4><a href="#">isElement(element:Element):Boolean</a></h4>
+    <p>Returns true if <span class="code">element</span> is Element; false otherwise</p>
+  </li>
+  <li>
+    <h4><a href="#">remove(element:Element):Node</a></h4>
+    <p>Removes the <span class="code">element</span></p>
+  </li>
+  <li>
+    <h4><a href="#">parent(element:Element):Element</a></h4>
+    <p>Returns <span class="code">element</span>'s parent element</p>
+  </li>
+  <li>
+    <h4><a href="#">firstElement(element:Element):Element</a></h4>
+    <p>Returns <span class="code">element</span>'s first child (Element)</p>
+  </li>
+  <li>
+    <h4><a href="#">prev(element:Element):Node</a></h4>
+    <p>Returns <span class="code">element</span>'s previous sibling (Element)</p>
+  </li>
+  <li>
+    <h4><a href="#">next(element:Element):Node</a></h4>
+    <p>Returns <span class="code">element</span>'s next sibling (Element)</p>
+  </li>
+  <li>
+    <h4><a href="#">clone(element:Element, deep:Boolean):Node</a></h4>
+    <p>Alias for Node.cloneNode(deep)</p>
+  </li>
+  <li>
+    <h4><a href="#">putAtBottom(element:Element, ref:Node):Node</a></h4>
+    <p>Inserts clone of the <span class="code">element</span> as the last child of 
+      <span class="code">ref</span> node</p>
+  </li>
+  <li>
+    <h4><a href="#">putAtTop(element:Element, ref:Node):Node</a></h4>
+    <p>Inserts clone of the <span class="code">element</span> as the first child of 
+      <span class="code">ref</span> node</p>
+  </li>
+  <li>
+    <h4><a href="#">putAfter(element:Element, ref:Node):Node</a></h4>
+    <p>Inserts clone of the <span class="code">element</span> as next sibling of 
+      <span class="code">ref</span> node</p>
+  </li>
+  <li>
+    <h4><a href="#">putBefore(element:Element, ref:Node):Node</a></h4>
+    <p>Inserts clone of the <span class="code">element</span> as previous sibling of 
+      <span class="code">ref</span> node</p>
+  </li>
+  <li>
+    <h4><a href="#">replace(element:Element, ref:Node, clone:Boolean):Node</a></h4>
+    <p>Replaces <span class="code">ref</span> with an <span class="code">element</span> 
+      (or its clone if <span class="code">clone</span> is set to true)
+  </li>
+  <li>
+    <h4><a href="#">center(element:Element):Void</a></h4>
+    <p>Centers <span class="code">element</span> on the screen</p>
+  </li>
+  <li>
+    <h4><a href="#">centerH(element:Element):Void</a></h4>
+    <p>Centers <span class="code">element</span> horizontally on the screen</p>
+  </li>
+  <li>
+    <h4><a href="#">centerV(element:Element):Void</a></h4>
+    <p>Centers <span class="code">element</span> vertically on the screen</p>
+  </li>
+  <li>
+    <h4><a href="#">getCenteredPosition(element:Element):Point</a></h4>
+    <p>Returns position of <span class="code">element</span> as if it was centered on the screen</p>
+  </li>
+  <li>
+    <h4><a href="#">getDocumentSize():Point</a></h4>
+    <p>Returns document size</p>
+  </li>
+  <li>
+    <h4><a href="#">getWindowSize():Point</a></h4>
+    <p>Returns window size</p>
+  </li>
+  <li>
+    <h4><a href="#">setPosition(element:Element, position:Point):Void</a></h4>
+    <p>Sets the position of <span class="code">element</span> on the screen</p>
+  </li>
+  <li>
+    <h4><a href="#">getPosition(element:Element, withoutScroll:Boolean):Point</a></h4>
+    <p>Returns position of the <span class="code">element</span> on the screen</p>
+  </li>
+  <li>
+    <h4><a href="#">getScrollPosition():Point</a></h4>
+    <p>Returns scroll (x, y) values</p>
+  </li>
+  <li>
+    <h4><a href="#">setX(element:Element, value:Number):Void</a></h4>
+    <p>Sets x position of <span class="code">element</span> on the screen</p>
+  </li>
+  <li>
+    <h4><a href="#">setY(element:Element, value:Number):Void</a></h4>
+    <p>Sets y position of <span class="code">element</span> on the screen</p>
+  </li>
+  <li>
+    <h4><a href="#">getLayout(element:Element, withoutScroll:Boolean):Rectangle</a></h4>
+    <p>Returns position and size of <span class="code">element</span> as a (x, y, width, height) Rectangle</p>
+  </li>
+  <li>
+    <h4><a href="#">enable(element:Element):Void</a></h4>
+    <p>Enables the <span class="code">element</span></p>
+  </li>
+  <li>
+    <h4><a href="#">disable(element:Element):Void</a></h4>
+    <p>Disables the <span class="code">element</span></p>
+  </li>
+  <li>
+    <h4><a href="#">setEnabled(element:Element, enabled:Boolean):Void</a></h4>
+    <p>Enables <span class="code">element</span> if <span class="code">enabled</span> is true; disables otherwise</p>
+  </li>
+</ul>
+
+<h4>Events</h4>
+<p>None.</p>

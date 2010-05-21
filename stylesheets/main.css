@@ -75,14 +75,14 @@ ul {
   width: 720px;
 }
 .content ul {
-  padding: 10px 14px;
+  padding: 6px 14px;
   margin-bottom: 20px;
   border: 1px solid #BBB;
   background: #FFF;
   list-style: none;
 }
 .content ul li {
-  padding: 8px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #EEE;
 }
 .content ul li a {
