@@ -1,0 +1,3 @@
+[submodule "javascripts/artJs"]
+	path = javascripts/artJs
+	url = git@github.com:arthwood/artJs.git
