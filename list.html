@@ -1,0 +1,136 @@
+<h2>List</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.data</p>
+</div>
+
+<h3>Description</h3>
+<p>List data model implementation</p>
+
+<h3>Events</h3>
+<ul>
+  <li>
+    <h4><a href="#">onChange(list:List)</a></h4>
+    <p>Triggered every time the collection changes</p>
+  </li>
+</ul>
+
+<h3>Properties</h3>
+<ul>
+  <li>
+    <h4><a href="#">allowDuplicates:Boolean</a></h4>
+    <p>Flag that allows having duplicates in collection</p>
+  </li>
+  <li>
+    <h4><a href="#">loop:Boolean</a></h4>
+    <p>Flag that allows periodically return the item, even if index is out of collection bounds</p>
+  </li>
+</ul>
+
+<h3>Methods</h3>
+<ul>
+  <li>
+    <h4><a href="#">addItem(item:Object):Void</a></h4>
+    <p>Adds <span class="code">item</span> to the end of collection</p>
+  </li>
+  <li>
+    <h4><a href="#">addItemAt(item:Object, idx:Number):Void</a></h4>
+    <p>Adds <span class="code">item</span> to collection at specific position</p>
+  </li>
+  <li>
+    <h4><a href="#">addItemAt(item:Object, idx:Number):Void</a></h4>
+    <p>Adds <span class="code">item</span> to collection at specific position</p>
+  </li>
+  <li>
+    <h4><a href="#">removeItem(item:Object, onlyFirst:Boolean, noEvent:Boolean):Void</a></h4>
+    <p>Removes <span class="code">item</span> from collection</p>
+  </li>
+  <li>
+    <h4><a href="#">removeItemAt(idx:Number):Void</a></h4>
+    <p>Removes <span class="code">item</span> at specific position from collection</p>
+  </li>
+  <li>
+    <h4><a href="#">removeAll():Void</a></h4>
+    <p>Removes all items from collection</p>
+  </li>
+  <li>
+    <h4><a href="#">getItemAt(idx:Number):Object</a></h4>
+    <p>Retrieves <span class="code">item</span> at specific position</p>
+  </li>
+  <li>
+    <h4><a href="#">getItemIndex(item:Object):Number</a></h4>
+    <p>Retrieves <span class="code">item</span> index</p>
+  </li>
+  <li>
+    <h4><a href="#">moveItem(item:Object, idx:Number):Void</a></h4>
+    <p>Moves <span class="code">item</span> to specific position</p>
+  </li>
+  <li>
+    <h4><a href="#">getLength():Number</a></h4>
+    <p>Returns length of collection</p>
+  </li>
+  <li>
+    <h4><a href="#">getItems():Array</a></h4>
+    <p>Returns copy of collection</p>
+  </li>
+  <li>
+    <h4><a href="#">setItems(items:Array):Void</a></h4>
+    <p>Set the collection</p>
+  </li>
+  <li>
+    <h4><a href="#">hasItem(item:Object):Boolean</a></h4>
+    <p>Returns true if <span class="code">item</span> is in collection; false otherwise</p>
+  </li>
+  <li>
+    <h4><a href="#">setItem(item:Object):Void</a></h4>
+    <p>Set the pointer at position if <span class="code">item</span></p>
+  </li>
+  <li>
+    <h4><a href="#">reset():Void</a></h4>
+    <p>Sets pointer to zero</p>
+  </li>
+  <li>
+    <h4><a href="#">getPointer():Number</a></h4>
+    <p>Returns pointer</p>
+  </li>
+  <li>
+    <h4><a href="#">setPointer(i:Number):Void</a></h4>
+    <p>Sets pointer</p>
+  </li>
+  <li>
+    <h4><a href="#">decrease():Void</a></h4>
+    <p>Decreases pointer</p>
+  </li>
+  <li>
+    <h4><a href="#">increase():Void</a></h4>
+    <p>Increases pointer</p>
+  </li>
+  <li>
+    <h4><a href="#">getCurrent():Object</a></h4>
+    <p>Returns current item</p>
+  </li>
+  <li>
+    <h4><a href="#">getPrevious():Object</a></h4>
+    <p>Returns item before current</p>
+  </li>
+  <li>
+    <h4><a href="#">getNext():Object</a></h4>
+    <p>Returns item after current</p>
+  </li>
+  <li>
+    <h4><a href="#">getFirst():Object</a></h4>
+    <p>Returns first item of collection</p>
+  </li>
+  <li>
+    <h4><a href="#">getLast():Object</a></h4>
+    <p>Returns last item of collection</p>
+  </li>
+  <li>
+    <h4><a href="#">empty():Boolean</a></h4>
+    <p>Returns true if collection is empty; false otherwise</p>
+  </li>
+  <li>
+    <h4><a href="#">isLast():Boolean</a></h4>
+    <p>Returns true if pointer is set to last item in collection; false otherwise</p>
+  </li>
+</ul>

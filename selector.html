@@ -1,0 +1,33 @@
+<h2>Selector</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.dom</p>
+</div>
+
+<h3>Description</h3>
+<p>Allows to easily traverse DOM</p>
+
+<h3>Events</h3>
+<p>None.</p>
+        
+<h3>Methods</h3>
+<ul>
+  <li>
+    <h4><a href="#">up(element:Element, path:String):Element</a></h4>
+    <p>Returns first ascendant of <span class="code">element</span> 
+      that meets the <span class="code">path</span> requirements</p>
+  </li>
+  <li>
+    <h4><a href="#">down(element:Element, path:String):Array</a></h4>
+    <p>Returns array of elements that meets the <span class="code">path</span> requirements</p>
+  </li>
+  <li>
+    <h4><a href="#">getFamily(element:Element, root:Element = body):Array</a></h4>
+    <p>Returns Array of elements starting from <span class="code">element</span>'s immediate parent 
+      up to <span class="code">root</span></p>
+  </li>
+  <li>
+    <h4><a href="#">descendantOf(element:Element, root:Element):Boolean</a></h4>
+    <p>Returns true if <span class="code">element</span> is descendant of <span class="code">root</span></p>
+  </li>
+</ul>

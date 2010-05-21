@@ -5,6 +5,7 @@ var Main = function () {
   this.onNodeDC = this.onNode.bind(this, true);
   this.onLeafDC = this.onLeaf.bind(this, true);
   this.onContentSuccessD = $D(this, this.onContentSuccess);
+  this.removeLastBorderDC = this.removeLastBorder.bind(this);
   
   $$('.node').each(this.eachNode.bind(this));
   $$('.leaf').each(this.eachLeaf.bind(this));
@@ -44,9 +45,19 @@ Main.prototype = {
     
     this.content.setContent(content);
     
-    var last = this.content.down('li').last();
+    var last = this.content.lastElement();
     
-    last && (last.style.borderBottom = 'none');
+    last && (last.style.marginBottom = '0');
+    
+    var uls = this.content.down('ul');
+    
+    !uls.empty() && uls.each(this.removeLastBorderDC);
+  },
+  
+  removeLastBorder: function(ul) {
+    var last = ul.down('li').last();
+    
+    last.style.borderBottom = 'none';
   }
 };
 
