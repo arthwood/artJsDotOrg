@@ -79,11 +79,15 @@ ul {
   margin-bottom: 20px;
   border: 1px solid #BBB;
   background: #FFF;
-  list-style: none;
 }
 .content ul li {
   padding: 12px 0;
   border-bottom: 1px solid #EEE;
+  list-style: none;
+}
+.content ul.classes li {
+  padding: 2px 0;
+  border-bottom: none;
 }
 .content ul li a {
   font-size: 12px;
@@ -92,10 +96,13 @@ ul {
   margin-bottom: 0px;
 }
 .sidebar li {
-  line-height: 16px;
+  line-height: 18px;
 }
 .sidebar > ul li ul {
   margin: 4px 0;
+}
+.sidebar ul li a {
+  vertical-align: top;
 }
 span.code {
   font-family: Courier New;

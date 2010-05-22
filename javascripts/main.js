@@ -7,8 +7,12 @@ var Main = function () {
   this.onContentSuccessD = $D(this, this.onContentSuccess);
   this.removeLastBorderDC = this.removeLastBorder.bind(this);
   
-  $$('.node').each(this.eachNode.bind(this));
-  $$('.leaf').each(this.eachLeaf.bind(this));
+  var point = $$('li').partition(function(item, idx) {
+    return item.down('ul').empty();
+  });
+  
+  point.x.each(this.eachLeaf.bind(this));
+  point.y.each(this.eachNode.bind(this));
   
   this.content = $$('.content').first();
   
@@ -17,17 +21,22 @@ var Main = function () {
 
 Main.prototype = {
   eachNode: function(i) {
-    i.onclick = this.onNodeDC;
+    i.firstElement().onclick = this.onNodeDC;
+    i.style.listStyleImage = 'url(images/plus.png)';
   },
   
   onNode: function(a) {
-    a.next().toggle();
+    var ul = a.next();
+    
+    ul.toggle();
+    a.parent().style.listStyleImage = ul.isHidden() ? 'url(images/plus.png)' : 'url(images/minus.png)'
     
     return false;
   },
   
   eachLeaf: function(i) {
-    i.onclick = this.onLeafDC;
+    i.firstElement().onclick = this.onLeafDC;
+    i.style.listStyleImage = 'url(images/leaf.png)';
   },
   
   onLeaf: function(a) {
