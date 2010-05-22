@@ -4,6 +4,7 @@ body {
   font-family: Verdana;
   font-size: 11px;
   background: #000;
+  overflow-y: scroll;
 }
 .clearfix:after {
   content: ".";
