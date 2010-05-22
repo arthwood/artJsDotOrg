@@ -1,0 +1,64 @@
+<h2>Clock</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.events</p>
+</div>
+
+<h3>Description</h3>
+<p>Allows trigger events periodically</p>
+
+<h3>Constructor</h3>
+<ul>
+  <li>
+    <h4><a href="#">Clock(interval:Number, repeat:Number)</a></h4>
+    <p><span class="param">interval</span> - interval between ticks in miliseconds</p>
+    <p><span class="param">repeat</span> - number of ticks</p>
+  </li>
+</ul>
+
+<h4>Events</h4>
+<ul>
+  <li>
+    <h4><a href="#">onChange(clock:Clock)</a></h4>
+    <p>Triggered on each tick</p>
+  </li>
+  <li>
+    <h4><a href="#">onFinish(clock:Clock)</a></h4>
+    <p>Triggered after last tick</p>
+  </li>
+</ul>
+
+<h4>Properties</h4>
+<ul>
+  <li>
+    <h4><a href="#">interval:Number</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="#">repeat:Number</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="#">counter:Number</a></h4>
+    <p>Number of released ticks</p>
+  </li>
+</ul>
+<h3>Methods</h3>
+<ul>
+  <li>
+    <h4><a href="#">start(now:Boolean):Void</a></h4>
+    <p>Starts the clock. First tick after interval or immediately if <span class="code">now</span> is true</p>
+  </li>
+  <li>
+    <h4><a href="#">stop():Void</a></h4>
+    <p>Stops the clock and sets counter to zero</p>
+  </li>
+  <li>
+    <h4><a href="#">pause():Void</a></h4>
+    <p>Same as stop() but doesn't reset the counter</p>
+  </li>
+  <li>
+    <h4><a href="#">isRunning():Void</a></h4>
+    <p>Returns true if clock is running; false otherwise</p>
+  </li>
+</ul>

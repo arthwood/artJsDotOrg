@@ -18,7 +18,7 @@ h1 {
 }
 h2 {
   margin: 0 0 10px;
-  font-size: 14px;
+  font-size: 20px;
 }
 h3 {
   margin: 0 0 10px;
@@ -42,6 +42,9 @@ p {
 ul {
   padding-left: 20px;
   margin: 0;
+}
+.param {
+  font-weight: bold;
 }
 .label {
   width: 70px;
@@ -93,10 +96,13 @@ ul {
   font-size: 12px;
 }
 .content ul li p {
-  margin-bottom: 0px;
+  margin-bottom: 4px;
 }
 .sidebar li {
   line-height: 18px;
+}
+.sidebar > ul {
+  margin-left: 2px;
 }
 .sidebar > ul li ul {
   margin: 4px 0;
