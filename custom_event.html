@@ -1,0 +1,51 @@
+<h2>CustomEvent</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.events</p>
+</div>
+
+<h3>Description</h3>
+<p>Defines new event object.</p>
+
+<h3>Constructor</h3>
+<ul>
+  <li>
+    <h4><a href="#">Event(name:String = null)</a></h4>
+    <p><span class="param">name</span> - name of the event</p>
+  </li>
+</ul>
+
+<h4>Properties</h4>
+<ul>
+  <li>
+    <h4><a href="#">name:Name</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="#">collection:DelegateCollection</a></h4>
+    <p>Collection of registered listeners</p>
+  </li>
+</ul>
+<h3>Methods</h3>
+<ul>
+  <li>
+    <h4><a href="#">fire():Void</a></h4>
+    <p>Triggers the event</p>
+  </li>
+  <li>
+    <h4><a href="#">add(delegate:Delegate):Void</a></h4>
+    <p>Registers listener</p>
+  </li>
+  <li>
+    <h4><a href="#">remove(delegate:Delegate):Void</a></h4>
+    <p>Removes listener</p>
+  </li>
+  <li>
+    <h4><a href="#">removeAll():Void</a></h4>
+    <p>Removes all listeners</p>
+  </li>
+  <li>
+    <h4><a href="#">getLength():Number</a></h4>
+    <p>Amount of listeners currently registered</p>
+  </li>
+</ul>

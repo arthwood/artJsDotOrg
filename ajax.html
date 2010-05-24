@@ -1,0 +1,158 @@
+<h2>Ajax</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.net</p>
+</div>
+
+<h3>Description</h3>
+<p>Facilitates AJAX requests</p>
+
+<h3>Constructor</h3>
+<ul>
+  <li>
+    <h4><a href="#">Ajax(url:String, data:Object, method:String)</a></h4>
+    <p><span class="param">url</span> - request URL</p>
+    <p><span class="param">data</span> - request data</p>
+    <p><span class="param">method</span> - request method</p>
+  </li>
+</ul>
+
+<h4>Events</h4>
+<ul>
+  <li>
+    <h4><a href="#">onSuccess(ajax:Ajax)</a></h4>
+    <p>Dispatched after successful response</p>
+  </li>
+  <li>
+    <h4><a href="#">onFailure(ajax:Ajax)</a></h4>
+    <p>Dispatched after request failed</p>
+  </li>
+</ul>
+
+<h4>Properties</h4>
+<ul>
+  <li>
+    <h4><a href="#">url:String</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="#">data:Object</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="#">method:String</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="#">requestData:Object</a></h4>
+    <p>Data that is actually send to server</p>
+  </li>
+  <li>
+    <h4><a href="#">requestMethod:String</a></h4>
+    <p>Method that is actually used for request</p>
+  </li>
+  <li>
+    <h4><a href="#">requestQueryData:String</a></h4>
+    <p>request data transformed to a String (this is what is actually send to server)</p>
+  </li>
+</ul>
+
+<h3>Methods</h3>
+<ul>
+  <li>
+    <h4><a href="#">request():Void</a></h4>
+    <p>Performs request</p>
+  </li>
+  <li>
+    <h4><a href="#">abort():Void</a></h4>
+    <p>Aborts request</p>
+  </li>
+  <li>
+    <h4><a href="#">getReadyState():Number</a></h4>
+    <p>Returns request ready state</p>
+  </li>
+  <li>
+    <h4><a href="#">getStatus():Number</a></h4>
+    <p>Returns request status</p>
+  </li>
+  <li>
+    <h4><a href="#">getStatusText():String</a></h4>
+    <p>Returns request status text</p>
+  </li>
+  <li>
+    <h4><a href="#">getResponseText():String</a></h4>
+    <p>Returns response text</p>
+  </li>
+  <li>
+    <h4><a href="#">setRequestHeader(header:String, value:String):Void</a></h4>
+    <p>Sets request header</p>
+  </li>
+  <li>
+    <h4><a href="#">getRequestHeader(header:String):String</a></h4>
+    <p>Returns request header</p>
+  </li>
+  <li>
+    <h4><a href="#">getAllRequestHeaders():String</a></h4>
+    <p>Returns all request headers</p>
+  </li>
+</ul>
+
+<h3>Static properties</h3>
+<ul>
+  <li>
+    <h4><a href="#">Methods.GET</a></h4>
+    <p>GET method name</p>
+  </li>
+  <li>
+    <h4><a href="#">Methods.POST</a></h4>
+    <p>POST method name</p>
+  </li>
+  <li>
+    <h4><a href="#">Methods.PUT</a></h4>
+    <p>PUT method name</p>
+  </li>
+  <li>
+    <h4><a href="#">Methods.DELETE</a></h4>
+    <p>DELETE method name</p>
+  </li>
+  <li>
+    <h4><a href="#">ReadyState.UNINITIALIZED</a></h4>
+    <p>UNINITIALIZED ready state</p>
+  </li>
+  <li>
+    <h4><a href="#">ReadyState.OPEN</a></h4>
+    <p>OPEN ready state</p>
+  </li>
+  <li>
+    <h4><a href="#">ReadyState.SENT</a></h4>
+    <p>SENT ready state</p>
+  </li>
+  <li>
+    <h4><a href="#">ReadyState.RECEIVING</a></h4>
+    <p>RECEIVING ready state</p>
+  </li>
+  <li>
+    <h4><a href="#">ReadyState.LOADED</a></h4>
+    <p>LOADED ready state</p>
+  </li>
+</ul>
+
+<h3>Static methods</h3>
+<ul>
+  <li>
+    <h4><a href="#">get(url:String, data:Object, onSuccess:Delegate)</a></h4>
+    <p>Performs GET request</p>
+  </li>
+  <li>
+    <h4><a href="#">post(url:String, data:Object, onSuccess:Delegate)</a></h4>
+    <p>Performs POST request</p>
+  </li>
+  <li>
+    <h4><a href="#">put(url:String, data:Object, onSuccess:Delegate)</a></h4>
+    <p>Performs PUT request</p>
+  </li>
+  <li>
+    <h4><a href="#">del(url:String, data:Object, onSuccess:Delegate)</a></h4>
+    <p>Performs DELETE request</p>
+  </li>
+</ul>

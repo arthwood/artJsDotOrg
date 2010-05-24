@@ -1,0 +1,68 @@
+<h2>Delegate</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.events</p>
+</div>
+
+<h3>Description</h3>
+<p>Allows to keep context object along with function</p>
+
+<h3>Constructor</h3>
+<ul>
+  <li>
+    <h4><a href="#">Delegate(object:Object, method:Function, ...rest)</a></h4>
+    <p><span class="param">object</span> - context object</p>
+    <p><span class="param">method</span> - any function</p>
+  </li>
+</ul>
+
+<h4>Properties</h4>
+<ul>
+  <li>
+    <h4><a href="#">object:Object</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="#">method:Function</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="#">args:Array</a></h4>
+    <p>optional set of arguments</p>
+  </li>
+</ul>
+<h3>Methods</h3>
+<ul>
+  <li>
+    <h4><a href="#">invoke():Object</a></h4>
+    <p>Calls the delegate method with object as a context</p>
+  </li>
+  <li>
+    <h4><a href="#">invokeWithSource(src:Object, args:Array):Object</a></h4>
+    <p>Same as invoke but passes the original source object as first argument of handler method</p>
+  </li>
+  <li>
+    <h4><a href="#">callback(withSource:Boolean, ...rest):Function</a></h4>
+    <p>Returns Function object, than when called will receive source object as first argument if 
+      <span class="code">withSource</span> is true, and <span class="code">this</span> in that function 
+      will always point to context object</p>
+  </li>
+</ul>
+
+<h3>Static Methods</h3>
+<ul>
+  <li>
+    <h4><a href="#">callback(object:Object, method:Function, withSource:Boolean, ...rest):Function</a></h4>
+    <p>A shorthand function that allows to create delegate and returns it's callback at one step</p>
+  </li>
+  <li>
+    <h4><a href="#">create(...rest):Delegate</a></h4>
+    <p>A shorthand function that allows to create and returns new delegate object</p>
+  </li>
+  <li>
+    <h4><a href="#">callback(withSource:Boolean, ...rest):Function</a></h4>
+    <p>Returns Function object, than when called will receive source object as first argument if 
+      <span class="code">withSource</span> is true, and <span class="code">this</span> in that function 
+      will always point to context object</p>
+  </li>
+</ul>
