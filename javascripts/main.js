@@ -5,9 +5,11 @@ var Main = function () {
   this.onNodeDC = this.onNode.bind(this, true);
   this.onLeafDC = this.onLeaf.bind(this, true);
   this.onContentSuccessD = $D(this, this.onContentSuccess);
-  this.removeLastBorderDC = this.removeLastBorder.bind(this);
+  this.eachUlDC = this.eachUl.bind(this);
+  this.initAnchorsDC = this.initAnchors.bind(this);
+  this.onAnchorDC = this.onAnchor.bind(this, true);
   
-  var point = $$('li').partition(function(item, idx) {
+  var point = $$('.sidebar li').partition(function(item, idx) {
     return item.down('ul').empty();
   });
   
@@ -58,15 +60,30 @@ Main.prototype = {
     
     last && (last.style.marginBottom = '0');
     
-    var uls = this.content.down('ul');
+    var uls = this.content.down('ul.members');
     
-    !uls.empty() && uls.each(this.removeLastBorderDC);
+    !uls.empty() && uls.each(this.eachUlDC);
   },
   
-  removeLastBorder: function(ul) {
-    var last = ul.down('li').last();
+  eachUl: function(ul) {
+    var lis = ul.down('li');
+    var last = lis.last();
     
     last.style.borderBottom = 'none';
+    
+    lis.each(this.initAnchorsDC);
+  },
+  
+  initAnchors: function(li) {
+    li.down('h4 a').first().onclick = this.onAnchorDC;
+  },
+  
+  onAnchor: function(a) {
+    var div = a.parent().next().next();
+    
+    div && div.toggle();
+    
+    return false;
   }
 };
 

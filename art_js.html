@@ -5,7 +5,7 @@
 </p>
 
 <h3>Constants</h3>
-<ul>
+<ul class="members">
   <li>
     <h4><a href="#">VERSION:String</a></h4>
     <p>Current version of framework</p>
@@ -17,13 +17,55 @@
 </ul>
 
 <h3>Methods</h3>
-<ul>
+<ul class="members">
   <li>
     <h4><a href="#">globalize():Void</a></h4>
     <p>Makes all classes accessible globally in window object</p>
+    <div class="more" style="display:none">
+      <p>
+        Normally after framework is loaded you have two ways of accessing its classes:
+      </p>
+      <p>
+        - using full qualified path (com.arthwood.utils.ArrayUtils)<br/>
+        - by looking into top ArtJs namespace (ArtJs.ArrayUtils)
+      </p>
+      <p>
+        For now there is no classes with the same name in whole framework so accessing it via ArtJs is fine.<br/> 
+        However, if at some point it happens, full qualified name is necessary.<br/>
+        When all framework classes are accessible simply use:
+      </p>
+      <p class="code">
+        ArtJs.globalize();
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">doInjection():Void</a></h4>
     <p>After calling this method you are able to call Utils methods on native objects</p>
+    <div class="more" style="display:none">
+      <p>
+        Some of the class methods from framework can get injected into native classes.<br/>
+        For example most of com.arthwood.utils.ArrayUtils would then affect native Array object.<br/>
+        To achieve this, when all framework classes are accessible use:
+      </p>
+      <p class="code">
+        ArtJs.doInjection();
+      </p>
+      <p>
+        After that action you will be able to write:
+      </p>
+      <p class="code">
+        myArray.last(); // 3
+      </p>
+      <p>
+        instead of:
+      </p>
+      <p class="code">
+        ArtJs.ArrayUtils.last(myArray); // 3
+      </p>
+      <p>
+        To see what framework functionality is affecting native classes see other parts of documentation.
+      </p>
+    </div>
   </li>
 </ul>
