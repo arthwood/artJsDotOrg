@@ -81,7 +81,18 @@ Main.prototype = {
   onAnchor: function(a) {
     var div = a.parent().next().next();
     
-    div && div.toggle();
+    if (div) {
+      var effect = ArtJs.Reveal.findByElement(div);
+      
+      if (effect) {
+        effect.toggle();
+      }
+      else {
+        effect = new ArtJs.Reveal(div);
+      }
+      
+      effect.start();
+    }
     
     return false;
   }

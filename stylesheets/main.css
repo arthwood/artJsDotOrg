@@ -118,6 +118,7 @@ ul {
 }
 .more {
   padding: 10px;
+  overflow: hidden;
 }
 .more .code {
   padding: 10px;
