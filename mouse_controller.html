@@ -12,18 +12,43 @@
   <li>
     <h4><a href="#">MouseController(element:Element)</a></h4>
     <p><span class="param">element</span> - controlled element</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var mc = new MouseController(element);<br/><br/>
+        
+        mc.onOver.add(new Delegate(this, onOver));<br/> 
+        mc.onOut.add(new Delegate(this, onOut));
+      </p>
+    </div>
   </li>
 </ul>
 
 <h3>Events</h3>
 <ul class="members">
   <li>
-    <h4><a href="#">onOver()</a></h4>
+    <h4><a href="#">onOver(mc:MouseController, e:Event)</a></h4>
     <p>Dispatched after mouse enters the element area</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var mc = new MouseController(element);<br/><br/>
+        
+        mc.onOver.add(new Delegate(this, onOver));
+      </p>
+    </div>
   </li>
   <li>
-    <h4><a href="#">onOut()</a></h4>
+    <h4><a href="#">onOut(mc:MouseController, e:Event)</a></h4>
     <p>Dispatched after mouse leaves the element area</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var mc = new MouseController(element);<br/><br/>
+        
+        mc.onOut.add(new Delegate(this, onOut));
+      </p>
+    </div>
   </li>
 </ul>
 
@@ -42,7 +67,29 @@
 <h3>Methods</h3>
 <ul class="members">
   <li>
-    <h4><a href="#">targets():Object</a></h4>
-    <p>Returns object containing information about the event</p>
+    <h4><a href="#">getTargets():Object</a></h4>
+    <p>
+      Returns object containing information about the event.<br/> 
+      This object contains following properties:<br/> 
+      - origin<br/> 
+      - current<br/> 
+      - related
+    </p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var mc = new MouseController(element);<br/><br/>
+        
+        mc.onOver.add(new Delegate(this, onOver));<br/><br/>
+        
+        function onOver(e, mc) {<br/>
+          &nbsp;&nbsp;var targets = mc.getTargets(e);<br/><br/>
+          
+          &nbsp;&nbsp;if (targets.related == someElement) {<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;// do something<br/>
+          &nbsp;&nbsp;}<br/>
+        }
+      </p>
+    </div>
   </li>
 </ul>

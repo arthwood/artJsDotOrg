@@ -85,8 +85,8 @@ ul {
   background: #FFF;
 }
 .content ul li {
-  padding: 12px 0;
-  border-bottom: 1px solid #EEE;
+  padding: 12px 4px;
+  border-bottom: 1px solid #CCC;
   list-style: none;
 }
 .content ul.classes li {
@@ -120,9 +120,10 @@ ul {
   padding: 10px;
   overflow: hidden;
 }
-.more .code {
+.block {
+  display: block;
   padding: 10px;
-  margin-top: 10px;
+  margin: 10px 0;
   border: 1px solid #CCC;
   background: #CFE5FF;
 }

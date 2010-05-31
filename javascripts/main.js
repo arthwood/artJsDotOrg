@@ -79,10 +79,10 @@ Main.prototype = {
   },
   
   onAnchor: function(a) {
-    var div = a.parent().next().next();
+    var div = a.parent().parent().lastElement();
     
-    if (div) {
-      var effect = ArtJs.Reveal.findByElement(div);
+    if (div && div.hasClass('more')) {
+      var effect = ArtJs.Reveal.find(div);
       
       if (effect) {
         effect.toggle();

@@ -12,6 +12,21 @@
   <li>
     <h4><a href="#">QueuedClock(interval:Number)</a></h4>
     <p><span class="param">interval</span> - interval between clock ticks in miliseconds</p>
+    <p>The class works like queue. You add Delegate items and then clock periodically removes current item 
+      and calls invoke() on it.</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var qc = new QueuedClock(1000);<br/><br/>
+        
+        // add one delegate item<br/>
+        qc.addItem(new Delegate(this, this.onTick)) // 1;<br/>
+        qc.getLength(); // 1<br/>
+        qc.start();<br/>
+        // after first tick the collection is empty<br/>
+        qc.getLength(); // 0
+      </p>
+    </div>
   </li>
 </ul>
 
@@ -30,11 +45,43 @@
 <h3>Methods</h3>
 <ul class="members">
   <li>
-    <h4><a href="#">addItem(item:Delegate):Void</a></h4>
-    <p>Adds delegate to collection</p>
+    <h4><a href="#">addItem(item:Delegate):Number</a></h4>
+    <p>Adds delegate to collection and returns its new length</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var qc = new QueuedClock(1000);<br/><br/>
+        
+        qc.addItem(new Delegate(this, this.onTick)) // 1;
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="#">start():Void</a></h4>
+    <p>Starts execution</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var qc = new QueuedClock(1000);<br/><br/>
+        
+        qc.addItem(new Delegate(this, this.onTick));
+        
+        qc.start();
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getLength():Number</a></h4>
     <p>Returns current length of collection</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var qc = new QueuedClock(1000);<br/><br/>
+        
+        qc.getLength(); // 0<br/>
+        qc.addItem(new Delegate(this, this.onTick));<br/>
+        qc.getLength(); // 1<br/>
+      </p>
+    </div>
   </li>
 </ul>

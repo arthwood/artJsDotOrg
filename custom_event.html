@@ -5,13 +5,19 @@
 </div>
 
 <h3>Description</h3>
-<p>Defines new event object.</p>
+<p>Defines object capable of dispatching events.</p>
 
 <h3>Constructor</h3>
 <ul class="members">
   <li>
-    <h4><a href="#">Event(name:String = null)</a></h4>
+    <h4><a href="#">CustomEvent(name:String = null)</a></h4>
     <p><span class="param">name</span> - name of the event</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code">
+        var myEvent = new CustomEvent('MyClass::myEvent');
+      </p>
+    </div>
   </li>
 </ul>
 
@@ -24,29 +30,116 @@
   <li>
     <h4><a href="#">collection:DelegateCollection</a></h4>
     <p>Collection of registered listeners</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code">
+        var myEvent = new CustomEvent('MyClass::myEvent');<br/><br/>
+        
+        myEvent.collection.length // 0<br/>
+        myEvent.add(new Delegate(null, function() {<br/>
+        &nbsp;&nbsp;alert('event!')<br/>
+        }));<br/>
+        myEvent.collection.length // 1
+      </p>
+    </div>
   </li>
 </ul>
 
 <h3>Methods</h3>
 <ul class="members">
   <li>
-    <h4><a href="#">fire():Void</a></h4>
-    <p>Triggers the event</p>
+    <h4><a href="#">fire():Array</a></h4>
+    <p>Triggers the event and returns responses from handlers as an array</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code">
+        var myEvent = new CustomEvent('MyClass::myEvent');<br/><br/>
+        
+        myEvent.add(new Delegate(null, function() {<br/>
+        &nbsp;&nbsp;alert('event!');<br/>
+        &nbsp;&nbsp;return 2;<br/>
+        }));<br/><br/>
+        // ...then at some point you dispatch the event<br/>
+        myEvent.fire(this, 'hello'); // [2]
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">add(delegate:Delegate):Void</a></h4>
     <p>Registers listener</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code">
+        var myEvent = new CustomEvent('MyClass::myEvent');<br/><br/>
+        
+        myEvent.add(new Delegate(null, function() {<br/>
+        &nbsp;&nbsp;alert('event!')<br/>
+        }));
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">remove(delegate:Delegate):Void</a></h4>
     <p>Removes listener</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code">
+        var myEvent = new CustomEvent('MyClass::myEvent');<br/>
+        var delegate = new Delegate(null, function(msg) {<br/>
+        &nbsp;&nbsp;alert('event says: ' + msg)<br/>
+        });<br/><br/>
+        
+        myEvent.add(delegate);<br/>
+        myEvent.fire('hello!'); // delegate handles event<br/>
+        myEvent.remove(delegate);<br/>
+        myEvent.fire('hello!'); // nothing happens<br/>
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">removeAll():Void</a></h4>
     <p>Removes all listeners</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code">
+        var myEvent = new CustomEvent('MyClass::myEvent');<br/>
+        var delegateOne = new Delegate(null, function(msg) {<br/>
+        &nbsp;&nbsp;alert('event says to delegate 1: ' + msg);<br/>
+        });<br/>
+        var delegateTwo = new Delegate(null, function(msg) {<br/>
+        &nbsp;&nbsp;alert('event says to delegate 2: ' + msg);<br/>
+        });<br/><br/>
+        
+        myEvent.add(delegateOne);<br/>
+        myEvent.add(delegateTwo);<br/>
+        myEvent.fire('hello!'); // delegates handle event<br/>
+        myEvent.removeAll();<br/>
+        myEvent.fire('hello!');// nothing happens<br/>
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getLength():Number</a></h4>
     <p>Amount of listeners currently registered</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code">
+        var myEvent = new CustomEvent('MyClass::myEvent');<br/>
+        var delegateOne = new Delegate(null, function(msg) {<br/>
+        &nbsp;&nbsp;alert('event says to delegate 1: ' + msg);<br/>
+        });<br/>
+        var delegateTwo = new Delegate(null, function(msg) {<br/>
+        &nbsp;&nbsp;alert('event says to delegate 2: ' + msg);<br/>
+        });<br/><br/>
+        
+        myEvent.getLength(); // 0<br/>
+        myEvent.add(delegateOne);<br/>
+        myEvent.getLength(); // 1<br/>
+        myEvent.add(delegateTwo);<br/>
+        myEvent.getLength(); // 2<br/>
+        myEvent.removeAll();<br/>
+        myEvent.getLength(); // 0<br/>
+      </p>
+    </div>
   </li>
 </ul>
