@@ -13,7 +13,13 @@
     <h4><a href="#">Flash(element:Element, path:String, delay:Number = 6)</a></h4>
     <p><span class="param">element</span> - element on which will display flash message</p>
     <p><span class="param">path</span> - path to icons (without trailing slash)</p>
-    <p><span class="param">delay</span> - time before message disappears</p>
+    <p><span class="param">delay</span> - time before message disappears (in seconds)</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var flash = new Flash(element, 'images/flash', 4);
+      </p>
+    </div>
   </li>
 </ul>
 
@@ -38,9 +44,30 @@
   <li>
     <h4><a href="#">show(type:String, message:String):Void</a></h4>
     <p>Displays flash message (accepted types: 'info', 'warning', 'error')</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var flash = new Flash(element, 'images/flash', 4);<br/><br/>
+        
+        // ... at some point<br/>
+        flash.show('info', 'Project created sucessfully!');
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">hide():Void</a></h4>
     <p>Hides flash message</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var flash = new Flash(element, 'images/flash', 4);<br/><br/>
+        
+        // ... at some point<br/>
+        flash.show('info', 'Project created sucessfully!');
+        
+        // ... at some point (preferrably when flash is still visible)<br/>
+        flash.hide();
+      </p>
+    </div>
   </li>
 </ul>

@@ -1,23 +1,23 @@
-<h2>Fade</h2>
+<h2>Reveal</h2>
 <div class="clearfix">
   <p class="label">Package:</p>
   <p class="package">com.arthwood.tween</p>
 </div>
 
 <h3>Description</h3>
-<p>Implements "fade" effect</p>
+<p>Implements "reveal" effect</p>
 
 <h3>Constructor</h3>
 <ul class="members">
   <li>
-    <h4><a href="#">Fade(element:Element, delta:Number = 0.05, interval:Number = 20)</a></h4>
+    <h4><a href="#">Reveal(element:Element, delta:Number = 0.05, interval:Number = 20)</a></h4>
     <p><span class="param">element</span> - element on which effect is applied</p>
     <p><span class="param">delta</span> - increment (0 &lt; delta &lt; 1)</p>
     <p><span class="param">interval</span> - animation timeframe in miliseconds</p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
-        var fade = new Fade($('nav'), 0.2, 30);
+        var reveal = new Reveal($('nav'), 0.2, 30);
       </p>
     </div>
   </li>
@@ -26,18 +26,18 @@
 <h3>Events</h3>
 <ul class="members">
   <li>
-    <h4><a href="#">onComplete(fade:Fade)</a></h4>
+    <h4><a href="#">onComplete(reveal:Reveal)</a></h4>
     <p>Dispatched after effect finish</p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
-        var fade = new Fade($('nav'), 0.2, 30);<br/><br/>
+        var reveal = new Reveal($('nav'), 0.2, 30);<br/><br/>
         
-        fade.onComplete.add(new Delegate(null, onComplete));<br/><br/>
+        reveal.onComplete.add(new Delegate(null, onComplete));<br/><br/>
         
-        fade.start();<br/><br/>
+        reveal.start();<br/><br/>
         
-        function onComplete(fade) {<br/>
+        function onComplete(reveal) {<br/>
         &nbsp;&nbsp;alert('animation completed!');<br/>
         }
       </p>
@@ -69,9 +69,9 @@
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
-        var fade = new Fade($('nav'), 0.2, 30);<br/><br/>
+        var reveal = new Reveal($('nav'), 0.2, 30);<br/><br/>
         
-        fade.start();
+        reveal.start();
       </p>
     </div>
   </li>
@@ -81,12 +81,12 @@
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
-        var fade = new Fade($('nav'), 0.2, 30);<br/><br/>
+        var reveal = new Reveal($('nav'), 0.2, 30);<br/><br/>
         
-        fade.start();<br/><br/>
+        reveal.start();<br/><br/>
         
         // ... some time later<br/>
-        fade.stop();
+        reveal.stop();
       </p>
     </div>
   </li>
@@ -96,11 +96,11 @@
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
-        var fade = new Fade($('nav'), 0.2, 30);<br/><br/>
+        var reveal = new Reveal($('nav'), 0.2, 30);<br/><br/>
         
-        fade.start();<br/><br/>
+        reveal.start();<br/><br/>
         
-        fade.isRunning(); // true
+        reveal.isRunning(); // true
       </p>
     </div>
   </li>

@@ -13,6 +13,12 @@
     <h4><a href="#">Point(x:Number, y:Number)</a></h4>
     <p><span class="param">x</span> - x coordinate</p>
     <p><span class="param">y</span> - y coordinate</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var point = new Point(20, 40);
+      </p>
+    </div>
   </li>
 </ul>
 
@@ -33,49 +39,155 @@
   <li>
     <h4><a href="#">getLength():Number</a></h4>
     <p>Length of a vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var point = new Point(3, 4);
+        
+        point.getLength(); // 5
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">dot():Number</a></h4>
     <p>Dot product of this vector and other vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p1 = new Point(2, 3);
+        var p2 = new Point(4, -1);
+        
+        p1.dot(p2); // 5
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">add():Point</a></h4>
     <p>Adds other vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p1 = new Point(2, 3);
+        var p2 = new Point(4, -1);
+        
+        p1.add(p2); // (6, 2)
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">sub():Void</a></h4>
     <p>Subtracts other vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p1 = new Point(2, 3);
+        var p2 = new Point(4, -1);
+        
+        p1.sub(p2); // (-2, 4)
+      </p>
+    </div>
   </li>
   <li>
-    <h4><a href="#">reversed():Point</a></h4>
+    <h4><a href="#">reverse():Point</a></h4>
     <p>Reverses vector and returns this vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);
+        
+        p.reverse(); // (-2, -3)
+        p; // (-2, -3)
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getReversed():Point</a></h4>
     <p>Returns reversed vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);
+        
+        p.getReversed(); // (-2, -3)
+        p; // (2, 3)
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">reverseX():Point</a></h4>
     <p>Reverses x coordinate and returns this vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);
+        
+        p.reverse(); // (-2, 3)
+        p; // (-2, 3)
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">reverseY():Point</a></h4>
     <p>Reverses y coordinate and returns this vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);
+        
+        p.reverse(); // (2, -3)
+        p; // (2, -3)
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">transpose():Point</a></h4>
     <p>Transposes coordinates and returns this vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);
+        
+        p.transpose(); // (3, 2)
+        p; // (3, 2)
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getTransposed():Point</a></h4>
     <p>Returns new transposed vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);
+        
+        p.getTransposed(); // (3, 2)
+        p; // (2, 3)
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">times(k:Number):Point</a></h4>
     <p>Returns new vector multiplied by <span class="code">k</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);
+        
+        p.times(-3); // (-9, -6)
+        p; // (2, 3)
+      </p>
+    </div>
   </li>
     <li>
     <h4><a href="#">toString():String</a></h4>
     <p>Returns string representation od vector</p>
+      <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);
+        
+        p.toString(); // [2, 3]
+      </p>
+    </div>
   </li>
 </ul>

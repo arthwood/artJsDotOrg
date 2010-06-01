@@ -10,11 +10,17 @@
 <h3>Constructor</h3>
 <ul class="members">
   <li>
-    <h4><a href="#">Point(left:Number, top:Number, right:Number, bottom:Number)</a></h4>
+    <h4><a href="#">Rectangle(left:Number, top:Number, right:Number, bottom:Number)</a></h4>
     <p><span class="param">left</span> - left edge</p>
     <p><span class="param">top</span> - top edge</p>
     <p><span class="param">right</span> - right edge</p>
     <p><span class="param">bottom</span> - bottom edge</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var rectangle = new Rectangle(10, 10, 30, 20);
+      </p>
+    </div>
   </li>
 </ul>
 
@@ -43,37 +49,110 @@
   <li>
     <h4><a href="#">getWidth():Number</a></h4>
     <p>width of rectangle</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var rectangle = new Rectangle(10, 10, 30, 20);
+        
+        rectangle.getWidth(); // 20
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getHeight():Number</a></h4>
     <p>height of rectangle</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var rectangle = new Rectangle(10, 10, 30, 20);
+        
+        rectangle.getHeight(); // 10
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getArea():Number</a></h4>
     <p>area of rectangle</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var rectangle = new Rectangle(10, 10, 30, 20);
+        
+        rectangle.getArea(); // 200
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getLeftTop():Point</a></h4>
     <p>left-top corner vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var rectangle = new Rectangle(10, 10, 30, 20);
+        
+        rectangle.getLeftTop(); // [10, 10]
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getRightTop():Point</a></h4>
     <p>right-top corner vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var rectangle = new Rectangle(10, 10, 30, 20);
+        
+        rectangle.getRightTop(); // [30, 10]
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getRightBottom():Point</a></h4>
     <p>right-bottom corner vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var rectangle = new Rectangle(10, 10, 30, 20);
+        
+        rectangle.getRightBottom(); // [30, 20]
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getLeftBottom():Point</a></h4>
     <p>left-bottom corner vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var rectangle = new Rectangle(10, 10, 30, 20);
+        
+        rectangle.getRightBottom(); // [10, 20]
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">getSize():Point</a></h4>
     <p>width and height as a vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var rectangle = new Rectangle(10, 10, 30, 20);
+        
+        rectangle.getSize(); // [20, 10]
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">moveBy(point:Point):Void</a></h4>
     <p>Moves rectangle by a vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var rectangle = new Rectangle(10, 10, 30, 20);
+        
+        rectangle.moveBy(new Point(-10, -10); 
+        rectangle.toString(); // [0, 0, 20, 10]
+      </p>
+    </div>
   </li>
 </ul>
