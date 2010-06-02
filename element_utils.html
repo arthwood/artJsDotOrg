@@ -479,4 +479,138 @@
       </p>
     </div>
   </li>
+  <li>
+    <h4><a href="#">serialize(element:Element):Object</a></h4>
+    <p>Serializes content of <span class="param">element</span> (usually form) and returns its data as Object</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        ElementUtils.serialize(element);<br/><br/>
+        
+        // or<br/>
+        // element.serialize();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="#">getContent(element:Element):String</a></h4>
+    <p>Returns content (like innerHTML) of <span class="param">element</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        ElementUtils.getContent(element);<br/><br/>
+        
+        // or<br/>
+        // element.getContent();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="#">setContent(element:Element, content:String):Void</a></h4>
+    <p>Sets the content (like innerHTML) of <span class="param">element</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        ElementUtils.setContent(element, 'hello &lt;span&gt;world&lt;/span&gt;!');<br/><br/>
+        
+        // or<br/>
+        // element.setContent('hello &lt;span&gt;world&lt;/span&gt;!');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="#">hasClass(element:Element, name:String):Boolean</a></h4>
+    <p>Returns true if <span class="param">element</span> has class identified by <span class="param">name</span>;
+      flase otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        ElementUtils.hasClass(element, 'nav');<br/><br/>
+        
+        // or<br/>
+        // element.hasClass('nav');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="#">getClasses(element:Element):Array</a></h4>
+    <p>Returns array of <span class="param">element</span>'s classes</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        ElementUtils.getClasses(element);<br/><br/>
+        
+        // or<br/>
+        // element.getClasses();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="#">setClass(element:Element, name:String, add:Boolean):Void</a></h4>
+    <p>If <span class="param">add</span> is true it adds, otherwise removes class identified by 
+      <span class="param">name</span> to <span class="param">element</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        ElementUtils.setClass(element, 'nav', true);<br/><br/>
+        
+        // or<br/>
+        // element.setClass('nav', true);
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="#">addClass(element:Element, name:String):Void</a></h4>
+    <p>Adds class identified by <span class="param">name</span> to <span class="param">element</span>
+      (only if it doesn't already have this class)</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        ElementUtils.addClass(element, 'nav');<br/><br/>
+        
+        // or<br/>
+        // element.addClass('nav');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="#">removeClass(element:Element, name:String):Void</a></h4>
+    <p>Removes class identified by <span class="param">name</span> from <span class="param">element</span>
+      (only if it have this class)</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        ElementUtils.removeClass(element, 'nav');<br/><br/>
+        
+        // or<br/>
+        // element.removeClass('nav');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="#">toggleClass(element:Element, name:String):Void</a></h4>
+    <p>Toggles class identified by <span class="param">name</span> of <span class="param">element</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        ElementUtils.toggleClass(element, 'nav');<br/><br/>
+        
+        // or<br/>
+        // element.toggleClass('nav');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="#">getAttributes(element:Element):Object</a></h4>
+    <p>Returns attributes as an Object</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        ElementUtils.getAttributes(element);<br/><br/>
+        
+        // or<br/>
+        // element.getAttributes();
+      </p>
+    </div>
+  </li>
 </ul>
