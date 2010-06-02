@@ -67,7 +67,9 @@
 <h3>Methods</h3>
 <ul class="members">
   <li>
-    <h4><a href="#">getTargets():Object</a></h4>
+    <h4><a href="#">getTargets(event:Event, over:Boolean):Object</a></h4>
+    <p><span class="param">event</span> - event object</p>
+    <p><span class="param">over</span> - pass true if you call this action in mouse over event handler; false otherwise</p>
     <p>
       Returns object containing information about the event.<br/> 
       This object contains following properties:<br/> 
@@ -83,7 +85,7 @@
         mc.onOver.add(new Delegate(this, onOver));<br/><br/>
         
         function onOver(e, mc) {<br/>
-          &nbsp;&nbsp;var targets = mc.getTargets(e);<br/><br/>
+          &nbsp;&nbsp;var targets = mc.getTargets(e, true);<br/><br/>
           
           &nbsp;&nbsp;if (targets.related == someElement) {<br/>
             &nbsp;&nbsp;&nbsp;&nbsp;// do something<br/>

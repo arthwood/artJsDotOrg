@@ -11,6 +11,18 @@
 <ul class="members">
   <li>
     <h4><a href="#">edge(targets:Object):Boolean</a></h4>
-    <p>Detects if mouse event occured on the edge on an Element</p>
+    <p>Returns true if mouse event occured on the edge on an Element; false otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var mc = new MouseController(element);<br/><br/>
+        
+        // in mouseover event handler<br/>
+        EventUtils.edge(element, mc.getTargets(event, true));<br/><br/>
+        
+        // or<br/>
+        // element.edge(mc.getTargets(event, true));
+      </p>
+    </div>
   </li>
 </ul>

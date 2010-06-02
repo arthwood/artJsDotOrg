@@ -11,20 +11,52 @@
 <ul class="members">
   <li>
     <h4><a href="#">sgn(x:Number):Number</a></h4>
-    <p>Signum function of <span class="code">x</span></p>
+    <p>Signum function of <span class="param">x</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        MathUtils.sgn(-2); // -1<br/>
+        MathUtils.sgn(0); // 0<br/>
+        MathUtils.sgn(15); // 1
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">limit(x:Number, a:Number, b:Number):Number</a></h4>
-    <p>Returns <span class="code">x</span> value limited to 
-      [<span class="code">a</span>, <span class="code">b</span>] range</p>
+    <p>Returns <span class="param">x</span> value limited to 
+      [<span class="param">a</span>, <span class="param">b</span>] range</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        MathUtils.limit(6, 2, 13); // 6<br/>
+        MathUtils.limit(6, 8, 13); // 8<br/>
+        MathUtils.limit(6, -2, 3); // 3
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">periodicLimit(x:Number, a:Number, b:Number):Number</a></h4>
-    <p>Returns <span class="code">x</span> value periodically limited to 
-      [<span class="code">a</span>, <span class="code">b</span>] range</p>
+    <p>Returns <span class="param">x</span> value periodically limited to 
+      [<span class="param">a</span>, <span class="param">b</span>] range</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        MathUtils.periodicLimit(6, 2, 13); // 6<br/>
+        MathUtils.periodicLimit(6, 8, 13); // 11<br/>
+        MathUtils.periodicLimit(6, -2, 3); // 1
+      </p>
+    </div>
   </li>
   <li>
     <h4><a href="#">stairs(x:Number, a:Number, b:Number):Number</a></h4>
-    <p>"stairs" function of <span class="code">x</span></p>
+    <p>"stairs" function of <span class="param">x</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        MathUtils.stairs(6, 2, 4); // 2<br/>
+        MathUtils.stairs(6, 1, 2); // 5<br/>
+        MathUtils.stairs(6, -1, 1); // 3
+      </p>
+    </div>
   </li>
 </ul>
