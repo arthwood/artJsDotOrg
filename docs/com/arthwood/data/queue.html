@@ -1,0 +1,118 @@
+<h2>Queue</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.data</p>
+</div>
+
+<h3>Description</h3>
+<p>Queue data model implementation</p>
+
+<h3>Constructor</h3>
+<ul class="members">
+  <li>
+    <h4><a href="queue.html#">Queue(data:Array = [])</a></h4>
+    <p><span class="param">data</span> - collection data</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var queue = new Queue([1, 2, 3, 4, 5]);
+      </p>
+    </div>
+  </li>
+</ul>
+        
+<h3>Events</h3>
+<ul class="members">
+  <li>
+    <h4><a href="queue.html#">onChange(list:List)</a></h4>
+    <p>Dispatched every time the collection changes</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var queue = new Queue([1, 2, 3, 4, 5]);
+        <br/><br/>
+        queue.onChange.add(new ArtJs.Delegate(this, this.onChange));
+        <br/>
+        function onChange(queue) {
+          alert('queue has changed!');
+        }
+      </p>
+    </div>
+  </li>
+</ul>
+
+<h3>Methods</h3>
+<ul class="members">
+  <li>
+    <h4><a href="queue.html#">addItem(item:Object):Void</a></h4>
+    <p>Adds <span class="code">item</span> to the end of collection</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var queue = new Queue([1, 2, 3, 4, 5]);
+        <br/><br/>
+        queue.addItem(6); // 6
+        <br/>
+        queue.toString() // 1, 2, 3, 4, 5, 6
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="queue.html#">getItem():Object</a></h4>
+    <p>Pops and returns current item</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var queue = new Queue([1, 2, 3, 4, 5]);
+        <br/>
+        var item = queue.getItem(); // 1
+        <br/><br/>
+        queue.toString(); // 2, 3, 4, 5
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="queue.html#">getLength():Number</a></h4>
+    <p>Returns length of collection</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var queue = new Queue([1, 2, 3, 4, 5]);
+        <br/><br/>
+        queue.getLength(); // 5
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="queue.html#">setData(data:Array):Void</a></h4>
+    <p>Sets the collection</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var queue = new Queue([1, 2, 3, 4, 5]);
+        <br/><br/>
+        queue.toString(); // 1, 2, 3, 4, 5
+        <br/>
+        queue.setData([4, 5, 6]);
+        <br/>
+        queue.toString(); // 4, 5, 6
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="queue.html#">empty():Boolean</a></h4>
+    <p>Returns true if collection is empty; false otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var queue = new Queue([3]);
+        <br/><br/>
+        queue.empty(); // false
+        <br/><br/>
+        var item = queue.getItem();
+        <br/><br/>
+        queue.empty(); // true
+      </p>
+    </div>
+  </li>
+</ul>

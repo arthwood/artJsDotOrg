@@ -1,0 +1,87 @@
+<h2>QueuedClock</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.events</p>
+</div>
+
+<h3>Description</h3>
+<p>Allows trigger events periodically</p>
+
+<h3>Constructor</h3>
+<ul class="members">
+  <li>
+    <h4><a href="queued_clock.html#">QueuedClock(interval:Number)</a></h4>
+    <p><span class="param">interval</span> - interval between clock ticks in miliseconds</p>
+    <p>The class works like queue. You add Delegate items and then clock periodically removes current item 
+      and calls invoke() on it.</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var qc = new QueuedClock(1000);<br/><br/>
+        
+        // add one delegate item<br/>
+        qc.addItem(new Delegate(this, this.onTick)) // 1;<br/>
+        qc.getLength(); // 1<br/>
+        qc.start();<br/>
+        // after first tick the collection is empty<br/>
+        qc.getLength(); // 0
+      </p>
+    </div>
+  </li>
+</ul>
+
+<h3>Properties</h3>
+<ul class="members">
+  <li>
+    <h4><a href="queued_clock.html#">interval:Number</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="queued_clock.html#">busy:Boolean</a></h4>
+    <p>Indicates if clock is running</p>
+  </li>
+</ul>
+
+<h3>Methods</h3>
+<ul class="members">
+  <li>
+    <h4><a href="queued_clock.html#">addItem(item:Delegate):Number</a></h4>
+    <p>Adds delegate to collection and returns its new length</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var qc = new QueuedClock(1000);<br/><br/>
+        
+        qc.addItem(new Delegate(this, this.onTick)) // 1;
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="queued_clock.html#">start():Void</a></h4>
+    <p>Starts execution</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var qc = new QueuedClock(1000);<br/><br/>
+        
+        qc.addItem(new Delegate(this, this.onTick));
+        
+        qc.start();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="queued_clock.html#">getLength():Number</a></h4>
+    <p>Returns current length of collection</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var qc = new QueuedClock(1000);<br/><br/>
+        
+        qc.getLength(); // 0<br/>
+        qc.addItem(new Delegate(this, this.onTick));<br/>
+        qc.getLength(); // 1<br/>
+      </p>
+    </div>
+  </li>
+</ul>

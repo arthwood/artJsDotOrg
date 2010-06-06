@@ -1,0 +1,157 @@
+<h2>Clock</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.events</p>
+</div>
+
+<h3>Description</h3>
+<p>Allows trigger events periodically</p>
+
+<h3>Constructor</h3>
+<ul class="members">
+  <li>
+    <h4><a href="clock.html#">Clock(interval:Number, repeat:Number)</a></h4>
+    <p><span class="param">interval</span> - interval between ticks in miliseconds</p>
+    <p><span class="param">repeat</span> - number of ticks</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var clock = new Clock(1000, 5);
+      </p>
+    </div>
+  </li>
+</ul>
+
+<h3>Events</h3>
+<ul class="members">
+  <li>
+    <h4><a href="clock.html#">onChange(clock:Clock)</a></h4>
+    <p>Triggered on each tick</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var clock = new Clock(1000, 5);<br/><br/>
+        
+        clock.onChange.add(new Delegate(this, this.onClockChange);<br/><br/>
+        
+        function onClockChange(clock) {<br/>
+        &nbsp;&nbsp;alert('clock change!');<br/>
+        }
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="clock.html#">onFinish(clock:Clock)</a></h4>
+    <p>Triggered after last tick</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var clock = new Clock(1000, 5);<br/><br/>
+        
+        clock.onComplete.add(new Delegate(this, this.onClockComplete);<br/><br/>
+        
+        function onClockComplete(clock) {<br/>
+        &nbsp;&nbsp;alert('clock complete!');<br/>
+        }
+      </p>
+    </div>
+  </li>
+</ul>
+
+<h3>Properties</h3>
+<ul class="members">
+  <li>
+    <h4><a href="clock.html#">interval:Number</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="clock.html#">repeat:Number</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
+  <li>
+    <h4><a href="clock.html#">counter:Number</a></h4>
+    <p>Number of released ticks</p>
+  </li>
+</ul>
+
+<h3>Methods</h3>
+<ul class="members">
+  <li>
+    <h4><a href="clock.html#">start(now:Boolean):Void</a></h4>
+    <p>Starts the clock. First tick after interval or immediately if <span class="param">now</span> is true</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var clock = new Clock(1000, 5);<br/><br/>
+        
+        clock.start();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="clock.html#">stop():Void</a></h4>
+    <p>Stops the clock and sets counter to zero</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var clock = new Clock(1000, 5);<br/><br/>
+        
+        clock.start();<br/>
+        // ... and some time later<br/>
+        clock.counter; // 3<br/>
+        clock.stop();<br/>
+        clock.counter; // 0<br/>
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="clock.html#">pause():Void</a></h4>
+    <p>Same as stop() but doesn't reset the counter</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var clock = new Clock(1000, 5);<br/><br/>
+        
+        clock.start(true);<br/>
+        // ... and some time later<br/>
+        clock.counter; // 3<br/>
+        clock.pause();<br/>
+        clock.counter; // 3<br/>
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="clock.html#">resume():Void</a></h4>
+    <p>Resumes ticking after it has been paused</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var clock = new Clock(1000, 5);<br/><br/>
+        
+        clock.start();<br/>
+        // ... and some time later<br/>
+        clock.counter; // 3<br/>
+        clock.pause();<br/>
+        // ... and some time later<br/>
+        clock.resume();<br/>
+        clock.counter; // 3<br/>
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="clock.html#">isRunning():Void</a></h4>
+    <p>Returns true if clock is running; false otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var clock = new Clock(1000, 5);<br/><br/>
+        
+        clock.isRunning(); // false<br/>
+        clock.start(true);<br/>
+        clock.isRunning(); // true<br/>
+        clock.stop();<br/>
+        clock.isRunning(); // false<br/>
+      </p>
+    </div>
+  </li>
+</ul>

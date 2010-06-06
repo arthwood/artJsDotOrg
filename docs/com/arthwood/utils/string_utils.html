@@ -1,0 +1,273 @@
+<h2>StringUtils</h2>
+<div class="clearfix">
+  <p class="label">Package:</p>
+  <p class="package">com.arthwood.utils</p>
+</div>
+
+<h3>Description</h3>
+<p>Provides set of methods that operates on any String instance.</p>
+
+<h3>Methods</h3>
+<ul class="members">
+  <li>
+    <h4><a href="string_utils.html#">first(string:String):String</a></h4>
+    <p>Returns first letter of a <span class="code">string</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'quantum mechanics';<br/><br/>
+        
+        StringUtils.first(string); // q<br/>
+        // or<br/>
+        // string.first();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">last(string:String):String</a></h4>
+    <p>Returns last letter of a <span class="code">string</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'quantum mechanics';<br/><br/>
+        
+        StringUtils.last(string); // s<br/>
+        // or<br/>
+        // string.last();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">strip(string:String):String</a></h4>
+    <p>Removes whitespaces from <span class="code">string</span> and returns the result</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'quantum mechanics';<br/><br/>
+        
+        StringUtils.strip(string); // quantummechanics<br/>
+        // or<br/>
+        // string.strip();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">blank(string:String):Boolean</a></h4>
+    <p>Returns true if <span class="code">string</span> is null or empty; false otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'quantum mechanics';<br/>
+        var emptyString = '      ';<br/>
+        var nullValue = null;<br/><br/>
+        
+        StringUtils.blank(string); // false<br/>
+        // or<br/>
+        // string.blank();<br/><br/>
+        
+        StringUtils.blank(emptyString); // true<br/>
+        // or<br/>
+        // emptyString.blank();<br/><br/>
+        
+        StringUtils.blank(nullValue); // true<br/>
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">empty(string:String):Boolean</a></h4>
+    <p>Returns true if <span class="code">string</span> is empty; false otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'quantum mechanics';<br/>
+        var emptyString = '      ';<br/><br/>
+        
+        StringUtils.empty(string); // false<br/>
+        // or<br/>
+        // string.empty();<br/><br/>
+        
+        StringUtils.empty(emptyString); // true<br/>
+        // or<br/>
+        // emptyString.empty();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">nullifyEmpty(string:String):Object</a></h4>
+    <p>Returns null if <span class="code">string</span> is empty; <span class="code">string</span> otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'quantum mechanics';<br/>
+        var emptyString = '      ';<br/><br/>
+        
+        StringUtils.nullifyEmpty(string); // quantum mechanics<br/>
+        // or<br/>
+        // string.nullifyEmpty();<br/><br/>
+        
+        StringUtils.nullifyEmpty(emptyString); // null<br/>
+        // or<br/>
+        // emptyString.nullifyEmpty();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">toS(string:String):String</a></h4>
+    <p>Returns empty string if <span class="code">string</span> is null; <span class="code">string</span> otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'quantum mechanics';<br/>
+        var nullValue = null;<br/><br/>
+        
+        StringUtils.toS(string); // quantum mechanics<br/>
+        StringUtils.toS(nullValue); // (empty string)
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">countPattern(string:String, pattern:String):Number</a></h4>
+    <p>Returns number of <span class="code">pattern</span> occurences in <span class="code">string</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'advanced quantum mechanics';<br/><br/>
+        
+        StringUtils.countPattern(string, 'an'); // 3<br/>
+        // or<br/>
+        // string.countPattern('an');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">align(string:String, length:Number, char:String, left:Boolean):String</a></h4>
+    <p>Extends length of the <span class="code">string</span> to <span class="code">length</span> value by filling
+      the gap with <span class="code">char</span> characters on the side determined by <span class="code">left</span>
+      argument</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'color';<br/><br/>
+        
+        StringUtils.align(string, 10, '-', true); // color-----<br/>
+        // or<br/>
+        // string.align(10, '-', true);
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">getMultiPattern(pattern:String, n:Number):String</a></h4>
+    <p>Returns string containing of <span class="code">pattern</span> concatenated <span class="code">n</span> times</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'yes, ';<br/><br/>
+        
+        StringUtils.getMultiPattern(string, 3); // yes, yes, yes, <br/>
+        // or<br/>
+        // string.getMultiPattern(3);
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">formatPrice(value:Number):String</a></h4>
+    <p>Returns price formatted string</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var price = 3.7;<br/><br/>
+        
+        StringUtils.formatPrice(price); // 3.70<br/>
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">truncate(string:String, n:Number, end:String = '...'):String</a></h4>
+    <p>Truncates <span class="code">string</span> to length <span class="code">n</span> and appends 
+      <span class="code">end</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'advanced quantum mechanics';<br/><br/>
+        
+        StringUtils.truncate(string, 8); // advanced...<br/>
+        // or<br/>
+        // string.truncate(8);
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">singularOrPlural(string:String, n:Number):String</a></h4>
+    <p>Returns plural version of <span class="code">string</span> if <span class="code">n</span> is other than 1</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'chicken';<br/><br/>
+        
+        StringUtils.singularOrPlural(string, 1); // chicken<br/>
+        // or<br/>
+        // string.singularOrPlural(1);<br/><br/>
+        
+        StringUtils.singularOrPlural(string, 5); // chickens<br/>
+        // or<br/>
+        // string.singularOrPlural(5);
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">capitalize(string:String):String</a></h4>
+    <p>Upcase each word in <span class="code">string</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'advanced quantum mechanics';<br/><br/>
+        
+        StringUtils.capitalize(string); // Advanced Quantum Mechanics<br/>
+        // or<br/>
+        // string.capitalize();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">trim(string:String):String</a></h4>
+    <p>Remove all the whitespaces from the begining and the end of the <span class="code">string</span></p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = '    quantum mechanics  ';<br/><br/>
+        
+        StringUtils.trim(string); // quantum mechanics<br/>
+        // or<br/>
+        // string.trim();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">sub(string:String, start:Number, end:Number):String</a></h4>
+    <p>Periodic version of String.substring()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = 'quantum mechanics';<br/><br/>
+        
+        StringUtils.sub(string, -2, 4); // csquan<br/>
+        // or<br/>
+        // string.sub(-2, 4);
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="string_utils.html#">toJson(string:String):Object</a></h4>
+    <p>Converts <span class="code">string</span> JSON format to Object</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="code block">
+        var string = "{id: 5, name: 'Mike'}";<br/><br/>
+        
+        StringUtils.toJson(string); // {id: 5, name: 'Mike'}<br/>
+        // or<br/>
+        // string.toJson();
+      </p>
+    </div>
+  </li>
+</ul>

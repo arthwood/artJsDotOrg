@@ -1,0 +1,195 @@
+<h2>ArtJs</h2>
+<h3>Description</h3>
+<p>This is top level object that stores information about framework and few methods that allows you to 
+  select the framework mode
+</p>
+
+<h3>Constants</h3>
+<ul class="members">
+  <li>
+    <h4><a href="art_js.html#">VERSION:String</a></h4>
+    <p>Current version of framework</p>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">CLIENT:String</a></h4>
+    <p>Dedicated browser</p>
+  </li>
+</ul>
+
+<h3>Methods</h3>
+<ul class="members">
+  <li>
+    <h4><a href="art_js.html#">globalize():Void</a></h4>
+    <p>Makes all classes accessible globally in window object</p>
+    <div class="more" style="display: none">
+      <p>
+        Normally after framework is loaded you have two ways of accessing its classes:
+      </p>
+      <p>
+        - using full qualified path (com.arthwood.utils.ArrayUtils)<br/>
+        - by looking into top ArtJs namespace (ArtJs.ArrayUtils)
+      </p>
+      <p>
+        For now there is no classes with the same name in whole framework so accessing it via ArtJs is fine.<br/> 
+        However, if at some point it happens, full qualified name is necessary.<br/>
+        When all framework classes are loaded and accessible (e.g. in js file following the framework file) simply use:
+      </p>
+      <p class="block code">
+        ArtJs.globalize();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">doInjection():Void</a></h4>
+    <p>After calling this method you are able to call Utils methods on native objects</p>
+    <div class="more" style="display:none">
+      <p>
+        Some of the class methods from framework can get injected into native classes.<br/>
+        For example most of com.arthwood.utils.ArrayUtils would then affect native Array object.<br/>
+        To achieve this, when all framework classes are accessible use:
+      </p>
+      <p class="block code">
+        ArtJs.doInjection();
+      </p>
+      <p>
+        After that action you will be able to write:
+      </p>
+      <p class="block code">
+        myArray.last(); // 3
+      </p>
+      <p>
+        instead of:
+      </p>
+      <p class="block code">
+        ArtJs.ArrayUtils.last(myArray); // 3
+      </p>
+      <p>
+        To see what framework functionality is affecting native classes see other parts of documentation.
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$():Element</a></h4>
+    <p>Alias for ElementUtils.getElementById()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var nav = ArtJs.$('navigation');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$$():Array</a></h4>
+    <p>Alias for ElementUtils.getElements()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var nav = ArtJs.$$('.main p.item span');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$down():Array</a></h4>
+    <p>Alias for ElementUtils.down()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var nav = ArtJs.$('navigation');
+        <br/>
+        var items = ArtJs.$down(nav, '.item');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$up():Element</a></h4>
+    <p>Alias for ElementUtils.up()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var nav = ArtJs.$('navigation');
+        <br/>
+        var parent = ArtJs.$up(nav);
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$P():Element</a></h4>
+    <p>Alias for ElementBuilder.parse()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var element = ArtJs.$P('<span class="desc">Blue t-shirt</span>');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$get():Ajax</a></h4>
+    <p>Alias for Ajax.get()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var ajax = ArtJs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$post():Ajax</a></h4>
+    <p>Alias for Ajax.post()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var ajax = ArtJs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$put():Ajax</a></h4>
+    <p>Alias for Ajax.$put()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var ajax = ArtJs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$del():Ajax</a></h4>
+    <p>Alias for Ajax.del()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var ajax = ArtJs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">p():Void</a></h4>
+    <p>Debug info. If debug console is accessible output to the console; uses alert() otherwise.</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        p('myVariable: ' +  myVariable);
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$D():Delegate</a></h4>
+    <p>Alias for Delegate.create()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var delegate = ArtJs.$D(this, this.onClick);
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="art_js.html#">$DC():Function</a></h4>
+    <p>Alias for Delegate.callback()</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var callback = ArtJs.$DC(this, this.onClick, true);
+      </p>
+    </div>
+  </li>
+</ul>
