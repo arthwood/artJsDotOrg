@@ -30,16 +30,12 @@
       </p>
       <p>
         Zip package contains one art.js file that loads appropriate library depending on browser it is running on.
-        Default load location is set to "javascripts/" but you can change it by setting your own path like:
+        Default load location is set to "javascripts/" but you can change it by setting your own path like this:
         <div class="block code">
-          <![CDATA[
-            <script type="text/javascript">
-              //<![CDATA[
-                window.ArtJs_path = '../javascripts/';
-              //]]>
-            </script>
-            <script src="../javascripts/art.js" type="text/javascript"></script>
-          ]]>
+          &lt;script type="text/javascript"&gt;<br/>
+            &nbsp;&nbsp;window.ArtJs_path = '../javascripts/';<br/>
+          &lt;/script&gt;<br/>
+          &lt;script src=&quot;../javascripts/art.js&quot; type=&quot;text/javascript&quot;>&lt;/script&gt;
         </div>
       </p>
       <p>This is the order in which framework classes are loaded:</p>
@@ -77,18 +73,20 @@
         <li>Finalize</li>
       </ul>
       <p>
-        Some of the classes are optional (DatePicker), other are core classes on which other might depend (Delegate),
-        but until there is no clean distinction between those two groups ("core" and "more") 
-        all framework classes will be loaded.
+        Some of the classes are optional (e.g. DatePicker), other are core classes on which other might depend 
+        (e.g. Delegate), but until there is no clean distinction between those two groups ("core" and "more") 
+        all framework classes are being loaded.
       </p>
       <p>
         Just after library is loaded there are two methods that you may want to use:
+        <span class="block code">ArtJs.globalize()</span>
+        and
+        <span class="block code">ArtJs.doInjection()</span>
       </p>
-      <p class="code">ArtJs.globalize()</p>
-      <p class="code">ArtJs.doInjection()</p>
       <p>
-      ArtJs.globalize() makes all the classes globally accessible in window object, as well as shorthand utility methods like:
-      $, $$, $P, $B, $D, $DC, $E.
+        <span class="code">ArtJs.globalize()</span> makes all the classes globally accessible in window object, 
+        as well as shorthand utility methods like:
+        <span class="block code">$, $$, $P, $B, $D, $DC, $E.</span>
       </p>
       <p>
       <span class="code">ArtJs.doInjection()</span> makes an extensions on native classes like Object, Array, Date, Element etc.

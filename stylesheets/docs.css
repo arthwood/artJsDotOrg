@@ -71,13 +71,6 @@ ul {
 .header {
   margin-bottom: 20px;
 }
-.sidebar {
-  float: left;
-  width: 180px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  background: #eee;
-}
 .content {
   float: right;
   padding: 20px;
@@ -96,15 +89,18 @@ ul {
   border-bottom: 1px solid #CCC;
   list-style: none;
 }
-.content ul.classes li {
-  padding: 2px 0;
-  border-bottom: none;
-}
 .content ul li a {
   font-size: 12px;
 }
 .content ul li p {
   margin-bottom: 4px;
+}
+.sidebar {
+  float: left;
+  width: 180px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background: #eee;
 }
 .sidebar li {
   line-height: 18px;
@@ -118,6 +114,11 @@ ul {
 .sidebar ul li a {
   vertical-align: top;
   font-size: 11px;
+  padding: 2px;
+}
+.sidebar ul li a.selected {
+  background: #FF0077;
+  color: white;
 }
 .code {
   font-family: Courier New;

@@ -8,7 +8,9 @@ var Main = function () {
   this.eachUlDC = this.eachUl.bind(this);
   this.initAnchorsDC = this.initAnchors.bind(this);
   this.onAnchorDC = this.onAnchor.bind(this, true);
+  this.currentLeaf = null;
   
+  // leaves and nodes
   var point = $$('.sidebar li').partition(function(item, idx) {
     return item.down('ul').empty();
   });
@@ -18,7 +20,7 @@ var Main = function () {
   
   this.content = $$('.content').first();
   
-  this.load('main.html');
+  this.onLeaf(point.x.first().firstElement());
 };
 
 Main.FOLDED = 'url(../images/plus.png)';
@@ -47,6 +49,10 @@ Main.prototype = {
   
   onLeaf: function(a) {
     this.load(a.href);
+    
+    this.currentLeaf && this.currentLeaf.removeClass('selected');
+    this.currentLeaf = a;
+    this.currentLeaf.addClass('selected');
     
     return false;
   },
