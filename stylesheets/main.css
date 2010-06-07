@@ -39,8 +39,26 @@ img {
   border-width: 0 1px 1px;
   border-color: #DDD #EEE;
 }
-
 .header {
   margin-bottom: 20px;
 }
-
+.divider {
+  margin: 0 10px;
+}
+.nav {
+  margin-bottom: 20px;
+}
+.text {
+  
+}
+.block {
+  display: block;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #CCC;
+  background: #DFF1FF;
+}
+.code {
+  font-family: Courier New;
+  font-size: 11px;
+}

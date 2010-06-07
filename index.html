@@ -13,7 +13,91 @@
     <div class="header">
       <a href="http://artjs.org/"><img src="images/logo.png"/></a>
     </div>
-    <a href="http://artjs.org/docs/">Documentation</a>
+    <div class="nav">
+      <a href="http://artjs.org/docs/">Documentation</a>
+      <span class="divider">|</span>
+      <a href="http://github.com/arthwood/artJs">Watch on GitHub</a>
+      <span class="divider">|</span>
+      <a href="download/artjs.zip">Download (zip)</a>
+    </div>
+    <div class="text">
+      <p>
+        ArtJs is JavaScript framework of general purpose. It allows you to select or manipulate DOM elements,
+        perform AJAX requests, provides load of helper methods for String, Date and other native classes, etc.
+      </p>
+      <p>
+        Currently it supports FF and IE8 browsers. Support for Chrome and Safari is coming soon.
+      </p>
+      <p>
+        Zip package contains one art.js file that loads appropriate library depending on browser it is running on.
+        Default load location is set to "javascripts/" but you can change it by setting your own path like:
+        <div class="block code">
+          <![CDATA[
+            <script type="text/javascript">
+              //<![CDATA[
+                window.ArtJs_path = '../javascripts/';
+              //]]>
+            </script>
+            <script src="../javascripts/art.js" type="text/javascript"></script>
+          ]]>
+        </div>
+      </p>
+      <p>This is the order in which framework classes are loaded:</p>
+      <ul class="classes">
+        <li>Initialize</li>
+        <li>utils/Log</li>
+        <li>events/Delegate</li>
+        <li>utils/MathUtils</li>
+        <li>utils/ObjectUtils</li>
+        <li>utils/ArrayUtils</li>
+        <li>utils/ClassUtils</li>
+        <li>utils/StringUtils</li>
+        <li>utils/DateUtils</li>
+        <li>utils/ElementUtils</li>
+        <li>utils/EventUtils</li>
+        <li>modules/Locator</li>
+        <li>events/DelegateCollection</li>
+        <li>events/CustomEvent</li>
+        <li>events/MouseController</li>
+        <li>math/Point</li>
+        <li>math/Rectangle</li>
+        <li>dom/ElementBuilder</li>
+        <li>dom/Selector</li>
+        <li>events/Clock</li>
+        <li>data/List</li>
+        <li>data/Queue</li>
+        <li>events/QueuedClock</li>
+        <li>net/Ajax</li>
+        <li>ui/containers/ModalBox</li>
+        <li>ui/DatePicker</li>
+        <li>ui/Flash</li>
+        <li>tween/Base</li>
+        <li>tween/Fade</li>
+        <li>tween/Reveal</li>
+        <li>Finalize</li>
+      </ul>
+      <p>
+        Some of the classes are optional (DatePicker), other are core classes on which other might depend (Delegate),
+        but until there is no clean distinction between those two groups ("core" and "more") 
+        all framework classes will be loaded.
+      </p>
+      <p>
+        Just after library is loaded there are two methods that you may want to use:
+      </p>
+      <p class="code">ArtJs.globalize()</p>
+      <p class="code">ArtJs.doInjection()</p>
+      <p>
+      ArtJs.globalize() makes all the classes globally accessible in window object, as well as shorthand utility methods like:
+      $, $$, $P, $B, $D, $DC, $E.
+      </p>
+      <p>
+      <span class="code">ArtJs.doInjection()</span> makes an extensions on native classes like Object, Array, Date, Element etc.
+      so that you can use:
+      </p>
+      <p class="block code">arr.first();</p>
+      <p>otherwise you are still able to call the method using:</p>
+      <p class="block code">ArtJs.ArrayUtils.first(arr);</p>
+    </div>
   </div>
   <script type="text/javascript">
     var _gaq = _gaq || [];
