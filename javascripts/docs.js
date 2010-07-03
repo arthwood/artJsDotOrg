@@ -70,6 +70,10 @@ Main.prototype = {
     
     last && (last.style.marginBottom = '0');
     
+    this.initializeLinks();
+  },
+  
+  initializeLinks: function() {
     var uls = this.content.down('ul.members');
     
     !uls.empty() && uls.each(this.eachUlDC);

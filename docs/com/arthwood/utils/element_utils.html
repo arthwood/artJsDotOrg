@@ -423,20 +423,23 @@
     </div>
   </li>
   <li>
-    <h4><a href="element_utils.html#">getLayout(element:Element, withoutScroll:Boolean):Rectangle</a></h4>
+    <h4><a href="element_utils.html#">getBounds(element:Element, real:Boolean, withoutScroll:Boolean):Rectangle</a></h4>
     <p>
       Returns position and size of <span class="param">element</span> as a (x, y, width, height) Rectangle.
       <br/>
+      If <span class="param">real</span> is set to true size is calculated even if element is hidden 
+      (otherwise size would return value of (0, 0))
+      <br/>
       If <span class="param">withoutScroll</span> is set to true posision is calculated relative to 
-      current view's origin; otherwise to document's origin
+      current view's origin; otherwise to document's origin.
     </p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="code block">
-        ElementUtils.getLayout(element);<br/><br/>
+        ElementUtils.getBounds(element);<br/><br/>
         
         // or<br/>
-        // element.getLayout();
+        // element.getBounds();
       </p>
     </div>
   </li>
