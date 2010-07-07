@@ -19,7 +19,7 @@ var Main = function () {
   point.y.each(this.eachNode.bind(this));
   
   this.content = $$('.content').first();
-  
+  this.onNode(point.y.first().firstElement());
   this.onLeaf(point.x.first().firstElement());
 };
 

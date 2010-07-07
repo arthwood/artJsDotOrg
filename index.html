@@ -29,7 +29,8 @@
         Currently it supports FF, Chrome, Safari and IE8.
       </p>
       <p>
-        Zip package contains art.js file that loads appropriate library depending on the browser.
+        Zip package contains art.js file that loads appropriate library depending on the browser.<br/>
+        You only need to inlude that file in your head section.<br/>
         Default load location is set to "javascripts/" but you can change it by setting your own path like this:
         <div class="block code">
           &lt;script type="text/javascript"&gt;<br/>
@@ -37,45 +38,6 @@
           &lt;/script&gt;<br/>
           &lt;script src=&quot;../javascripts/art.js&quot; type=&quot;text/javascript&quot;>&lt;/script&gt;
         </div>
-      </p>
-      <p>This is the order in which framework classes are loaded:</p>
-      <ul class="classes">
-        <li>Initialize</li>
-        <li>utils/Log</li>
-        <li>events/Delegate</li>
-        <li>utils/MathUtils</li>
-        <li>utils/ObjectUtils</li>
-        <li>utils/ArrayUtils</li>
-        <li>utils/ClassUtils</li>
-        <li>utils/StringUtils</li>
-        <li>utils/DateUtils</li>
-        <li>utils/ElementUtils</li>
-        <li>utils/EventUtils</li>
-        <li>modules/Locator</li>
-        <li>events/DelegateCollection</li>
-        <li>events/CustomEvent</li>
-        <li>events/MouseController</li>
-        <li>math/Point</li>
-        <li>math/Rectangle</li>
-        <li>dom/ElementBuilder</li>
-        <li>dom/Selector</li>
-        <li>events/Clock</li>
-        <li>data/List</li>
-        <li>data/Queue</li>
-        <li>events/QueuedClock</li>
-        <li>net/Ajax</li>
-        <li>ui/containers/ModalBox</li>
-        <li>ui/DatePicker</li>
-        <li>ui/Flash</li>
-        <li>tween/Base</li>
-        <li>tween/Fade</li>
-        <li>tween/Reveal</li>
-        <li>Finalize</li>
-      </ul>
-      <p>
-        Some of the classes are optional (e.g. DatePicker), other are core classes on which other might depend 
-        (e.g. Delegate), but until there is no clean distinction between those two groups ("core" and "more") 
-        all framework classes are being loaded.
       </p>
       <p>
         Just after library is loaded there are two methods that you may want to use:
