@@ -6,5 +6,10 @@ ArtJs_version['Opera'] = 'ff';
 
 var ArtJs_package = ArtJs_version[navigator.appName];
 var ArtJs_path = ArtJs_path || 'javascripts/';
+var scriptElement = document.createElement('script');
 
-document.write('<script src="' + ArtJs_path + 'art.' + ArtJs_package + '.js" type="text/javascript"></script>');
+scriptElement.setAttribute('src', ArtJs_path + 'art.' + ArtJs_package + '.js');
+scriptElement.setAttribute('type', 'text/javascript');
+document.getElementsByTagName('head')[0].appendChild(scriptElement);
+
+scriptElement = undefined;
