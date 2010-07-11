@@ -2,6 +2,7 @@ var ArtJs_version = {};
 
 ArtJs_version['Microsoft Internet Explorer'] = 'ie';
 ArtJs_version['Netscape'] = 'ff';
+ArtJs_version['Opera'] = 'ff';
 
 var ArtJs_package = ArtJs_version[navigator.appName];
 var ArtJs_path = ArtJs_path || 'javascripts/';
