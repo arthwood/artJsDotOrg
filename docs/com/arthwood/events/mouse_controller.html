@@ -27,18 +27,6 @@
 <h3>Events</h3>
 <ul class="members">
   <li>
-    <h4><a href="mouse_controller.html#">onOver(mc:MouseController, e:Event)</a></h4>
-    <p>Dispatched after mouse enters the element area</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var mc = new MouseController(element);<br/><br/>
-        
-        mc.onOver.add(new Delegate(this, onOver));
-      </p>
-    </div>
-  </li>
-  <li>
     <h4><a href="mouse_controller.html#">onOut(mc:MouseController, e:Event)</a></h4>
     <p>Dispatched after mouse leaves the element area</p>
     <div class="more" style="display:none">
@@ -47,6 +35,18 @@
         var mc = new MouseController(element);<br/><br/>
         
         mc.onOut.add(new Delegate(this, onOut));
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="mouse_controller.html#">onOver(mc:MouseController, e:Event)</a></h4>
+    <p>Dispatched after mouse enters the element area</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var mc = new MouseController(element);<br/><br/>
+        
+        mc.onOver.add(new Delegate(this, onOver));
       </p>
     </div>
   </li>

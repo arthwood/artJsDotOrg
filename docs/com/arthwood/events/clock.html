@@ -61,6 +61,10 @@
 <h3>Properties</h3>
 <ul class="members">
   <li>
+    <h4><a href="clock.html#">counter:Number</a></h4>
+    <p>Number of released ticks</p>
+  </li>
+  <li>
     <h4><a href="clock.html#">interval:Number</a></h4>
     <p>The same property as in constructor</p>
   </li>
@@ -68,39 +72,23 @@
     <h4><a href="clock.html#">repeat:Number</a></h4>
     <p>The same property as in constructor</p>
   </li>
-  <li>
-    <h4><a href="clock.html#">counter:Number</a></h4>
-    <p>Number of released ticks</p>
-  </li>
 </ul>
 
 <h3>Methods</h3>
 <ul class="members">
   <li>
-    <h4><a href="clock.html#">start(now:Boolean):Void</a></h4>
-    <p>Starts the clock. First tick after interval or immediately if <span class="param">now</span> is true</p>
+    <h4><a href="clock.html#">isRunning():Void</a></h4>
+    <p>Returns true if clock is running; false otherwise</p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
         var clock = new Clock(1000, 5);<br/><br/>
         
-        clock.start();
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="clock.html#">stop():Void</a></h4>
-    <p>Stops the clock and sets counter to zero</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var clock = new Clock(1000, 5);<br/><br/>
-        
-        clock.start();<br/>
-        // ... and some time later<br/>
-        clock.counter; // 3<br/>
+        clock.isRunning(); // false<br/>
+        clock.start(true);<br/>
+        clock.isRunning(); // true<br/>
         clock.stop();<br/>
-        clock.counter; // 0<br/>
+        clock.isRunning(); // false<br/>
       </p>
     </div>
   </li>
@@ -139,18 +127,30 @@
     </div>
   </li>
   <li>
-    <h4><a href="clock.html#">isRunning():Void</a></h4>
-    <p>Returns true if clock is running; false otherwise</p>
+    <h4><a href="clock.html#">start(now:Boolean):Void</a></h4>
+    <p>Starts the clock. First tick after interval or immediately if <span class="param">now</span> is true</p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
         var clock = new Clock(1000, 5);<br/><br/>
         
-        clock.isRunning(); // false<br/>
-        clock.start(true);<br/>
-        clock.isRunning(); // true<br/>
+        clock.start();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="clock.html#">stop():Void</a></h4>
+    <p>Stops the clock and sets counter to zero</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var clock = new Clock(1000, 5);<br/><br/>
+        
+        clock.start();<br/>
+        // ... and some time later<br/>
+        clock.counter; // 3<br/>
         clock.stop();<br/>
-        clock.isRunning(); // false<br/>
+        clock.counter; // 0<br/>
       </p>
     </div>
   </li>

@@ -10,19 +10,18 @@
 <h3>Methods</h3>
 <ul class="members">
   <li>
-    <h4><a href="selector.html#">up(element:Element, path:String):Element</a></h4>
-    <p>Returns first ascendant of <span class="code">element</span> 
-      that meets the <span class="code">path</span> requirements</p>
+    <h4><a href="selector.html#">descendantOf(element:Element, root:Element):Boolean</a></h4>
+    <p>Returns true if <span class="code">element</span> is descendant of <span class="code">root</span></p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
-        var element = $('nav');
+        var element = $('menu');
         <br/>
-        var menu = Selector.up(element, '.menu');
+        Selector.descendantOf(element, $('container'));
         <br/>
         // or
         <br/>
-        // var menu = element.up('.menu');
+        // element.descendantOf($('container'));
       </p>
     </div>
   </li>
@@ -60,18 +59,19 @@
     </div>
   </li>
   <li>
-    <h4><a href="selector.html#">descendantOf(element:Element, root:Element):Boolean</a></h4>
-    <p>Returns true if <span class="code">element</span> is descendant of <span class="code">root</span></p>
+    <h4><a href="selector.html#">up(element:Element, path:String):Element</a></h4>
+    <p>Returns first ascendant of <span class="code">element</span> 
+      that meets the <span class="code">path</span> requirements</p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
-        var element = $('menu');
+        var element = $('nav');
         <br/>
-        Selector.descendantOf(element, $('container'));
+        var menu = Selector.up(element, '.menu');
         <br/>
         // or
         <br/>
-        // element.descendantOf($('container'));
+        // var menu = element.up('.menu');
       </p>
     </div>
   </li>

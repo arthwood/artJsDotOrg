@@ -37,14 +37,15 @@
 <h3>Methods</h3>
 <ul class="members">
   <li>
-    <h4><a href="point.html#">getLength():Number</a></h4>
-    <p>Length of a vector</p>
+    <h4><a href="point.html#">add():Point</a></h4>
+    <p>Adds other vector</p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
-        var point = new Point(3, 4);<br/><br/>
+        var p1 = new Point(2, 3);<br/>
+        var p2 = new Point(4, -1);<br/><br/>
         
-        point.getLength(); // 5
+        p1.add(p2); // (6, 2)
       </p>
     </div>
   </li>
@@ -62,41 +63,14 @@
     </div>
   </li>
   <li>
-    <h4><a href="point.html#">add():Point</a></h4>
-    <p>Adds other vector</p>
+    <h4><a href="point.html#">getLength():Number</a></h4>
+    <p>Length of a vector</p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
-        var p1 = new Point(2, 3);<br/>
-        var p2 = new Point(4, -1);<br/><br/>
+        var point = new Point(3, 4);<br/><br/>
         
-        p1.add(p2); // (6, 2)
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="point.html#">sub():Void</a></h4>
-    <p>Subtracts other vector</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var p1 = new Point(2, 3);<br/>
-        var p2 = new Point(4, -1);<br/><br/>
-        
-        p1.sub(p2); // (-2, 4)
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="point.html#">reverse():Point</a></h4>
-    <p>Reverses vector and returns this vector</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var p = new Point(2, 3);<br/><br/>
-        
-        p.reverse(); // (-2, -3)<br/>
-        p; // (-2, -3)
+        point.getLength(); // 5
       </p>
     </div>
   </li>
@@ -110,6 +84,32 @@
         
         p.getReversed(); // (-2, -3)<br/>
         p; // (2, 3)
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="point.html#">getTransposed():Point</a></h4>
+    <p>Returns new transposed vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);<br/><br/>
+        
+        p.getTransposed(); // (3, 2)<br/>
+        p; // (2, 3)
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="point.html#">reverse():Point</a></h4>
+    <p>Reverses vector and returns this vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);<br/><br/>
+        
+        p.reverse(); // (-2, -3)<br/>
+        p; // (-2, -3)
       </p>
     </div>
   </li>
@@ -140,28 +140,15 @@
     </div>
   </li>
   <li>
-    <h4><a href="point.html#">transpose():Point</a></h4>
-    <p>Transposes coordinates and returns this vector</p>
+    <h4><a href="point.html#">sub():Void</a></h4>
+    <p>Subtracts other vector</p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
-        var p = new Point(2, 3);<br/><br/>
+        var p1 = new Point(2, 3);<br/>
+        var p2 = new Point(4, -1);<br/><br/>
         
-        p.transpose(); // (3, 2)<br/>
-        p; // (3, 2)
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="point.html#">getTransposed():Point</a></h4>
-    <p>Returns new transposed vector</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var p = new Point(2, 3);<br/><br/>
-        
-        p.getTransposed(); // (3, 2)<br/>
-        p; // (2, 3)
+        p1.sub(p2); // (-2, 4)
       </p>
     </div>
   </li>
@@ -178,7 +165,7 @@
       </p>
     </div>
   </li>
-    <li>
+  <li>
     <h4><a href="point.html#">toString():String</a></h4>
     <p>Returns string representation od vector</p>
       <div class="more" style="display:none">
@@ -187,6 +174,19 @@
         var p = new Point(2, 3);<br/><br/>
         
         p.toString(); // [2, 3]
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="point.html#">transpose():Point</a></h4>
+    <p>Transposes coordinates and returns this vector</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var p = new Point(2, 3);<br/><br/>
+        
+        p.transpose(); // (3, 2)<br/>
+        p; // (3, 2)
       </p>
     </div>
   </li>

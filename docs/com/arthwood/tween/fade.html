@@ -48,11 +48,11 @@
 <h3>Properties</h3>
 <ul class="members">
   <li>
-    <h4><a href="fade.html#">element:Element</a></h4>
+    <h4><a href="fade.html#">delta:Number</a></h4>
     <p>The same property as in constructor</p>
   </li>
   <li>
-    <h4><a href="fade.html#">delta:Number</a></h4>
+    <h4><a href="fade.html#">element:Element</a></h4>
     <p>The same property as in constructor</p>
   </li>
   <li>
@@ -63,6 +63,20 @@
 
 <h3>Methods</h3>
 <ul class="members">
+  <li>
+    <h4><a href="fade.html#">isRunning():Boolean</a></h4>
+    <p>Indicates if animation is in progress</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var fade = new Fade($('nav'), 0.2, 30);<br/><br/>
+        
+        fade.start();<br/><br/>
+        
+        fade.isRunning(); // true
+      </p>
+    </div>
+  </li>
   <li>
     <h4><a href="fade.html#">start():Void</a></h4>
     <p>Starts the animation</p>
@@ -87,20 +101,6 @@
         
         // ... some time later<br/>
         fade.stop();
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="fade.html#">isRunning():Boolean</a></h4>
-    <p>Indicates if animation is in progress</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var fade = new Fade($('nav'), 0.2, 30);<br/><br/>
-        
-        fade.start();<br/><br/>
-        
-        fade.isRunning(); // true
       </p>
     </div>
   </li>

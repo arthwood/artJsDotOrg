@@ -20,7 +20,7 @@
     </div>
   </li>
 </ul>
-        
+
 <h3>Events</h3>
 <ul class="members">
   <li>
@@ -54,6 +54,22 @@
         queue.addItem(6); // 6
         <br/>
         queue.toString() // 1, 2, 3, 4, 5, 6
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="queue.html#">empty():Boolean</a></h4>
+    <p>Returns true if collection is empty; false otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var queue = new Queue([3]);
+        <br/><br/>
+        queue.empty(); // false
+        <br/><br/>
+        var item = queue.getItem();
+        <br/><br/>
+        queue.empty(); // true
       </p>
     </div>
   </li>
@@ -96,22 +112,6 @@
         queue.setData([4, 5, 6]);
         <br/>
         queue.toString(); // 4, 5, 6
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="queue.html#">empty():Boolean</a></h4>
-    <p>Returns true if collection is empty; false otherwise</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var queue = new Queue([3]);
-        <br/><br/>
-        queue.empty(); // false
-        <br/><br/>
-        var item = queue.getItem();
-        <br/><br/>
-        queue.empty(); // true
       </p>
     </div>
   </li>

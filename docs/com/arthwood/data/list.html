@@ -111,6 +111,241 @@
     </div>
   </li>
   <li>
+    <h4><a href="list.html#">decrease():Void</a></h4>
+    <p>Decreases pointer</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.setPointer(2);
+        <br/>
+        list.decrease();
+        <br/>
+        list.getPointer(); // 1
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">empty():Boolean</a></h4>
+    <p>Returns true if collection is empty; false otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.empty(); // false
+        <br/>
+        list.removeAll();
+        <br/>
+        list.empty(); // true
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">getCurrent():Object</a></h4>
+    <p>Returns current item</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.setPointer(2);
+        <br/>
+        list.getCurrent(); // 3
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">getFirst():Object</a></h4>
+    <p>Returns first item of collection</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.getFirst(); // 1
+      </p>
+    </div>
+  </li>
+
+  <li>
+    <h4><a href="list.html#">getItemAt(idx:Number):Object</a></h4>
+    <p>Retrieves <span class="code">item</span> at specific position</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.getItemAt(3); // 4
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">getItemIndex(item:Object):Number</a></h4>
+    <p>Retrieves <span class="code">item</span>'s index</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.getItemIndex(3); // 2
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">getItems():Array</a></h4>
+    <p>Returns copy of collection</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.getItems().toString(); // 1, 2, 3, 4, 5
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">getLast():Object</a></h4>
+    <p>Returns last item of collection</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.getLast(); // 5
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">getLength():Number</a></h4>
+    <p>Returns length of collection</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.getLength(); // 5
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">getNext():Object</a></h4>
+    <p>Returns item after current</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.setPointer(2);
+        <br/>
+        list.getNext(); // 4
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">getPointer():Number</a></h4>
+    <p>Returns pointer</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.getPointer(); // 0
+        <br/>
+        list.increase();
+        <br/>
+        list.getPointer(); // 1
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">getPrevious():Object</a></h4>
+    <p>Returns item before current</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.setPointer(2);
+        <br/>
+        list.getPrevious(); // 2
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">hasItem(item:Object):Boolean</a></h4>
+    <p>Returns true if <span class="code">item</span> is in collection; false otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.hasItem(4); // true
+        <br/>
+        list.hasItem(7); // false
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">increase():Void</a></h4>
+    <p>Increases pointer</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.setPointer(2);
+        <br/>
+        list.increase();
+        <br/>
+        list.getPointer(); // 3
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">isLast():Boolean</a></h4>
+    <p>Returns true if pointer is set to last item in collection; false otherwise</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.setPointer(4);
+        <br/>
+        list.isLast(); // true
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">moveItem(fromIndex:Number, toIndex:Number):Void</a></h4>
+    <p>Moves <span class="code">item</span> from, to specific position</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.moveItem(3, 0);
+        <br/>
+        list.toString(); // 4, 1, 2, 3, 5;
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="list.html#">removeAll(noEvent:Boolean):Void</a></h4>
+    <p>Removes all items from collection</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var list = new List([1, 2, 3, 4, 5]);
+        <br/><br/>
+        list.removeAll();
+        <br/>
+        list.toString() //
+      </p>
+    </div>
+  </li>
+  <li>
     <h4><a href="list.html#">removeItem(item:Object, onlyFirst:Boolean, noEvent:Boolean):Void</a></h4>
     <p>Removes <span class="code">item</span> from collection</p>
     <div class="more" style="display:none">
@@ -139,78 +374,20 @@
     </div>
   </li>
   <li>
-    <h4><a href="list.html#">removeAll(noEvent:Boolean):Void</a></h4>
-    <p>Removes all items from collection</p>
+    <h4><a href="list.html#">reset():Void</a></h4>
+    <p>Sets pointer to zero</p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
         var list = new List([1, 2, 3, 4, 5]);
         <br/><br/>
-        list.removeAll();
+        list.setPointer(2);
         <br/>
-        list.toString() //
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">getItemAt(idx:Number):Object</a></h4>
-    <p>Retrieves <span class="code">item</span> at specific position</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.getItemAt(3); // 4
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">getItemIndex(item:Object):Number</a></h4>
-    <p>Retrieves <span class="code">item</span>'s index</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.getItemIndex(3); // 2
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">moveItem(fromIndex:Number, toIndex:Number):Void</a></h4>
-    <p>Moves <span class="code">item</span> from, to specific position</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.moveItem(3, 0);
+        list.getPointer(); // 2
         <br/>
-        list.toString(); // 4, 1, 2, 3, 5;
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">getLength():Number</a></h4>
-    <p>Returns length of collection</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.getLength(); // 5
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">getItems():Array</a></h4>
-    <p>Returns copy of collection</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.getItems().toString(); // 1, 2, 3, 4, 5
+        list.reset();
+        <br/>
+        list.getPointer(); // 0
       </p>
     </div>
   </li>
@@ -231,20 +408,6 @@
     </div>
   </li>
   <li>
-    <h4><a href="list.html#">hasItem(item:Object):Boolean</a></h4>
-    <p>Returns true if <span class="code">item</span> is in collection; false otherwise</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.hasItem(4); // true
-        <br/>
-        list.hasItem(7); // false
-      </p>
-    </div>
-  </li>
-  <li>
     <h4><a href="list.html#">setPointerAtItem(item:Object):Void</a></h4>
     <p>Set the pointer at position of <span class="code">item</span></p>
     <div class="more" style="display:none">
@@ -253,40 +416,6 @@
         var list = new List([1, 2, 3, 4, 5]);
         <br/><br/>
         list.setPointerAtItem(2);
-        <br/>
-        list.getPointer(); // 1
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">reset():Void</a></h4>
-    <p>Sets pointer to zero</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.setPointer(2);
-        <br/>
-        list.getPointer(); // 2
-        <br/>
-        list.reset();
-        <br/>
-        list.getPointer(); // 0
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">getPointer():Number</a></h4>
-    <p>Returns pointer</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.getPointer(); // 0
-        <br/>
-        list.increase();
         <br/>
         list.getPointer(); // 1
       </p>
@@ -303,134 +432,6 @@
         list.setPointer(2);
         <br/>
         list.getPointer(); // 2
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">decrease():Void</a></h4>
-    <p>Decreases pointer</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.setPointer(2);
-        <br/>
-        list.decrease();
-        <br/>
-        list.getPointer(); // 1
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">increase():Void</a></h4>
-    <p>Increases pointer</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.setPointer(2);
-        <br/>
-        list.increase();
-        <br/>
-        list.getPointer(); // 3
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">getCurrent():Object</a></h4>
-    <p>Returns current item</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.setPointer(2);
-        <br/>
-        list.getCurrent(); // 3
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">getPrevious():Object</a></h4>
-    <p>Returns item before current</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.setPointer(2);
-        <br/>
-        list.getPrevious(); // 2
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">getNext():Object</a></h4>
-    <p>Returns item after current</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.setPointer(2);
-        <br/>
-        list.getNext(); // 4
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">getFirst():Object</a></h4>
-    <p>Returns first item of collection</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.getFirst(); // 1
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">getLast():Object</a></h4>
-    <p>Returns last item of collection</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.getLast(); // 5
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">empty():Boolean</a></h4>
-    <p>Returns true if collection is empty; false otherwise</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.empty(); // false
-        <br/>
-        list.removeAll();
-        <br/>
-        list.empty(); // true
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="list.html#">isLast():Boolean</a></h4>
-    <p>Returns true if pointer is set to last item in collection; false otherwise</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var list = new List([1, 2, 3, 4, 5]);
-        <br/><br/>
-        list.setPointer(4);
-        <br/>
-        list.isLast(); // true
       </p>
     </div>
   </li>

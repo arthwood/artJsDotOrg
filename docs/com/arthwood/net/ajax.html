@@ -30,24 +30,6 @@
 <h3>Events</h3>
 <ul class="members">
   <li>
-    <h4><a href="ajax.html#">onSuccess(ajax:Ajax)</a></h4>
-    <p>Dispatched after successful response</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
-        
-        ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));<br/><br/>
-        
-        function onAjaxSuccess(ajax) {<br/>
-        &nbsp;&nbsp;alert('success!');<br/>
-        }<br/><br/>
-        
-        ajax.request();
-      </p>
-    </div>
-  </li>
-  <li>
     <h4><a href="ajax.html#">onFailure(ajax:Ajax)</a></h4>
     <p>Dispatched after request failed</p>
     <div class="more" style="display:none">
@@ -65,14 +47,28 @@
       </p>
     </div>
   </li>
+  <li>
+    <h4><a href="ajax.html#">onSuccess(ajax:Ajax)</a></h4>
+    <p>Dispatched after successful response</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
+        
+        ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));<br/><br/>
+        
+        function onAjaxSuccess(ajax) {<br/>
+        &nbsp;&nbsp;alert('success!');<br/>
+        }<br/><br/>
+        
+        ajax.request();
+      </p>
+    </div>
+  </li>
 </ul>
 
 <h3>Properties</h3>
 <ul class="members">
-  <li>
-    <h4><a href="ajax.html#">url:String</a></h4>
-    <p>The same property as in constructor</p>
-  </li>
   <li>
     <h4><a href="ajax.html#">data:Object</a></h4>
     <p>The same property as in constructor</p>
@@ -93,24 +89,14 @@
     <h4><a href="ajax.html#">requestQueryData:String</a></h4>
     <p>request data transformed to a String (this is what is actually send to server)</p>
   </li>
+  <li>
+    <h4><a href="ajax.html#">url:String</a></h4>
+    <p>The same property as in constructor</p>
+  </li>
 </ul>
 
 <h3>Methods</h3>
 <ul class="members">
-  <li>
-    <h4><a href="ajax.html#">request():Void</a></h4>
-    <p>Performs request</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
-        
-        ajax.onSuccess.add(new Delegate(this, this.onAjaxSuccess));<br/><br/>
-        
-        ajax.request();
-      </p>
-    </div>
-  </li>
   <li>
     <h4><a href="ajax.html#">abort():Void</a></h4>
     <p>Aborts request</p>
@@ -127,6 +113,18 @@
     </div>
   </li>
   <li>
+    <h4><a href="ajax.html#">getAllRequestHeaders():String</a></h4>
+    <p>Returns all request headers</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
+        
+        ajax.getAllRequestHeaders();
+      </p>
+    </div>
+  </li>
+  <li>
     <h4><a href="ajax.html#">getReadyState():Number</a></h4>
     <p>Returns request ready state</p>
     <div class="more" style="display:none">
@@ -138,6 +136,36 @@
         
         // ... at some point during request<br/>
         ajax.getReadyState();
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="ajax.html#">getRequestHeader(header:String):String</a></h4>
+    <p>Returns request header</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
+        
+        ajax.getRequestHeader('Accept');
+      </p>
+    </div>
+  </li>
+  <li>
+    <h4><a href="ajax.html#">getResponseText():String</a></h4>
+    <p>Returns response text</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
+        
+        ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));<br/><br/>
+        
+        function onAjaxSuccess(ajax) {<br/>
+        &nbsp;&nbsp;alert(ajax.getResponseText());<br/>
+        }<br/><br/>
+        
+        ajax.request();
       </p>
     </div>
   </li>
@@ -172,18 +200,14 @@
     </div>
   </li>
   <li>
-    <h4><a href="ajax.html#">getResponseText():String</a></h4>
-    <p>Returns response text</p>
+    <h4><a href="ajax.html#">request():Void</a></h4>
+    <p>Performs request</p>
     <div class="more" style="display:none">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
         
-        ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));<br/><br/>
-        
-        function onAjaxSuccess(ajax) {<br/>
-        &nbsp;&nbsp;alert(ajax.getResponseText());<br/>
-        }<br/><br/>
+        ajax.onSuccess.add(new Delegate(this, this.onAjaxSuccess));<br/><br/>
         
         ajax.request();
       </p>
@@ -201,34 +225,14 @@
       </p>
     </div>
   </li>
-  <li>
-    <h4><a href="ajax.html#">getRequestHeader(header:String):String</a></h4>
-    <p>Returns request header</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
-        
-        ajax.getRequestHeader('Accept');
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="ajax.html#">getAllRequestHeaders():String</a></h4>
-    <p>Returns all request headers</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
-        
-        ajax.getAllRequestHeaders();
-      </p>
-    </div>
-  </li>
 </ul>
 
 <h3>Static properties</h3>
 <ul class="members">
+  <li>
+    <h4><a href="ajax.html#">Methods.DELETE</a></h4>
+    <p>DELETE method name ('DELETE')</p>
+  </li>
   <li>
     <h4><a href="ajax.html#">Methods.GET</a></h4>
     <p>GET method name ('GET')</p>
@@ -242,33 +246,39 @@
     <p>PUT method name ('PUT')</p>
   </li>
   <li>
-    <h4><a href="ajax.html#">Methods.DELETE</a></h4>
-    <p>DELETE method name ('DELETE')</p>
-  </li>
-  <li>
-    <h4><a href="ajax.html#">ReadyState.UNINITIALIZED</a></h4>
-    <p>UNINITIALIZED ready state (0)</p>
+    <h4><a href="ajax.html#">ReadyState.LOADED</a></h4>
+    <p>LOADED ready state (4)</p>
   </li>
   <li>
     <h4><a href="ajax.html#">ReadyState.OPEN</a></h4>
     <p>OPEN ready state (1)</p>
   </li>
   <li>
-    <h4><a href="ajax.html#">ReadyState.SENT</a></h4>
-    <p>SENT ready state (2)</p>
-  </li>
-  <li>
     <h4><a href="ajax.html#">ReadyState.RECEIVING</a></h4>
     <p>RECEIVING ready state (3)</p>
   </li>
   <li>
-    <h4><a href="ajax.html#">ReadyState.LOADED</a></h4>
-    <p>LOADED ready state (4)</p>
+    <h4><a href="ajax.html#">ReadyState.SENT</a></h4>
+    <p>SENT ready state (2)</p>
+  </li>
+  <li>
+    <h4><a href="ajax.html#">ReadyState.UNINITIALIZED</a></h4>
+    <p>UNINITIALIZED ready state (0)</p>
   </li>
 </ul>
 
 <h3>Static methods</h3>
 <ul class="members">
+  <li>
+    <h4><a href="ajax.html#">del(url:String, data:Object, onSuccess:Delegate)</a></h4>
+    <p>Performs DELETE request</p>
+    <div class="more" style="display:none">
+      <p class="example">Example:</p>
+      <p class="block code">
+        var ajax = Ajax.del('/users/3', {name: 'Michael'}, new Delegate(this, this.onAjaxSuccess);
+      </p>
+    </div>
+  </li>
   <li>
     <h4><a href="ajax.html#">get(url:String, data:Object, onSuccess:Delegate)</a></h4>
     <p>Performs GET request</p>
@@ -296,16 +306,6 @@
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = Ajax.put('/users/3', {name: 'Michael'}, new Delegate(this, this.onAjaxSuccess);
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="ajax.html#">del(url:String, data:Object, onSuccess:Delegate)</a></h4>
-    <p>Performs DELETE request</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var ajax = Ajax.del('/users/3', {name: 'Michael'}, new Delegate(this, this.onAjaxSuccess);
       </p>
     </div>
   </li>
