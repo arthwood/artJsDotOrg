@@ -14,7 +14,7 @@
     <p><span class="param">url</span> - request URL</p>
     <p><span class="param">data</span> - request data</p>
     <p><span class="param">method</span> - request method</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -32,7 +32,7 @@
   <li>
     <h4><a href="ajax.html#">onFailure(ajax:Ajax)</a></h4>
     <p>Dispatched after request failed</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -50,7 +50,7 @@
   <li>
     <h4><a href="ajax.html#">onSuccess(ajax:Ajax)</a></h4>
     <p>Dispatched after successful response</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -100,7 +100,7 @@
   <li>
     <h4><a href="ajax.html#">abort():Void</a></h4>
     <p>Aborts request</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -115,7 +115,7 @@
   <li>
     <h4><a href="ajax.html#">getAllRequestHeaders():String</a></h4>
     <p>Returns all request headers</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -127,7 +127,7 @@
   <li>
     <h4><a href="ajax.html#">getReadyState():Number</a></h4>
     <p>Returns request ready state</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -142,7 +142,7 @@
   <li>
     <h4><a href="ajax.html#">getRequestHeader(header:String):String</a></h4>
     <p>Returns request header</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -154,7 +154,7 @@
   <li>
     <h4><a href="ajax.html#">getResponseText():String</a></h4>
     <p>Returns response text</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -172,7 +172,7 @@
   <li>
     <h4><a href="ajax.html#">getStatus():Number</a></h4>
     <p>Returns request status</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -187,7 +187,7 @@
   <li>
     <h4><a href="ajax.html#">getStatusText():String</a></h4>
     <p>Returns request status text</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -202,7 +202,7 @@
   <li>
     <h4><a href="ajax.html#">request():Void</a></h4>
     <p>Performs request</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -216,7 +216,7 @@
   <li>
     <h4><a href="ajax.html#">setRequestHeader(header:String, value:String):Void</a></h4>
     <p>Sets request header</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);<br/><br/>
@@ -272,7 +272,7 @@
   <li>
     <h4><a href="ajax.html#">del(url:String, data:Object, onSuccess:Delegate)</a></h4>
     <p>Performs DELETE request</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = Ajax.del('/users/3', {name: 'Michael'}, new Delegate(this, this.onAjaxSuccess);
@@ -282,7 +282,7 @@
   <li>
     <h4><a href="ajax.html#">get(url:String, data:Object, onSuccess:Delegate)</a></h4>
     <p>Performs GET request</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = Ajax.get('/users', {only_active: 1}, new Delegate(this, this.onAjaxSuccess);
@@ -292,7 +292,7 @@
   <li>
     <h4><a href="ajax.html#">post(url:String, data:Object, onSuccess:Delegate)</a></h4>
     <p>Performs POST request</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = Ajax.post('/users', {name: 'Michael'}, new Delegate(this, this.onAjaxSuccess);
@@ -302,7 +302,7 @@
   <li>
     <h4><a href="ajax.html#">put(url:String, data:Object, onSuccess:Delegate)</a></h4>
     <p>Performs PUT request</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = Ajax.put('/users/3', {name: 'Michael'}, new Delegate(this, this.onAjaxSuccess);

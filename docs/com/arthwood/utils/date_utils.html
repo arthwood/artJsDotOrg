@@ -12,7 +12,7 @@
   <li>
     <h4><a href="date_utils.html#">copy(date:Date):Date</a></h4>
     <p>Returns <span class="param">date</span> copy</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}<br/>
@@ -30,7 +30,7 @@
   <li>
     <h4><a href="date_utils.html#">firstDate(date:Date):Date</a></h4>
     <p>Returns date of first day in <span class="param">date</span>'s month</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}<br/><br/>
@@ -44,7 +44,7 @@
   <li>
     <h4><a href="date_utils.html#">firstDay(date:Date):Number</a></h4>
     <p>Returns week day of first day in <span class="param">date</span>'s month (1 means Monday)</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}<br/><br/>
@@ -58,7 +58,7 @@
   <li>
     <h4><a href="date_utils.html#">fromDMY(dmy:String, separator:String = '/'):Date</a></h4>
     <p>Parses <span class="param">dmy</span> (&lt;day&gt;/&lt;month&gt;/&lt;year&gt;) expression and returns Date object</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = DateUtils.fromDMY('7/10/2003'); // Tue Oct 07 2003 00:00:00 GMT+0200 {}
@@ -68,7 +68,7 @@
   <li>
     <h4><a href="date_utils.html#">getDateShifted(date:Date, days:Number):Date</a></h4>
     <p>Returns date <span class="param">days</span> after (before if negative) <span class="param">date</span></p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = new Date(); // Tue Jun 07 2010 15:41:32 GMT+0200 {}<br/>
@@ -82,7 +82,7 @@
   <li>
     <h4><a href="date_utils.html#">hmToMinutes(hm:String, separator:String = ':'):Number</a></h4>
     <p>Parses <span class="param">hm</span> (&lt;hours&gt;:&lt;minutes&gt;) expression and returns Number of minutes</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = DateUtils.hmToMinutes('2:15'); // 135
@@ -92,7 +92,7 @@
   <li>
     <h4><a href="date_utils.html#">minutesToHM(minutes:Number, separator:String = ':'):String</a></h4>
     <p>Returns &lt;hours&gt;:&lt;minutes&gt; format for given amount of <span class="param">minutes</span></p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = DateUtils.minutesToHM(135); // '2:15'
@@ -102,7 +102,7 @@
   <li>
     <h4><a href="date_utils.html#">monthDaysNum(date:Date):Number</a></h4>
     <p>Returns number of days in <span class="param">date</span>'s month</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}<br/><br/>
@@ -116,7 +116,7 @@
   <li>
     <h4><a href="date_utils.html#">msToSeconds(ms:String, separator:String = ':'):Number</a></h4>
     <p>Parses <span class="param">ms</span> (&lt;minutes&gt;:&lt;seconds&gt;) expression and returns Number of seconds</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = DateUtils.msToSeconds('02:15'); // 135
@@ -126,7 +126,7 @@
   <li>
     <h4><a href="date_utils.html#">secondsToHMS(seconds:Number, separator:String = ':'):String</a></h4>
     <p>Returns &lt;hours&gt;:&lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="param">seconds</span></p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = DateUtils.secondsToMS(4350); // '1:12:30'
@@ -136,7 +136,7 @@
   <li>
     <h4><a href="date_utils.html#">secondsToMS(seconds:Number, separator:String = ':'):String</a></h4>
     <p>Returns &lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="param">seconds</span></p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = DateUtils.secondsToMS(135); // '02:15'
@@ -146,7 +146,7 @@
   <li>
     <h4><a href="date_utils.html#">stripDayTime(date:Date):Date</a></h4>
     <p>Returns date without time part</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = new Date(); // Tue Jun 07 2010 15:41:32 GMT+0200 {}<br/>
@@ -160,7 +160,7 @@
   <li>
     <h4><a href="date_utils.html#">toDMY(date:Date, separator:String = '/'):String</a></h4>
     <p>Returns <span class="param">date</span>'s string representation of day, month, year</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}<br/><br/>
@@ -174,7 +174,7 @@
   <li>
     <h4><a href="date_utils.html#">toHMS(date:Date, separator:String = ':'):String</a></h4>
     <p>Returns <span class="param">date</span>'s string representation of hour, minute, second</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}<br/><br/>
@@ -188,7 +188,7 @@
   <li>
     <h4><a href="date_utils.html#">toYMD(date:Date, separator:String = '/'):String</a></h4>
     <p>Returns <span class="param">date</span>'s string representation of year, month, day</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}<br/><br/>

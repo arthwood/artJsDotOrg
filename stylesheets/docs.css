@@ -124,9 +124,8 @@ ul {
   font-family: Courier New;
   font-size: 11px;
 }
-.more {
+.more > div {
   padding: 10px;
-  overflow: hidden;
 }
 .block {
   display: block;

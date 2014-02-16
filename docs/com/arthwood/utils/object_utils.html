@@ -12,7 +12,7 @@
   <li>
     <h4><a href="object_utils.html#">all(object:Object, callback:Function):Boolean</a></h4>
     <p>Returns true if for all values <span class="code">callback</span> returns true; false otherwise</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {color: 'white', id: 5};<br/><br/>
@@ -38,7 +38,7 @@
   <li>
     <h4><a href="object_utils.html#">copy(object:Object):Object</a></h4>
     <p>Creates a copy of an <span class="param">object</span>.</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4};<br/>
@@ -56,7 +56,7 @@
   <li>
     <h4><a href="object_utils.html#">copyProps(source:Object, target:Object):Void</a></h4>
     <p>Copies properties from <span class="param">source</span> object to <span class="param">taraget</span> object.</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var source = {id: 4};<br/>
@@ -75,7 +75,7 @@
   <li>
     <h4><a href="object_utils.html#">each(object:Object, callback:Function):Void</a></h4>
     <p>Iterates over properties and passes value to <span class="param">callback</span></p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/><br/>
@@ -93,7 +93,7 @@
   <li>
     <h4><a href="object_utils.html#">eachKey(object:Object, callback:Function):Void</a></h4>
     <p>Iterates over properties and passes key to <span class="param">callback</span></p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/><br/>
@@ -111,7 +111,7 @@
   <li>
     <h4><a href="object_utils.html#">eachPair(object:Object, callback:Function):Void</a></h4>
     <p>Iterates over properties and passes key and value to <span class="code">callback</span></p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/><br/>
@@ -129,19 +129,19 @@
   <li>
     <h4><a href="object_utils.html#">empty(object:Object):Boolean</a></h4>
     <p>Returns true if <span class="code">object</span> has no properties; false otherwise</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/>
         var empty = {};<br/><br/>
         
-        ObjectUtils.empty(object); // false<br/>
+        ObjectUtils.isEmpty(object); // false<br/>
         // or<br/>
-        // object.empty();<br/><br/>
+        // object.isEmpty();<br/><br/>
         
-        ObjectUtils.empty(empty); // true<br/>
+        ObjectUtils.isEmpty(empty); // true<br/>
         // or<br/>
-        // empty.empty();<br/><br/>
+        // empty.isEmpty();<br/><br/>
       </p>
     </div>
   </li>
@@ -151,7 +151,7 @@
       Copies properties from <span class="param">base</span> object to <span class="param">target</span> object.<br/>
       In fact it works the same as <span class="code">copyProps()</span>, the only difference is arguments order. 
     </p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var base = {id: 4};<br/>
@@ -170,7 +170,7 @@
   <li>
     <h4><a href="object_utils.html#">fromArray(array:Array):Object</a></h4>
     <p>Transforms 2-dim <span class="code">array</span> into object</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var array = [['color', 'white'], ['id', 5]];<br/><br/>
@@ -183,7 +183,7 @@
     <h4><a href="object_utils.html#">include(object:Object, item:Object):Boolean</a></h4>
     <p>Returns true if any <span class="code">object</span> value is equal to 
       <span class="code">item</span>; false otherwise</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {color: 'white', id: 5};<br/><br/>
@@ -202,7 +202,7 @@
     <h4><a href="object_utils.html#">includeAll(object:Object, subset:Object):Boolean</a></h4>
     <p>Returns true if all <span class="code">subset</span> values can be found among 
       <span class="code">object</span>'s values; false otherwise</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {color: 'white', id: 5};<br/><br/>
@@ -220,7 +220,7 @@
   <li>
     <h4><a href="object_utils.html#">map(object:Object, callback:Function):Array</a></h4>
     <p>Maps key and value to Array item using <span class="param">callback</span> function</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/>
@@ -236,7 +236,7 @@
   <li>
     <h4><a href="object_utils.html#">mapKey(object:Object, callback:Function):Object</a></h4>
     <p>Transforms key using <span class="param">callback</span> function</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/>
@@ -256,7 +256,7 @@
   <li>
     <h4><a href="object_utils.html#">mapValue(object:Object, callback:Function):Object</a></h4>
     <p>Transforms value using <span class="param">callback</span> function</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/>
@@ -272,7 +272,7 @@
   <li>
     <h4><a href="object_utils.html#">merge(target:Object, base:Object):Object</a></h4>
     <p>Works the same as extend() but returns modified <span class="param">target</span> object.</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var base = {id: 4};<br/>
@@ -292,7 +292,7 @@
     <h4><a href="object_utils.html#">reject(object:Object, callback:Function):Object</a></h4>
     <p>Returns copy of <span class="code">object</span> without properties for which 
       <span class="code">callback</span> returns true</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/>
@@ -313,7 +313,7 @@
     <h4><a href="object_utils.html#">removeValue(object:Object, value:Object):Void</a></h4>
     <p>Removes all <span class="param">object</span>'s properties with value equal to 
       <span class="param">value</span> param</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/><br/>
@@ -330,7 +330,7 @@
   <li>
     <h4><a href="object_utils.html#">removeValues(object:Object, values:Array):Void</a></h4>
     <p>Works the same as removeValue but you can remove many <span class="param">values</span> by passing them in array</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/><br/>
@@ -348,7 +348,7 @@
     <h4><a href="object_utils.html#">select(object:Object, callback:Function):Object</a></h4>
     <p>Returns copy of <span class="code">object</span> containing only properties for which 
       <span class="code">callback</span> returns true</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/>
@@ -368,7 +368,7 @@
   <li>
     <h4><a href="object_utils.html#">selectWithKey(object:Object, callback:Function):Object</a></h4>
     <p>Same as select, but <span class="code">callback</span> receives both key and value</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {id: 4, active: true, project_id: 4, status: '4'};<br/>
@@ -388,7 +388,7 @@
   <li>
     <h4><a href="object_utils.html#">toArray(object:Object):Array</a></h4>
     <p>Transforms <span class="code">object</span> into array</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {color: 'white', id: 5};<br/><br/>
@@ -402,7 +402,7 @@
   <li>
     <h4><a href="object_utils.html#">toQueryString(object:Object):String</a></h4>
     <p>Returns query string representation of <span class="code">object</span></p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="code block">
         var object = {color: 'white', id: 5, user: {name: 'Andy', id: 3}};<br/><br/>

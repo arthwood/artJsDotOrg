@@ -1,0 +1,24 @@
+body {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 12px;
+}
+
+.runner .success {
+  color: green;
+}
+
+.runner .failure {
+  color: red;
+}
+
+.results ul li {
+  padding: 6px 0;
+}
+
+.results ul li p {
+  margin: 0;
+}
+
+.results.success p {
+  color: green;
+}

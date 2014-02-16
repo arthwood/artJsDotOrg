@@ -7,11 +7,11 @@
 <h3>Constants</h3>
 <ul class="members">
   <li>
-    <h4><a href="art_js.html#">VERSION:String</a></h4>
+    <h4><a href="main.html#">VERSION:String</a></h4>
     <p>Current version of framework</p>
   </li>
   <li>
-    <h4><a href="art_js.html#">CLIENT:String</a></h4>
+    <h4><a href="main.html#">CLIENT:String</a></h4>
     <p>Dedicated browser</p>
   </li>
 </ul>
@@ -19,9 +19,9 @@
 <h3>Methods</h3>
 <ul class="members">
   <li>
-    <h4><a href="art_js.html#">doInjection():Void</a></h4>
+    <h4><a href="main.html#">doInjection():Void</a></h4>
     <p>After calling this method you are able to call Utils methods on native objects</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p>
         Some of the class methods from framework can get injected into native classes.<br/>
         For example most of com.arthwood.utils.ArrayUtils would then affect native Array object.<br/>
@@ -48,9 +48,9 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">globalize():Void</a></h4>
+    <h4><a href="main.html#">globalize():Void</a></h4>
     <p>Makes all classes accessible globally in window object</p>
-    <div class="more" style="display: none">
+    <div class="more">
       <p>
         Normally after framework is loaded you have two ways of accessing its classes:
       </p>
@@ -69,29 +69,19 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">$():Element</a></h4>
-    <p>Alias for ElementUtils.getElementById()</p>
-    <div class="more" style="display:none">
-      <p class="example">Example:</p>
-      <p class="block code">
-        var nav = ArtJs.$('navigation');
-      </p>
-    </div>
-  </li>
-  <li>
-    <h4><a href="art_js.html#">$$():Array</a></h4>
+    <h4><a href="main.html#">$():Element</a></h4>
     <p>Alias for ElementUtils.getElements()</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
-        var nav = ArtJs.$$('.main p.item span');
+        var nav = ArtJs.$('.main p.item span');
       </p>
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">$D():Delegate</a></h4>
+    <h4><a href="main.html#">$D():Delegate</a></h4>
     <p>Alias for Delegate.create()</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var delegate = ArtJs.$D(this, this.onClick);
@@ -99,9 +89,9 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">$DC():Function</a></h4>
+    <h4><a href="main.html#">$DC():Function</a></h4>
     <p>Alias for Delegate.callback()</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var callback = ArtJs.$DC(this, this.onClick, true);
@@ -109,9 +99,9 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">$del():Ajax</a></h4>
+    <h4><a href="main.html#">$del():Ajax</a></h4>
     <p>Alias for Ajax.del()</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = ArtJs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));
@@ -119,9 +109,9 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">$down():Array</a></h4>
-    <p>Alias for ElementUtils.down()</p>
-    <div class="more" style="display:none">
+    <h4><a href="main.html#">$find():Array</a></h4>
+    <p>Alias for ElementUtils.find()</p>
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var nav = ArtJs.$('navigation');
@@ -131,9 +121,9 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">$get():Ajax</a></h4>
+    <h4><a href="main.html#">$get():Ajax</a></h4>
     <p>Alias for Ajax.get()</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = ArtJs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));
@@ -141,9 +131,9 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">p():Void</a></h4>
+    <h4><a href="main.html#">p():Void</a></h4>
     <p>Debug info. If debug console is accessible output to the console; uses alert() otherwise.</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         p('myVariable: ' +  myVariable);
@@ -151,9 +141,9 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">$P():Element</a></h4>
+    <h4><a href="main.html#">$P():Element</a></h4>
     <p>Alias for ElementBuilder.parse()</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var element = ArtJs.$P('<span class="desc">Blue t-shirt</span>');
@@ -161,9 +151,9 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">$post():Ajax</a></h4>
+    <h4><a href="main.html#">$post():Ajax</a></h4>
     <p>Alias for Ajax.post()</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = ArtJs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));
@@ -171,9 +161,9 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">$put():Ajax</a></h4>
+    <h4><a href="main.html#">$put():Ajax</a></h4>
     <p>Alias for Ajax.$put()</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var ajax = ArtJs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));
@@ -181,9 +171,9 @@
     </div>
   </li>
   <li>
-    <h4><a href="art_js.html#">$up():Element</a></h4>
+    <h4><a href="main.html#">$up():Element</a></h4>
     <p>Alias for ElementUtils.up()</p>
-    <div class="more" style="display:none">
+    <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
         var nav = ArtJs.$('navigation');
