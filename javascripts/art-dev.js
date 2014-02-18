@@ -2508,14 +2508,22 @@ ArtJs.ReceiveMatcher.prototype = {
   },
   failureText: function(actual) {
     var result = [ '"' + actual.value.name + '"', "expected to call", this.expected ];
-    if (this.receiver.args) {
+    if (this.receiver.args()) {
+      var expectedArgs = this.receiver.args();
+      var actualArgs = this.receiver.actualArgs();
       result.push("with");
-      result.push("(" + this.receiver.args.join(", ") + ")");
-      if (this.actualArgs) {
-        result.push("but was (" + this.actualArgs.join(", ") + ")");
+      result.push(this._argsString(expectedArgs));
+      if (actualArgs) {
+        result.push("but was " + this._argsString(actualArgs));
       }
     }
     return result.join(" ");
+  },
+  _mapArgs: function(i) {
+    return "[" + i.join(", ") + "]";
+  },
+  _argsString: function(args) {
+    return "(" + (this.receiver.isInSeries() ? ArtJs.ArrayUtils.map(args, this._mapArgs, this) : args).join(", ") + ")";
   }
 };
 
@@ -2629,50 +2637,64 @@ function it(facet, body) {
 }
 
 ArtJs.SpecReceiver = com.arthwood.spec.Receiver = function(matcher, actual) {
-  this.matcher = matcher;
-  this.actual = actual;
-  var actualValue = this.actual.value;
-  var expected = this.matcher.expected;
-  this.original = ArtJs.$D(actualValue, actualValue[expected]);
-  this.delegate = ArtJs.$D(this, this.resolve);
-  var callback = this.delegate.callback();
-  callback.mock = true;
-  actualValue[expected] = callback;
-  this.counter = 0;
-  this.times = null;
-  this.args = null;
-  this.callOriginal = null;
+  this._matcher = matcher;
+  this._actual = actual;
+  var actualValue = this._actual.value;
+  var expected = this._matcher.expected;
+  this._original = ArtJs.$D(actualValue, actualValue[expected]);
+  this._delegate = ArtJs.$D(this, this.resolve);
+  actualValue[expected] = this._delegate.callback();
+  this._successCounter = 0;
+  this._callCounter = 0;
+  this._times = null;
+  this._args = null;
+  this._callOriginal = null;
+  this._inSeries = null;
 };
 
 ArtJs.SpecReceiver.prototype = {
   resolve: function() {
     var args = ArtJs.$A(arguments);
     var returnValue;
-    if (this.original.method.mock) {
-      this.original.args = args;
-      returnValue = this.original.invoke();
-    } else if (this.callOriginal) {
-      this.original.args = args;
-      returnValue = this.original.invoke();
+    if (this._callOriginal) {
+      this._original.args = args;
+      returnValue = this._original.invoke();
     } else {
-      returnValue = this.returnValue;
+      returnValue = this._returnValue;
     }
-    if (this.args == null || ArtJs.ArrayUtils.equal([ args, this.args ])) {
-      this.counter++;
+    if (this._args == null) {
+      this._successCounter++;
+    } else {
+      var expectedArgs = this._inSeries ? this._args[this._callCounter] : this._args;
+      if (ArtJs.ArrayUtils.equal([ args, expectedArgs ])) {
+        this._successCounter++;
+      }
     }
-    this.matcher.actualArgs = args;
+    if (this._inSeries) {
+      if (!this._actualArgs) {
+        this._actualArgs = [];
+      }
+      this._actualArgs.push(args);
+    } else {
+      this._actualArgs = args;
+    }
+    this._callCounter++;
     return returnValue;
   },
+  inSeries: function() {
+    this._inSeries = true;
+    return this;
+  },
   withArgs: function() {
-    this.args = ArtJs.$A(arguments);
+    this._args = ArtJs.$A(arguments);
     return this;
   },
   andReturn: function(returnValue) {
-    this.returnValue = returnValue;
+    this._returnValue = returnValue;
     return this;
   },
   andCallOriginal: function() {
-    this.callOriginal = true;
+    this._callOriginal = true;
     return this;
   },
   once: function() {
@@ -2687,12 +2709,23 @@ ArtJs.SpecReceiver.prototype = {
     this._times = n;
     return this;
   },
+  args: function() {
+    return this._args;
+  },
+  actualArgs: function() {
+    return this._actualArgs;
+  },
+  isInSeries: function() {
+    return this._inSeries;
+  },
   getResult: function() {
-    var value = this.times == null ? this.counter > 0 : this.counter == this._times;
-    return new ArtJs.SpecResult(this.actual, this.matcher, value);
+    var times = this._inSeries ? this._args.length : this._times;
+    var n = this._successCounter;
+    var value = times == null ? n > 0 : n == times;
+    return new ArtJs.SpecResult(this._actual, this._matcher, value);
   },
   rollback: function() {
-    this.actual.value[this.matcher.expected] = this.original.method;
+    this._actual.value[this._matcher.expected] = this._original.method;
   }
 };
 

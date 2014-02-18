@@ -603,8 +603,7 @@ spec(ArtJs.ArrayUtils, function() {
     it('should print all the values', function() {
       var value = ['hello', 3];
 
-      expect(ArtJs).to(receive('p')).withArgs('hello');
-      expect(ArtJs).to(receive('p')).withArgs(3);
+      expect(ArtJs).to(receive('p')).inSeries().withArgs(['hello'], [3]);
       
       subject().print(value);
     });
