@@ -45,6 +45,56 @@ ArtJs.p = function() {
   }
 };
 
+ArtJs.Class = function(ctor, proto, stat, superclass) {
+  var builder = new ArtJs.ClassBuilder(ctor, proto, stat, superclass);
+  return builder.ctor;
+};
+
+ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
+  this.ctor = ctor || this._defaultConstructor();
+  this.ctor.prototype.constructor = this.ctor;
+  if (superclass) {
+    this.ctor.super = superclass;
+    ArtJs.ObjectUtils.extend(this.ctor, superclass);
+    ArtJs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
+    this.ctor.prototype.super = function() {
+      var _arguments_ = ArtJs.$A(arguments);
+      var __arguments__ = _arguments_.shift();
+      return __arguments__.callee.super.apply(this, _arguments_);
+    };
+  } else {
+    this.ctor.prototype = {};
+  }
+  if (proto) {
+    ArtJs.ObjectUtils.eachPair(proto, this._eachProto, this);
+  }
+  if (stat) {
+    ArtJs.ObjectUtils.eachPair(stat, this._eachStat, this);
+  }
+};
+
+ArtJs.ClassBuilder.prototype = {
+  _defaultConstructor: function() {
+    return function() {
+      this.super();
+    };
+  },
+  _eachProto: function(k, v) {
+    this._each(this.ctor.prototype, k, v);
+  },
+  _eachStat: function(k, v) {
+    this._each(this.ctor, k, v);
+  },
+  _each: function(obj, k, v) {
+    if (typeof v == "function") {
+      if (obj[k]) {
+        v.super = obj[k];
+      }
+    }
+    obj[k] = v;
+  }
+};
+
 ArtJs.Delegate = com.arthwood.events.Delegate = function(object, method) {
   this.object = object;
   this.method = method;
@@ -2445,69 +2495,60 @@ ArtJs.ObjectUtils.extend(ArtJs.Reveal, {
   }
 });
 
-ArtJs.EqMatcher = com.arthwood.spec.matchers.Eq = function(expected) {
+ArtJs.BaseMatcher = com.arthwood.spec.matchers.Base = ArtJs.Class(function(expected, toText) {
   this.expected = expected;
-};
+  this.toText = toText || "be";
+}, {
+  resolve: function(actual) {
+    return actual.value === this.expected;
+  },
+  failureText: function(actual) {
+    return [ '"' + actual.value + '"', "expected to", this.toText, String(this.expected) ].join(" ");
+  }
+});
 
-ArtJs.EqMatcher.prototype = {
+ArtJs.EqMatcher = com.arthwood.spec.matchers.Eq = ArtJs.Class(function(expected) {
+  this.super(arguments, expected, "equal");
+}, {
   resolve: function(actual) {
     if (ArtJs.ObjectUtils.isArray(actual.value)) {
       return ArtJs.ArrayUtils.equal([ actual.value, this.expected ]);
     } else {
-      return actual.value === this.expected;
+      return this.super(arguments, actual);
     }
-  },
-  failureText: function(actual) {
-    return [ '"' + actual.value + '"', "expected to equal", '"' + this.expected + '"' ].join(" ");
   }
-};
+}, null, ArtJs.BaseMatcher);
 
 function eq(expected) {
   return new ArtJs.EqMatcher(expected);
 }
 
-ArtJs.FalseMatcher = com.arthwood.spec.matchers.False = function() {};
-
-ArtJs.FalseMatcher.prototype = {
-  resolve: function(actual) {
-    return actual.value === false;
-  },
-  failureText: function(actual) {
-    return [ '"' + actual.value + '"', "expected to be false" ].join(" ");
-  }
-};
+ArtJs.FalseMatcher = com.arthwood.spec.matchers.False = ArtJs.Class(function() {
+  this.super(arguments, false);
+}, null, null, ArtJs.BaseMatcher);
 
 function beFalse() {
   return new ArtJs.FalseMatcher;
 }
 
-ArtJs.NullMatcher = com.arthwood.spec.matchers.Null = function() {};
-
-ArtJs.NullMatcher.prototype = {
-  resolve: function(actual) {
-    return actual.value === null;
-  },
-  failureText: function(actual) {
-    return [ '"' + actual.value + '"', "expected to be null" ].join(" ");
-  }
-};
+ArtJs.NullMatcher = com.arthwood.spec.matchers.Null = ArtJs.Class(function() {
+  this.super(arguments, null);
+}, null, null, ArtJs.BaseMatcher);
 
 function beNull() {
   return new ArtJs.NullMatcher;
 }
 
-ArtJs.ReceiveMatcher = com.arthwood.spec.matchers.Receive = function(expected) {
-  this.expected = expected;
-};
-
-ArtJs.ReceiveMatcher.prototype = {
+ArtJs.ReceiveMatcher = com.arthwood.spec.matchers.Receive = ArtJs.Class(function(expected) {
+  this.super(arguments, expected, "call");
+}, {
   resolve: function(actual) {
     this.receiver = new ArtJs.SpecReceiver(this, actual);
     runner.receivers.push(this.receiver);
     return this.receiver;
   },
   failureText: function(actual) {
-    var result = [ '"' + actual.value.name + '"', "expected to call", this.expected ];
+    var result = this.super.failureText(arguments, actual);
     if (this.receiver.args()) {
       var expectedArgs = this.receiver.args();
       var actualArgs = this.receiver.actualArgs();
@@ -2525,32 +2566,23 @@ ArtJs.ReceiveMatcher.prototype = {
   _argsString: function(args) {
     return "(" + (this.receiver.isInSeries() ? ArtJs.ArrayUtils.map(args, this._mapArgs, this) : args).join(", ") + ")";
   }
-};
+}, null, ArtJs.BaseMatcher);
 
 function receive(expected) {
   return new ArtJs.ReceiveMatcher(expected);
 }
 
-ArtJs.TrueMatcher = com.arthwood.spec.matchers.True = function() {};
-
-ArtJs.TrueMatcher.prototype = {
-  resolve: function(actual) {
-    return actual.value === true;
-  },
-  failureText: function(actual) {
-    return [ '"' + actual.value + '"', "expected to be true" ].join(" ");
-  }
-};
+ArtJs.TrueMatcher = com.arthwood.spec.matchers.True = ArtJs.Class(function() {
+  this.super(arguments, true);
+}, null, null, ArtJs.BaseMatcher);
 
 function beTrue() {
   return new ArtJs.TrueMatcher;
 }
 
-ArtJs.Actual = com.arthwood.spec.Actual = function(value) {
+ArtJs.Actual = com.arthwood.spec.Actual = ArtJs.Class(function(value) {
   this.value = value;
-};
-
-ArtJs.Actual.prototype = {
+}, {
   to: function(matcher) {
     var value = matcher.resolve(this);
     if (typeof value == "boolean") {
@@ -2558,23 +2590,16 @@ ArtJs.Actual.prototype = {
     }
     return value;
   }
-};
+});
 
 function expect(value) {
   return new ArtJs.Actual(value);
 }
 
-ArtJs.Definition = com.arthwood.spec.Definition = function(value) {
+ArtJs.Definition = com.arthwood.spec.Definition = ArtJs.Class(function(value) {
   this.value = value;
   this.evaluation = ArtJs.$DC(this, this.evaluate);
-};
-
-ArtJs.Definition.getEvaluation = function(value) {
-  var definition = new this(value);
-  return definition.evaluation;
-};
-
-ArtJs.Definition.prototype = {
+}, {
   evaluate: function() {
     if (!this.isEvaluated) {
       this.result = this.value();
@@ -2582,7 +2607,12 @@ ArtJs.Definition.prototype = {
     }
     return this.result;
   }
-};
+}, {
+  getEvaluation: function(value) {
+    var definition = new this(value);
+    return definition.evaluation;
+  }
+});
 
 function define(value) {
   return ArtJs.Definition.getEvaluation(value);
@@ -2636,7 +2666,7 @@ function it(facet, body) {
   runner.path.pop();
 }
 
-ArtJs.SpecReceiver = com.arthwood.spec.Receiver = function(matcher, actual) {
+ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, actual) {
   this._matcher = matcher;
   this._actual = actual;
   var actualValue = this._actual.value;
@@ -2650,9 +2680,7 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = function(matcher, actual) {
   this._args = null;
   this._callOriginal = null;
   this._inSeries = null;
-};
-
-ArtJs.SpecReceiver.prototype = {
+}, {
   resolve: function() {
     var args = ArtJs.$A(arguments);
     var returnValue;
@@ -2727,21 +2755,20 @@ ArtJs.SpecReceiver.prototype = {
   rollback: function() {
     this._actual.value[this._matcher.expected] = this._original.method;
   }
-};
+});
 
-ArtJs.SpecResult = com.arthwood.spec.Result = function(expectation, matcher, value) {
+ArtJs.SpecResult = com.arthwood.spec.Result = ArtJs.Class(function(expectation, matcher, value) {
   this.path = runner.path.concat();
   this.expectation = expectation;
   this.matcher = matcher;
   this.value = value;
-};
+});
 
-ArtJs.SpecRunner = com.arthwood.spec.Runner = function() {
+ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(function() {
   this.timeline = new ArtJs.Timeline;
+  console.log("lol");
   this.init();
-};
-
-ArtJs.SpecRunner.prototype = {
+}, {
   runnerTemplate: ArtJs.ElementBuilder.create("div", {
     className: "runner"
   }),
@@ -2831,7 +2858,7 @@ ArtJs.SpecRunner.prototype = {
     this.path.push(i);
     i.body();
   }
-};
+});
 
 function subject() {
   return runner.subject;

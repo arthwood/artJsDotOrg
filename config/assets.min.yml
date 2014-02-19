@@ -2,6 +2,7 @@ javascripts:
   art-min:
     - 'artJs/com/arthwood/Initialize'
     - 'artJs/com/arthwood/utils/Log'
+    - 'artJs/com/arthwood/utils/Class'
     - 'artJs/com/arthwood/events/Delegate'
     - 'artJs/com/arthwood/utils/MathUtils'
     - 'artJs/com/arthwood/utils/ObjectUtils'
@@ -27,6 +28,7 @@ javascripts:
     - 'artJs/com/arthwood/tween/Base'
     - 'artJs/com/arthwood/tween/Fade'
     - 'artJs/com/arthwood/tween/Reveal'
+    - 'artJs/com/arthwood/spec/matchers/Base'
     - 'artJs/com/arthwood/spec/matchers/Eq'
     - 'artJs/com/arthwood/spec/matchers/False'
     - 'artJs/com/arthwood/spec/matchers/Null'
