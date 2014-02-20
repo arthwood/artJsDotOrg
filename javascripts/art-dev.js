@@ -54,14 +54,21 @@ ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor = ctor || this._defaultConstructor();
   this.ctor.prototype.constructor = this.ctor;
   if (superclass) {
-    this.ctor.super = superclass;
-    ArtJs.ObjectUtils.extend(this.ctor, superclass);
-    ArtJs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
-    this.ctor.prototype.super = function() {
+    var _super_ = function() {
+      var ctor = arguments.callee.ctor;
       var _arguments_ = ArtJs.$A(arguments);
       var __arguments__ = _arguments_.shift();
-      return __arguments__.callee.super.apply(this, _arguments_);
+      var __callee__ = __arguments__.callee;
+      var _super_;
+      _super_ = __callee__ == ctor ? ctor.superclass : __callee__.super;
+      return _super_.apply(this, _arguments_);
     };
+    _super_.ctor = this.ctor;
+    this.ctor.superclass = superclass;
+    this.ctor.super = _super_;
+    this.ctor.prototype.super = _super_;
+    ArtJs.ObjectUtils.extend(this.ctor, superclass);
+    ArtJs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
   } else {
     this.ctor.prototype = {};
   }
@@ -2766,7 +2773,6 @@ ArtJs.SpecResult = com.arthwood.spec.Result = ArtJs.Class(function(expectation, 
 
 ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(function() {
   this.timeline = new ArtJs.Timeline;
-  console.log("lol");
   this.init();
 }, {
   runnerTemplate: ArtJs.ElementBuilder.create("div", {
