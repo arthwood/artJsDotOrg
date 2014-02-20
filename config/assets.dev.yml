@@ -12,6 +12,8 @@ javascripts:
     - 'artJs/com/arthwood/utils/DateUtils'
     - 'artJs/com/arthwood/utils/EventUtils'
     - 'artJs/com/arthwood/utils/ElementUtils'
+    - 'artJs/com/arthwood/utils/Toggler'
+    - 'artJs/com/arthwood/utils/ClassToggler'
     - 'artJs/com/arthwood/modules/Locator'
     - 'artJs/com/arthwood/events/DelegateCollection' 
     - 'artJs/com/arthwood/events/CustomEvent'
