@@ -8,7 +8,9 @@ spec(ArtJs.Class, function() {
   }, {
     staticMethod: function(value) {
       return value + 3;
-    }
+    },
+    id: 3,
+    classname: 'SuperClass'
   });
   
   var SubClass = ArtJs.Class(function(name) {
@@ -20,7 +22,8 @@ spec(ArtJs.Class, function() {
   }, {
     staticMethod: function(value) {
       return this.super(arguments, value) * 3;
-    }
+    },
+    classname: 'SubClass'
   },
     SuperClass
   );
@@ -32,5 +35,7 @@ spec(ArtJs.Class, function() {
     expect(instance.name).to(eq(name));
     expect(instance.instanceMethod(2)).to(eq(8));
     expect(SubClass.staticMethod(2)).to(eq(15));
+    expect(SubClass.classname).to(eq('SubClass'));
+    expect(SubClass.id).to(eq(3));
   });
 });

@@ -38,6 +38,7 @@ javascripts:
     - 'artJs/com/arthwood/spec/matchers/True'
     - 'artJs/com/arthwood/spec/Actual'
     - 'artJs/com/arthwood/spec/Definition'
+    - 'artJs/com/arthwood/spec/Mock'
     - 'artJs/com/arthwood/spec/Nodes'
     - 'artJs/com/arthwood/spec/Receiver'
     - 'artJs/com/arthwood/spec/Result'

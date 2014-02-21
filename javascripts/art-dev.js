@@ -45,6 +45,10 @@ ArtJs.p = function() {
   }
 };
 
+ArtJs.log = function(msg, level) {
+  console.log(msg);
+};
+
 ArtJs.Class = function(ctor, proto, stat, superclass) {
   var builder = new ArtJs.ClassBuilder(ctor, proto, stat, superclass);
   return builder.ctor;
@@ -1383,7 +1387,8 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     return ArtJs.ArrayUtils.includes(this.getClasses(e), className);
   },
   getClasses: function(e) {
-    return e.className.split(" ");
+    var className = ArtJs.StringUtils.trim(e.className);
+    return ArtJs.StringUtils.isBlank(className) ? [] : className.split(" ");
   },
   setClass: function(e, className, add) {
     if (add) {
@@ -1519,31 +1524,31 @@ ArtJs.Toggler = com.arthwood.utils.Toggler = ArtJs.Class(function() {
   }
 });
 
-ArtJs.ClassToggler = com.arthwood.utils.ClassToggler = function(className) {
-  this.className = className;
-  this.toggler = new ArtJs.Toggler;
-  this.toggler.onActivate.add(ArtJs.$D(this, this._onActivate));
-  this.toggler.onDeactivate.add(ArtJs.$D(this, this._onDeactivate));
+ArtJs.ClassToggler = com.arthwood.utils.ClassToggler = ArtJs.Class(function(className) {
+  this._className = className;
+  this._toggler = new ArtJs.Toggler;
+  this._toggler.onActivate.add(ArtJs.$D(this, this._onActivate));
+  this._toggler.onDeactivate.add(ArtJs.$D(this, this._onDeactivate));
   this.onActivate = new ArtJs.CustomEvent("ClassToggler::onActivate");
   this.onDeactivate = new ArtJs.CustomEvent("ClassToggler::onDeactivate");
-};
-
-ArtJs.ClassToggler.prototype = {
+}, {
   toggle: function(item) {
-    this.toggler.toggle(item);
+    this._toggler.toggle(item);
+  },
+  getCurrent: function() {
+    return this._toggler.current;
   },
   _onActivate: function(t) {
-    if (t.current) t.current.addClass(this.className);
+    if (t.current) ArtJs.ElementUtils.addClass(t.current, this._className);
     this.onActivate.fire(this);
   },
   _onDeactivate: function(t) {
-    if (t.current) t.current.removeClass(this.className);
+    if (t.current) ArtJs.ElementUtils.removeClass(t.current, this._className);
     this.onDeactivate.fire(this);
-  },
-  getCurrent: function() {
-    return this.toggler.current;
   }
-};
+}, {
+  name: "ClassToggler"
+});
 
 ArtJs.Locator = com.arthwood.modules.Locator = {
   register: function(object) {
@@ -1744,13 +1749,13 @@ ArtJs.ElementBuilder.prototype = {
 
 ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
   init: function() {
-    ArtJs.$E = ArtJs.$DC(this, this.getElement);
     ArtJs.$B = ArtJs.$DC(this, this.build);
-    ArtJs.$P = ArtJs.$DC(this, this.parse);
     ArtJs.$C = ArtJs.$DC(this, this.create);
+    ArtJs.$E = ArtJs.$DC(this, this.getElement);
+    ArtJs.$P = ArtJs.$DC(this, this.parse);
   },
   getElement: function(name, attributes, value, empty) {
-    return (new this(name, attributes, value, empty)).getElement();
+    return this.build(name, attributes, value, empty).getElement();
   },
   _getElement: function(i) {
     return arguments.callee.element;
@@ -2663,6 +2668,16 @@ function define(value) {
   return ArtJs.Definition.getEvaluation(value);
 }
 
+ArtJs.Mock = com.arthwood.spec.Mock = ArtJs.Class(function() {}, {
+  toString: function() {
+    return "mock";
+  }
+});
+
+function mock() {
+  return new ArtJs.Mock;
+}
+
 ArtJs.Spec = function(facet, body) {
   this.facet = facet;
   this.body = body;
@@ -2716,9 +2731,11 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, 
   this._actual = actual;
   var actualValue = this._actual.value;
   var expected = this._matcher.expected;
-  this._original = ArtJs.$D(actualValue, actualValue[expected]);
-  this._delegate = ArtJs.$D(this, this.resolve);
-  actualValue[expected] = this._delegate.callback();
+  var dc = ArtJs.$DC(this, this.resolve);
+  if (!this._isForMock()) {
+    this._original = ArtJs.$D(actualValue, actualValue[expected]);
+  }
+  actualValue[expected] = dc;
   this._successCounter = 0;
   this._callCounter = 0;
   this._times = null;
@@ -2767,7 +2784,12 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, 
     return this;
   },
   andCallOriginal: function() {
-    this._callOriginal = true;
+    if (this._isForMock()) {
+      ArtJs.log('WARNING: Using "andCallOriginal" for mock has no result.');
+      this._callOriginal = false;
+    } else {
+      this._callOriginal = true;
+    }
     return this;
   },
   once: function() {
@@ -2798,7 +2820,12 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, 
     return new ArtJs.SpecResult(this._actual, this._matcher, value);
   },
   rollback: function() {
-    this._actual.value[this._matcher.expected] = this._original.method;
+    if (!this._isForMock()) {
+      this._actual.value[this._matcher.expected] = this._original.method;
+    }
+  },
+  _isForMock: function() {
+    return this._actual.value instanceof ArtJs.Mock;
   }
 });
 
