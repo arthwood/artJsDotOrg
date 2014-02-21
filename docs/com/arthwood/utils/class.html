@@ -1,4 +1,4 @@
-<h2>ClassUtils</h2>
+<h2>Class</h2>
 <div class="clearfix">
   <p class="label">Package:</p>
   <p class="package">com.arthwood.utils</p>
@@ -10,7 +10,7 @@
 <h3>Methods</h3>
 <ul class="members">
   <li>
-    <h4><a href="class_utils.html#">extend(base:Function, constr:Function, instanceMethods:Object, classMethods:Object):Function</a></h4>
+    <h4><a href="class.html#">extend(base:Function, constr:Function, instanceMethods:Object, classMethods:Object):Function</a></h4>
     <p>Creates a subclass ob <span class="param">base</span> class</p>
     <div class="more">
       <p class="example">Example:</p>
@@ -29,7 +29,7 @@
         &nbsp;&nbsp;return 'animal';<br/>
         };<br/><br/>
         
-        Dog = ClassUtils.extend(Animal, function(name, options) {<br/>
+        Dog = ArtJs.Class(Animal, function(name, options) {<br/>
         &nbsp;&nbsp;arguments.callee.$super(name);<br/><br/>
           
         &nbsp;&nbsp;this.options = options;<br/>

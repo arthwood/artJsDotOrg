@@ -20,6 +20,8 @@ var Main = function () {
   
   this.expandNode(point.y.first().firstElement());
   this.loadSection(point.x.first().firstElement());
+
+  //this.ei = new ElementInspector();
 };
 
 Main.FOLDED = 'url(../images/plus.png)';
@@ -83,11 +85,13 @@ Main.prototype = {
   initializeLinks: function() {
     var uls = this.content.find('ul.members');
     
-    !uls.isEmpty() && uls.each(this.eachUl, this);
+    if (!uls.isEmpty()) {
+      uls.each(this.eachMember, this);
+    }
   },
-  
-  eachUl: function(ul) {
-    var lis = ul.last('li');
+
+  eachMember: function(ul) {
+    var lis = ul.find('li');
     var last = lis.last();
     
     last.style.borderBottom = 'none';

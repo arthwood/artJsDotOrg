@@ -33,7 +33,6 @@ var com = {
       matchers: {}
     },
     transition: {},
-    tween: {},
     ui: {},
     utils: {}
   }
@@ -813,55 +812,6 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
 
 ArtJs.$A = ArtJs.ArrayUtils.arrify;
 
-ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
-  init: function() {
-    ArtJs.$X = ArtJs.$DC(this, this.extend);
-  },
-  extend: function(base, constr, instanceMethods, classMethods) {
-    var builder = function() {
-      var callee = arguments.callee;
-      var c = callee.constr;
-      var b = callee.base;
-      var args = ArtJs.$A(arguments);
-      callee.self = this;
-      c.$super = ArtJs.$DC(callee.self, b);
-      c.apply(this, args);
-    };
-    builder.prototype = new base;
-    builder.prototype.constructor = builder;
-    builder.base = base;
-    builder.constr = constr;
-    this.builder = builder;
-    ArtJs.ObjectUtils.eachPair(instanceMethods, this._eachInstanceMethod, this);
-    ArtJs.ObjectUtils.eachPair(classMethods, this._eachClassMethod, this);
-    return builder;
-  },
-  _eachInstanceMethod: function(k, v) {
-    var b = this.builder;
-    this.defineOverride(k, v, b.prototype, b.base.prototype[k]);
-  },
-  _eachClassMethod: function(k, v) {
-    var b = this.builder;
-    var base = b.base;
-    this.defineOverride(k, v, b, base[k]);
-  },
-  defineOverride: function(k, v, proto, overriden) {
-    if (overriden) {
-      var wrapper = function() {
-        var callee = arguments.callee;
-        callee.override.$super = ArtJs.$DC(this, callee.overriden);
-        return callee.override.apply(this, ArtJs.$A(arguments));
-      };
-      wrapper.overriden = overriden;
-      wrapper.override = v;
-      wrapper.name = k;
-      proto[k] = wrapper;
-    } else {
-      proto[k] = v;
-    }
-  }
-};
-
 ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   name: "StringUtils",
   first: function(str) {
@@ -1125,7 +1075,7 @@ ArtJs.EventUtils = com.arthwood.utils.EventUtils = {
     var ct = targets.current;
     var rt = targets.related;
     var s = ArtJs.Selector;
-    return t == ct && !s.descendantOf(rt, ct) || s.descendantOf(t, ct) && !s.selfOrDescendant(rt, ct);
+    return t == ct && !s.isDescendantOf(rt, ct) || s.isDescendantOf(t, ct) && !s.isSelfOrDescendantOf(rt, ct);
   },
   doInjection: function() {
     var proto = Event.prototype;
@@ -1512,15 +1462,18 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   }
 };
 
-ArtJs.Toggler = com.arthwood.utils.Toggler = ArtJs.Class(function() {
+ArtJs.Toggler = com.arthwood.utils.Toggler = ArtJs.Class(function(unique) {
+  this.unique = unique;
   this.current = null;
   this.onActivate = new ArtJs.CustomEvent("Toggler::onActivate");
   this.onDeactivate = new ArtJs.CustomEvent("Toggler::onDeactivate");
 }, {
   toggle: function(item) {
-    this.onDeactivate.fire(this);
-    this.current = item;
-    this.onActivate.fire(this);
+    if (!(this.unique && this.current == item)) {
+      this.onDeactivate.fire(this);
+      this.current = item;
+      this.onActivate.fire(this);
+    }
   }
 });
 
@@ -1819,10 +1772,10 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     return this.getElements(path, element);
   },
   first: function(element, path) {
-    return ArtJs.ArrayUtils.first(this.getElements(path, element));
+    return ArtJs.ArrayUtils.first(this.find(element, path));
   },
   last: function(element, path) {
-    return ArtJs.ArrayUtils.last(this.getElements(path, element));
+    return ArtJs.ArrayUtils.last(this.find(element, path));
   },
   parent: function(element, path) {
     if (!path) {
@@ -1852,7 +1805,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     var descendants = this._getDescendants(e, root);
     return !this._au.isEmpty(descendants) && descendants.length > 1;
   },
-  isSelfOrDescendant: function(e, root) {
+  isSelfOrDescendantOf: function(e, root) {
     return e == root || this.isDescendantOf(e, root);
   },
   getElementById: function(v) {
@@ -1863,12 +1816,6 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
   },
   getElementsByClassName: function(v) {
     return document.getElementsByClassName ? ArtJs.$A(document.getElementsByClassName(v)) : this._getElementsByClassName(v);
-  },
-  getHead: function() {
-    return ArtJs.ArrayUtils.first(this.getElements("head"));
-  },
-  getBody: function() {
-    return ArtJs.ArrayUtils.first(this.getElements("body"));
   },
   _toDescendants: function(i, idx, root) {
     return this._getDescendants(i, root);
@@ -2363,6 +2310,72 @@ ArtJs.ObjectUtils.extend(ArtJs.Clock, {
   }
 });
 
+ArtJs.MouseController = com.arthwood.events.MouseController = ArtJs.Class(function(e) {
+  this.onOver = new ArtJs.CustomEvent("MouseController::onOver");
+  this.onOut = new ArtJs.CustomEvent("MouseController::onOut");
+  this.onClick = new ArtJs.CustomEvent("MouseController::onClick");
+  this.onMove = new ArtJs.CustomEvent("MouseController::onMove");
+  this._attachEvents(e);
+  this.element = e;
+  this.over = false;
+}, {
+  _onMove: function(e) {
+    this.onMove.fire(e, this);
+  },
+  _onOver: function(e) {
+    if (ArtJs.EventUtils.edge(this.getTargets(e, true)) && !this.over) {
+      this.over = true;
+      this.onOver.fire(e, this);
+    }
+  },
+  _onOut: function(e) {
+    if (ArtJs.EventUtils.edge(this.getTargets(e, false)) && this.over) {
+      this.over = false;
+      this.onOut.fire(e, this);
+    }
+  },
+  _onClick: function(e) {
+    this.onClick.fire(e, this);
+  },
+  getIdentifier: function() {
+    return this.element;
+  },
+  _attachEvents: function(e) {
+    var onMove = ArtJs.$DC(this, this._onMove);
+    var onOver = ArtJs.$DC(this, this._onOver);
+    var onOut = ArtJs.$DC(this, this._onOut);
+    var onClick = ArtJs.$DC(this, this._onClick);
+    if (e.addEventListener) {
+      e.addEventListener("mousemove", onMove, false);
+      e.addEventListener("mouseover", onOver, false);
+      e.addEventListener("mouseout", onOut, false);
+      e.addEventListener("click", onClick, false);
+    } else {
+      e.attachEvent("onmousemove", onMove);
+      e.attachEvent("onmouseover", onOver);
+      e.attachEvent("onmouseout", onOut);
+      e.attachEvent("onclick", onClick);
+    }
+  },
+  getTargets: function(e, over) {
+    if (e.target) {
+      return {
+        origin: e.target,
+        current: e.currentTarget,
+        related: e.relatedTarget
+      };
+    } else {
+      var originRelated = [ e.fromElement, e.toElement ];
+      if (over) originRelated.reverse();
+      return {
+        origin: originRelated[0],
+        current: this.element,
+        related: originRelated[1]
+      };
+    }
+  }
+});
+
 ArtJs.Timeline = com.arthwood.events.Timeline = function() {};
 
 ArtJs.Timeline.prototype = {
@@ -2400,148 +2413,6 @@ ArtJs.ObjectUtils.extend(ArtJs.Blind, {
     var proto = Element.prototype;
     proto.blindToggle = ArtJs.$DC(this, this.blindToggle, true);
     proto.blindTo = ArtJs.$DC(this, this.blindTo, true);
-  }
-});
-
-com.arthwood.tween.Base = function(e, delta, interval, eventName) {
-  var defaults = arguments.callee.DEFAULTS;
-  this.element = e;
-  this.on = true;
-  this.p = 0;
-  this.setDelta(delta || defaults.delta);
-  this.clock = new ArtJs.Clock(interval || defaults.interval);
-  this.clock.onChange.add(ArtJs.$D(this, this._onTick));
-  this.onComplete = new ArtJs.CustomEvent(eventName);
-};
-
-ArtJs.ObjectUtils.extend(com.arthwood.tween.Base, {
-  DEFAULTS: {
-    delta: .05,
-    interval: 10
-  }
-});
-
-com.arthwood.tween.Base.prototype = {
-  start: function() {
-    this.before();
-    this.clock.start();
-  },
-  stop: function() {
-    this.clock.stop();
-  },
-  _onTick: function(clock) {
-    this.p += this.delta;
-    if (this.on && this.p < 1 || !this.on && this.p > 0) {
-      this.update();
-    } else {
-      this.clock.stop();
-      this.p = Number(this.on);
-      this.update();
-      this.after();
-      this.onComplete.fire(this);
-    }
-  },
-  toggle: function() {
-    this.setDelta(-this.delta);
-  },
-  setDelta: function(d) {
-    this.delta = d;
-    this.on = ArtJs.MathUtils.isNonNegative(this.delta);
-  },
-  getDelta: function() {
-    return this.delta;
-  },
-  update: function() {},
-  isRunning: function() {
-    this.clock.isRunning();
-  },
-  before: function() {
-    this.update();
-  },
-  after: function() {},
-  setInitialState: function() {
-    this.p = 0;
-  },
-  setFinalState: function() {
-    this.p = 1;
-  },
-  isInInitialState: function() {
-    return this.p === 0;
-  },
-  isInFinalState: function() {
-    return this.p === 1;
-  },
-  getIdentifier: function() {
-    return this.element;
-  }
-};
-
-ArtJs.Fade = com.arthwood.tween.Fade = ArtJs.ClassUtils.extend(com.arthwood.tween.Base, function(e, delta, interval) {
-  arguments.callee.$super(e, delta, interval, "Fade:onComplete");
-  ArtJs.Reveal.instances.push(this);
-}, {
-  update: function() {
-    arguments.callee.$super();
-    ArtJs.ElementUtils.setAlpha(this.element, this.p);
-  }
-});
-
-ArtJs.Locator.register(ArtJs.Fade);
-
-ArtJs.ObjectUtils.extend(ArtJs.Fade, {
-  doInjection: function() {
-    var proto = Element.prototype;
-    proto.fade = function(delta, interval) {
-      return new ArtJs.Fade(this, delta, interval);
-    };
-  }
-});
-
-ArtJs.Reveal = com.arthwood.tween.Reveal = ArtJs.ClassUtils.extend(com.arthwood.tween.Base, function(e, delta, interval) {
-  arguments.callee.$super(e, delta, interval, "Reveal:onComplete");
-  var eu = ArtJs.ElementUtils;
-  this.heightWithPadding = eu.getSize(e, true).y;
-  this.padding = eu.getPadding(e);
-  this.height = this.heightWithPadding - (this.padding.top + this.padding.bottom);
-  ArtJs.Reveal.instances.push(this);
-}, {
-  update: function() {
-    arguments.callee.$super();
-    var mu = ArtJs.MathUtils;
-    var height = this.height;
-    var h = this.p * this.heightWithPadding;
-    var pt = this.padding.top;
-    var pb = this.padding.bottom;
-    var s = this.element.style;
-    var p1 = Math.round(mu.limit(h, 0, pt));
-    var p2 = Math.round(mu.limit(h - pt, 0, height));
-    var p3 = Math.round(mu.limit(h - height - pt, 0, pb));
-    s.paddingTop = p1 + "px";
-    s.height = p2 + "px";
-    s.paddingBottom = p3 + "px";
-  },
-  before: function() {
-    arguments.callee.$super();
-    if (this.isInInitialState() && this.on) {
-      ArtJs.ElementUtils.show(this.element);
-    }
-  },
-  after: function() {
-    arguments.callee.$super();
-    if (this.isInInitialState() && !this.on) {
-      ArtJs.ElementUtils.hide(this.element);
-    }
-  }
-});
-
-ArtJs.Locator.register(ArtJs.Reveal);
-
-ArtJs.ObjectUtils.extend(ArtJs.Reveal, {
-  doInjection: function() {
-    var proto = Element.prototype;
-    proto.reveal = function(delta, interval) {
-      return new ArtJs.Reveal(this, delta, interval);
-    };
   }
 });
 
@@ -2941,14 +2812,25 @@ window.onload = function() {
   this.runner.run();
 };
 
-ArtJs.ObjectUtils.init();
+ArtJs.ElementInspector = com.arthwood.ui.ElementInspector = ArtJs.Class(function() {
+  this._mc = new ArtJs.MouseController(document);
+  this._mc.onMove.add(ArtJs.$D(this, this._onMouseMove));
+  this._toggler = new ArtJs.Toggler(true);
+  this._toggler.onActivate.add(ArtJs.$D(this, this._onActivate));
+}, {
+  _onMouseMove: function(e, mc) {
+    var targets = mc.getTargets(e);
+    this._toggler.toggle(targets.origin);
+  },
+  _onActivate: function(toggler) {
+    console.log(toggler.current);
+  }
+});
 
-ArtJs.ClassUtils.init();
+ArtJs.ObjectUtils.init();
 
 ArtJs.ElementBuilder.init();
 
 ArtJs.ElementUtils.init();
 
 ArtJs.Selector.init();
-
-ArtJs.ClassUtils.init();
