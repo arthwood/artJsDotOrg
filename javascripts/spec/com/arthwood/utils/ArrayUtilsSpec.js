@@ -198,7 +198,7 @@ spec(ArtJs.ArrayUtils, function() {
           var value = [6, 3];
           var result = subject().inject(value, {a: 4}, this._callback, this);
           
-          expect(ArtJs.ObjectUtils.getKeys(result)).to(eq(['a', 'd_0', 'd_1']));
+          expect(ArtJs.ObjectUtils.keys(result)).to(eq(['a', 'd_0', 'd_1']));
           expect(result.a).to(eq(4));
           expect(result.d_0).to(eq(6));
           expect(result.d_1).to(eq(3));

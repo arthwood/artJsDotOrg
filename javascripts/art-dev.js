@@ -209,9 +209,9 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   },
   removeValues: function(obj, values) {
     this._invertedRemoveValueDC.delegate.args = [ obj ];
-    ArtJs.ArrayUtils.each(values, this._invertedRemoveValueDC);
+    ArtJs.ArrayUtils.eachItem(values, this._invertedRemoveValueDC);
   },
-  getKeys: function(obj) {
+  keys: function(obj) {
     var result = [];
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
@@ -220,7 +220,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     }
     return result;
   },
-  getValues: function(obj) {
+  values: function(obj) {
     var result = [];
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
@@ -422,8 +422,8 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     proto.each = dc(this, this.each, true);
     proto.eachPair = dc(this, this.eachPair, true);
     proto.extend = dc(this, this.extend, true);
-    proto.getKeys = dc(this, this.getKeys, true);
-    proto.getValues = dc(this, this.getValues, true);
+    proto.keys = dc(this, this.keys, true);
+    proto.values = dc(this, this.values, true);
     proto.includes = dc(this, this.includes, true);
     proto.includesAll = dc(this, this.includesAll, true);
     proto.isArray = dc(this, this.isArray, true);
@@ -2423,8 +2423,11 @@ ArtJs.BaseMatcher = com.arthwood.spec.matchers.Base = ArtJs.Class(function(expec
   resolve: function(actual) {
     return actual.value === this.expected;
   },
+  _failureData: function(actual) {
+    return [ '"' + actual.value + '"', "expected to", this.toText, String(this.expected) ];
+  },
   failureText: function(actual) {
-    return [ '"' + actual.value + '"', "expected to", this.toText, String(this.expected) ].join(" ");
+    return this._failureData(actual).join(" ");
   }
 });
 
@@ -2468,10 +2471,10 @@ ArtJs.ReceiveMatcher = com.arthwood.spec.matchers.Receive = ArtJs.Class(function
     runner.receivers.push(this.receiver);
     return this.receiver;
   },
-  failureText: function(actual) {
-    var result = this.super.failureText(arguments, actual);
-    if (this.receiver.args()) {
-      var expectedArgs = this.receiver.args();
+  _failureData: function(actual) {
+    var result = this.super(arguments, actual);
+    var expectedArgs = this.receiver.args();
+    if (expectedArgs) {
       var actualArgs = this.receiver.actualArgs();
       result.push("with");
       result.push(this._argsString(expectedArgs));
@@ -2479,7 +2482,7 @@ ArtJs.ReceiveMatcher = com.arthwood.spec.matchers.Receive = ArtJs.Class(function
         result.push("but was " + this._argsString(actualArgs));
       }
     }
-    return result.join(" ");
+    return result;
   },
   _mapArgs: function(i) {
     return "[" + i.join(", ") + "]";
