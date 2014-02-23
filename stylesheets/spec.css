@@ -3,6 +3,15 @@ body {
   font-size: 12px;
 }
 
+.runner {
+  width: 600px;
+  overflow: hidden;
+}
+.runner .success,
+.runner .failure {
+  float: left;
+}
+
 .runner .success {
   color: green;
 }
