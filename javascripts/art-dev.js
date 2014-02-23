@@ -161,7 +161,7 @@ ArtJs.MathUtils = com.arthwood.utils.MathUtils = {
   limit: function(x, a, b) {
     return Math.min(Math.max(x, a), b);
   },
-  periodicLimit: function(x, a, b) {
+  sawtooth: function(x, a, b) {
     return x - this.stairs(x, a, b) * (b - a);
   },
   stairs: function(x, a, b) {
@@ -2156,7 +2156,7 @@ ArtJs.List.prototype = {
     }
   },
   getItemAt: function(position) {
-    position = this.loop ? ArtJs.MathUtils.periodicLimit(position, 0, this.getLength()) : position;
+    position = this.loop ? ArtJs.MathUtils.sawtooth(position, 0, this.getLength()) : position;
     return this.items[position];
   },
   getItemIndex: function(item) {
