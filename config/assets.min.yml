@@ -2,11 +2,11 @@ javascripts:
   art-min:
     - 'artJs/com/arthwood/Initialize'
     - 'artJs/com/arthwood/utils/Log'
+    - 'artJs/com/arthwood/utils/ObjectUtils'
+    - 'artJs/com/arthwood/utils/ArrayUtils'
     - 'artJs/com/arthwood/utils/Class'
     - 'artJs/com/arthwood/events/Delegate'
     - 'artJs/com/arthwood/utils/MathUtils'
-    - 'artJs/com/arthwood/utils/ObjectUtils'
-    - 'artJs/com/arthwood/utils/ArrayUtils'
     - 'artJs/com/arthwood/utils/StringUtils'
     - 'artJs/com/arthwood/utils/DateUtils'
     - 'artJs/com/arthwood/utils/EventUtils'

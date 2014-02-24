@@ -48,130 +48,6 @@ ArtJs.log = function(msg, level) {
   console.log(msg);
 };
 
-ArtJs.Class = function(ctor, proto, stat, superclass) {
-  var builder = new ArtJs.ClassBuilder(ctor, proto, stat, superclass);
-  return builder.ctor;
-};
-
-ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
-  this.ctor = ctor || this._defaultConstructor();
-  this.ctor.prototype.constructor = this.ctor;
-  if (superclass) {
-    var _super_ = function() {
-      var ctor = arguments.callee.ctor;
-      var _arguments_ = ArtJs.$A(arguments);
-      var __arguments__ = _arguments_.shift();
-      var __callee__ = __arguments__.callee;
-      var _super_;
-      _super_ = __callee__ == ctor ? ctor.superclass : __callee__.super;
-      return _super_.apply(this, _arguments_);
-    };
-    _super_.ctor = this.ctor;
-    this.ctor.superclass = superclass;
-    this.ctor.super = _super_;
-    this.ctor.prototype.super = _super_;
-    ArtJs.ObjectUtils.extend(this.ctor, superclass);
-    ArtJs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
-  } else {
-    this.ctor.prototype = {};
-  }
-  if (proto) {
-    ArtJs.ObjectUtils.eachPair(proto, this._eachProto, this);
-  }
-  if (stat) {
-    ArtJs.ObjectUtils.eachPair(stat, this._eachStat, this);
-  }
-};
-
-ArtJs.ClassBuilder.prototype = {
-  _defaultConstructor: function() {
-    return function() {
-      this.super();
-    };
-  },
-  _eachProto: function(k, v) {
-    this._each(this.ctor.prototype, k, v);
-  },
-  _eachStat: function(k, v) {
-    this._each(this.ctor, k, v);
-  },
-  _each: function(obj, k, v) {
-    if (typeof v == "function") {
-      if (obj[k]) {
-        v.super = obj[k];
-      }
-    }
-    obj[k] = v;
-  }
-};
-
-ArtJs.Delegate = com.arthwood.events.Delegate = function(object, method) {
-  this.object = object;
-  this.method = method;
-  this.args = ArtJs.$A(arguments, 2);
-};
-
-ArtJs.Delegate.prototype = {
-  invoke: function() {
-    var args = ArtJs.$A(arguments).concat(this.args);
-    return this.method.apply(this.object, args);
-  },
-  callback: function(withSource) {
-    var result = function() {
-      var callee = arguments.callee;
-      var delegate = callee.delegate;
-      var args = ArtJs.$A(arguments);
-      if (callee.withSource) {
-        args.unshift(this);
-      }
-      return delegate.invoke.apply(delegate, args);
-    };
-    result.withSource = withSource;
-    result.delegate = this;
-    return result;
-  }
-};
-
-ArtJs.$DC = ArtJs.Delegate.callback = function(object, method, withSource) {
-  var delegate = new ArtJs.Delegate(object, method);
-  var callback = delegate.callback(withSource);
-  delegate.args = ArtJs.$A(arguments, 3);
-  return callback;
-};
-
-ArtJs.$D = ArtJs.Delegate.create = function(object, method) {
-  var delegate = new ArtJs.Delegate(object, method);
-  delegate.args = ArtJs.$A(arguments, 2);
-  return delegate;
-};
-
-ArtJs.Delegate.injected = false;
-
-ArtJs.Delegate.doInjection = function() {
-  Function.prototype.bind = function(obj, withSource) {
-    return ArtJs.$DC.apply(ArtJs.$DC, [ obj, this, withSource ].concat(ArtJs.$A(arguments, 2)));
-  };
-  this.injected = true;
-};
-
-ArtJs.MathUtils = com.arthwood.utils.MathUtils = {
-  sgn: function(x) {
-    return x === 0 ? 0 : Math.abs(x) / x;
-  },
-  limit: function(x, a, b) {
-    return Math.min(Math.max(x, a), b);
-  },
-  sawtooth: function(x, a, b) {
-    return x - this.stairs(x, a, b) * (b - a);
-  },
-  stairs: function(x, a, b) {
-    return Math.floor((x - a) / (b - a));
-  },
-  isNonNegative: function(x) {
-    return Boolean(this.sgn(x) + 1);
-  }
-};
-
 ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   QUERY_DELIMITER: "&",
   init: function() {
@@ -812,6 +688,129 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
 
 ArtJs.$A = ArtJs.ArrayUtils.arrify;
 
+ArtJs.Class = function(ctor, proto, stat, superclass) {
+  var builder = new ArtJs.ClassBuilder(ctor, proto, stat, superclass);
+  return builder.ctor;
+};
+
+ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
+  this.ctor = ctor || this._defaultConstructor();
+  this.ctor.prototype.constructor = this.ctor;
+  if (superclass) {
+    var _super_ = function() {
+      var ctor = arguments.callee.ctor;
+      var _arguments_ = ArtJs.$A(arguments);
+      var __arguments__ = _arguments_.shift();
+      var __callee__ = __arguments__.callee;
+      var _super_;
+      _super_ = __callee__ == ctor ? ctor.superclass : __callee__.super;
+      return _super_.apply(this, _arguments_);
+    };
+    _super_.ctor = this.ctor;
+    this.ctor.superclass = superclass;
+    this.ctor.super = _super_;
+    this.ctor.prototype.super = _super_;
+    ArtJs.ObjectUtils.extend(this.ctor, superclass);
+    ArtJs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
+  } else {
+    this.ctor.prototype = {};
+  }
+  if (proto) {
+    ArtJs.ObjectUtils.eachPair(proto, this._eachProto, this);
+  }
+  if (stat) {
+    ArtJs.ObjectUtils.eachPair(stat, this._eachStat, this);
+  }
+};
+
+ArtJs.ClassBuilder.prototype = {
+  _defaultConstructor: function() {
+    return function() {
+      this.super();
+    };
+  },
+  _eachProto: function(k, v) {
+    this._each(this.ctor.prototype, k, v);
+  },
+  _eachStat: function(k, v) {
+    this._each(this.ctor, k, v);
+  },
+  _each: function(obj, k, v) {
+    if (typeof v == "function") {
+      if (obj[k]) {
+        v.super = obj[k];
+      }
+    }
+    obj[k] = v;
+  }
+};
+
+ArtJs.Delegate = com.arthwood.events.Delegate = ArtJs.Class(function(object, method) {
+  this.object = object;
+  this.method = method;
+  this.args = ArtJs.$A(arguments, 2);
+}, {
+  invoke: function() {
+    var args = ArtJs.$A(arguments).concat(this.args);
+    return this.method.apply(this.object, args);
+  },
+  callback: function(withSource) {
+    var result = function() {
+      var callee = arguments.callee;
+      var delegate = callee.delegate;
+      var args = ArtJs.$A(arguments);
+      if (callee.withSource) {
+        args.unshift(this);
+      }
+      return delegate.invoke.apply(delegate, args);
+    };
+    result.withSource = withSource;
+    result.delegate = this;
+    return result;
+  }
+}, {
+  injected: false,
+  callback: function(object, method, withSource) {
+    var delegate = new ArtJs.Delegate(object, method);
+    var callback = delegate.callback(withSource);
+    delegate.args = ArtJs.$A(arguments, 3);
+    return callback;
+  },
+  create: function(object, method) {
+    var delegate = new ArtJs.Delegate(object, method);
+    delegate.args = ArtJs.$A(arguments, 2);
+    return delegate;
+  },
+  doInjection: function() {
+    Function.prototype.bind = function(obj, withSource) {
+      return ArtJs.$DC.apply(ArtJs.$DC, [ obj, this, withSource ].concat(ArtJs.$A(arguments, 2)));
+    };
+    this.injected = true;
+  }
+});
+
+ArtJs.$DC = ArtJs.Delegate.callback;
+
+ArtJs.$D = ArtJs.Delegate.create;
+
+ArtJs.MathUtils = com.arthwood.utils.MathUtils = {
+  sgn: function(x) {
+    return x === 0 ? 0 : Math.abs(x) / x;
+  },
+  limit: function(x, a, b) {
+    return Math.min(Math.max(x, a), b);
+  },
+  sawtooth: function(x, a, b) {
+    return x - this.stairs(x, a, b) * (b - a);
+  },
+  stairs: function(x, a, b) {
+    return Math.floor((x - a) / (b - a));
+  },
+  isNonNegative: function(x) {
+    return Boolean(this.sgn(x) + 1);
+  }
+};
+
 ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   name: "StringUtils",
   first: function(str) {
@@ -954,13 +953,13 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     return (new Date).getTime();
   },
   monthDaysNum: function(date) {
-    var d = new Date(date);
+    var d = this.copy(date);
     d.setMonth(d.getMonth() + 1);
     d.setDate(0);
     return d.getDate();
   },
   firstDate: function(date) {
-    var d = new Date(date);
+    var d = this.copy(date);
     d.setDate(1);
     return d;
   },
@@ -984,17 +983,17 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     arr.reverse();
     return arr.join(separator);
   },
-  fromDMY: function(str, separator) {
-    separator = separator || "-";
-    var arr = str.split(separator);
-    var au = ArtJs.ArrayUtils;
-    return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
-  },
   fromYMD: function(str, separator) {
     separator = separator || "-";
     var arr = str.split(separator);
     var au = ArtJs.ArrayUtils;
     return new Date(parseInt(au.first(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.third(arr), 10));
+  },
+  fromDMY: function(str, separator) {
+    separator = separator || "-";
+    var arr = str.split(separator);
+    var au = ArtJs.ArrayUtils;
+    return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
   },
   minutesToHM: function(minutes, separator) {
     separator = separator || ":";
@@ -1023,17 +1022,6 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     separator = separator || ":";
     return this.minutesToHM(minutes, separator) + separator + ArtJs.StringUtils.addZeros(seconds.toString(), 2);
   },
-  copy: function(date) {
-    return new Date(date);
-  },
-  getDateShifted: function(date, days) {
-    var dateCopy = this.copy(date);
-    dateCopy.setDate(date.getDate() + days);
-    return dateCopy;
-  },
-  stripDayTime: function(date) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  },
   miliToHMSM: function(v) {
     var mili = v % 1e3;
     var totalSeconds = (v - mili) / 1e3;
@@ -1051,6 +1039,17 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     var totalMinutes = (totalSeconds - seconds) / 60;
     var minutes = totalMinutes;
     return minutes.toString() + ":" + ArtJs.StringUtils.addZeros(seconds.toString(), 2) + "." + ArtJs.StringUtils.addZeros(mili.toString(), 3);
+  },
+  copy: function(date) {
+    return new Date(date);
+  },
+  getDateShifted: function(date, days) {
+    var dateCopy = this.copy(date);
+    dateCopy.setDate(date.getDate() + days);
+    return dateCopy;
+  },
+  stripDayTime: function(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   },
   doInjection: function() {
     var proto = Date.prototype;
