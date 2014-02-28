@@ -137,3 +137,6 @@ ul {
 .example {
   font-weight: bold;
 }
+.inspected {
+  color: green;
+}

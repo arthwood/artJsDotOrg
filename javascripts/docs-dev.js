@@ -1,10 +1,8 @@
-var Main = function() {
-  ArtJs.globalize();
-  ArtJs.doInjection();
-  this.onNodeDC = this.onNode.bind(this, true);
-  this.onLeafDC = this.onLeaf.bind(this, true);
+var Main = ArtJs.Class(function() {
+  this.onNodeDelegate = $D(this, this.onNode);
+  this.onLeafDelegate = $D(this, this.onLeaf);
   this.onContentSuccessD = $D(this, this.onContentSuccess);
-  this.onAnchorDC = this.onAnchor.bind(this);
+  this.onAnchorDelegate = $D(this, this.onAnchor);
   this.currentLeaf = null;
   var point = $(".sidebar li").partition(function(item, idx) {
     return item.find("ul").isEmpty();
@@ -14,35 +12,28 @@ var Main = function() {
   this.content = $(".content").first();
   this.expandNode(point.y.first().firstElement());
   this.loadSection(point.x.first().firstElement());
-};
-
-Main.FOLDED = "url(../images/plus.png)";
-
-Main.UNFOLDED = "url(../images/minus.png)";
-
-Main.LEAF = "url(../images/leaf.png)";
-
-Main.prototype = {
+  this.ei = new ArtJs.ElementInspector;
+}, {
   eachNode: function(i) {
-    i.firstElement().onclick = this.onNodeDC;
-    i.style.listStyleImage = Main.FOLDED;
+    i.firstElement().onClick(this.onNodeDelegate);
+    i.style.listStyleImage = this.ctor.FOLDED;
   },
-  onNode: function(a, e) {
-    e.preventDefault();
-    this.expandNode(a);
+  onNode: function(originalEvent, elementEvent) {
+    originalEvent.preventDefault();
+    this.expandNode(elementEvent.element);
   },
   expandNode: function(a) {
     var ul = a.next();
     ul.toggle();
-    a.parent().style.listStyleImage = ul.isHidden() ? Main.FOLDED : Main.UNFOLDED;
+    a.parent().style.listStyleImage = ul.isHidden() ? this.ctor.FOLDED : this.ctor.UNFOLDED;
   },
   eachLeaf: function(i) {
-    i.firstElement().onclick = this.onLeafDC;
-    i.style.listStyleImage = Main.LEAF;
+    i.firstElement().onClick(this.onLeafDelegate);
+    i.style.listStyleImage = this.ctor.LEAF;
   },
-  onLeaf: function(a, e) {
-    e.preventDefault();
-    this.loadSection(a);
+  onLeaf: function(originalEvent, elementEvent) {
+    originalEvent.preventDefault();
+    this.loadSection(elementEvent.element);
   },
   loadSection: function(a) {
     this.load("com/arthwood/" + a.getAttributes().href);
@@ -74,7 +65,7 @@ Main.prototype = {
   },
   initAnchors: function(li) {
     var a = li.first("h4 a");
-    a.onclick = this.onAnchorDC;
+    a.onClick(this.onAnchorDelegate);
     var more = li.first(".more");
     if (more) {
       more.blindTo(0, 0);
@@ -88,8 +79,16 @@ Main.prototype = {
       div.blindToggle(div.firstElement().getSize().y);
     }
   }
-};
+}, {
+  FOLDED: "url(../images/plus.png)",
+  UNFOLDED: "url(../images/minus.png)",
+  LEAF: "url(../images/leaf.png)"
+});
 
-window.onload = function() {
+ArtJs.globalize();
+
+ArtJs.doInjection();
+
+ArtJs.onDocumentLoad.add($D(null, function() {
   this.main = new Main;
-};
+}));

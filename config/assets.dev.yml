@@ -24,7 +24,7 @@ javascripts:
     - 'artJs/com/arthwood/data/List'
     - 'artJs/com/arthwood/data/Queue'
     - 'artJs/com/arthwood/events/Clock'
-    - 'artJs/com/arthwood/events/MouseController'
+    - 'artJs/com/arthwood/events/ElementEvent'
     - 'artJs/com/arthwood/events/Timeline'
     - 'artJs/com/arthwood/transition/Blind'
     - 'artJs/com/arthwood/spec/matchers/Base'

@@ -695,26 +695,25 @@ ArtJs.Class = function(ctor, proto, stat, superclass) {
 
 ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor = ctor || this._defaultConstructor();
-  this.ctor.prototype.constructor = this.ctor;
   if (superclass) {
     var _super_ = function() {
       var ctor = arguments.callee.ctor;
       var _arguments_ = ArtJs.$A(arguments);
       var __arguments__ = _arguments_.shift();
-      var __callee__ = __arguments__.callee;
-      var _super_;
-      _super_ = __callee__ == ctor ? ctor.superclass : __callee__.super;
+      var _callee_ = __arguments__.callee;
+      var _super_ = _callee_.superclass || _callee_.super;
       return _super_.apply(this, _arguments_);
     };
     _super_.ctor = this.ctor;
+    ArtJs.ObjectUtils.extend(this.ctor, superclass);
+    ArtJs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
     this.ctor.superclass = superclass;
     this.ctor.super = _super_;
     this.ctor.prototype.super = _super_;
-    ArtJs.ObjectUtils.extend(this.ctor, superclass);
-    ArtJs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
   } else {
     this.ctor.prototype = {};
   }
+  this.ctor.prototype.ctor = this.ctor;
   if (proto) {
     ArtJs.ObjectUtils.eachPair(proto, this._eachProto, this);
   }
@@ -726,7 +725,7 @@ ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
 ArtJs.ClassBuilder.prototype = {
   _defaultConstructor: function() {
     return function() {
-      this.super();
+      this.super(arguments);
     };
   },
   _eachProto: function(k, v) {
@@ -1404,6 +1403,9 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     var de = document.documentElement;
     return new ArtJs.Point(de.scrollLeft || window.scrollX, de.scrollTop || window.scrollY);
   },
+  onClick: function(e, delegate) {
+    return ArtJs.on(e, "click", delegate);
+  },
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;
@@ -1433,6 +1435,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     proto.isHidden = dc(this, this.isHidden, true);
     proto.lastElement = dc(this, this.lastElement, true);
     proto.next = dc(this, this.next, true);
+    proto.onClick = dc(this, this.onClick, true);
     proto.parent = dc(this, this.parent, true);
     proto.prev = dc(this, this.prev, true);
     proto.putAtBottom = dc(this, this.putAtBottom, true);
@@ -2309,53 +2312,16 @@ ArtJs.ObjectUtils.extend(ArtJs.Clock, {
   }
 });
 
-ArtJs.MouseController = com.arthwood.events.MouseController = ArtJs.Class(function(e) {
-  this.onOver = new ArtJs.CustomEvent("MouseController::onOver");
-  this.onOut = new ArtJs.CustomEvent("MouseController::onOut");
-  this.onClick = new ArtJs.CustomEvent("MouseController::onClick");
-  this.onMove = new ArtJs.CustomEvent("MouseController::onMove");
-  this._attachEvents(e);
-  this.element = e;
-  this.over = false;
+ArtJs.ElementEvent = com.arthwood.events.Element = ArtJs.Class(function(element, name, delegate) {
+  this.element = element;
+  this.delegate = delegate;
+  var on = ArtJs.$DC(this, this._on, false);
+  if (element.addEventListener) {
+    element.addEventListener(name, on, false);
+  } else {
+    element.attachEvent("on" + name, on);
+  }
 }, {
-  _onMove: function(e) {
-    this.onMove.fire(e, this);
-  },
-  _onOver: function(e) {
-    if (ArtJs.EventUtils.edge(this.getTargets(e, true)) && !this.over) {
-      this.over = true;
-      this.onOver.fire(e, this);
-    }
-  },
-  _onOut: function(e) {
-    if (ArtJs.EventUtils.edge(this.getTargets(e, false)) && this.over) {
-      this.over = false;
-      this.onOut.fire(e, this);
-    }
-  },
-  _onClick: function(e) {
-    this.onClick.fire(e, this);
-  },
-  getIdentifier: function() {
-    return this.element;
-  },
-  _attachEvents: function(e) {
-    var onMove = ArtJs.$DC(this, this._onMove);
-    var onOver = ArtJs.$DC(this, this._onOver);
-    var onOut = ArtJs.$DC(this, this._onOut);
-    var onClick = ArtJs.$DC(this, this._onClick);
-    if (e.addEventListener) {
-      e.addEventListener("mousemove", onMove, false);
-      e.addEventListener("mouseover", onOver, false);
-      e.addEventListener("mouseout", onOut, false);
-      e.addEventListener("click", onClick, false);
-    } else {
-      e.attachEvent("onmousemove", onMove);
-      e.attachEvent("onmouseover", onOver);
-      e.attachEvent("onmouseout", onOut);
-      e.attachEvent("onclick", onClick);
-    }
-  },
   getTargets: function(e, over) {
     if (e.target) {
       return {
@@ -2372,8 +2338,51 @@ ArtJs.MouseController = com.arthwood.events.MouseController = ArtJs.Class(functi
         related: originRelated[1]
       };
     }
+  },
+  _on: function(e) {
+    this.delegate.invoke(e, this);
   }
 });
+
+ArtJs.MouseEvent = com.arthwood.events.Mouse = ArtJs.Class(function(element, name, delegate, on) {
+  this.super(arguments, element, name, delegate);
+  this.over = false;
+  this.on = on;
+}, {
+  _on: function(e) {
+    if (ArtJs.EventUtils.edge(this.getTargets(e, this.on)) && !(this.on == this.over)) {
+      this.over = this.on;
+      this.super(arguments, e);
+    }
+  }
+}, null, ArtJs.ElementEvent);
+
+ArtJs.ClickEvent = com.arthwood.events.Click = ArtJs.Class(function(element, delegate) {
+  this.super(arguments, element, "click", delegate);
+}, null, null, ArtJs.ElementEvent);
+
+ArtJs.MouseMoveEvent = com.arthwood.events.MouseMove = ArtJs.Class(function(element, delegate) {
+  this.super(arguments, element, "mousemove", delegate);
+}, null, null, ArtJs.ElementEvent);
+
+ArtJs.MouseOverEvent = com.arthwood.events.MouseOver = ArtJs.Class(function(element, delegate) {
+  this.super(arguments, element, "mouseover", delegate, true);
+}, null, null, ArtJs.MouseEvent);
+
+ArtJs.MouseOutEvent = com.arthwood.events.MouseOut = ArtJs.Class(function(element, delegate) {
+  this.super(arguments, element, "mouseout", delegate, false);
+}, null, null, ArtJs.MouseEvent);
+
+ArtJs.EventMapping = {
+  mousemove: ArtJs.MouseMoveEvent,
+  mouseover: ArtJs.MouseOverEvent,
+  mouseout: ArtJs.MouseOutEvent,
+  click: ArtJs.ClickEvent
+};
+
+ArtJs.on = function(target, eventName, delegate) {
+  return new ArtJs.EventMapping[eventName](target, delegate);
+};
 
 ArtJs.Timeline = com.arthwood.events.Timeline = function() {};
 
@@ -2820,24 +2829,27 @@ function subject() {
   return runner.subject;
 }
 
-var runner = new ArtJs.SpecRunner;
-
-window.onload = function() {
-  this.runner.run();
-};
-
 ArtJs.ElementInspector = com.arthwood.ui.ElementInspector = ArtJs.Class(function() {
-  this._mc = new ArtJs.MouseController(document);
-  this._mc.onMove.add(ArtJs.$D(this, this._onMouseMove));
+  ArtJs.on(document, "mousemove", ArtJs.$D(this, this._onMouseMove));
   this._toggler = new ArtJs.Toggler(true);
   this._toggler.onActivate.add(ArtJs.$D(this, this._onActivate));
+  this._toggler.onDeactivate.add(ArtJs.$D(this, this._onDeactivate));
 }, {
-  _onMouseMove: function(e, mc) {
-    var targets = mc.getTargets(e);
+  _onMouseMove: function(e, ee) {
+    var targets = ee.getTargets(e);
     this._toggler.toggle(targets.origin);
   },
   _onActivate: function(toggler) {
-    console.log(toggler.current);
+    var current = toggler.current;
+    if (current) {
+      ArtJs.ElementUtils.addClass(current, "inspected");
+    }
+  },
+  _onDeactivate: function(toggler) {
+    var current = toggler.current;
+    if (current) {
+      ArtJs.ElementUtils.removeClass(current, "inspected");
+    }
   }
 });
 
@@ -2848,3 +2860,15 @@ ArtJs.ElementBuilder.init();
 ArtJs.ElementUtils.init();
 
 ArtJs.Selector.init();
+
+ArtJs.onDocumentLoad = new ArtJs.CustomEvent("document:load");
+
+ArtJs.onWindowLoad = new ArtJs.CustomEvent("window:load");
+
+document.addEventListener("DOMContentLoaded", function() {
+  ArtJs.onDocumentLoad.fire();
+}, false);
+
+window.addEventListener("load", function() {
+  ArtJs.onWindowLoad.fire();
+}, false);
