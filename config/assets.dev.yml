@@ -45,8 +45,12 @@ javascripts:
     - 'artJs/com/arthwood/spec/Core'
     - 'artJs/com/arthwood/ui/ElementInspector'
     - 'artJs/com/arthwood/Finalize'
-  docs-dev: 'docs'
+  docs-dev: 
+    - 'art/sidebar'
+    - 'art/content'
+    - 'docs'
   main-dev: 'main'
 stylesheets:
-  docs-dev: 'docs'
-  main-dev: 'main'
+  docs-dev: 'css/docs'
+  main-dev: 'css/main'
+  spec-dev: 'css/spec'

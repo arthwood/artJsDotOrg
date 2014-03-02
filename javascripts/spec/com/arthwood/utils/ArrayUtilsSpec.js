@@ -570,11 +570,11 @@ spec(ArtJs.ArrayUtils, function() {
     });
   });
 
-  describe('#nonEmpty', function() {
+  describe('#isNotEmpty', function() {
     context('when array is empty', function() {
       it('should return false', function() {
         var value = [];
-        var result = subject().nonEmpty(value);
+        var result = subject().isNotEmpty(value);
 
         expect(result).to(beFalse());
       });
@@ -583,7 +583,7 @@ spec(ArtJs.ArrayUtils, function() {
     context('when array is not empty', function() {
       it('should return true', function() {
         var value = [null];
-        var result = subject().nonEmpty(value);
+        var result = subject().isNotEmpty(value);
 
         expect(result).to(beTrue());
       });

@@ -598,7 +598,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     return this.includes(arr, arguments.callee.item);
   },
   selectNonEmpty: function(arr) {
-    return this.select(arr, this.nonEmpty, this);
+    return this.select(arr, this.isNotEmpty, this);
   },
   compact: function(arr) {
     return this.reject(arr, this.isNullLike, this);
@@ -609,7 +609,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   isEmpty: function(arr) {
     return arr.length == 0;
   },
-  nonEmpty: function(arr) {
+  isNotEmpty: function(arr) {
     return !this.isEmpty(arr);
   },
   numerize: function(arr) {
@@ -666,7 +666,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     proto.itemsEqual = dc(this, this.itemsEqual, true);
     proto.last = dc(this, this.last, true);
     proto.map = dc(this, this.map, true);
-    proto.nonEmpty = dc(this, this.nonEmpty, true);
+    proto.isNotEmpty = dc(this, this.isNotEmpty, true);
     proto.numerize = dc(this, this.numerize, true);
     proto.partition = dc(this, this.partition, true);
     proto.pluck = dc(this, this.pluck, true);
@@ -1181,14 +1181,20 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     var v = value.match(this.SIZE_STYLE_RE);
     return v && Number(v[1]) || 0;
   },
+  children: function(e) {
+    return ArtJs.$A(e.childNodes);
+  },
   elements: function(e) {
-    return this.filterElements(ArtJs.$A(e.childNodes));
+    return this.filterElements(this.children(e));
   },
   filterElements: function(items) {
     return ArtJs.ArrayUtils.select(items, this.isElement, this);
   },
   isElement: function(e) {
-    return e.nodeType == 1;
+    return e.nodeType == Node.ELEMENT_NODE;
+  },
+  isText: function(e) {
+    return e.nodeType == Node.TEXT_NODE;
   },
   remove: function(e) {
     e.parentNode.removeChild(e);
@@ -1756,8 +1762,8 @@ ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
 
 ArtJs.Selector = com.arthwood.dom.Selector = {
   tagRE: /^\w+/gi,
-  classesRE: /\.\w+/gi,
-  idRE: /#\w+/i,
+  classesRE: /\.[\w\-]+/gi,
+  idRE: /#[\w\-]+/gi,
   attrsRE: /\[.*\]/gi,
   init: function() {
     this._filterDescendantsDC = ArtJs.$DC(this, this._filterDescendants);
@@ -2837,7 +2843,11 @@ ArtJs.ElementInspector = com.arthwood.ui.ElementInspector = ArtJs.Class(function
 }, {
   _onMouseMove: function(e, ee) {
     var targets = ee.getTargets(e);
-    this._toggler.toggle(targets.origin);
+    var origin = targets.origin;
+    var eu = ArtJs.ElementUtils;
+    if (eu.children(origin).any(eu.isText)) {
+      this._toggler.toggle(origin);
+    }
   },
   _onActivate: function(toggler) {
     var current = toggler.current;

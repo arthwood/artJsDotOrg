@@ -1,0 +1,130 @@
+body {
+  margin: 0;
+  color: #555555;
+  font-family: Verdana;
+  font-size: 12px;
+  background: url(../../images/bg.png);
+  overflow-y: scroll; }
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; }
+
+h1 {
+  margin: 0 0 10px;
+  font-size: 16px; }
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #ff0077; }
+
+h3 {
+  margin: 0 0 10px;
+  font-size: 14px; }
+
+h4 {
+  margin: 0 0 8px;
+  font-size: 12px; }
+
+a {
+  text-decoration: none;
+  color: #1166cc; }
+  a:hover {
+    color: #0055bb; }
+
+img {
+  border: none; }
+
+p {
+  margin: 0 0 10px;
+  line-height: 20px; }
+
+ul {
+  padding-left: 20px;
+  margin: 0; }
+
+.param {
+  font-weight: bold; }
+
+.label {
+  width: 70px;
+  font-weight: bold; }
+
+.label,
+.package {
+  float: left; }
+
+.main {
+  margin: 0 auto;
+  padding: 20px;
+  width: 800px;
+  background: white;
+  border-style: solid;
+  border-width: 0 1px 1px;
+  border-color: #dddddd #eeeeee; }
+
+.header {
+  margin-bottom: 20px; }
+
+.art-content {
+  float: right;
+  padding: 20px;
+  border: 1px solid #cccccc;
+  background: #eeeeee;
+  width: 520px; }
+  .art-content ul {
+    padding: 6px 14px;
+    margin-bottom: 20px;
+    border: 1px solid #cccccc;
+    background: white; }
+    .art-content ul li {
+      padding: 12px 4px;
+      border-bottom: 1px solid #cccccc;
+      list-style: none; }
+      .art-content ul li a {
+        font-size: 12px; }
+      .art-content ul li p {
+        margin-bottom: 4px; }
+
+.art-sidebar {
+  float: left;
+  width: 180px;
+  padding: 20px;
+  border: 1px solid #cccccc;
+  background: #eeeeee; }
+  .art-sidebar li {
+    line-height: 18px; }
+  .art-sidebar > ul {
+    margin-left: 2px; }
+    .art-sidebar > ul li ul {
+      margin: 4px 0; }
+  .art-sidebar ul li a {
+    font-size: 11px;
+    padding: 2px; }
+    .art-sidebar ul li a.selected {
+      background: #ff0077;
+      color: white; }
+
+.code {
+  font-family: Courier New;
+  font-size: 11px; }
+
+.more > div {
+  padding: 10px; }
+
+.block {
+  display: block;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #cccccc;
+  background: #dff1ff; }
+
+.example {
+  font-weight: bold; }
+
+.inspected {
+  color: lightgreen !important; }

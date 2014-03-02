@@ -45,8 +45,12 @@ javascripts:
     - 'artJs/com/arthwood/spec/Core'
     - 'artJs/com/arthwood/ui/ElementInspector'
     - 'artJs/com/arthwood/Finalize'
-  docs-min: 'docs'
+  docs-min: 
+    - 'art/sidebar'
+    - 'art/content'
+    - 'docs'
   main-min: 'main'
 stylesheets:
-  docs-min: 'docs'
-  main-min: 'main'
+  docs-min: 'css/docs'
+  main-min: 'css/main'
+  spec-min: 'css/spec'
