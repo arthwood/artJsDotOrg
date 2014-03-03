@@ -1,4 +1,4 @@
-var Content = ArtJs.Class(
+art.Content = ArtJs.Class(
   function() {
     this._element = $('.art-content').first();
     this._onContentSuccessD = $D(this, this._onContentSuccess);

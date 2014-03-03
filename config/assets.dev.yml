@@ -13,7 +13,7 @@ javascripts:
     - 'artJs/com/arthwood/utils/ElementUtils'
     - 'artJs/com/arthwood/utils/Toggler'
     - 'artJs/com/arthwood/utils/ClassToggler'
-    - 'artJs/com/arthwood/modules/Locator'
+    - 'artJs/com/arthwood/module/Locator'
     - 'artJs/com/arthwood/events/DelegateCollection' 
     - 'artJs/com/arthwood/events/CustomEvent'
     - 'artJs/com/arthwood/math/Point'
@@ -44,13 +44,14 @@ javascripts:
     - 'artJs/com/arthwood/spec/Subject'
     - 'artJs/com/arthwood/spec/Core'
     - 'artJs/com/arthwood/ui/ElementInspector'
+    - 'artJs/com/arthwood/ui/Tree'
     - 'artJs/com/arthwood/Finalize'
   docs-dev: 
-    - 'art/sidebar'
-    - 'art/content'
-    - 'docs'
-  main-dev: 'main'
+    - 'Docs'
+    - 'art/Sidebar'
+    - 'art/Content'
+  main-dev: 'Main'
 stylesheets:
   docs-dev: 'css/docs'
   main-dev: 'css/main'
-  spec-dev: 'css/spec'
+
