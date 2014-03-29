@@ -15,42 +15,47 @@
     <div class="more">
       <p class="example">Example:</p>
       <p class="block code">
-        function Animal(name) {<br/>
-        &nbsp;&nbsp;this.name = name;<br/>
-        }<br/><br/>
+        Animal = ArtJs.Class(
+          function(name) {
+            this.name = name;
+          },
+          {
+            getSound: function() {
+              return '...';
+            }
+          },
+          getName: function() {
+            return 'animal';
+          }
+        );
         
-        Animal.prototype = {<br/>
-        &nbsp;&nbsp;getSound: function() {<br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;return '...';<br/>
-        &nbsp;&nbsp;}<br/>
-        };<br/><br/>
-        
-        Animal.getName = function() {<br/>
-        &nbsp;&nbsp;return 'animal';<br/>
-        };<br/><br/>
-        
-        Dog = ArtJs.Class(Animal, function(name, options) {<br/>
-        &nbsp;&nbsp;arguments.callee.$super(name);<br/><br/>
-          
-        &nbsp;&nbsp;this.options = options;<br/>
-        }, {<br/>
-        &nbsp;&nbsp;getSound: function() {<br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;var sound = arguments.callee.$super();<br/><br/>
+        Dog = ArtJs.Class(
+          function(name, options) {
+            this.super(arguments, name);
             
-        &nbsp;&nbsp;&nbsp;&nbsp;return sound + 'meoww';<br/>
-        &nbsp;&nbsp;}<br/>
-        }, {<br/>
-        &nbsp;&nbsp;getName: function() {<br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;var name = arguments.callee.$super();<br/><br/>
-            
-        &nbsp;&nbsp;&nbsp;&nbsp;return name + '::' + 'dog';<br/>
-        &nbsp;&nbsp;}<br/>
-        });<br/><br/>
+            this.options = options;
+          }, 
+          {
+            getSound: function() {
+              var sound = this.super(arguments);
+              
+              return sound + 'meoww';
+            }
+          }, 
+          {
+            getName: function() {
+              var name = this.super(arguments);
+              
+              return name + '::' + 'dog';
+            }
+          },
+          Animal
+        );
         
-        var dog = new Dog('fluffy', {color: 'white'});<br/><br/>
+        var dog = new Dog('fluffy', {color: 'white'});
         
-        dog.name; // 'fluffy'<br/>
-        dog.getSound(); // '...meoww'<br/>
+        dog.name; // 'fluffy'
+        dog.getSound(); // '...meoww'
         Dog.getName(); // 'animal::dog'
       </p>
     </div>

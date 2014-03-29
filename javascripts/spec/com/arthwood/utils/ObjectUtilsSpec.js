@@ -234,7 +234,7 @@ spec(ArtJs.ObjectUtils, function() {
   describe('#build', function() {
     it('should return new object', function() {
       var array = [new ArtJs.Point('a', 5)];
-      var result = subject().build(array);
+      var result = subject().fromPoints(array);
 
       expect(ArtJs.ObjectUtils.keys(result)).to(eq(['a']));
       expect(ArtJs.ObjectUtils.values(result)).to(eq([5]));

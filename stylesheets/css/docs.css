@@ -85,6 +85,8 @@ ul {
       padding: 12px 4px;
       border-bottom: 1px solid #cccccc;
       list-style: none; }
+      .art-content ul li:last-child {
+        border-bottom: none; }
       .art-content ul li a {
         font-size: 12px; }
       .art-content ul li p {
