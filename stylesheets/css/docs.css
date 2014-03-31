@@ -70,44 +70,44 @@ ul {
 .header {
   margin-bottom: 20px; }
 
-.art-content {
+.art-Content {
   float: right;
   padding: 20px;
   border: 1px solid #cccccc;
   background: #eeeeee;
   width: 520px; }
-  .art-content ul {
+  .art-Content ul {
     padding: 6px 14px;
     margin-bottom: 20px;
     border: 1px solid #cccccc;
     background: white; }
-    .art-content ul li {
+    .art-Content ul li {
       padding: 12px 4px;
       border-bottom: 1px solid #cccccc;
       list-style: none; }
-      .art-content ul li:last-child {
+      .art-Content ul li:last-child {
         border-bottom: none; }
-      .art-content ul li a {
+      .art-Content ul li a {
         font-size: 12px; }
-      .art-content ul li p {
+      .art-Content ul li p {
         margin-bottom: 4px; }
 
-.art-sidebar {
+.art-Sidebar {
   float: left;
   width: 180px;
   padding: 20px;
   border: 1px solid #cccccc;
   background: #eeeeee; }
-  .art-sidebar li {
+  .art-Sidebar li {
     line-height: 18px; }
-  .art-sidebar > ul {
+  .art-Sidebar > ul {
     margin-left: 2px; }
-    .art-sidebar > ul li ul {
+    .art-Sidebar > ul li ul {
       margin: 4px 0; }
-  .art-sidebar ul li a {
+  .art-Sidebar ul li a {
     font-size: 11px;
     padding: 2px; }
-    .art-sidebar ul li a.selected {
+    .art-Sidebar ul li a.selected {
       background: #ff0077;
       color: white; }
 

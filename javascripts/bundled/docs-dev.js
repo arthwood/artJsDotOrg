@@ -1,27 +1,13 @@
-var art = {
-  Main: ArtJs.Class(function() {
-    this.sidebar = new art.Sidebar;
-    this.content = new art.Content;
-    this.sidebar.onLeaf.add($D(this, this.onLeaf));
-    this.sidebar.init();
-  }, {
-    onLeaf: function(element) {
-      this.content.loadSection(element);
-    }
-  })
+var art = {};
+
+ArtJs.TemplateLibrary.config = {
+  PATH: "/artJsDotOrg/templates",
+  TEMPLATES: [ "doc", "member", "section", "ga" ]
 };
-
-ArtJs.TemplateLibrary.PATH = "/artJsDotOrg/templates";
-
-ArtJs.TemplateLibrary.TEMPLATES = [ "doc", "member", "section" ];
 
 ArtJs.globalize();
 
 ArtJs.doInjection();
-
-ArtJs.onLibraryLoad.add(ArtJs.$D(null, function() {
-  this.main = new art.Main;
-}));
 
 art.DB = {
   tree: {
@@ -37,75 +23,72 @@ art.DB = {
       Selector: "selector"
     },
     "com.arthwood.events": {
-      Clock: "events/clock.html",
-      CustomEvent: "events/custom_event.html",
-      Delegate: "events/delegate.html",
-      DelegateCollection: "events/delegate_collection.html",
-      ElementEvent: "events/element_event.html",
-      QueuedClock: "events/queued_clock.html",
-      Timeline: "events/timeline.html"
+      Clock: "clock",
+      CustomEvent: "custom_event",
+      Delegate: "delegate",
+      DelegateCollection: "delegate_collection",
+      ElementEvent: "element_event",
+      QueuedClock: "queued_clock",
+      Timeline: "timeline"
     },
     "com.arthwood.math": {
-      Point: "math/point.html",
-      Rectangle: "math/rectangle.html"
+      Point: "point",
+      Rectangle: "rectangle"
     },
     "com.arthwood.net": {
-      Ajax: "net/ajax.html"
+      Ajax: "ajax"
     },
     "com.arthwood.spec": {
       "com.arthwood.matchers": {
-        A: "spec/matchers/a.html",
-        Base: "spec/matchers/base.html",
-        Eq: "spec/matchers/eq.html",
-        False: "spec/matchers/false.html",
-        Null: "spec/matchers/null.html",
-        Receive: "spec/matchers/receive.html",
-        True: "spec/matchers/true.html"
+        A: "matchers/a",
+        Eq: "matchers/eq",
+        False: "matchers/false",
+        Null: "matchers/null",
+        Receive: "matchers/receive",
+        True: "matchers/true"
       },
-      Actual: "spec/actual.html",
-      Definition: "spec/definition.html",
-      Mock: "spec/mock.html",
-      Nodes: "spec/nodes.html",
-      Receiver: "spec/receiver.html",
-      Result: "spec/result.html",
-      Runner: "spec/runner.html",
-      Subject: "spec/subject.html"
+      Actual: "actual",
+      Mock: "mock",
+      Nodes: "nodes",
+      Receiver: "receiver",
+      Runner: "runner",
+      Subject: "subject"
     },
     "com.arthwood.template": {
-      Base: "template/base.html",
-      Helpers: "template/helpers.html"
+      Base: "template/base",
+      Helpers: "template/helpers"
     },
     "com.arthwood.transition": {
-      Blind: "transition/blind.html"
+      Blind: "transition/blind"
     },
     "com.arthwood.ui": {
-      DatePicker: "ui/date_picker.html",
-      ElementInspector: "ui/element_inspector.html",
-      Flash: "ui/flash.html",
-      ModalBox: "ui/modal_box.html",
-      ScreenManager: "ui/screen_manager.html",
-      Tabs: "ui/tabs.html",
-      Tree: "ui/tree.html"
+      DatePicker: "date_picker",
+      ElementInspector: "element_inspector",
+      Flash: "flash",
+      ModalBox: "modal_box",
+      ScreenManager: "screen_manager",
+      Tabs: "tabs",
+      Tree: "tree"
     },
     "com.arthwood.utils": {
-      Array: "utils/array.html",
-      Class: "utils/class.html",
-      ClassToggler: "utils/class_toggler.html",
-      Date: "utils/date.html",
-      Element: "utils/element.html",
-      Event: "utils/event.html",
-      Log: "utils/log.html",
-      Math: "utils/math.html",
-      Object: "utils/object.html",
-      String: "utils/string.html",
-      Toggler: "utils/toggler.html"
+      Array: "array",
+      Class: "class",
+      ClassToggler: "class_toggler",
+      Date: "date",
+      Element: "element",
+      Event: "event",
+      Log: "log",
+      Math: "math",
+      Object: "object",
+      String: "string",
+      Toggler: "toggler"
     }
   },
   content: {
     main: {
       name: "ArtJs",
       "package": "ArtJs",
-      description: "This is top level object that stores information about framework and few methods that allows you to select the framework mode",
+      description: "This is top level object that stores information about framework and few methods that allows you to select the framework mode.",
       sections: [ {
         name: "Constants",
         members: [ {
@@ -117,7 +100,7 @@ art.DB = {
         members: [ {
           header: "doInjection():Void",
           description: "After calling this method you are able to call Utils methods on native objects",
-          more: "Some of the class methods from framework can get injected into native classes.<br/>" + "For example most of com.arthwood.utils.ArrayUtils would then affect native Array object.<br/>" + "To see which native classes can be affected by framework see other parts of documentation.",
+          more: "Some of the class methods from framework can get injected into native classes.<br/>" + "For example most of com.arthwood.utils.ArrayUtils would then affect native Array object.<br/>" + 'To see which native classes can be affected by framework see other parts of documentation, especially "utils" package.',
           example: [ "ArtJs.doInjection();", "", "// After that action you will be able to use:", "", "myArray.last(); // 3", "", "instead of:", "", "ArtJs.ArrayUtils.last(myArray); // 3" ]
         }, {
           header: "globalize():Void",
@@ -174,7 +157,7 @@ art.DB = {
     list: {
       name: "List",
       "package": "com.arthwood.data",
-      description: "List data model implementation",
+      description: "List data model implementation.",
       sections: [ {
         name: "Constructor",
         members: [ {
@@ -349,6 +332,11 @@ art.DB = {
         } ]
       } ]
     },
+    component: {
+      name: "Component",
+      "package": "com.arthwood.dom",
+      description: 'Components allow you to attach your own view class to element node. In order to do this simply assign "art" class to your element along with class name of your custom class e.g. com.domain.LeftNav.'
+    },
     element_builder: {
       name: "ElementBuilder",
       "package": "com.arthwood.dom",
@@ -403,13 +391,202 @@ art.DB = {
     selector: {
       name: "Selector",
       "package": "com.arthwood.dom",
-      description: "Allows to easily traverse DOM",
+      description: "Allows to easily traverse DOM.",
       sections: [ {
         name: "Methods",
         members: [ {
+          header: "find(element:Element, selector:String):Array",
+          description: "Same as #getElements but with reversed arguments."
+        }, {
+          header: "first(element:Element, selector:String):Element",
+          description: "Returns first result of #find."
+        }, {
+          header: "last(element:Element, selector:String):Element",
+          description: "Returns last result of #find."
+        }, {
+          header: "parent(element:Element, selector:String):Element",
+          description: "Returns first ancestor that matches the selector."
+        }, {
+          header: "getElements(selector:String, element:Element):Array",
+          description: "Returns all descendants that match the selector.",
+          more: "Selector parameter must be a single selector without spaces",
+          example: [ "var main = getElements('#main');", "var titles = getElements('p.title', main);" ]
+        }, {
           header: "isDescendantOf(element:Element, root:Element):Boolean",
-          params: [],
-          example: [ "" ]
+          description: "Returns true if element is descendant of root."
+        }, {
+          header: "isSelfOrDescendantOf(element:Element, root:Element):Boolean",
+          description: "Same as #isDescendantOf but returns true also if element is the root itself."
+        }, {
+          header: "getElementById(id:String):Element",
+          description: "Returns Element by id."
+        }, {
+          header: "getElementsByTagName(name:String):Array",
+          description: "Returns array of Elements by tag name."
+        }, {
+          header: "getElementsByClassName(name:String):Array",
+          description: "Returns array of Elements by class name."
+        } ]
+      } ]
+    },
+    clock: {
+      name: "Clock",
+      "package": "com.arthwood.events",
+      description: "Allows trigger events periodically",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "Clock(interval:Number, repeat:Number)",
+          params: {
+            interval: "interval between ticks in miliseconds",
+            repeat: "number of ticks"
+          },
+          example: [ "var clock = new Clock(1000, 5);" ]
+        } ]
+      }, {
+        name: "Events",
+        members: [ {
+          header: "onChange(clock:Clock)",
+          description: "Triggered on each tick",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.onChange.add(new Delegate(this, this.onClockChange);", "", "function onClockChange(clock) {", "  console.log('clock change!');", "}" ]
+        }, {
+          header: "onFinish(clock:Clock)",
+          description: "Triggered after last tick",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.onComplete.add(new Delegate(this, this.onClockComplete);", "", "function onClockComplete(clock) {", "  console.log('clock complete!');", "}" ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "counter:Number",
+          description: "Number of released ticks"
+        }, {
+          header: "interval:Number",
+          description: "The same property as in constructor"
+        }, {
+          header: "repeat:Number",
+          description: "The same property as in constructor"
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "isRunning():Void",
+          description: "Returns true if clock is running; false otherwise",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.isRunning(); // false", "clock.start(true);", "clock.isRunning(); // true", "clock.stop();", "clock.isRunning(); // false" ]
+        }, {
+          header: "pause():Void",
+          description: "'Same as stop() but doesn't reset the counter'",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.start(true);", "// ... and some time later", "clock.counter; // 3", "clock.pause();", "clock.counter; // 3" ]
+        }, {
+          header: "resume():Void",
+          description: "Resumes ticking after it has been paused",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.start();", "// ... and some time later", "clock.counter; // 3", "clock.pause();", "// ... and some time later", "clock.resume();", "clock.counter; // 3" ]
+        }, {
+          header: "start(now:Boolean):Void",
+          description: "Starts the clock. First tick after interval or immediately if 'now' param is true",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.start();" ]
+        }, {
+          header: "stop():Void",
+          description: "Stops the clock and sets counter to zero",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.start();", "// ... and some time later", "clock.counter; // 3", "clock.stop();", "clock.counter; // 0" ]
+        } ]
+      } ]
+    },
+    custom_event: {
+      name: "CustomEvent",
+      "package": "com.arthwood.events",
+      description: "Defines object capable of dispatching events.",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "CustomEvent(name:String = null)",
+          params: {
+            name: "name of the event"
+          },
+          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');" ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "name:Name",
+          description: "The same property as in constructor"
+        }, {
+          header: "collection:DelegateCollection",
+          description: "Collection of registered listeners",
+          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "", "myEvent.collection.length // 0", "myEvent.add(new Delegate(null, function() {", "console.log('event!')", "}));", "myEvent.collection.length // 1" ]
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "add(delegate:Delegate):Void",
+          description: "Registers listener",
+          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "", "myEvent.add(new Delegate(null, function() {", "  console.log('event!')", "}));" ]
+        }, {
+          header: "fire():Array",
+          description: "Triggers the event and returns responses from handlers as an array",
+          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "", "myEvent.add(new Delegate(null, function() {", "  console.log('event!');", "  return 2;", "}));", "// ...then at some point you dispatch the event", "myEvent.fire(this, 'hello'); // [2]" ]
+        }, {
+          header: "getLength():Number",
+          description: "Amount of listeners currently registered",
+          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.getLength(); // 0", "myEvent.add(delegateOne);", "myEvent.getLength(); // 1", "myEvent.add(delegateTwo);", "myEvent.getLength(); // 2", "myEvent.removeAll();", "myEvent.getLength(); // 0" ]
+        }, {
+          header: "remove(delegate:Delegate):Void",
+          description: "Removes listener",
+          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "var delegate = new Delegate(null, function(msg) {", "  console.log('event says: ' + msg)", "});", "", "myEvent.add(delegate);", "myEvent.fire('hello!'); // delegate handles event", "myEvent.remove(delegate);", "myEvent.fire('hello!'); // nothing happens" ]
+        }, {
+          header: "removeAll():Void",
+          description: "Removes all listeners",
+          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.add(delegateOne);", "myEvent.add(delegateTwo);", "myEvent.fire('hello!'); // delegates handle event", "myEvent.removeAll();", "myEvent.fire('hello!');// nothing happens" ]
+        } ]
+      } ]
+    },
+    delegate: {
+      name: "Delegate",
+      "package": "com.arthwood.events",
+      description: "Allows to keep context object along with function.",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "Delegate(object:Object, method:Function, ...rest)",
+          params: {
+            object: "context object",
+            method: "any function"
+          },
+          description: "Delegate wraps context object, any function and optional arguments into single Delegate object.<br/>" + "When you ask for callback function:<br/>" + '<span class="block code">' + "var delegate = new Delegate(this, this.onChange, 'hello');<br/>" + "var callback = delegate.callback();" + "</span>" + 'you will get a Function object that when called will have set <span class="code" >this</span> to context object.<br/>' + 'Optionally when you pass <span class="code">true</span> to <span class="code">delegate.callback()</span>' + 'the <span class="code">callback</span> handler will receive "source" as first argument' + '("source" points to object who actually called the callback).<br/>' + "Arguments list that are passed to callback function are:<br/>" + "- source object (if specified)<br/>" + "- arguments that are passed directly when it is being called<br/>" + "- optional arguments (...rest) passed to delegate when creating the instance",
+          example: [ "function onClick(link, e, msg) {", "  alert('Link clicked! ' + msg);", "  return false;", "}", "", "var delegate = new Delegate(this, onClick, 'hello');", "", "link.onclick = delegate.callback(true);" ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "args:Array",
+          description: "Optional set of arguments"
+        }, {
+          header: "method:Function",
+          description: "The same property as in constructor"
+        }, {
+          header: "object:Object",
+          description: "The same property as in constructor"
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "callback(withSource:Boolean):Function",
+          description: "Returns Function object, than when called will receive source object as first argument if" + '<span class="code">withSource</span> is true, and <span class="code">this</span> in that function' + "will always point to context object",
+          example: [ "var obj = {id: 4};", "", "function meth(source, name, greeting) {", "  console.log('source: ' + source + ', id: ' + this.id + ': ' + greeting + \", it's \" + name);", "}", "", "var delegate = new Delegate(obj, meth, 'hello');", "var callback = delegate.callback(true);", "", "callback('Steve');" ]
+        }, {
+          header: "invoke():Object",
+          description: "Calls the delegate method with object as a context",
+          example: [ "function method(value, message) {", "  alert('method called! value:' + value + ', message: ' + message);", "  return true;", "}", "", "var delegate = new Delegate(this, method, 'hello');", "var result = delegate.invoke(5); // true" ]
+        } ]
+      }, {
+        name: "Static Methods",
+        members: [ {
+          header: "callback(object:Object, method:Function, withSource:Boolean, ...rest):Function",
+          description: "A shorthand function that allows to create delegate and returns it's callback at one step",
+          example: [ "var obj = {id: 4};", "", "function meth(source, name, greeting) {", "  console.log('source: ' + source + ', id: ' + this.id + ': ' + greeting + \", it's \" + name);", "}", "", "var callback = Delegate.callback(obj, meth, true, 'hello');", "", "callback('Steve');" ]
+        }, {
+          header: "create(object:Object, method:Function, ...rest):Delegate",
+          description: "A shorthand function that allows to create and return new delegate object",
+          example: [ "var obj = {id: 4};", "", "function meth(source, name, greeting) {", "  console.log('source: ' + source + ', id: ' + this.id + ': ' + greeting + \", it's \" + name);", "}", "", "var delegate = Delegate.create(obj, meth, 'hello');", "var callback = delegate.callback(true);", "", "callback('Steve');" ]
         } ]
       } ]
     }
@@ -418,59 +595,49 @@ art.DB = {
 
 ArtJs.TemplateHelpers.registerAll({
   renderExample: function(v) {
-    var result;
-    if (v) {
-      var exampleElement = $B("p", {
-        className: "example"
-      }, "Example:").toString();
-      var codeElement = $B("p", {
-        className: "block code"
-      }, v.join("<br />")).toString();
-      result = exampleElement + codeElement;
-    } else {
-      result = "";
-    }
-    return result;
+    var exampleElement = $B("p", {
+      className: "example"
+    }, "Example:").toString();
+    var codeElement = $B("p", {
+      className: "block code"
+    }, v.join("<br />")).toString();
+    return exampleElement + codeElement;
   },
   renderMore: function(v) {
-    return v ? $B("p", null, v).toString() : "";
+    return $B("p", null, v).toString();
   },
   renderDescription: function(v) {
-    return v ? $B("p", null, v).toString() : "";
+    return $B("p", null, v).toString();
+  },
+  renderParams: function(v) {
+    var collection = v.map(this._paramToElement, this).join("");
+    return $B("p", {
+      className: "params"
+    }, collection).toString();
   },
   _paramToElement: function(k, v) {
     return $B("span", null, k).toString() + " - " + v;
-  },
-  renderParams: function(v) {
-    if (v) {
-      var collection = ArtJs.ObjectUtils.map(v, this._paramToElement, this).join("");
-      return ArtJs.$B("p", {
-        className: "params"
-      }, collection).toString();
-    } else {
-      return "";
-    }
   }
 });
 
 art.Sidebar = ArtJs.Class(function() {
+  this.super(arguments);
   this._tree = new ArtJs.Tree(art.DB.tree);
   this._onNodeDelegate = $D(this, this._onNode);
   this._onLeafDelegate = $D(this, this._onLeaf);
   this._leafClassToggler = new ArtJs.ClassToggler("selected");
   this.onLeaf = new ArtJs.CustomEvent("onLeaf");
+  this.element.insert(this._tree.render());
+  var point = this.element.find("li").partition(function(item, idx) {
+    return item.find("ul").isNotEmpty();
+  });
+  this.nodes = point.x;
+  this.leaves = point.y;
+  this.nodes.each($DC(this, this._eachNode));
+  this.leaves.each($DC(this, this._eachLeaf));
+  this._expandNode(this.nodes.first().firstElement());
+  this._leafAction(this.leaves.first().firstElement());
 }, {
-  init: function() {
-    this._element = $(".art-sidebar").first();
-    this._element.insert(this._tree.render());
-    var point = this._element.find("li").partition(function(item, idx) {
-      return item.find("ul").isNotEmpty();
-    });
-    this.nodes = point.x;
-    this.leaves = point.y;
-    this.nodes.each($DC(this, this._eachNode));
-    this.leaves.each($DC(this, this._eachLeaf));
-  },
   _eachNode: function(i) {
     i.firstElement().onClick(this._onNodeDelegate);
     i.find("ul").first().hide();
@@ -501,47 +668,30 @@ art.Sidebar = ArtJs.Class(function() {
   FOLDED: "url(../images/plus.png)",
   UNFOLDED: "url(../images/minus.png)",
   LEAF: "url(../images/leaf.png)"
-});
+}, ArtJs.Component);
 
-art.Content = ArtJs.Class(function() {
-  this._element = $(".art-content").first();
-  this._onContentSuccessD = $D(this, this._onContentSuccess);
-  this._onAnchorDelegate = $D(this, this._onAnchor);
+art.Content = ArtJs.Class(null, {
+  onDependency: function(sidebar) {
+    sidebar.onLeaf.add($D(this, this.onLeaf));
+  },
+  onLeaf: function(element) {
+    this._loadSection(element);
+  },
+  _loadSection: function(a) {
+    ArtJs.TemplateHelpers.renderInto(this.element, "doc", art.DB.content[a.getAttributes().href]);
+  }
+}, {}, ArtJs.Component);
+
+art.Content.dependsOn(art.Sidebar);
+
+art.Member = ArtJs.Class(function(element) {
+  var a = element.first("h4").first("a");
+  a.onClick($D(this, this._onAnchor));
+  var more = element.first(".more");
+  if (more) {
+    more.blindTo(0, 0);
+  }
 }, {
-  loadSection: function(a) {
-    var path = a.getAttributes().href;
-    if (ArtJs.ArrayUtils.includes(this.ctor.templates, path)) {
-      var request = ArtJs.$get("com/arthwood/" + path, null, this._onContentSuccessD);
-      request.path = path;
-    } else {
-      this._setContent(path, "{render('doc', data)}");
-    }
-  },
-  _onContentSuccess: function(ajax) {
-    this._setContent(ajax.path, ajax.getResponseText());
-  },
-  _setContent: function(path, text) {
-    var content = ArtJs.TemplateBase.compile(text, {
-      data: art.DB.content[path]
-    });
-    this._element.setContent(content);
-    this._initializeLinks();
-  },
-  _initializeLinks: function() {
-    var uls = this._element.find("ul.members");
-    uls.each(this._eachMember, this);
-  },
-  _eachMember: function(ul) {
-    ul.elements().each(this._initAnchors, this);
-  },
-  _initAnchors: function(li) {
-    var a = li.first("h4").first("a");
-    a.onClick(this._onAnchorDelegate);
-    var more = li.first(".more");
-    if (more) {
-      more.blindTo(0, 0);
-    }
-  },
   _onAnchor: function(e) {
     e.preventDefault();
     var a = e.currentTarget;
@@ -550,6 +700,4 @@ art.Content = ArtJs.Class(function() {
       more.blindToggle(300);
     }
   }
-}, {
-  templates: []
 });

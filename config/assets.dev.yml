@@ -18,6 +18,7 @@ javascripts:
     - 'artJs/com/arthwood/events/CustomEvent'
     - 'artJs/com/arthwood/math/Point'
     - 'artJs/com/arthwood/math/Rectangle'
+    - 'artJs/com/arthwood/dom/Component'
     - 'artJs/com/arthwood/dom/ElementBuilder'
     - 'artJs/com/arthwood/dom/Selector'
     - 'artJs/com/arthwood/dom/Signature'
@@ -27,6 +28,7 @@ javascripts:
     - 'artJs/com/arthwood/events/Clock'
     - 'artJs/com/arthwood/events/ElementEvent'
     - 'artJs/com/arthwood/events/Timeline'
+    - 'artJs/com/arthwood/events/Timeout'
     - 'artJs/com/arthwood/transition/Blind'
     - 'artJs/com/arthwood/spec/matchers/Base'
     - 'artJs/com/arthwood/spec/matchers/A'
@@ -56,6 +58,7 @@ javascripts:
     - 'art/Helpers'
     - 'art/Sidebar'
     - 'art/Content'
+    - 'art/Member'
   main-dev: 'Main'
 stylesheets:
   docs-dev: 'css/docs'

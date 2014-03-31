@@ -1,9 +1,9 @@
-<li>
+<li class="art art-Member">
   <h4><a href="#">{header}</a></h4>
-  {renderDescription(description)}
-  {renderParams(params)}
+  {renderIf(description, 'renderDescription')}
+  {renderIf(params, 'renderParams')}
   <div class="more">
-    {renderMore(more)}
-    {renderExample(example)}
+    {renderIf(more, 'renderMore')}
+    {renderIf(example, 'renderExample')}
   </div>
 </li>
