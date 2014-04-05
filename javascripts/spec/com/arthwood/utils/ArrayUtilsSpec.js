@@ -316,12 +316,12 @@ spec(ArtJs.ArrayUtils, function() {
     });
   });
 
-  describe('#itemsEqual', function() {
+  describe('#areItemsEqual', function() {
     context('when not equal', function() {
       var value = [2, 5, 1];
 
       it('should return false', function() {
-        var result = subject().itemsEqual(value);
+        var result = subject().areItemsEqual(value);
 
         expect(result).to(beFalse());
       });
@@ -331,7 +331,7 @@ spec(ArtJs.ArrayUtils, function() {
       var value = [2, 2, 2];
 
       it('should return true', function() {
-        var result = subject().itemsEqual(value);
+        var result = subject().areItemsEqual(value);
 
         expect(result).to(beTrue());
       });

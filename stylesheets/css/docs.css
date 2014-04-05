@@ -42,6 +42,8 @@ img {
 p {
   margin: 0 0 10px;
   line-height: 20px; }
+  p:last-child {
+    margin-bottom: 0; }
 
 ul {
   padding-left: 20px;
@@ -91,6 +93,8 @@ ul {
         font-size: 12px; }
       .art-Content ul li p {
         margin-bottom: 4px; }
+        .art-Content ul li p:last-child {
+          margin-bottom: 0; }
 
 .art-Sidebar {
   float: left;

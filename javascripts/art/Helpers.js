@@ -7,7 +7,7 @@ ArtJs.TemplateHelpers.registerAll({
   },
   
   renderMore: function(v) {
-    return $B('p', null, v).toString()
+    return $B('div', null, v).toString();
   },
   
   renderDescription: function(v) {
@@ -17,10 +17,12 @@ ArtJs.TemplateHelpers.registerAll({
   renderParams: function(v) {
     var collection = v.map(this._paramToElement, this).join('');
       
-    return $B('p', {className: 'params'}, collection).toString();
+    return $B('div', {className: 'params'}, collection).toString();
   },
   
   _paramToElement: function(k, v) {
-    return $B('span', null, k).toString() + ' - ' + v;
+    var content = $B('span', null, k).toString() + ' - ' + v;
+    
+    return $B('p', null, content).toString();
   }
 });

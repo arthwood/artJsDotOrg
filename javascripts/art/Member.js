@@ -1,10 +1,14 @@
 art.Member = ArtJs.Class(
   function(element) {
+    this.super(arguments);
+    
     var a = element.first('h4').first('a');
     
     a.onClick($D(this, this._onAnchor));
     
     var more = element.first('.more');
+    
+    this.height = more.getSize().y;
     
     if (more) {
       more.blindTo(0, 0);
@@ -18,8 +22,10 @@ art.Member = ArtJs.Class(
       var more = a.parent().parent().first('.more');
       
       if (more) {
-        more.blindToggle(300);
+        more.blindToggle(this.height, 0.2);
       }
     }
-  }
+  },
+  {_name: 'art.Member'},
+  ArtJs.Component
 );

@@ -8,6 +8,7 @@ art.DB = {
       'Queue': 'queue'
     },
     'com.arthwood.dom': {
+      'Component': 'component',
       'ElementBuilder': 'element_builder',
       'Selector': 'selector'
     },
@@ -15,8 +16,6 @@ art.DB = {
       'Clock': 'clock',
       'CustomEvent': 'custom_event',
       'Delegate': 'delegate',
-      'DelegateCollection': 'delegate_collection',
-      'ElementEvent': 'element_event',
       'QueuedClock': 'queued_clock',
       'Timeline': 'timeline'
     },
@@ -95,8 +94,8 @@ art.DB = {
               header: 'doInjection():Void',
               description: 'After calling this method you are able to call Utils methods on native objects',
               more: 
-                'Some of the class methods from framework can get injected into native classes.<br/>' +
-                'For example most of com.arthwood.utils.ArrayUtils would then affect native Array object.<br/>' +
+                'Some of the class methods from framework can get injected into native classes.' +
+                'For example most of com.arthwood.utils.ArrayUtils would then affect native Array object.' +
                 'To see which native classes can be affected by framework see other parts of documentation, especially "utils" package.',
               example: [
                 'ArtJs.doInjection();',
@@ -116,8 +115,8 @@ art.DB = {
               more: 
                 '<p>Normally after framework is loaded you have two ways of accessing its classes:</p>' +
                 '<ul><li>using full qualified path (com.arthwood.utils.ArrayUtils)</li><li>by looking into top ArtJs namespace (ArtJs.ArrayUtils)</li></ul>' +
-                '<p>For now there is no classes with the same name in whole framework so accessing it via ArtJs is fine.<br/>' + 
-                'However, if at some point it happens, full qualified name is necessary.<br/>' +
+                '<p>For now there is no classes with the same name in whole framework so accessing it via ArtJs is fine.' + 
+                'However, if at some point it happens, full qualified name is necessary.' +
                 'When all framework classes are loaded and accessible (e.g. in js file following the framework file) simply use:</p>',
               example: [
                 'ArtJs.globalize();'
@@ -271,7 +270,7 @@ art.DB = {
               header: 'addItem(item:Object, noEvent:Boolean):Number',
               description:
                 'Adds <span class="code">item</span> to the end of collection and returns new length.' +
-                '<br/>' +
+                '' +
                 'If <span class="code">noEvent</span> is set to true, this action wont dispatch the <span class="code">change</span> event.',
               example:
                 [
@@ -628,7 +627,30 @@ art.DB = {
     component: {
       name: 'Component',
       package: 'com.arthwood.dom',
-      description: 'Components allow you to attach your own view class to element node. In order to do this simply assign "art" class to your element along with class name of your custom class e.g. com.domain.LeftNav.'
+      description: 
+        'Components allow you to attach your own view class to element node. ' +
+        'In order to do this simply assign "art" class to your element along with class name of your custom class ' +
+        'e.g. com-domain-Navigation and define com.domain.Navigation class.',
+      sections: [
+        {
+          name: 'Static methods',
+          members: [
+            {
+              header: 'dependsOn(*dependencies:Class)',
+              description: 'Registers dependency. Whenever any of dependency classes is instantiated it is passed ' +
+                'to onDependency() method which you may need to implement.',
+              example: [
+                '/* ',
+                ' * This will cause two invocations on Content instance:',
+                ' * onDependency(sidebar) and onDependency(footer)',
+                ' * but not necessarily in this order.',
+                ' */',
+                'Content.dependsOn(Sidebar, Footer);'
+              ]
+            }
+          ]
+        }
+      ]
     },
     element_builder: {
       name: 'ElementBuilder',
@@ -647,7 +669,9 @@ art.DB = {
                 empty: 'if true, empty element will be created'
               },
               example: [
-                "var builder = new ElementBuilder('span', {class: 'price'}, '$199');"
+                "var builder = new ElementBuilder('span', {class: 'price'}, '$199');",
+                '',
+                'builder.toString(); // &lt;span class=\"price\"&gt;$199&lt;/span&gt;'
               ]
             }
           ]
@@ -677,7 +701,7 @@ art.DB = {
           name: 'Methods',
           members: [
             {
-              header: 'getElement():Node',
+              header: 'getElement():Element',
               description: 'Builds and returns new Element',
               example: [
                 "var builder = new ElementBuilder('span', {class: 'price'}, '$199');",
@@ -702,12 +726,49 @@ art.DB = {
           name: 'Static Methods',
           members: [
             {
-              header: 'parse(string:String):Node',
-              description: 'Parses <span class="code">string</span> and returns Node',
+              header: 'build(name:String, attributes:Object, value:String, empty:Boolean):ElementBuilder',
+              description: 'Returns new instance while passing all arguments',
+              example: [
+                "var builder = ElementBuilder.build('span', {class: 'price'}, '$199');",
+                '',
+                'builder.toString(); // &lt;span class=\"price\"&gt;$199&lt;/span&gt;'
+              ]
+            },
+            {
+              header: 'parse(string:String):Element',
+              description: 'Returns <span class="code">string</span> as an Element',
               example: [
                 "var element = ElementBuilder.parse('&lt;span class=\"price\"&gt;$199&lt;/span&gt;');",
                 '',
                 'element.toString(); // [object HTMLSpanElement]'
+              ]
+            },
+            {
+              header: 'create(name:String, attributes:Object, value:String, empty:Boolean):Element',
+              description: 'Performs build and parse methods in one step',
+              example: [
+                "var element = ElementBuilder.create('span', {class: 'price'}, '$199');",
+                '',
+                'element.toString(); // [object HTMLSpanElement]'
+              ]
+            },
+            {
+              header: 'getElement(name:String, attributes:Object, value:String, empty:Boolean):Element',
+              description: 'Works the same as corresponding instance method',
+              example: [
+                "var element = ElementBuilder.getElement('span', {class: 'price'}, '$199');",
+                '',
+                'element.toString(); // [object HTMLSpanElement]'
+              ]
+            },
+            {
+              header: 'getCollection(n:Integer, element:ElementBuilder):String',
+              description: 'Returns html string with element repeated n times',
+              example: [
+                "var element = ElementBuilder.getElement('span', {class: 'price'});",
+                "var html = ElementBuilder.getCollection(3, element);",
+                '',
+                'element.toString(); // &lt;span class=\"price\"&gt;&lt;/span&gt;&lt;span class=\"price\"&gt;&lt;/span&gt;&lt;span class=\"price\"&gt;&lt;/span&gt;'
               ]
             }
           ]
@@ -1052,19 +1113,19 @@ art.DB = {
                 method: 'any function'
               },
               description: 
-                "Delegate wraps context object, any function and optional arguments into single Delegate object.<br/>" +
-                "When you ask for callback function:<br/>" +
+                "Delegate wraps context object, any function and optional arguments into single Delegate object." +
+                "When you ask for callback function:" +
                 '<span class="block code">' +
-                "var delegate = new Delegate(this, this.onChange, 'hello');<br/>" +
+                "var delegate = new Delegate(this, this.onChange, 'hello');" +
                 "var callback = delegate.callback();" +
                 '</span>' +
-                'you will get a Function object that when called will have set <span class="code" >this</span> to context object.<br/>' +
+                'you will get a Function object that when called will have set <span class="code" >this</span> to context object.' +
                 'Optionally when you pass <span class="code">true</span> to <span class="code">delegate.callback()</span>' +
                 'the <span class="code">callback</span> handler will receive "source" as first argument' +
-                '("source" points to object who actually called the callback).<br/>' +
-                'Arguments list that are passed to callback function are:<br/>' +
-                '- source object (if specified)<br/>' +
-                '- arguments that are passed directly when it is being called<br/>' +
+                '("source" points to object who actually called the callback).' +
+                'Arguments list that are passed to callback function are:' +
+                '- source object (if specified)' +
+                '- arguments that are passed directly when it is being called' +
                 '- optional arguments (...rest) passed to delegate when creating the instance',
               example: [
                 'function onClick(link, e, msg) {',
@@ -1166,6 +1227,877 @@ art.DB = {
                 '',
                 "callback('Steve');"
               ]
+            }
+          ]
+        }
+      ]
+    },
+    queued_clock: {
+      name: 'QueuedClock',
+      package: 'com.arthwood.events',
+      description: 'Allows to trigger events periodically.',
+      sections: [
+        {
+          name: 'Constructor',
+          members: [
+            {
+              header: 'QueuedClock(interval:Number)',
+              params: {
+                interval: 'interval between clock ticks in miliseconds'
+              },
+              description: 
+                'The class works like queue. You add Delegate items and then clock periodically removes current item and calls invoke() on it.',
+              example: [
+                'var qc = new QueuedClock(1000);',
+                '',
+                '// add one delegate item',
+                'qc.addItem(new Delegate(this, this.onTick)) // 1;',
+                'qc.getLength(); // 1',
+                'qc.start();',
+                '// after first tick the collection is empty',
+                'qc.getLength(); // 0'
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Properties',
+          members: [
+            {
+              header: 'interval:Number',
+              description: 'The same property as in constructor'
+            }
+          ]
+        },
+        {
+          name: 'Methods',
+          members: [
+            {
+              header: 'addItem(item:Delegate):Number',
+              description: 
+                'Adds delegate to collection and returns its new length',
+              example: [
+                'var qc = new QueuedClock(1000);',
+                '',
+                'qc.addItem(new Delegate(this, this.onTick)) // 1;'
+              ]
+            },
+            {
+              header: 'getLength():Number',
+              description: 'Returns current length of collection',
+              example: [
+                'var qc = new QueuedClock(1000);',
+                '',
+                'qc.getLength(); // 0',
+                'qc.addItem(new Delegate(this, this.onTick));',
+                'qc.getLength(); // 1'
+              ]
+            },
+            {
+              header: 'start():Void',
+              description: 'Starts execution',
+              example: [
+                'var qc = new QueuedClock(1000);',
+                '',
+                'qc.addItem(new Delegate(this, this.onTick));',
+                '',
+                'qc.start();'
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    point: {
+      name: 'Point',
+      package: 'com.arthwood.math',
+      description: 'Math 2-dimentional vector implementation',
+      sections: [
+        {
+          name: 'Constructor',
+          members: [
+            {
+              header: 'Point(x:Number, y:Number)',
+              params: {
+                x: 'x coordinate',
+                y: 'y coordinate'
+              },
+              example: [
+                'var point = new Point(20, 40);'
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Properties',
+          members: [
+            {
+              header: 'x:Number',
+              description: 'The same property as in constructor'
+            },
+            {
+              header: 'y:Number',
+              description: 'The same property as in constructor'
+            }
+          ]
+        },
+        {
+          name: 'Methods',
+          members: [
+            {
+              header: 'add():Point',
+              description: 'Adds other vector',
+              example: [
+                'var p1 = new Point(2, 3);',
+                'var p2 = new Point(4, -1);',
+                '',
+                'p1.add(p2); // (6, 2)'
+              ]
+            },
+            {
+              header: 'dot():Number',
+              description: 'Dot product of this vector and other vector',
+              example: [
+                'var p1 = new Point(2, 3);',
+                'var p2 = new Point(4, -1);',
+                '',
+                'p1.dot(p2); // 5'
+              ]
+            },
+            {
+              header: 'getLength():Number',
+              description: 'Length of a vector',
+              example: [
+                'var point = new Point(3, 4);',
+                '',
+                'point.getLength(); // 5'
+              ]
+            },
+            {
+              header: 'getReversed():Point',
+              description: 'Returns reversed vector',
+              example: [
+                'var p = new Point(2, 3);',
+                '',
+                'p.getReversed(); // (-2, -3)',
+                'p; // (2, 3)'
+              ]
+            },
+            {
+              header: 'getTransposed():Point',
+              description: 'Returns new transposed vector',
+              example: [
+                'var p = new Point(2, 3);',
+                '',
+                'p.getTransposed(); // (3, 2)',
+                'p; // (2, 3)'
+              ]
+            },
+            {
+              header: 'reverse():Point',
+              description: 'Reverses vector and returns this vector',
+              example: [
+                'var p = new Point(2, 3);',
+                '',
+                'p.reverse(); // (-2, -3)',
+                'p; // (-2, -3)'
+              ]
+            },
+            {
+              header: 'reverseX():Point',
+              description: 'Reverses x coordinate and returns this vector',
+              example: [
+                'var p = new Point(2, 3);',
+                '',
+                'p.reverse(); // (-2, 3)',
+                'p; // (-2, 3)'
+              ]
+            },
+            {
+              header: 'reverseY():Point',
+              description: 'Reverses y coordinate and returns this vector',
+              example: [
+                'var p = new Point(2, 3);',
+                '',
+                'p.reverse(); // (2, -3)',
+                'p; // (2, -3)'
+              ]
+            },
+            {
+              header: 'sub():Void',
+              description: 'Subtracts other vector',
+              example: [
+                'var p1 = new Point(2, 3);',
+                'var p2 = new Point(4, -1);',
+                '',
+                'p1.sub(p2); // (-2, 4)'
+              ]
+            },
+            {
+              header: 'times(k:Number):Point',
+              description: 'Returns new vector multiplied by <span class="code">k</span>',
+              example: [
+                'var p = new Point(2, 3);',
+                '',
+                'p.times(-3); // (-9, -6)',
+                'p; // (2, 3)'
+              ]
+            },
+            {
+              header: 'toString():String',
+              description: 'Returns string representation od vector',
+              example: [
+                'var p = new Point(2, 3);',
+                '',
+                'p.toString(); // [2, 3]'
+              ]
+            },
+            {
+              header: 'transpose():Point',
+              description: 'Transposes coordinates and returns this vector',
+              example: [
+                'var p = new Point(2, 3);',
+                '',
+                'p.transpose(); // (3, 2)',
+                'p; // (3, 2)'
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    rectangle: {
+      name: 'Rectangle',
+      package: 'com.arthwood.math',
+      description: 'Math rectangle implementation',
+      sections: [
+        {
+          name: 'Constructor',
+          members: [
+            {
+              header: 'Rectangle(left:Number, top:Number, right:Number, bottom:Number)',
+              params: {
+                left: 'left edge',
+                top: 'top edge',
+                right: 'right edge',
+                bottom: 'bottom edge'
+              },
+              example: [
+                'var rectangle = new Rectangle(10, 10, 30, 20);'
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Properties',
+          members: [
+            {
+              header: 'bottom:Number',
+              description: 'The same property as in constructor'
+            },
+            {
+              header: 'left:Number',
+              description: 'The same property as in constructor'
+            },
+            {
+              header: 'right:Number',
+              description: 'The same property as in constructor'
+            },
+            {
+              header: 'top:Number',
+              description: 'The same property as in constructor'
+            }
+          ]
+        },
+        {
+          name: 'Methods',
+          members: [
+            {
+              header: 'getArea():Number',
+              description: 'Area of rectangle',
+              example: [
+                'var rectangle = new Rectangle(10, 10, 30, 20);',
+                '',
+                'rectangle.getArea(); // 200'
+              ]
+            },
+            {
+              header: 'getHeight():Number',
+              description: 'Height of rectangle',
+              example: [
+                'var rectangle = new Rectangle(10, 10, 30, 20);',
+                '',
+                'rectangle.getHeight(); // 10'
+              ]
+            },
+            {
+              header: 'getLeftBottom():Point',
+              description: 'Left-bottom corner vector',
+              example: [
+                'var rectangle = new Rectangle(10, 10, 30, 20);',
+                '',
+                'rectangle.getRightBottom(); // [10, 20]'
+              ]
+            },
+            {
+              header: 'getLeftTop():Point',
+              description: 'Left-top corner vector',
+              example: [
+                'var rectangle = new Rectangle(10, 10, 30, 20);',
+                '',
+                'rectangle.getLeftTop(); // [10, 10]'
+              ]
+            },
+            {
+              header: 'getRightBottom():Point',
+              description: 'Right-bottom corner vector',
+              example: [
+                'var rectangle = new Rectangle(10, 10, 30, 20);',
+                '',
+                'rectangle.getRightBottom(); // [30, 20]'
+              ]
+            },
+            {
+              header: 'getRightTop():Point',
+              description: 'Right-top corner vector',
+              example: [
+                'var rectangle = new Rectangle(10, 10, 30, 20);',
+                '',
+                'rectangle.getRightTop(); // [30, 10]'
+              ]
+            },
+            {
+              header: 'getSize():Point',
+              description: 'Width and height as a vector',
+              example: [
+                'var rectangle = new Rectangle(10, 10, 30, 20);',
+                '',
+                'rectangle.getSize(); // [20, 10]'
+              ]
+            },
+            {
+              header: 'getWidth():Number',
+              description: 'Width of rectangle',
+              example: [
+                'var rectangle = new Rectangle(10, 10, 30, 20);',
+                '',
+                'rectangle.getWidth(); // 20'
+              ]
+            },
+            {
+              header: 'moveBy(point:Point):Void',
+              description: 'Moves rectangle by a vector',
+              example: [
+                'var rectangle = new Rectangle(10, 10, 30, 20);',
+                '',
+                'rectangle.moveBy(new Point(-10, -10);',
+                'rectangle.toString(); // [0, 0, 20, 10]'
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    ajax: {
+      name: 'Ajax',
+      package: 'com.arthwood.net',
+      description: 'Facilitates AJAX requests',
+      sections: [
+        {
+          name: 'Constructor',
+          members: [
+            {
+              header: 'Ajax(url:String, data:Object, method:String)',
+              params: {
+                url: 'request URL',
+                data: 'request data',
+                method: 'request method'
+              },
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                'ajax.onSuccess.add(new Delegate(this, this.onAjaxSuccess));',
+                '',
+                'ajax.request();'
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Events',
+          members: [
+            {
+              header: 'onFailure(ajax:Ajax)',
+              description: 'Dispatched after request failed',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                'ajax.onFailure.add(new Delegate(null, onAjaxFailure));',
+                '',
+                'function onAjaxFailure(ajax) {',
+                "  alert('failure...');",
+                '}',
+                '',
+                'ajax.request();'
+              ]
+            },
+            {
+              header: 'onSuccess(ajax:Ajax)',
+              description: 'Dispatched after successful response',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                'ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));',
+                '',
+                'function onAjaxSuccess(ajax) {',
+                "  alert('success!');",
+                '}',
+                '',
+                'ajax.request();'
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Properties',
+          members: [
+            {
+              header: 'data:Object',
+              description: 'The same property as in constructor'
+            },
+            {
+              header: 'method:String',
+              description: 'The same property as in constructor'
+            },
+            {
+              header: 'requestData:Object',
+              description: 'Data that is actually send to server'
+            },
+            {
+              header: 'requestMethod:String',
+              description: 'Method that is actually used for request'
+            },
+            {
+              header: 'requestQueryData:String',
+              description: 'Request data transformed to a String (this is what is actually send to server)'
+            },
+            {
+              header: 'url:String',
+              description: 'The same property as in constructor'
+            }
+          ]
+        },
+        {
+          name: 'Methods',
+          members: [
+            {
+              header: 'abort():Void',
+              description: 'Aborts request',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                'ajax.request();',
+                '',
+                '// ... at some point during the request',
+                'ajax.abort();'
+              ]
+            },
+            {
+              header: 'getAllRequestHeaders():String',
+              description: 'Returns all request headers',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                'ajax.getAllRequestHeaders();'
+              ]
+            },
+            {
+              header: 'getReadyState():Number',
+              description: 'Returns request ready state',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                'ajax.request();',
+                '',
+                '// ... at some point during request',
+                'ajax.getReadyState();'
+              ]
+            },
+            {
+              header: 'getRequestHeader(header:String):String',
+              description: 'Returns request header',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                "ajax.getRequestHeader('Accept');"
+              ]
+            },
+            {
+              header: 'getResponseText():String',
+              description: 'Returns response text',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                'ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));',
+                '',
+                'function onAjaxSuccess(ajax) {',
+                '  alert(ajax.getResponseText());',
+                '}',
+                '',
+                'ajax.request();'
+              ]
+            },
+            {
+              header: 'getStatus():Number',
+              description: 'Returns request status',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                'ajax.request();',
+                '',
+                '// ... at some point during request',
+                'ajax.getStatus();'
+              ]
+            },
+            {
+              header: 'getStatusText():String',
+              description: 'Returns request status text',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                'ajax.request();',
+                '',
+                '// ... at some point during request',
+                'ajax.getStatusText();'
+              ]
+            },
+            {
+              header: 'request():Void',
+              description: 'Performs request',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                'ajax.onSuccess.add(new Delegate(this, this.onAjaxSuccess));',
+                '',
+                'ajax.request();'
+              ]
+            },
+            {
+              header: 'setRequestHeader(header:String, value:String):Void',
+              description: 'Sets request header',
+              example: [
+                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                '',
+                "ajax.setRequestHeader('X-My-Header', 'hello');"
+              ]
+            }
+          ]
+        },
+        {
+          name: 'Static properties',
+          members: [
+            {
+              header: 'Methods.DELETE',
+              description: "DELETE method name ('DELETE')"
+            },
+            {
+              header: 'Methods.GET',
+              description: "GET method name ('GET')"
+            },
+            {
+              header: 'Methods.POST',
+              description: "POST method name ('POST')"
+            },
+            {
+              header: 'Methods.PUT',
+              description: "PUT method name ('PUT')"
+            },
+            {
+              header: 'ReadyState.LOADED',
+              description: 'LOADED ready state (4)'
+            },
+            {
+              header: 'ReadyState.OPEN',
+              description: 'OPEN ready state (1)'
+            },
+            {
+              header: 'ReadyState.RECEIVING',
+              description: 'RECEIVING ready state (3)'
+            },
+            {
+              header: 'ReadyState.SENT',
+              description: 'SENT ready state (2)'
+            },
+            {
+              header: 'ReadyState.UNINITIALIZED',
+              description: 'UNINITIALIZED ready state (0)'
+            }
+          ]
+        },
+        {
+          name: 'Static methods',
+          members: [
+            {
+              header: 'del(url:String, data:Object, onSuccess:Delegate)',
+              description: 'Performs DELETE request',
+              example: [
+                "var ajax = Ajax.del('/users/3', {name: 'Michael'}, new Delegate(this, this.onAjaxSuccess);"
+              ]
+            },
+            {
+              header: 'get(url:String, data:Object, onSuccess:Delegate)',
+              description: 'Performs GET request',
+              example: [
+                "var ajax = Ajax.get('/users', {only_active: 1}, new Delegate(this, this.onAjaxSuccess);"
+              ]
+            },
+            {
+              header: 'post(url:String, data:Object, onSuccess:Delegate)',
+              description: 'Performs POST request',
+              example: [
+                "var ajax = Ajax.post('/users', {name: 'Michael'}, new Delegate(this, this.onAjaxSuccess);"
+              ]
+            },
+            {
+              header: 'put(url:String, data:Object, onSuccess:Delegate)',
+              description: 'Performs PUT request',
+              example: [
+                "var ajax = Ajax.put('/users/3', {name: 'Michael'}, new Delegate(this, this.onAjaxSuccess);"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    array: {
+      name: 'ArrayUtils',
+      package: 'com.arthwood.utils',
+      description: 
+        'Provides set of methods that operates on any Object instance.<br/>' +
+        'Most of examples show optional use of a method when <span class="code">ArtJs.doInjection()</span> has been performed.',
+      sections: [
+        {
+          name: 'Static methods',
+          members: [
+            {
+              header: 'build(n:Integer, func:Function):Array',
+              description: 'Creates a new array with n items using func as factory. func receives index as the only parameter.',
+              example: [
+                'var array = ArrayUtils.build(4, function(i) { return i * i; });'
+              ]
+            },
+            {
+              header: 'first():Object',
+              description: 'Returns first element of the array.'
+            },
+            {
+              header: 'second():Object',
+              description: 'Returns second element of the array.'
+            },
+            {
+              header: 'third():Object',
+              description: 'Returns third element of the array.'
+            },
+            {
+              header: 'last():Object',
+              description: 'Returns last element of the array.'
+            },
+            {
+              header: 'beforeLast():Object',
+              description: 'Returns last but one element of the array.'
+            },
+            {
+              header: 'getItem(i:Integer):Object',
+              description: 'Returns element on i-th position in the array.'
+            },
+            {
+              header: 'includes(i:*):Boolean',
+              description: 'Returns true if element exists in the array; false otherwise.'
+            },
+            {
+              header: 'includesAll(subset:Array):Boolean',
+              description: 'Returns true if all items in subet exist in the array.'
+            },
+            {
+              header: 'insertAt(index:Integer, insertion:Array):Void',
+              description: 'Inserts insertion array at index posion.'
+            },
+            {
+              header: 'removeAt(index:Integer):Void',
+              description: 'Removes element on index position.'
+            },
+            {
+              header: 'removeItem(i:*, onlyFirst:Boolean = false):Void',
+              description: 'Removes all occurences of i from the array or only first if second argument is true.'
+            },
+            {
+              header: 'arrify(index:Integer = 0):Array',
+              description: 'Converts enumerable to array starting from index. Useful for "arguments" object conversion.'
+            },
+            {
+              header: 'map(f:Function, context:Object = null):Array',
+              description: 'Maps an array using f iterator. Use context to set this reference inside the iterator.'
+            },
+            {
+              header: 'invoke(method:String, args:Array = []):Array',
+              description: 'Calls method on every item while passing args as an argument list. Returns array of results.'
+            },
+            {
+              header: 'pluck(property:String):Array',
+              description: 'Maps every item to its property value.'
+            },
+            {
+              header: 'each(f:Function, context:Object = null):Void',
+              description: 
+                'Calls f for every item. Use context to set this reference inside the callback. ' + 
+                'Callback receives item, index and array as a list of arguments.'
+            },
+            {
+              header: 'eachItem(f:Function, context:Object = null):Void',
+              description: 'Same as each but does not pass index to the callback.'
+            },
+            {
+              header: 'eachIndex(f:Function, context:Object = null):Void',
+              description: 'Same as each but does not pass item to the callback.'
+            },
+            {
+              header: 'inject(init:Object, f:Function, context:Object = null):Object',
+              description: 
+                'Builds an object from array using f as an iterator. Use context to set this reference inside the iterator.' +
+                'Iterator receives result, item, index and array as a list of arguments.' +
+                'You can either update result object inside iterator or return the value which will update the result.'
+            },
+            {
+              header: 'flatten():Array',
+              description: 'Converts multidimentional array to 1-dim Array. Currently it flattens only 1 level deep.'
+            },
+            {
+              header: 'select(f:Function, context:Object = null):Array',
+              description: 
+                'Filters the array leaving only elements for which iterator f returns true. ' +
+                'Use context to set this reference inside the iterator. ' +
+                'Iterator receives item, index and array as a list of arguments. ' +
+                'Returns new array without affecting the subject.'
+            },
+            {
+              header: '$select(f:Function, context:Object = null):Void',
+              description: 
+                'Filters the array by leaving elements for which iterator f returns true. ' +
+                'Use context to set this reference inside the iterator. ' +
+                'Iterator receives item, index and array as a list of arguments. ' +
+                'This method affects the subject.'
+            },
+            {
+              header: 'reject(f:Function, context:Object = null):Array',
+              description: 
+                'Filters the array removing elements for which iterator f returns true. ' +
+                'Use context to set this reference inside the iterator. ' +
+                'Iterator receives item, index and array as a list of arguments. ' +
+                'Returns new array without affecting the subject.'
+            },
+            {
+              header: '$reject(f:Function, context:Object = null):Void',
+              description: 
+                'Filters the array by removing elements for which iterator f returns true. ' +
+                'Use context to set this reference inside the iterator. ' +
+                'Iterator receives item, index and array as a list of arguments. ' +
+                'This method affects the subject.'
+            },
+            {
+              header: 'detect(f:Function, context:Object = null):Object',
+              description: 
+                'Returns first element for which iterator f returns true. ' +
+                'Use context to set this reference inside the iterator. ' +
+                'Iterator receives item, index and array as a list of arguments.'
+            },
+            {
+              header: 'equal(f:Function, context:Object = null):Boolean',
+              description: 
+                'Returns true if all arrays in subject have the same items. ' +
+                'You can optionally pass f iterator to define equality criteria. See #uniq for more information.' +
+                'Use context to set this reference inside the iterator.'
+            },
+            {
+              header: 'areItemsEqual(f:Function, context:Object = null):Boolean',
+              description: 
+                'Returns true if all items are equal. ' +
+                'You can optionally pass f iterator to define equality criteria. See #uniq for more information.' +
+                'Use context to set this reference inside the iterator.'
+            },
+            {
+              header: 'transpose():Array',
+              description: 
+                'Returns new Array with switched rows and columns. '
+            },
+            {
+              header: 'all(f:Function, context:Object = null):Boolean',
+              description: 
+                'Returns true if iterartor f returns true for all items. ' +
+                'Use context to set this reference inside the iterator.'
+            },
+            {
+              header: 'any(f:Function, context:Object = null):Boolean',
+              description: 
+                'Returns true if iterartor f returns true for at least one item. ' +
+                'Use context to set this reference inside the iterator.'
+            },
+            {
+              header: 'partition(f:Function, context:Object = null):Array',
+              description: 
+                'Returns Point object with x property set to array of elements for each f iterator returns true and ' +
+                'y property for each f iterator returns false. ' +
+                'Use context to set this reference inside the iterator.'
+            },
+            {
+              header: 'uniq(f:Function = identity, context:Object = null):Array',
+              description: 
+                'Returns new Array with first occurences of duplicatied objects. ' +
+                'Use f iterator to define equality criteria. ' +
+                'Use context to set this reference inside the iterator.'
+            },
+            {
+              header: 'groupBy(f:Function = identity, context:Object = null, keepOrder:Boolean = false):Object',
+              description: 
+                'Returns Object whose keys are unique results of f iterator and values are items for which iterator returns that key. ' +
+                'Use f iterator to define equality criteria.' +
+                'Use context to set this reference inside the iterator. ' +
+                'If you pass keepOrder as true, then the result is an Array of Points object with x and y values equal to key and values as described above respectively.'
+            },
+            {
+              header: 'indexOf(item:Object):Integer',
+              description: 'Returns position of given item.'
+            },
+            {
+              header: 'intersection(arr:Array):Array',
+              description: 'Returns Array of shared elements. Argument is an array of arrays to be tested.'
+            },
+            {
+              header: 'selectNonEmpty():Array',
+              description: 'Should be called on 2-dim array. Returns new Array with empty Arrays removed.'
+            },
+            {
+              header: 'compact():Array',
+              description: 'Returns new Array with null or undefined items removed.'
+            },
+            {
+              header: 'isEmpty():Boolean',
+              description: 'Returns true if array is empty; false otherwise.'
+            },
+            {
+              header: 'numerize():Array',
+              description: 'Returns new array with items cast to Number.'
+            },
+            {
+              header: 'print():Void',
+              description: 'Prints out every item using ArtJs.p method.'
+            },
+            {
+              header: 'sum():Number',
+              description: 'Returns sum of all elements.'
+            },
+            {
+              header: 'stringify():Array',
+              description: 'Returns new array with items cast to String.'
             }
           ]
         }

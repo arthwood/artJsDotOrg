@@ -1,7 +1,6 @@
 var ArtJs = {
   VERSION: "2.0",
   name: "ArtJs",
-  dependencies: {},
   globalize: function() {
     var copy = this.ObjectUtils.copy(this);
     delete copy.globalize;
@@ -53,9 +52,9 @@ ArtJs.log = function(msg, level) {
 };
 
 ArtJs.ObjectUtils = com.arthwood.utils.Object = {
-  name: "ObjectUtils",
+  _name: "ObjectUtils",
   QUERY_DELIMITER: "&",
-  init: function() {
+  _init: function() {
     this._invertedRemoveValueDC = ArtJs.$DC(this, this._invertedRemoveValue);
     this._eachPairDeleteValueDC = ArtJs.$DC(this, this._eachPairDeleteValue);
     this._invertedIncludesDC = ArtJs.$DC(this, this._invertedIncludes);
@@ -340,7 +339,11 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
 };
 
 ArtJs.ArrayUtils = com.arthwood.utils.Array = {
-  name: "ArrayUtils",
+  _name: "ArrayUtils",
+  _init: function() {
+    this._areItemsEqualCallback = ArtJs.$DC(this, this.areItemsEqual);
+    this._invokeCallback = ArtJs.$DC(this, this._invoke);
+  },
   build: function(n, func) {
     var arr = new Array(n);
     for (var i = 0; i < n; i++) {
@@ -389,7 +392,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     var n = arr.length;
     while (n-- > 0) {
       if (arr[n] === item) {
-        arr.splice(n, 1);
+        this.removeAt(arr, n);
         if (onlyFirst) {
           return;
         }
@@ -415,13 +418,12 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     }
     return result;
   },
-  invoke: function(arr, meth, args) {
-    this._invoke.meth = meth;
-    this._invoke.args = args;
-    return this.map(arr, this._invoke, this);
+  invoke: function(arr, meth) {
+    this._invokeCallback.delegate.args = [ meth, this.arrify(arguments, 2) ];
+    return this.map(arr, this._invokeCallback);
   },
-  _invoke: function(i) {
-    return i[arguments.callee.meth].apply(i, arguments.callee.args);
+  _invoke: function(i, idx, arr, meth, args) {
+    return i[meth].apply(i, args);
   },
   pluck: function(arr, prop) {
     this._pluck.prop = prop;
@@ -478,7 +480,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   },
   select: function(arr, func, context) {
     var result = [];
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
@@ -490,9 +492,20 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     }
     return result;
   },
+  $select: function(arr, func, context) {
+    var n = arr.length - 1;
+    var test = func || this.identity;
+    var item;
+    for (var i = n; i >= 0; i--) {
+      item = arr[i];
+      if (!test.call(context || this, item, parseInt(i, 10), arr)) {
+        this.removeAt(arr, i);
+      }
+    }
+  },
   reject: function(arr, func, context) {
     var result = [];
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
@@ -506,17 +519,17 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   },
   $reject: function(arr, func, context) {
     var n = arr.length - 1;
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     for (var i = n; i >= 0; i--) {
       item = arr[i];
       if (test.call(context || this, item, parseInt(i, 10), arr)) {
-        arr.splice(i, 1);
+        this.removeAt(arr, i);
       }
     }
   },
   detect: function(arr, func, context) {
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
@@ -528,11 +541,12 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     }
     return null;
   },
-  equal: function(arr) {
-    return this.all(this.transpose(arr), this.itemsEqual, this);
+  equal: function(arr, func, context) {
+    this._areItemsEqualCallback.delegate.args = [ func, context ];
+    return this.all(this.transpose(arr), this._areItemsEqualCallback, this);
   },
-  itemsEqual: function(arr) {
-    return this.uniq(arr).length == 1;
+  areItemsEqual: function(i, idx, arr, func, context) {
+    return this.uniq(i, func, context).length == 1;
   },
   transpose: function(arr) {
     var result = [];
@@ -547,7 +561,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return result;
   },
   all: function(arr, func, context) {
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
@@ -560,7 +574,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return true;
   },
   any: function(arr, func, context) {
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
@@ -572,7 +586,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     }
     return false;
   },
-  _defaultTestFunction: function(i) {
+  identity: function(i) {
     return i;
   },
   partition: function(arr, func, context) {
@@ -591,7 +605,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return this.map(this.pluck(groups, "y"), this.first, this);
   },
   groupBy: function(arr, func, context, keepOrder) {
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var result = [];
     var values = {};
     var group;
@@ -708,6 +722,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     proto.removeItem = dc(this, this.removeItem, true);
     proto.second = dc(this, this.second, true);
     proto.select = dc(this, this.select, true);
+    proto.$select = dc(this, this.$select, true);
     proto.selectNonEmpty = dc(this, this.selectNonEmpty, true);
     proto.stringify = dc(this, this.stringify, true);
     proto.sum = dc(this, this.sum, true);
@@ -724,8 +739,12 @@ ArtJs.Class = function(ctor, proto, stat, superclass) {
   return builder.ctor;
 };
 
+ArtJs.Class._name = "Class";
+
 ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor = ctor || this._defaultConstructor();
+  this.ctor._onCreated = this._defaultOnCreated;
+  this.ctor._onExtended = this._defaultOnExtended;
   if (superclass) {
     var _super_ = function() {
       var ctor = arguments.callee.ctor;
@@ -751,9 +770,19 @@ ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
   if (stat) {
     ArtJs.ObjectUtils.eachPair(stat, this._eachStat, this);
   }
+  this.ctor._onCreated();
+  if (superclass) {
+    this.ctor._onExtended();
+  }
 };
 
 ArtJs.ClassBuilder.prototype = {
+  _defaultOnCreated: function() {
+    this.subclasses = [];
+  },
+  _defaultOnExtended: function() {
+    this.superclass.subclasses.push(this);
+  },
   _defaultConstructor: function() {
     return function() {
       this.super(arguments);
@@ -824,7 +853,7 @@ ArtJs.$DC = ArtJs.Delegate.callback;
 ArtJs.$D = ArtJs.Delegate.create;
 
 ArtJs.MathUtils = com.arthwood.utils.Math = {
-  name: "MathUtils",
+  _name: "MathUtils",
   sgn: function(x) {
     return x === 0 ? 0 : Math.abs(x) / x;
   },
@@ -843,7 +872,7 @@ ArtJs.MathUtils = com.arthwood.utils.Math = {
 };
 
 ArtJs.StringUtils = com.arthwood.utils.String = {
-  name: "StringUtils",
+  _name: "StringUtils",
   first: function(str) {
     return str.substr(0, 1);
   },
@@ -980,6 +1009,7 @@ ArtJs.StringUtils = com.arthwood.utils.String = {
 };
 
 ArtJs.DateUtils = com.arthwood.utils.Date = {
+  _name: "DateUtils",
   getTime: function() {
     return (new Date).getTime();
   },
@@ -1121,7 +1151,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   SUB_OBJ_RE: /\[\w+\]/g,
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: [ "", "-o-", "-ms-", "-moz-", "-khtml-", "-webkit-" ],
-  init: function() {
+  _init: function() {
     this.detectHiddenElementDC = ArtJs.$DC(this, this.detectHiddenElement);
     ArtJs.$insert = ArtJs.$DC(this, this.insert);
   },
@@ -1535,7 +1565,7 @@ ArtJs.Toggler = com.arthwood.utils.Toggler = ArtJs.Class(function(unique) {
     }
   }
 }, {
-  name: "Toggler"
+  _name: "Toggler"
 });
 
 ArtJs.ClassToggler = com.arthwood.utils.ClassToggler = ArtJs.Class(function(className) {
@@ -1561,7 +1591,7 @@ ArtJs.ClassToggler = com.arthwood.utils.ClassToggler = ArtJs.Class(function(clas
     this.onDeactivate.fire(this);
   }
 }, {
-  name: "ClassToggler"
+  _name: "ClassToggler"
 });
 
 ArtJs.Locator = com.arthwood.module.Locator = {
@@ -1571,11 +1601,11 @@ ArtJs.Locator = com.arthwood.module.Locator = {
   },
   extensions: {
     find: function(i) {
-      this.found.identifier = i;
-      return ArtJs.ArrayUtils.detect(this.instances, this.found);
+      this.identifier = i;
+      return ArtJs.ArrayUtils.detect(this.instances, this.found, this);
     },
     found: function(i) {
-      return i.getIdentifier() == arguments.callee.identifier;
+      return i.getIdentifier() == this.identifier;
     }
   }
 };
@@ -1721,18 +1751,40 @@ ArtJs.Rectangle.prototype = {
 
 ArtJs.Component = com.arthwood.dom.Component = ArtJs.Class(function(element) {
   this.element = element;
-}, null, {
-  scan: function(element) {
-    ArtJs.ArrayUtils.each(ArtJs.$find(element, ".art"), this._init, this);
-  },
+}, {
+  onDependency: function() {}
+}, {
+  _name: "Component",
   dependsOn: function() {
     this.dependees = ArtJs.$A(arguments);
     ArtJs.ArrayUtils.each(this.dependees, this._eachDependee, this);
   },
-  _eachDependee: function(i) {
-    (i.dependants = i.dependants || []).push(this);
+  _onExtended: function() {
+    this.super(arguments);
+    this.instances = [];
+    this.dependants = [];
   },
-  _init: function(i) {
+  _init: function() {
+    var clock = new ArtJs.Clock(2e3);
+    clock.onChange.add(ArtJs.$D(this, this._onSweep));
+    clock.start();
+  },
+  _onSweep: function(clock) {
+    ArtJs.ArrayUtils.each(this.subclasses, this._sweepInstances, this);
+  },
+  _sweepInstances: function(i) {
+    ArtJs.ArrayUtils.$select(i.instances, this._isOnStage, this);
+  },
+  _isOnStage: function(i) {
+    return ArtJs.Selector.isDescendantOf(i.element);
+  },
+  _eachDependee: function(i) {
+    i.dependants.push(this);
+  },
+  _scan: function(element) {
+    ArtJs.ArrayUtils.each(ArtJs.$find(element, ".art"), this._onFound, this);
+  },
+  _onFound: function(i) {
     this._element = i;
     var classnames = ArtJs.ElementUtils.getClasses(i);
     ArtJs.ArrayUtils.removeItem(classnames, "art");
@@ -1742,13 +1794,16 @@ ArtJs.Component = com.arthwood.dom.Component = ArtJs.Class(function(element) {
     var path = i.split("-");
     var _class = ArtJs.ArrayUtils.inject(path, window, this._injectPathChunk, this);
     if (_class instanceof Function) {
-      var instance = new _class(this._element);
-      (_class.instances = _class.instances || []).push(instance);
-      this._eachDependeeInstance.instance = instance;
-      ArtJs.ArrayUtils.each(ArtJs.ArrayUtils.flatten(ArtJs.ArrayUtils.map(_class.dependees, this._toInstances, this)), this._eachDependeeInstance, this);
-      this._eachDependantInstance.instance = instance;
-      ArtJs.ArrayUtils.each(ArtJs.ArrayUtils.flatten(ArtJs.ArrayUtils.map(_class.dependants, this._toInstances, this)), this._eachDependantInstance, this);
+      this._create(_class);
     }
+  },
+  _create: function(_class) {
+    var instance = new _class(this._element);
+    _class.instances.push(instance);
+    this._eachDependeeInstance.instance = instance;
+    ArtJs.ArrayUtils.each(ArtJs.ArrayUtils.flatten(ArtJs.ArrayUtils.map(_class.dependees, this._toInstances, this)), this._eachDependeeInstance, this);
+    this._eachDependantInstance.instance = instance;
+    ArtJs.ArrayUtils.each(ArtJs.ArrayUtils.flatten(ArtJs.ArrayUtils.map(_class.dependants, this._toInstances, this)), this._eachDependantInstance, this);
   },
   _toInstances: function(i) {
     return i.instances = i.instances || [];
@@ -1766,16 +1821,14 @@ ArtJs.Component = com.arthwood.dom.Component = ArtJs.Class(function(element) {
   }
 });
 
-ArtJs.ElementBuilder = com.arthwood.dom.ElementBuilder = function(name, attributes, value, isEmpty) {
+ArtJs.ElementBuilder = com.arthwood.dom.ElementBuilder = ArtJs.Class(function(name, attributes, value, isEmpty) {
   this.name = name;
   this.attributes = attributes;
   this.value = value;
   this.isEmpty = Boolean(isEmpty);
-};
-
-ArtJs.ElementBuilder.prototype = {
+}, {
   toString: function() {
-    var attributes = this.attributes && ArtJs.ObjectUtils.isNotEmpty(this.attributes) ? " " + this.attributesString() + " " : "";
+    var attributes = this.attributes && ArtJs.ObjectUtils.isNotEmpty(this.attributes) ? " " + this.ctor._attributesString(this.attributes) + " " : "";
     var part;
     if (this.value) {
       part = ">" + this.value + "</" + this.name + ">";
@@ -1790,57 +1843,24 @@ ArtJs.ElementBuilder.prototype = {
   },
   getElement: function() {
     var e = document.createElement(this.name);
-    var sa = ArtJs.ElementBuilder.setAttribute;
+    var sa = this.ctor._setAttribute;
     sa.e = e;
     ArtJs.ObjectUtils.eachPair(this.attributes, sa);
     if (this.value && !this.isEmpty) {
       e.innerHTML = this.value;
     }
     return e;
-  },
-  attributesString: function() {
-    return ArtJs.ArrayUtils.map(ArtJs.ObjectUtils.toArray(this.attributes), ArtJs.ElementBuilder.attributePairToString, ArtJs.ElementBuilder).join(" ");
   }
-};
-
-ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
-  init: function() {
+}, {
+  _KEY_TRANSLATOR: {
+    className: "class",
+    forField: "for"
+  },
+  _init: function() {
     ArtJs.$B = ArtJs.$DC(this, this.build);
     ArtJs.$C = ArtJs.$DC(this, this.create);
     ArtJs.$E = ArtJs.$DC(this, this.getElement);
     ArtJs.$P = ArtJs.$DC(this, this.parse);
-  },
-  getElement: function(name, attributes, value, empty) {
-    return this.build(name, attributes, value, empty).getElement();
-  },
-  _getElement: function(i) {
-    return arguments.callee.element;
-  },
-  getCollection: function(n, element) {
-    this._getElement.element = element;
-    return ArtJs.ArrayUtils.build(n, this._getElement).join("");
-  },
-  setAttribute: function(k, v) {
-    arguments.callee.e.setAttribute(k, v);
-  },
-  attributePairToString: function(arr) {
-    var key = this.translateKey(arr[0]);
-    var value = arr[1];
-    return key + '="' + value + '"';
-  },
-  translateKey: function(k) {
-    var result;
-    switch (k) {
-     case "className":
-      result = "class";
-      break;
-     case "forField":
-      result = "for";
-      break;
-     default:
-      result = k;
-    }
-    return result;
   },
   build: function(name, attributes, value, empty) {
     return new this(name, attributes, value, empty);
@@ -1852,11 +1872,32 @@ ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
   },
   create: function(name, attributes, value, empty) {
     return this.parse(this.build(name, attributes, value, empty));
+  },
+  getElement: function(name, attributes, value, empty) {
+    return this.build(name, attributes, value, empty).getElement();
+  },
+  getCollection: function(n, element) {
+    this._getElement.element = element;
+    return ArtJs.ArrayUtils.build(n, this._getElement).join("");
+  },
+  _getElement: function(i) {
+    return arguments.callee.element;
+  },
+  _attributesString: function(attrs) {
+    return ArtJs.ArrayUtils.map(ArtJs.ObjectUtils.toArray(attrs), this._attributePairToString, this).join(" ");
+  },
+  _setAttribute: function(k, v) {
+    arguments.callee.e.setAttribute(k, v);
+  },
+  _attributePairToString: function(arr) {
+    var key = this._KEY_TRANSLATOR[arr[0]] || arr[0];
+    var value = arr[1];
+    return key + '="' + value + '"';
   }
 });
 
 ArtJs.Selector = com.arthwood.dom.Selector = {
-  init: function() {
+  _init: function() {
     ArtJs.$ = ArtJs.$DC(this, this.getElements);
     ArtJs.$find = ArtJs.$DC(this, this.find);
     ArtJs.$parent = ArtJs.$DC(this, this.parent);
@@ -1905,12 +1946,11 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
   },
   _getDescendants: function(e, root) {
     var result = [];
-    while (e) {
+    while (e = e.parentNode) {
       result.push(e);
-      e = e.parentNode;
     }
     var index = result.indexOf(root || document.body);
-    return root && index == -1 ? null : result.slice(1, index);
+    return root && index == -1 ? null : result.slice(0, index);
   },
   _hasElementDescendants: function(point) {
     return !(point.y === null);
@@ -2463,9 +2503,7 @@ ArtJs.Timeout = com.arthwood.events.Timeout = ArtJs.Class(function(delay) {
   }
 });
 
-ArtJs.Blind = com.arthwood.transition.Blind = function(e, delta, interval) {};
-
-ArtJs.ObjectUtils.extend(ArtJs.Blind, {
+ArtJs.Blind = com.arthwood.transition.Blind = {
   EASE_IN_OUT: "ease-in-out",
   blindToggle: function(e, value, duration, type, delay) {
     this.blindTo(e, e.style.height == "0px" ? value : 0, duration, type, delay);
@@ -2485,7 +2523,7 @@ ArtJs.ObjectUtils.extend(ArtJs.Blind, {
     proto.blindToggle = ArtJs.$DC(this, this.blindToggle, true);
     proto.blindTo = ArtJs.$DC(this, this.blindTo, true);
   }
-});
+};
 
 ArtJs.BaseMatcher = com.arthwood.spec.matchers.Base = ArtJs.Class(function(expected, toText) {
   this.expected = expected;
@@ -2862,7 +2900,7 @@ ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(function() {
   },
   _nodeToString: function(i) {
     var facet = i.facet;
-    return typeof facet == "string" ? facet : facet.name;
+    return typeof facet == "string" ? facet : facet._name;
   },
   _isFailure: function(i) {
     return !i.value;
@@ -2912,26 +2950,33 @@ ArtJs.TemplateBase = com.arthwood.template.Base = ArtJs.Class(function(content, 
     return ArtJs.StringUtils.strip(i);
   }
 }, {
-  compile: function(content, scope) {
-    var template = new this(content, scope);
-    template.compile();
-    return template.content;
+  renderContent: function(content, scope) {
+    var instance = new this(content, scope);
+    instance.compile();
+    return instance.content;
   },
-  compileInto: function(element, content, scope) {
-    ArtJs.ElementUtils.setContent(element, this.compile(content, scope));
-    ArtJs.Component.scan(element);
+  renderInto: function(element, content, scope) {
+    this.render(element, this.renderContent(content, scope));
+  },
+  renderTemplate: function(templateId, scope) {
+    var template = ArtJs.TemplateLibrary.getTemplate(templateId);
+    return this.renderContent(template, scope);
+  },
+  renderTemplateInto: function(element, templateId, scope) {
+    this.render(element, this.renderTemplate(templateId, scope));
+  },
+  render: function(element, content) {
+    ArtJs.ElementUtils.setContent(element, content);
+    ArtJs.Component._scan(element);
   }
 });
 
 ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
   render: function(templateId, scope) {
-    var template = ArtJs.TemplateLibrary.getTemplate(templateId);
-    return ArtJs.TemplateBase.compile(template, scope);
+    return ArtJs.TemplateBase.renderTemplate(templateId, scope);
   },
   renderInto: function(element, templateId, scope) {
-    var content = this.render(templateId, scope);
-    ArtJs.ElementUtils.setContent(element, content);
-    ArtJs.Component.scan(element);
+    return ArtJs.TemplateBase.renderTemplateInto(element, templateId, scope);
   },
   renderCollection: function(template, collection) {
     var callback = ArtJs.$DC(this, this._renderCollectionItem, false, template);
@@ -2968,7 +3013,7 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
     TEMPLATES: []
   },
   _templates: {},
-  init: function() {
+  _init: function() {
     this.onLoad = new ArtJs.CustomEvent("Library::Load");
     this._onLoadSuccessBind = ArtJs.$D(this, this.onLoadSuccess);
     ArtJs.onDocumentLoad.add(ArtJs.$D(this, this._loadAll));
@@ -2990,8 +3035,7 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
   },
   _loadCheck: function() {
     if (ArtJs.ObjectUtils.keys(this._templates).length == this.config.TEMPLATES.length) {
-      ArtJs.ElementUtils.setContent(document.body, ArtJs.TemplateBase.compile(document.body.innerHTML));
-      ArtJs.Component.scan(document.body);
+      ArtJs.TemplateBase.renderInto(document.body, document.body.innerHTML);
       ArtJs.onLibraryLoad.fire(this);
     }
   }
@@ -3025,23 +3069,65 @@ ArtJs.ElementInspector = com.arthwood.ui.ElementInspector = ArtJs.Class(function
   }
 });
 
-ArtJs.Tree = com.arthwood.ui.Tree = ArtJs.Class(function(data) {
+ArtJs.Tree = com.arthwood.ui.Tree = ArtJs.Class(function(data, element) {
   this.data = data;
+  this._onNodeDelegate = ArtJs.$D(this, this._onNode);
+  this._onLeafDelegate = ArtJs.$D(this, this._onLeaf);
+  this._leafClassToggler = new ArtJs.ClassToggler("selected");
+  this.onLeaf = new ArtJs.CustomEvent("onLeaf");
+  ArtJs.ElementUtils.insert(element, this.render());
+  var point = ArtJs.ArrayUtils.partition(ArtJs.Selector.find(element, "li"), function(item, idx) {
+    return ArtJs.ArrayUtils.isNotEmpty(ArtJs.Selector.find(item, "ul"));
+  });
+  var nodes = point.x;
+  var leaves = point.y;
+  ArtJs.ArrayUtils.each(nodes, ArtJs.$DC(this, this._eachNode));
+  ArtJs.ArrayUtils.each(leaves, ArtJs.$DC(this, this._eachLeaf));
 }, {
   render: function() {
     return ArtJs.$P(this._renderNode(this.data));
   },
   _renderNode: function(node) {
-    return ArtJs.$B("ul", null, ArtJs.ObjectUtils.map(node, this._eachNode, this).join("")).toString();
+    return ArtJs.$B("ul", null, ArtJs.ObjectUtils.map(node, this._mapNode, this).join("")).toString();
   },
-  _eachNode: function(k, v) {
+  _mapNode: function(k, v) {
     var leaf = typeof v == "string";
     var href = leaf ? v : "#";
     var value = ArtJs.$B("a", {
       href: href
     }, k).toString() + (leaf ? "" : this._renderNode(v));
     return ArtJs.$B("li", null, value).toString();
+  },
+  _eachNode: function(i) {
+    ArtJs.ElementUtils.onClick(ArtJs.ElementUtils.firstElement(i), this._onNodeDelegate);
+    ArtJs.ElementUtils.hide(ArtJs.ArrayUtils.first(ArtJs.Selector.find(i, "ul")));
+    i.style.listStyleImage = this.ctor.FOLDED;
+  },
+  _onNode: function(originalEvent, elementEvent) {
+    originalEvent.preventDefault();
+    this._expandNode(elementEvent.element);
+  },
+  _expandNode: function(a) {
+    var ul = ArtJs.ElementUtils.next(a);
+    ArtJs.ElementUtils.toggle(ul);
+    ArtJs.Selector.parent(a).style.listStyleImage = ArtJs.ElementUtils.isHidden(ul) ? this.ctor.FOLDED : this.ctor.UNFOLDED;
+  },
+  _eachLeaf: function(i) {
+    ArtJs.ElementUtils.onClick(ArtJs.ElementUtils.firstElement(i), this._onLeafDelegate);
+    i.style.listStyleImage = this.ctor.LEAF;
+  },
+  _onLeaf: function(originalEvent, elementEvent) {
+    originalEvent.preventDefault();
+    this._leafAction(elementEvent.element);
+  },
+  _leafAction: function(element) {
+    this._leafClassToggler.toggle(element);
+    this.onLeaf.fire(element);
   }
+}, {
+  FOLDED: "url(../images/plus.png)",
+  UNFOLDED: "url(../images/minus.png)",
+  LEAF: "url(../images/leaf.png)"
 });
 
 ArtJs.onDocumentLoad = new ArtJs.CustomEvent("document:load");
@@ -3051,6 +3137,7 @@ ArtJs.onWindowLoad = new ArtJs.CustomEvent("window:load");
 ArtJs.onLibraryLoad = new ArtJs.CustomEvent("library:load");
 
 document.addEventListener("DOMContentLoaded", function() {
+  ArtJs.Component._init();
   ArtJs.onDocumentLoad.fire();
 }, false);
 
@@ -3058,12 +3145,14 @@ window.addEventListener("load", function() {
   ArtJs.onWindowLoad.fire();
 }, false);
 
-ArtJs.ObjectUtils.init();
+ArtJs.ArrayUtils._init();
 
-ArtJs.ElementBuilder.init();
+ArtJs.ObjectUtils._init();
 
-ArtJs.ElementUtils.init();
+ArtJs.ElementBuilder._init();
 
-ArtJs.Selector.init();
+ArtJs.ElementUtils._init();
 
-ArtJs.TemplateLibrary.init();
+ArtJs.Selector._init();
+
+ArtJs.TemplateLibrary._init();
