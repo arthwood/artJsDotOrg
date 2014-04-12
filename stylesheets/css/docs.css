@@ -49,7 +49,7 @@ ul {
   padding-left: 20px;
   margin: 0; }
 
-.param {
+.params p span, .param {
   font-weight: bold; }
 
 .label {
@@ -63,7 +63,7 @@ ul {
 .main {
   margin: 0 auto;
   padding: 20px;
-  width: 800px;
+  width: 920px;
   background: white;
   border-style: solid;
   border-width: 0 1px 1px;
@@ -72,54 +72,55 @@ ul {
 .header {
   margin-bottom: 20px; }
 
-.art-Content {
+.art-component-Content {
   float: right;
   padding: 20px;
   border: 1px solid #cccccc;
   background: #eeeeee;
-  width: 520px; }
-  .art-Content ul {
+  width: 640px; }
+  .art-component-Content ul {
     padding: 6px 14px;
     margin-bottom: 20px;
     border: 1px solid #cccccc;
     background: white; }
-    .art-Content ul li {
+    .art-component-Content ul li {
       padding: 12px 4px;
       border-bottom: 1px solid #cccccc;
       list-style: none; }
-      .art-Content ul li:last-child {
+      .art-component-Content ul li:last-child {
         border-bottom: none; }
-      .art-Content ul li a {
+      .art-component-Content ul li a {
         font-size: 12px; }
-      .art-Content ul li p {
+      .art-component-Content ul li p {
         margin-bottom: 4px; }
-        .art-Content ul li p:last-child {
+        .art-component-Content ul li p:last-child {
           margin-bottom: 0; }
 
-.art-Sidebar {
+.art-component-Sidebar {
   float: left;
   width: 180px;
   padding: 20px;
   border: 1px solid #cccccc;
   background: #eeeeee; }
-  .art-Sidebar li {
+  .art-component-Sidebar li {
     line-height: 18px; }
-  .art-Sidebar > ul {
+  .art-component-Sidebar > ul {
     margin-left: 2px; }
-    .art-Sidebar > ul li ul {
+    .art-component-Sidebar > ul li ul {
       margin: 4px 0; }
-  .art-Sidebar ul li a {
+  .art-component-Sidebar ul li a {
     font-size: 11px;
     padding: 2px; }
-    .art-Sidebar ul li a.selected {
+    .art-component-Sidebar ul li a.selected {
       background: #ff0077;
       color: white; }
 
-.code {
+pre {
   font-family: Courier New;
-  font-size: 11px; }
+  font-size: 12px;
+  line-height: 16px; }
 
-.more > div {
+.more .container {
   padding: 10px; }
 
 .block {

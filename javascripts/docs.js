@@ -1,4 +1,7 @@
-var art = {};
+var art = {
+  component: {},
+  model: {}
+};
 
 ArtJs.TemplateLibrary.config = {
   PATH: '/artJsDotOrg/templates',

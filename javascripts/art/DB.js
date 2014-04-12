@@ -17,7 +17,8 @@ art.DB = {
       'CustomEvent': 'custom_event',
       'Delegate': 'delegate',
       'QueuedClock': 'queued_clock',
-      'Timeline': 'timeline'
+      'Timeline': 'timeline',
+      'Timeout': 'timeout'
     },
     'com.arthwood.math': {
       'Point': 'point',
@@ -43,8 +44,8 @@ art.DB = {
       'Subject': 'subject'
     },
     'com.arthwood.template': {
-      'Base': 'template/base',
-      'Helpers': 'template/helpers'
+      'Helpers': 'template/helpers',
+      'Library': 'template/library'
     },
     'com.arthwood.transition': {
       'Blind': 'transition/blind'
@@ -64,7 +65,6 @@ art.DB = {
       'ClassToggler': 'class_toggler',
       'Date': 'date',
       'Element': 'element',
-      'Event': 'event',
       'Log': 'log',
       'Math': 'math',
       'Object': 'object',
@@ -81,23 +81,19 @@ art.DB = {
         {
           name: 'Constants',
           members: [
-            {
-              header: 'VERSION:String',
-              description: 'Current version of framework'
-            }
+            new art.model.Member(
+              'VERSION:String', 
+              'Current version of framework'
+            )
           ]
         },
         {
           name: 'Methods',
           members: [
-            {
-              header: 'doInjection():Void',
-              description: 'After calling this method you are able to call Utils methods on native objects',
-              more: 
-                'Some of the class methods from framework can get injected into native classes.' +
-                'For example most of com.arthwood.utils.ArrayUtils would then affect native Array object.' +
-                'To see which native classes can be affected by framework see other parts of documentation, especially "utils" package.',
-              example: [
+            new art.model.Member(
+              'doInjection():Void',
+              'After calling this method you are able to call Utils methods on native objects',
+              [
                 'ArtJs.doInjection();',
                 '',
                 '// After that action you will be able to use:',
@@ -107,100 +103,121 @@ art.DB = {
                 'instead of:',
                 '',
                 'ArtJs.ArrayUtils.last(myArray); // 3'
-              ]
-            },
-            {
-              header: 'globalize():Void',
-              description: 'Makes all classes accessible globally in window object',
-              more: 
-                '<p>Normally after framework is loaded you have two ways of accessing its classes:</p>' +
+              ],
+              null,
+              'Some of the class methods from framework can get injected into native classes.' +
+                'For example most of com.arthwood.utils.ArrayUtils would then affect native Array object.' +
+                'To see which native classes can be affected by framework see other parts of documentation, especially "utils" package.'
+            ),
+            new art.model.Member(
+              'globalize():Void',
+              'Makes all classes accessible globally in window object',
+              [
+                'ArtJs.globalize();'
+              ],
+              null,
+              '<p>Normally after framework is loaded you have two ways of accessing its classes:</p>' +
                 '<ul><li>using full qualified path (com.arthwood.utils.ArrayUtils)</li><li>by looking into top ArtJs namespace (ArtJs.ArrayUtils)</li></ul>' +
                 '<p>For now there is no classes with the same name in whole framework so accessing it via ArtJs is fine.' + 
                 'However, if at some point it happens, full qualified name is necessary.' +
-                'When all framework classes are loaded and accessible (e.g. in js file following the framework file) simply use:</p>',
-              example: [
-                'ArtJs.globalize();'
-              ]
-            },
-            {
-              header: '$():Element',
-              description: 'Alias for ElementUtils.getElements()',
-              example: [
+                'When all framework classes are loaded and accessible (e.g. in js file following the framework file) simply use:</p>'
+            ),
+            new art.model.Member(
+              '$():Element',
+              'Alias for ElementUtils.getElements()',
+              [
                 "var nav = ArtJs.$('.main p.item span');"
               ]
-            },
-            {
-              header: '$D():Delegate',
-              description: 'Alias for Delegate.create()',
-              example: [
+            ),
+            new art.model.Member(
+              '$D():Delegate',
+              'Alias for Delegate.create()',
+              [
                 'var delegate = ArtJs.$D(this, this.onClick);'
               ]
-            },
-            {
-              header: '$DC():Function',
-              description: 'Alias for Delegate.callback()',
-              example: [
+            ),
+            new art.model.Member(
+              '$DC():Function',
+              'Alias for Delegate.callback()',
+              [
                 'var callback = ArtJs.$DC(this, this.onClick, true);'
               ]
-            },
-            {
-              header: '$del():Ajax',
-              description: 'Alias for Ajax.del()',
-              example: [
+            ),
+            new art.model.Member(
+              '$del():Ajax',
+              'Alias for Ajax.del()',
+              [
                 "var ajax = ArtJs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
               ]
-            },
-            {
-              header: '$find():Array',
-              description: 'Alias for ElementUtils.find()',
-              example: [
+            ),
+            new art.model.Member(
+              '$find():Array',
+              'Alias for ElementUtils.find()',
+              [
                 "var nav = ArtJs.$('navigation');",
                 "var items = ArtJs.$down(nav, '.item');"
               ]
-            },
-            {
-              header: '$get():Ajax',
-              description: 'Alias for Ajax.get()',
-              example: [
+            ),
+            new art.model.Member(
+              '$get():Ajax',
+              'Alias for Ajax.get()',
+              [
                 "var ajax = ArtJs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));"
               ]
-            },
-            {
-              header: 'p():Void',
-              description: 'Debug info. If debug console is accessible output to the console; uses alert() otherwise.',
-              example: [
+            ),
+            new art.model.Member(
+              'p():Void',
+              'Debug info. If debug console is accessible output to the console; uses alert() otherwise.',
+              [
                 "p('myVariable: ' +  myVariable);"
               ]
-            },
-            {
-              header: '$P():Element',
-              description: 'Alias for ElementBuilder.parse()',
-              example: [
+            ),
+            new art.model.Member(
+              '$P():Element',
+              'Alias for ElementBuilder.parse()',
+              [
                 "var element = ArtJs.$P('<span class=\"desc\">Blue t-shirt</span>');"
               ]
-            },
-            {
-              header: '$post():Ajax',
-              description: 'Alias for Ajax.post()',
-              example: [
+            ),
+            new art.model.Member(
+              '$post():Ajax',
+              'Alias for Ajax.post()',
+              [
                 "var ajax = ArtJs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
               ]
-            },
-            {
-              header: '$put():Ajax',
-              description: 'Alias for Ajax.$put()',
-              example: [
+            ),
+            new art.model.Member(
+              '$put():Ajax',
+              'Alias for Ajax.$put()',
+              [
                 "var ajax = ArtJs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
               ]
-            },
-            {
-              header: '$up():Element',
-              description: 'Alias for ElementUtils.up()',
-              example: [
+            ),
+            new art.model.Member(
+              '$up():Element',
+              'Alias for ElementUtils.up()',
+              [
                 "var nav = ArtJs.$('navigation');",
                 'var parent = ArtJs.$up(nav);'
               ]
-            }
+            )
+          ]
+        },
+        {
+          name: 'Events',
+          members: [
+            new art.model.Member(
+              'onDocumentLoad',
+              'Triggered when DOM is loaded.'
+            ),
+            new art.model.Member(
+              'onWindowLoad',
+              'Triggered when whole window is loaded (executes after onDocumentLoad).'
+            ),
+            new art.model.Member(
+              'onLibraryLoad',
+              'Triggered when all library templates are loaded (executes after onWindowLoad).'
+            )
           ]
         }
       ]
@@ -638,7 +655,7 @@ art.DB = {
             {
               header: 'dependsOn(*dependencies:Class)',
               description: 'Registers dependency. Whenever any of dependency classes is instantiated it is passed ' +
-                'to onDependency() method which you may need to implement.',
+                'to onDependency() method which you may want to implement.',
               example: [
                 '/* ',
                 ' * This will cause two invocations on Content instance:',
@@ -1308,6 +1325,83 @@ art.DB = {
         }
       ]
     },
+    timeline: {
+      name: 'Timeline',
+      package: 'com.arthwood.events',
+      description: 'Useful for measuring time intervals between events.',
+      sections: [
+        {
+          name: 'Constructor',
+          members: [
+            {
+              header: 'Timeline()'
+            }
+          ]
+        },
+        {
+          name: 'Methods',
+          members: [
+            {
+              header: 'mark():Integer',
+              description: 'Marks the point on the timeline. Returns miliseconds since recent mark.'
+            }
+          ]
+        }
+      ]
+    },
+    timeout: {
+      name: 'Timeout',
+      package: 'com.arthwood.events',
+      description: 'Allows you to perform action with delay.',
+      sections: [
+        {
+          name: 'Constructor',
+          members: [
+            {
+              header: 'Timeout(delay:Number)',
+              params: {
+                delay: 'Delay in miliseconds before onComplete event is triggered.'
+              }
+            }
+          ]
+        },
+        {
+          name: 'Methods',
+          members: [
+            {
+              header: 'start():Void',
+              description: 'Initializes the timeout. After amount of time specified in constructor the onComplete will be triggered.'
+            },
+            {
+              header: 'getDelay():Number',
+              description: 'Returns delay specified in constructor.'
+            },
+            {
+              header: 'isRunning():Boolean',
+              description: 'Returns true if timeout has been started but not yet finished.'
+            }
+          ]
+        },
+        {
+          name: 'Events',
+          members: [
+            {
+              header: 'onComplete(delegate:Delegate):Void',
+              description: 'Triggered when timeout finishes.'
+            }
+          ]
+        },
+        {
+          name: 'Static methods',
+          members: [
+            {
+              header: 'fire(delegate:Delegate, delay:Number):Timeout',
+              description: 'Instantiates Timeout and registers handler at once.'
+            }
+          ]
+        }
+      ]
+    },
     point: {
       name: 'Point',
       package: 'com.arthwood.math',
@@ -1873,7 +1967,7 @@ art.DB = {
       name: 'ArrayUtils',
       package: 'com.arthwood.utils',
       description: 
-        'Provides set of methods that operates on any Object instance.<br/>' +
+        'Provides set of methods that operates on any Array instance.<br/>' +
         'Most of examples show optional use of a method when <span class="code">ArtJs.doInjection()</span> has been performed.',
       sections: [
         {
@@ -2099,6 +2193,1563 @@ art.DB = {
               header: 'stringify():Array',
               description: 'Returns new array with items cast to String.'
             }
+          ]
+        }
+      ]
+    },
+    object: {
+      name: 'ObjectUtils',
+      package: 'com.arthwood.utils',
+      description: 
+        'Provides set of methods that operates on any Object instance.<br/>' +
+        'Most of examples show optional use of a method when <span class="code">ArtJs.doInjection()</span> has been performed.',
+      sections: [
+        {
+          name: 'Static methods',
+          members: [
+            new art.model.Member(
+              'all(object:Object, callback:Function):Boolean',
+              'Returns true if for all values <span class="code">callback</span> returns true; false otherwise',
+              [
+                "var object = {color: 'white', id: 5};",  
+                '',
+                'ObjectUtils.all(object, function(i) {', 
+                '  return i !== false;',  
+                '}); // true ',
+                '// or ',
+                '// object.all(function(i) {', 
+                '  return i !== false;',
+                '});',
+                '',
+                'ObjectUtils.all(object, function(i) {', 
+                '  return !isNaN(parseInt(i));',
+                '}); // false',
+                '// or',
+                '// object.all(function(i) {', 
+                '  return !isNaN(parseInt(i));',  
+                '});'
+              ]
+            ),
+            new art.model.Member(
+              'copy(object:Object):Object',
+              'Creates a copy of an <span class="param">object</span>.',
+              [
+                'var object = {id: 4};', 
+                'var copy = ObjectUtils.copy(object);',  
+                '',
+                '// or', 
+                '// var copy = object.copy();',  
+                '',
+                'object.id = 5;', 
+                'object.id; // 5',
+                'copy.id; // 4'
+              ]
+            ),
+            new art.model.Member(
+              'copyProps(source:Object, target:Object):Void',
+              'Copies properties from <span class="param">source</span> object to <span class="param">target</span> object.',
+              [
+                'var source = {id: 4};',
+                'var target = {active: true};',  
+                '',
+                'ObjectUtils.copyProps(source, target);',  
+                '',
+                '// or' ,
+                '// source.copyProps(target);',  
+                '',
+                'source; // {id: 4}',
+                'target; // {active: true, id: 4}'
+              ]
+            ),
+            new art.model.Member(
+              'each(object:Object, callback:Function):Void',
+              'Iterates over properties and passes value to <span class="param">callback</span>',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
+                'ObjectUtils.each(object, function(i) {', 
+                '  alert(i);',
+                '});',  
+                '',
+                '// or',
+                '// object.each(function(i) {', 
+                '//   alert(i);', 
+                '// });'
+              ]
+            ),
+            new art.model.Member(
+              'eachKey(object:Object, callback:Function):Void',
+              'Iterates over properties and passes key to <span class="param">callback</span>',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};",
+                'ObjectUtils.eachKey(object, function(i) {',
+                '  alert(i);',
+                '});',
+                '',
+                '// or', 
+                '// object.eachKey(function(i) {', 
+                '//   alert(i);',
+                '// });'
+              ]
+            ),
+            new art.model.Member(
+              'eachPair(object:Object, callback:Function):Void',
+              'Iterates over properties and passes key and value to <span class="code">callback</span>',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
+                'ObjectUtils.eachPair(object, function(k, v) {', 
+                "  alert(k + ' -> ' + v);", 
+                '});',
+                '',
+                '// or',
+                '// object.eachPair(function(k, v) {', 
+                "//   alert(k + ' -> ' + v);", 
+                '// });'
+              ]
+            ),
+            new art.model.Member(
+              'isEmpty(object:Object):Boolean',
+              'Returns true if <span class="code">object</span> has no properties; false otherwise',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
+                'var empty = {};',
+                '',
+                'ObjectUtils.isEmpty(object); // false', 
+                '// or',
+                '// object.isEmpty();',  
+                '',
+                'ObjectUtils.isEmpty(empty); // true', 
+                '// or',
+                '// empty.isEmpty();'  
+              ]
+            ),
+            new art.model.Member(
+              'extend(target:Object, base:Object):Void',
+              'Copies properties from <span class="param">base</span> object to <span class="param">target</span> object.' 
+                + 'In fact it works the same as <span class="code">copyProps()</span>, the only difference is arguments order.',
+              [
+                'var base = {id: 4};',
+                'var target = {active: true};',  
+                '',
+                'ObjectUtils.extend(target, base);',  
+                '',
+                '// or', 
+                '// target.extend(base);',  
+                '',
+                'base; // {id: 4}',
+                'target; // {active: true, id: 4}'
+              ]
+            ),
+            new art.model.Member(
+              'fromArray(array:Array):Object',
+              'Transforms 2-dim <span class="code">array</span> into object',
+              [
+                "var array = [['color', 'white'], ['id', 5]];",
+                '',
+                "ObjectUtils.fromArray(array); // {color: 'white', id: 5}"
+              ]
+            ),
+            new art.model.Member(
+              'include(object:Object, item:Object):Boolean',
+              'Returns true if any <span class="code">object</span> value is equal to <span class="code">item</span>; false otherwise',
+              [
+                "var object = {color: 'white', id: 5};",  
+                '',
+                'ObjectUtils.include(object, 5); // true', 
+                '// or',
+                '// object.include(5);',  
+                '',
+                'ObjectUtils.include(object, true); // false', 
+                '// or',
+                '// object.include(true);'
+              ]
+            ),
+            new art.model.Member(
+              'includeAll(object:Object, subset:Object):Boolean',
+              "Returns true if all <span class=\"code\">subset</span> values can be found among <span class=\"code\">object</span>'s values; false otherwise",
+              [
+                "var object = {color: 'white', id: 5};",  
+                '',
+                "ObjectUtils.includeAll(object, {color: 'white', id: 5}); // true", 
+                '// or',
+                "// object.includeAll({color: 'white', id: 5});",  
+                '',
+                "ObjectUtils.includeAll(object, {id: 5, name: 'Mike'}); // false", 
+                '// or',
+                "// object.includeAll({id: 5, name: 'Mike'});"
+              ]
+            ),
+            new art.model.Member(
+              'map(object:Object, callback:Function):Array',
+              'Maps key and value to Array item using <span class="param">callback</span> function',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
+                "var mapped = ObjectUtils.map(object, function(k, v) {return k + ':' + v});",  
+                '',
+                '// or',
+                "// var mapped = object.map(function(k, v) {return k + ':' + v});",  
+                '',
+                "mapped; // ['id:4', 'active:true', 'project_id:4', 'status:4']"
+              ]
+            ),
+            new art.model.Member(
+              'mapKey(object:Object, callback:Function):Object',
+              'Transforms key using <span class="param">callback</span> function',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
+                'var mapped = ObjectUtils.mapKey(object, function(k) {',
+                '  return StringUtils.capitalizeUnderscored(k);',
+                '});',
+                '',
+                '// or',
+                '// var mapped = object.mapKey(function(k) {',
+                '//   return StringUtils.capitalizeUnderscored(k);', 
+                '// });',
+                '',
+                'mapped; // {Id: 8, Active: 2, ProjectId: 8, Status: 8}'
+              ]
+            ),
+            new art.model.Member(
+              'mapValue(object:Object, callback:Function):Object',
+              'Transforms value using <span class="param">callback</span> function',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};",
+                'var mapped = ObjectUtils.mapValue(object, function(v) {return v * 2});',  
+                '',
+                '// or',
+                '// var mapped = object.mapValue(function(v) {return v * 2});',  
+                '',
+                'mapped; // {id: 8, active: 2, project_id: 8, status: 8}'
+              ]
+            ),
+            new art.model.Member(
+              'merge(target:Object, base:Object):Object',
+              'Works the same as extend() but returns modified <span class="param">target</span> object.',
+              [
+                'var base = {id: 4};',
+                'var target = {active: true};',
+                '',
+                'ObjectUtils.merge(target, base); // {active: true, id: 4}',  
+                '',
+                '// or', 
+                '// target.merge(base);',  
+                '',
+                'base; // {id: 4}',
+                'target; // {active: true, id: 4}'
+              ]
+            ),
+            new art.model.Member(
+              'reject(object:Object, callback:Function):Object',
+              'Returns copy of <span class="code">object</span> without properties for which <span class="code">callback</span> returns true',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
+                'var filtered = ObjectUtils.reject(object, function(i) {', 
+                '  return i === true;',
+                '});',  
+                '',
+                '// or' ,
+                '// object.reject(function(i) {', 
+                '//   return i === true;', 
+                '// });',  
+                '',
+                "filtered; // {id: 4, project_id: 4, status: '4'}"
+              ]
+            ),
+            new art.model.Member(
+              'removeValue(object:Object, value:Object):Void',
+              "Removes all <span class=\"param\">object</span>'s properties with value equal to <span class=\"param\">value</span> param",
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
+                '',
+                'ObjectUtils.removeValue(object, 4);',  
+                '',
+                '// or',
+                '// object.removeValue(4);',  
+                '',
+                "object; // {active: true, status: '4'}"
+              ]
+            ),
+            new art.model.Member(
+              'removeValues(object:Object, values:Array):Void',
+              'Works the same as removeValue but you can remove many <span class="param">values</span> by passing them in array',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
+                '',
+                "ObjectUtils.removeValues(object, [4, '4']);",  
+                '',
+                '// or' ,
+                "// object.removeValues([4, '4']);",  
+                '',
+                'object; // {active: true}'
+              ]
+            ),
+            new art.model.Member(
+              'select(object:Object, callback:Function):Object',
+              'Returns copy of <span class="code">object</span> containing only properties for which <span class="code">callback</span> returns true',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
+                'var filtered = ObjectUtils.select(object, function(i) { ',
+                '  return !isNaN(parseFloat(i));', 
+                '});',
+                '',
+                '// or',
+                '// object.select(function(i) {',
+                '//   return !isNaN(parseFloat(i));', 
+                '// });',
+                '',
+                "filtered; // {id: 4, project_id: 4, status: '4'}"
+              ]
+            ),
+            new art.model.Member(
+              'selectWithKey(object:Object, callback:Function):Object',
+              'Same as select, but <span class="code">callback</span> receives both key and value',
+              [
+                "var object = {id: 4, active: true, project_id: 4, status: '4'};",
+                'var filtered = ObjectUtils.selectWithKey(object, function(k, v) {', 
+                '  return k.length > 2;', 
+                '});',
+                '',
+                '// or' ,
+                '// object.selectWithKey(function(k, v) {', 
+                '//   return k.length > 2;',
+                '// });',
+                '',
+                "filtered; // {active: true, project_id: 4, status: '4'}"
+              ]
+            ),
+            new art.model.Member(
+              'toArray(object:Object):Array',
+              'Transforms <span class="code">object</span> into array',
+              [
+                "var object = {color: 'white', id: 5};",  
+                '',
+                "ObjectUtils.toArray(object); // [['color', 'white'], ['id', 5]]", 
+                '// or',
+                '// object.toArray();'
+              ]
+            ),
+            new art.model.Member(
+              'toQueryString(object:Object):String',
+              'Returns query string representation of <span class="code">object</span>',
+              [
+                "var object = {color: 'white', id: 5, user: {name: 'Andy', id: 3}};",  
+                '',
+                'ObjectUtils.toQueryString(object);// color=white&id=5&user[name]=Andy&user[id]=3', 
+                '// or',
+                '// object.toQueryString()'
+              ]
+            )
+          ]
+        }
+      ]
+    },
+    class: {
+      name: 'Class',
+      package: 'com.arthwood.utils',
+      description: 'Facilitates class construction inheritance.',
+      sections: [
+        {
+          name: 'Usage',
+          members: [
+            new art.model.Member(
+              'Class(ctor:Function = null, proto:Object = null, stat:Object = null, superclass:Function = null):Function',
+              'Creates a new class. Returns decorated constructor function passed as a first argument. ' +
+              'If no constructor is passed a default one is created.',
+              [
+                'var MyClass = ArtJs.Class(',
+                '  function(name) {',
+                "    this.name = this.super(attributes) + ':' + name",
+                '  }, ',
+                '  {',
+                '    calculate: function(value) {',
+                "     return this.super(attributes, 3, 'hello') + 8;",
+                '  }, ',
+                '  {',
+                '    getName: function() {',
+                "      return this.super(attributes) + ':MyClass';",
+                '  },',
+                '  MySuperClass',
+                ');'
+              ],
+              {
+                ctor: 'Constructor function',
+                proto: 'Prototype object. Instance properties and methods of the class.',
+                stat: 'Class properties and methods.',
+                superclass: 'Class to extend from.'
+              },
+              'As you can see in example when extending the class you have access to super method from Constructor ' +
+              'function, instance methods and static methods. You always have to pass arguments object.' +
+              'If no additional params are passed then by default all arguments are passed to super method.' +
+              'However if you pass any additional arguments then they override actual arguments list and the actual ' +
+              'arguments list gets appended to the end of your custom list.'
+            )
+          ]
+        },
+        {
+          name: 'Instance properties',
+          members: [
+            new art.model.Member(
+              'ctor:Function',
+              'Reference to constructor function.'
+            )
+          ]
+        },
+        {
+          name: 'Static properties',
+          members: [
+            new art.model.Member(
+              'superclass:Function',
+              'Reference to constructor function of the parent class.'
+            ),
+            new art.model.Member(
+              'subclasses:Array',
+              'Stores all subclasses of given class.'
+            )
+          ]
+        },
+        {
+          name: 'Hooks',
+          members: [
+            new art.model.Member(
+              '_onCreated():Void',
+              'Invoked as a static method when class construction has completed.<br/>' +
+              'Useful for class initialization. Some of class properties are set at this point.<br/>' +
+              'You must always call super when implementing this hook.',
+              [
+                '_onCreated: function() {',
+                '  this.super(arguments);',
+                '',
+                "  console.log(this.subclasses);",
+                '}'
+              ]
+            ),
+            new art.model.Member(
+              '_onExtended():Void',
+              'Invoked as a static method when subclass construction has completed.<br/>' +
+              'Useful for class initialization. Some of class properties are set at this point.<br/>' +
+              'You must always call super when implementing this hook.',
+              [
+                '_onExtended: function() {',
+                '  this.super(arguments);',
+                '',
+                "  console.log(this.superclass + ' has been extended by ' + this);",
+                '}'
+              ]
+            )
+          ]
+        }
+      ]
+    },
+    date: {
+      name: 'DateUtils',
+      package: 'com.arthwood.utils',
+      description: 'Provides set of methods that operates on any Date instance.',
+      sections: [
+        {
+          name: 'Static methods',
+          members: [
+            new art.model.Member(
+              'copy(date:Date):Date',
+              'Returns <span class="param">date</span> copy',
+              [
+                'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
+                'var copy = DateUtils.copy(date);',
+                '',
+                '// or',
+                '// var copy = date.copy();',
+                '',
+                'date.setDate(6);',
+                'date; // Tue Jun 06 2010 15:41:32 GMT+0200 {}',
+                'copy; // Tue Jun 04 2010 15:41:32 GMT+0200 {}'
+              ]
+            ),
+            new art.model.Member(
+              'firstDay(date:Date):Number',
+              "Returns week day of first day in <span class=\"param\">date</span>'s month (1 means Monday)",
+              [
+                'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
+                '',
+                'DateUtils.firstDay(date); // 2',
+                '// or',
+                '// date.firstDay();'
+              ]
+            ),
+            new art.model.Member(
+              "fromDMY(dmy:String, separator:String = '/'):Date",
+              "Parses <span class=\"param\">dmy</span> (&lt;day&gt;/&lt;month&gt;/&lt;year&gt;) expression and returns Date object",
+              [
+                "var date = DateUtils.fromDMY('7/10/2003'); // Tue Oct 07 2003 00:00:00 GMT+0200 {}"
+              ]
+            ),
+            new art.model.Member(
+              'getDateShifted(date:Date, days:Number):Date',
+              "Returns date <span class=\"param\">days</span> after (before if negative) <span class=\"param\">date</span>",
+              [
+                'var date = new Date(); // Tue Jun 07 2010 15:41:32 GMT+0200 {}',
+                'var shifted = DateUtils.getDateShifted(date, -3); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
+                '',
+                '// or',
+                '// var shifted = date.getDateShifted(-3);'
+              ]
+            ),
+            new art.model.Member(
+              "hmToMinutes(hm:String, separator:String = ':'):Number",
+              'Parses <span class="param">hm</span> (&lt;hours&gt;:&lt;minutes&gt;) expression and returns Number of minutes',
+              [
+                "var date = DateUtils.hmToMinutes('2:15'); // 135"
+              ]
+            ),
+            new art.model.Member(
+              "minutesToHM(minutes:Number, separator:String = ':'):String",
+              'Returns &lt;hours&gt;:&lt;minutes&gt; format for given amount of <span class="param">minutes</span>',
+              [
+                "var date = DateUtils.minutesToHM(135); // '2:15'"
+              ]
+            ),
+            new art.model.Member(
+              'monthDaysNum(date:Date):Number',
+              "Returns number of days in <span class=\"param\">date</span>'s month",
+              [
+                'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
+                '',
+                'DateUtils.monthDaysNum(date); // 30',
+                '// or',
+                '// date.monthDaysNum();'
+              ]
+            ),
+            new art.model.Member(
+              "msToSeconds(ms:String, separator:String = ':'):Number",
+              'Parses <span class="param">ms</span> (&lt;minutes&gt;:&lt;seconds&gt;) expression and returns Number of seconds',
+              [
+                "var date = DateUtils.msToSeconds('02:15'); // 135"
+              ]
+            ),
+            new art.model.Member(
+              "secondsToHMS(seconds:Number, separator:String = ':'):String",
+              'Returns &lt;hours&gt;:&lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="param">seconds</span>',
+              [
+                "var date = DateUtils.secondsToMS(4350); // '1:12:30'"
+              ]
+            ),
+            new art.model.Member(
+              "secondsToMS(seconds:Number, separator:String = ':'):String",
+              'Returns &lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="param">seconds</span>',
+              [
+                "var date = DateUtils.secondsToMS(135); // '02:15'"
+              ]
+            ),
+            new art.model.Member(
+              'stripDayTime(date:Date):Date',
+              'Returns date without time part',
+              [
+                'var date = new Date(); // Tue Jun 07 2010 15:41:32 GMT+0200 {}',
+                'var stripped = DateUtils.stripDayTime(date); // Tue Jun 07 2010 00:00:00 GMT+0200 {}',
+                '',
+                '// or',
+                '// var stripped = date.stripDayTime();'
+              ]
+            ),
+            new art.model.Member(
+              "toDMY(date:Date, separator:String = '/'):String",
+              "Returns <span class=\"param\">date</span>'s string representation of day, month, year",
+              [
+                'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
+                '',
+                "DateUtils.toDMY(date); // '04/06/2010'",
+                '// or',
+                '// date.toDMY();'
+              ]
+            ),
+            new art.model.Member(
+              "toHMS(date:Date, separator:String = ':'):String",
+              "Returns <span class=\"param\">date</span>'s string representation of hour, minute, second",
+              [
+                'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
+                '',
+                "DateUtils.toHMS(date); // '15:41:32'",
+                '// or',
+                '// date.toHMS();'
+              ]
+            ),
+            new art.model.Member(
+              "toYMD(date:Date, separator:String = '/'):String",
+              "Returns <span class=\"param\">date</span>'s string representation of year, month, day",
+              [
+                'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
+                '',
+                "DateUtils.toYMD(date); // '2010/06/04'",
+                '// or',
+                '// date.toYMD();'
+              ]
+            )
+          ]
+        }
+      ]
+    },
+    element: {
+      name: 'ElementUtils',
+      package: 'com.arthwood.utils',
+      description: 'Provides set of methods that operate on HTML Element instance.',
+      sections: [
+        {
+          name: 'Static methods',
+          members: [
+            new art.model.Member(
+              'addClass(element:Element, name:String):Void',
+              "Adds class identified by <span class=\"param\">name</span> to <span class=\"param\">element</span>" +
+                "(only if it doesn't already have this class)",
+              [
+                "ElementUtils.addClass(element, 'nav');",
+                '',
+                '// or',
+                "// element.addClass('nav');"
+              ]
+            ),
+            new art.model.Member(
+              'center(element:Element):Void',
+              'Centers <span class="param">element</span> on the screen.' +
+                'This action takes effect only for elements with absolute position.',
+              [
+                'ElementUtils.center(element);',
+                '',
+                '// or',
+                '// element.center();'
+              ]
+            ),
+            new art.model.Member(
+              'centerH(element:Element):Void',
+              'Centers <span class="param">element</span> horizontally on the screen.' +
+                'This action takes effect only for elements with absolute position.',
+              [
+                'ElementUtils.centerH(element);',
+                '',
+                '// or',
+                '// element.centerH();'
+              ]
+            ),
+            new art.model.Member(
+              'centerV(element:Element):Void',
+              'Centers <span class="param">element</span> vertically on the screen.' +
+                'This action takes effect only for elements with absolute position',
+              [
+                'ElementUtils.centerV(element);',
+                '',
+                '// or',
+                '// element.centerV();'
+              ]
+            ),
+            new art.model.Member(
+              'clone(element:Element, deep:Boolean):Node',
+              'Alias for Node.cloneNode(deep).',
+              [
+                'ElementUtils.clone(element, true);',
+                '',
+                '// or',
+                '// element.clone(true);'
+              ]
+            ),
+            new art.model.Member(
+              'disable(element:Element):Void',
+              'Disables the <span class="param">element</span>.',
+              [
+                'ElementUtils.disable(element);',
+                '',
+                '// or',
+                '// element.disable();'
+              ]
+            ),
+            new art.model.Member(
+              'elements(element:Element):Array',
+              'Returns array of immediate descendants (Elements) of <span class="param">element</span>',
+              [
+                'ElementUtils.elements(element);',
+                '',
+                '// or',
+                '// element.elements();'
+              ]
+            ),
+            new art.model.Member(
+              'enable(element:Element):Void',
+              'Enables the <span class="param">element</span>',
+              [
+                'ElementUtils.enable(element);',
+                '',
+                '// or',
+                '// element.enable();'
+              ]
+            ),
+            new art.model.Member(
+              'firstElement(element:Element):Element',
+              "Returns <span class=\"param\">element</span>'s first child (Element)",
+              [
+                'ElementUtils.firstElement(element);',
+                '',
+                '// or',
+                '// element.firstElement();'
+              ]
+            ),
+            new art.model.Member(
+              'getAttributes(element:Element):Object',
+              'Returns attributes as an Object',
+              [
+                'ElementUtils.getAttributes(element);',
+                '',
+                '// or',
+                '// element.getAttributes();'
+              ]
+            ),
+            new art.model.Member(
+              'getBounds(element:Element, real:Boolean, withoutScroll:Boolean):Rectangle',
+              'Returns position and size of <span class="param">element</span> as a (x, y, width, height) Rectangle.',
+              [
+                'ElementUtils.getBounds(element);',
+                '',
+                '// or',
+                '// element.getBounds();'
+              ],
+              null, 
+              'If <span class="param">real</span> is set to true size is calculated even if element is hidden' +
+                '(otherwise size would return value of (0, 0)).' +
+                'If <span class="param">withoutScroll</span> is set to true posision is calculated relative to' +
+                "current view's origin; otherwise to document's origin."
+            ),
+            new art.model.Member(
+              'getCenteredPosition(element:Element):Point',
+              'Returns position of <span class="param">element</span> as if it was centered on the screen',
+              [
+                'ElementUtils.getCenteredPosition(element);',
+                '',
+                '// or',
+                '// element.getCenteredPosition();'
+              ]
+            ),
+            new art.model.Member(
+              'getClasses(element:Element):Array',
+              "Returns array of <span class=\"param\">element</span>'s classes",
+              [
+                'ElementUtils.getClasses(element);',
+                '',
+                '// or',
+                '// element.getClasses();'
+              ]
+            ),
+            new art.model.Member(
+              'getContent(element:Element):String',
+              'Returns content (like innerHTML) of <span class="param">element</span>',
+              [
+                'ElementUtils.getContent(element);',
+                '',
+                '// or',
+                '// element.getContent();'
+              ]
+            ),
+            new art.model.Member(
+              'getDocumentSize():Point',
+              'Returns document size',
+              [
+                'ElementUtils.getDocumentSize();'
+              ]
+            ),
+            new art.model.Member(
+              'getPosition(element:Element, withoutScroll:Boolean):Point',
+              'Returns position of the <span class="param">element</span> on the screen.',
+              [
+                'ElementUtils.getPosition(element);',
+                '',
+                '// or',
+                '// element.getPosition();'
+              ],
+              null,
+              'If <span class="param">withoutScroll</span> is set to true posision is calculated relative to' +
+                "current view's origin; otherwise to document's origin"
+            ),
+            new art.model.Member(
+              'getScrollPosition():Point',
+              'Returns scroll (x, y) values as a Point',
+              [
+                'ElementUtils.getScrollPosition();'
+              ]
+            ),
+            new art.model.Member(
+              'getSize(element:Element):Point',
+              'Returns size of the <span class="param">element</span> as a com.arthwood.math.Point object' +
+                'which x property is width and y property is height',
+              [
+                'ElementUtils.getSize(element);',
+                '',
+                '// or',
+                '// element.getSize();'
+              ]
+            ),
+            new art.model.Member(
+              'getWindowSize():Point',
+              'Returns window size',
+              [
+                'ElementUtils.getWindowSize();'
+              ]
+            ),
+            new art.model.Member(
+              'hasClass(element:Element, name:String):Boolean',
+              'Returns true if <span class="param">element</span> has class <span class="param">name</span>;' +
+                'false otherwise',
+              [
+                "ElementUtils.hasClass(element, 'nav');",
+                '',
+                '// or',
+                "// element.hasClass('nav');"
+              ]
+            ),
+            new art.model.Member(
+              'hide(element:Element):Void',
+              'Hides the <span class="param">element</span>',
+              [
+                'ElementUtils.hide(element);',
+                '',
+                '// or',
+                '// element.hide();'
+              ]
+            ),
+            new art.model.Member(
+              'isElement(element:Element):Boolean',
+              'Returns true if <span class="param">element</span> is Element; false otherwise',
+              [
+                'ElementUtils.isElement(element);',
+                '',
+                '// or',
+                '// element.isElement();'
+              ]
+            ),
+            new art.model.Member(
+              'isHidden(element:Element):Boolean',
+              'Returns true if the <span class="param">element</span> is hidden; true otherwise',
+              [
+                'ElementUtils.isHidden(element);',
+                '',
+                '// or',
+                '// element.isHidden();'
+              ]
+            ),
+            new art.model.Member(
+              'next(element:Element):Node',
+              "Returns <span class=\"param\">element</span>'s next sibling (Element)",
+              [
+                'ElementUtils.next(element);',
+                '',
+                '// or',
+                '// element.next();'
+              ]
+            ),
+            new art.model.Member(
+              'parent(element:Element):Element',
+              "Returns <span class=\"param\">element</span>'s parent element",
+              [
+                'ElementUtils.parent(element);',
+                '',
+                '// or',
+                '// element.parent();'
+              ]
+            ),
+            new art.model.Member(
+              'prev(element:Element):Node',
+              "Returns <span class=\"param\">element</span>'s previous sibling (Element)",
+              [
+                'ElementUtils.prev(element);',
+                '',
+                '// or',
+                '// element.prev();'
+              ]
+            ),
+            new art.model.Member(
+              'putAfter(element:Element, ref:Node):Node',
+              'Inserts clone of the <span class="param">element</span> as next sibling of <span class="param">ref</span> node',
+              [
+                'ElementUtils.putAfter(element, child);',
+                '',
+                '// or',
+                '// element.putAfter(child);'
+              ]
+            ),
+            new art.model.Member(
+              'putAtBottom(element:Element, ref:Node):Node',
+              'Inserts clone of the <span class="param">element</span> as the last child of <span class="param">ref</span> node',
+              [
+                'ElementUtils.putAtBottom(element, container);',
+                '',
+                '// or',
+                '// element.putAtBottom(container);'
+              ]
+            ),
+            new art.model.Member(
+              'putAtTop(element:Element, ref:Node):Node',
+              'Inserts clone of the <span class="param">element</span> as the first child of <span class="param">ref</span> node',
+              [
+                'ElementUtils.putAtTop(element, container);',
+                '',
+                '// or',
+                '// element.putAtTop(container);'
+              ]
+            ),
+            new art.model.Member(
+              'putBefore(element:Element, ref:Node):Node',
+              'Inserts clone of the <span class="param">element</span> as previous sibling of <span class="param">ref</span> node',
+              [
+                'ElementUtils.putBefore(element, child);',
+                '',
+                '// or',
+                '// element.putBefore(child);'
+              ]
+            ),
+            new art.model.Member(
+              'remove(element:Element):Node',
+              'Removes the <span class="param">element</span>',
+              [
+                'ElementUtils.remove(element);',
+                '',
+                '// or',
+                '// element.remove();'
+              ]
+            ),
+            new art.model.Member(
+              'removeClass(element:Element, name:String):Void',
+              'Removes class identified by <span class="param">name</span> from <span class="param">element</span> (only if it have this class)',
+              [
+                "ElementUtils.removeClass(element, 'nav');",
+                '',
+                '// or',
+                "// element.removeClass('nav');"
+              ]
+            ),
+            new art.model.Member(
+              'replace(element:Element, ref:Node, clone:Boolean):Node',
+              'Replaces <span class="param">ref</span> with an <span class="param">element</span> ' +
+                '(or its clone if <span class="param">clone</span> is set to true)',
+              [
+                'ElementUtils.replace(element, oldElement, true);',
+                '',
+                '// or',
+                '// element.replace(oldElement, true);'
+              ]
+            ),
+            new art.model.Member(
+              'serialize(element:Element):Object',
+              'Serializes content of <span class="param">element</span> (usually form) and returns its data as Object',
+              [
+                'ElementUtils.serialize(element);',
+                '',
+                '// or',
+                '// element.serialize();'
+              ]
+            ),
+            new art.model.Member(
+              'setAlpha(element:Element, value:Number):Void',
+              "Sets <span class=\"param\">element</span>'s transparency; <span class=\"param\">value</span> 0 means transparent, 1 means opaque",
+              [
+                'ElementUtils.setAlpha(element, 0.4);',
+                '',
+                '// or',
+                '// element.setAlpha(0.4);'
+              ]
+            ),
+            new art.model.Member(
+              'setClass(element:Element, name:String, add:Boolean):Void',
+              'If <span class="param">add</span> is true it adds, otherwise removes class identified by' +
+                '<span class="param">name</span> to <span class="param">element</span>',
+              [
+                "ElementUtils.setClass(element, 'nav', true);",
+                '',
+                '// or',
+                "// element.setClass('nav', true);"
+              ]
+            ),
+            new art.model.Member(
+              'setContent(element:Element, content:String):Void',
+              'Sets the content (like innerHTML) of <span class="param">element</span>',
+              [
+                "ElementUtils.setContent(element, 'hello &lt;span&gt;world&lt;/span&gt;!');",
+                '',
+                '// or',
+                "// element.setContent('hello &lt;span&gt;world&lt;/span&gt;!');"
+              ]
+            ),
+            new art.model.Member(
+              'setEnabled(element:Element, enabled:Boolean):Void',
+              'Enables <span class="param">element</span> if <span class="param">enabled</span> is true; disables otherwise',
+              [
+                'ElementUtils.setEnabled(element, true);',
+                '',
+                '// or',
+                '// element.setEnabled(true);'
+              ]
+            ),
+            new art.model.Member(
+              'setPosition(element:Element, position:Point):Void',
+              'Sets the position of <span class="param">element</span> on the screen. ' +
+                'This action has effect for elements with absolute position',
+              [
+                'ElementUtils.setPosition(element, point);',
+                '',
+                '// or',
+                '// element.setPosition(point);'
+              ]
+            ),
+            new art.model.Member(
+              'setVisible(element:Element, visible:Boolean):Void',
+              'Shows the <span class="param">element</span> if <span class="param">visible</span> argument is set to true; hides otherwise',
+              [
+                'ElementUtils.setVisible(element, true);',
+                '',
+                '// or',
+                '// element.setVisible(true);'
+              ]
+            ),
+            new art.model.Member(
+              'setX(element:Element, value:Number):Void',
+              'Sets x position of <span class="param">element</span> on the screen. ' +
+                'This action has effect for elements with absolute position',
+              [
+                'ElementUtils.setX(130);',
+                '',
+                '// or',
+                '// element.setX(130);'
+              ]
+            ),
+            new art.model.Member(
+              'setY(element:Element, value:Number):Void',
+              'Sets y position of <span class="param">element</span> on the screen. ' +
+                'This action has effect for elements with absolute position',
+              [
+                'ElementUtils.setY(130);',
+                '',
+                '// or',
+                '// element.setY(130);'
+              ]
+            ),
+            new art.model.Member(
+              'show(element:Element):Void',
+              'Shows the <span class="param">element</span>',
+              [
+                'ElementUtils.show(element);',
+                '',
+                '// or',
+                '// element.show();'
+              ]
+            ),
+            new art.model.Member(
+              'toggle(element:Element):Void',
+              "Shows the <span class=\"param\">element</span> if it's hidden; hides otherwise",
+              [
+                'ElementUtils.toggle(element);',
+                '',
+                '// or',
+                '// element.toggle();'
+              ]
+            ),
+            new art.model.Member(
+              'toggleClass(element:Element, name:String):Void',
+              'Toggles class identified by <span class="param">name</span> of <span class="param">element</span>',
+              [
+                "ElementUtils.toggleClass(element, 'nav');",
+                '',
+                '// or',
+                "// element.toggleClass('nav');"
+              ]
+            )
+          ]
+        }
+      ]
+    },
+    math: {
+      name: 'MathUtils',
+      package: 'com.arthwood.utils',
+      description: 'Provides set of math functions.',
+      sections: [
+        {
+          name: 'Static methods',
+          members: [
+            new art.model.Member(
+              'limit(x:Number, a:Number, b:Number):Number',
+              'Returns <span class="param">x</span> value limited to [<span class="param">a</span>, <span class="param">b</span>] range',
+              [
+                'MathUtils.limit(6, 2, 13); // 6',
+                'MathUtils.limit(6, 8, 13); // 8',
+                'MathUtils.limit(6, -2, 3); // 3'
+              ]
+            ),
+            new art.model.Member(
+              'sawtooth(x:Number, a:Number, b:Number):Number',
+              'Returns <span class="param">x</span> value periodically limited to ' +
+                '[<span class="param">a</span>, <span class="param">b</span>] range',
+              [
+                'MathUtils.sawtooth(6, 2, 13); // 6',
+                'MathUtils.sawtooth(6, 8, 13); // 11',
+                'MathUtils.sawtooth(6, -2, 3); // 1'
+              ]
+            ),
+            new art.model.Member(
+              'sgn(x:Number):Number',
+              'Signum function of <span class="param">x</span>',
+              [
+                'MathUtils.sgn(-2); // -1',
+                'MathUtils.sgn(0); // 0',
+                'MathUtils.sgn(15); // 1'
+              ]
+            ),
+            new art.model.Member(
+              'stairs(x:Number, a:Number, b:Number):Number',
+              '"stairs" function of <span class="param">x</span>',
+              [
+                'MathUtils.stairs(6, 2, 4); // 2',
+                'MathUtils.stairs(6, 1, 2); // 5',
+                'MathUtils.stairs(6, -1, 1); // 3'
+              ]
+            )
+          ]
+        }
+      ]
+    },
+    string: {
+      name: 'StringUtils',
+      package: 'com.arthwood.utils',
+      description: 'Provides set of methods that operates on any String instance.',
+      sections: [
+        {
+          name: 'Static methods',
+          members: [
+            new art.model.Member(
+              'align(string:String, length:Number, char:String, left:Boolean):String',
+              'Extends length of the <span class="code">string</span> to <span class="code">length</span> value by filling' +
+                'the gap with <span class="code">char</span> characters on the side determined by ' +
+                '<span class="code">left</span> argument',
+              [
+                "var string = 'color';",
+                '',
+                "StringUtils.align(string, 10, '-', true); // color-----",
+                '// or',
+                "// string.align(10, '-', true);"
+              ]
+            ),
+            new art.model.Member(
+              'isBlank(string:String):Boolean',
+              'Returns true if <span class="code">string</span> is null or empty; false otherwise',
+              [
+                "var string = 'quantum mechanics';",
+                "var emptyString = '      ';",
+                'var nullValue = null;',
+                '',
+                'StringUtils.isBlank(string); // false',
+                '// or',
+                '// string.isBlank();',
+                '',
+                'StringUtils.isBlank(emptyString); // true',
+                '// or',
+                '// emptyString.isBlank();',
+                '',
+                'StringUtils.isBlank(nullValue); // true'
+              ]
+            ),
+            new art.model.Member(
+              'capitalize(string:String):String',
+              'Upcase each word in <span class="code">string</span>',
+              [
+                "var string = 'advanced quantum mechanics';",
+                '',
+                'StringUtils.capitalize(string); // Advanced Quantum Mechanics',
+                '// or',
+                '// string.capitalize();'
+              ]
+            ),
+            new art.model.Member(
+              'countPattern(string:String, pattern:String):Number',
+              'Returns number of <span class="code">pattern</span> occurences in <span class="code">string</span>',
+              [
+                "var string = 'advanced quantum mechanics';",
+                '',
+                "StringUtils.countPattern(string, 'an'); // 3",
+                '// or',
+                "// string.countPattern('an');"
+              ]
+            ),
+            new art.model.Member(
+              'isEmpty(string:String):Boolean',
+              'Returns true if <span class="code">string</span> is empty; false otherwise',
+              [
+                "var string = 'quantum mechanics';",
+                "var emptyString = '      ';",
+                '',
+                'StringUtils.isEmpty(string); // false',
+                '// or',
+                '// string.isEmpty();',
+                '',
+                'StringUtils.isEmpty(emptyString); // true',
+                '// or',
+                '// emptyString.isEmpty();'
+
+              ]
+            ),
+            new art.model.Member(
+              'first(string:String):String',
+              'Returns first letter of a <span class="code">string</span>',
+              [
+                "var string = 'quantum mechanics';",
+                '',
+                'StringUtils.first(string); // q',
+                '// or',
+                '// string.first();'
+              ]
+            ),
+            new art.model.Member(
+              'formatPrice(value:Number):String',
+              'Returns price formatted string',
+              [
+                'var price = 3.7;',
+                '',
+                'StringUtils.formatPrice(price); // 3.70'
+              ]
+            ),
+            new art.model.Member(
+              'getMultiPattern(pattern:String, n:Number):String',
+              'Returns string containing of <span class="code">pattern</span> concatenated <span class="code">n</span> times',
+              [
+                "var string = 'yes, ';",
+                '',
+                'StringUtils.getMultiPattern(string, 3); // yes, yes, yes,', 
+                '// or',
+                '// string.getMultiPattern(3);'
+              ]
+            ),
+            new art.model.Member(
+              'last(string:String):String',
+              'Returns last letter of a <span class="code">string</span>',
+              [
+                "var string = 'quantum mechanics';",
+                '',
+                'StringUtils.last(string); // s',
+                '// or',
+                '// string.last();'
+              ]
+            ),
+            new art.model.Member(
+              'nullifyEmpty(string:String):Object',
+              'Returns null if <span class="code">string</span> is empty; <span class="code">string</span> otherwise',
+              [
+                "var string = 'quantum mechanics';",
+                "var emptyString = '      ';",
+                '',
+                'StringUtils.nullifyEmpty(string); // quantum mechanics',
+                '// or',
+                '// string.nullifyEmpty();',
+                '',
+                'StringUtils.nullifyEmpty(emptyString); // null',
+                '// or',
+                '// emptyString.nullifyEmpty();'
+              ]
+            ),
+            new art.model.Member(
+              'singularOrPlural(string:String, n:Number):String',
+              'Returns plural version of <span class="code">string</span> if <span class="code">n</span> is other than 1',
+              [
+                "var string = 'chicken';",
+                '',
+                'StringUtils.singularOrPlural(string, 1); // chicken',
+                '// or',
+                '// string.singularOrPlural(1);',
+                '',
+                'StringUtils.singularOrPlural(string, 5); // chickens',
+                '// or',
+                '// string.singularOrPlural(5);'
+              ]
+            ),
+            new art.model.Member(
+              'strip(string:String):String',
+              'Removes whitespaces from <span class="code">string</span> and returns the result',
+              [
+                "var string = 'quantum mechanics';",
+                '',
+                'StringUtils.strip(string); // quantummechanics',
+                '// or',
+                '// string.strip();'
+              ]
+            ),
+            new art.model.Member(
+              'sub(string:String, start:Number, end:Number):String',
+              'Periodic version of String.substring()',
+              [
+                "var string = 'quantum mechanics';",
+                '',
+                'StringUtils.sub(string, -2, 4); // csquan',
+                '// or',
+                '// string.sub(-2, 4);'
+              ]
+            ),
+            new art.model.Member(
+              'toJson(string:String):Object',
+              'Converts <span class="code">string</span> JSON format to Object',
+              [
+                "var string = \"{id: 5, name: 'Mike'}\";",
+                '',
+                "StringUtils.toJson(string); // {id: 5, name: 'Mike'}",
+                '// or',
+                '// string.toJson();'
+              ]
+            ),
+            new art.model.Member(
+              'toS(string:String):String',
+              'Returns empty string if <span class="code">string</span> is null; <span class="code">string</span> otherwise',
+              [
+                "var string = 'quantum mechanics';",
+                'var nullValue = null;',
+                '',
+                'StringUtils.toS(string); // quantum mechanics',
+                'StringUtils.toS(nullValue); // (empty string)'
+              ]
+            ),
+            new art.model.Member(
+              'trim(string:String):String',
+              'Remove all the whitespaces from the begining and the end of the <span class="code">string</span>',
+              [
+                "var string = '    quantum mechanics  ';",
+                '',
+                'StringUtils.trim(string); // quantum mechanics',
+                '// or',
+                '// string.trim();'
+              ]
+            ),
+            new art.model.Member(
+              "truncate(string:String, n:Number, end:String = '...'):String",
+              'Truncates <span class="code">string</span> to length <span class="code">n</span> and appends <span class="code">end</span>',
+              [
+                "var string = 'quantum field theory';",
+                '',
+                'StringUtils.truncate(string, 8); // quantum...',
+                '// or',
+                '// string.truncate(8);'
+              ]
+            )
+          ]
+        }
+      ]
+    },
+    toggler: {
+      name: 'Toggler',
+      package: 'com.arthwood.utils',
+      description: 
+        'Defines a single element container. ' +
+        'Whenever you put a new one the old pops out and appropriate events are triggered',
+      sections: [
+        {
+          name: 'Constructor',
+          members: [
+            new art.model.Member(
+              'Toggler(unique:Boolean = nil)',
+              null,
+              null,
+              {
+                unique: "if true, events won't be triggered when toggling to the same object."
+              }
+            )
+          ]
+        },
+        {
+          name: 'Properties',
+          members: [
+            new art.model.Member(
+              'unique:Boolean',
+              'The same as in constructor.'
+            ),
+            new art.model.Member(
+              'current:Object',
+              'Returns current element.'
+            )
+          ]
+        },
+        {
+          name: 'Methods',
+          members: [
+            new art.model.Member(
+              'toggle(element:Object):Void',
+              'Puts a new object into container. The previous one pops out.'
+            )
+          ]
+        },
+        {
+          name: 'Events',
+          members: [
+            new art.model.Member(
+              'onActivate()',
+              'Triggered when new element has been put into the container.'
+            ),
+            new art.model.Member(
+              'onDeactivate()',
+              'Triggered when element pops out from the container.'
+            )
+          ]
+        }
+      ]
+    },
+    log: {
+      name: 'Log',
+      package: 'com.arthwood.utils',
+      description: 'Allows you to output debug messages.',
+      sections: [
+        {
+          name: 'Static methods',
+          members: [
+            new art.model.Member(
+              'log(args...:*):Void',
+              'Uses internally console.log to display messages.'
+            ),
+            new art.model.Member(
+              'p(args...:*):Void',
+              'Alias method for log().'
+            )
+          ]
+        }
+      ]
+    },
+    'transition/blind': {
+      name: 'Blind',
+      package: 'com.arthwood.transition',
+      description: 'Allows to apply "Blind" visual effect.',
+      sections: [
+        {
+          name: 'Static methods',
+          members: [
+            new art.model.Member(
+              'blindTo(e:Element, value:Integer, duration:Number = 0.4, type:String = EASE_IN_OUT, delay:Number = 0):Void',
+              'Smoothly changes the height of element to that given by <span class="param">value</span>.'
+            ),
+            new art.model.Member(
+              'blindToggle(e:Element, value:Integer, duration:Number = 0.4, type:String = EASE_IN_OUT, delay:Number = 0):Void',
+              'Does the same as blindTo but only if current element height is zero. ' +
+                'Otherwise it makes transition to zero height.'
+            )
+          ]
+        },
+        {
+          name: 'Static properties',
+          members: [
+            new art.model.Member(
+              'EASE_IN_OUT:String',
+              'Used for defining blind effect type.'
+            )
+          ]
+        }
+      ]
+    },
+    'template/helpers': {
+      name: 'Helpers, ArtJs.TemplateHelpers',
+      package: 'com.arthwood.template',
+      description: 'This class can be used both in regular JS and in html templates.' +
+        'Defines set of methods that allows to generate dynamic content.',
+      sections: [
+        {
+          name: 'Static methods',
+          members: [
+            new art.model.Member(
+              'render(templateId:String, scope:Object):String',
+              'Returns content on template identified by <span class="param">templateId</span> with template data ' +
+                'substituded with data from <span class="param">scope</span> object.',
+              [
+                '/*',
+                ' * Suppose that there is a template named myTemplate.html with content:',
+                ' * &lt;p class="title"&gt;{title}&lt;/p&gt;',
+                ' */',
+                '',
+                "var content = ArtJs.TemplateHelpers.render('myTemplate', {title: 'Hello');",
+                '',
+                '// &lt;p class="container"&gt;Hello&lt;/p&gt;'
+              ],
+              null, 
+              'To read more about templates, navigate to com.arthwood.template.Library section.'
+            ),
+            new art.model.Member(
+              'renderInto(element:Element, templateId:String, scope:Object):Void',
+              "Does the same job as render() but instead of returning a content, puts it directly to element's body."
+            ),
+            new art.model.Member(
+              'renderCollection(templateId:String, collection:Array):String',
+              'For each scope in <span class=""param"">collection</span> renders a template and returns the result.',
+              [
+                '// myTemplate.html: &lt;li&gt;{id}&lt;/li&gt;',
+                'var collection = [{id: 1}, {id: 2}];',
+                "var content = ArtJs.TemplateHelpers.renderCollection('myTemplate', collection);",
+                '',
+                '// &lt;li>1&lt;/li>&lt;li&gt;2&lt;/li&gt;'
+              ]
+            ),
+            new art.model.Member(
+              'renderIf(value:Object, method:String):String',
+              'Returns result of <span>method</span> call on a Helper but only if <span>value</span> is present.' +
+                "Otherwise returns empty string. It's useful when you have your custom helper methods " +
+                'and they may be used in templates for null values',
+              [
+                '// Suppose you have following custom helper method:',
+                '// renderDescription: function(v) {',
+                "//   return $B('p', null, v).toString();",
+                "// }",
+                'var value;',
+                '',
+                "value = 'Hi there!';",
+                "renderIf(value, 'renderDescription'); // '&lt;p&gt;Hi There!&lt;/p&gt;'",
+                '',
+                "value = null;",
+                "renderIf(value, 'renderDescription'); // ''"
+              ]
+            ),
+            new art.model.Member(
+              'register(name:String, method:Function):Void',
+              'Allows you to register custom helper methods that can be used within templates.',
+              [
+                "register('renderDescription', function(v) {",
+                "  return ArtJs.$B('p', {className: 'description'}, v).toString();",
+                '});',
+                '// in the template:',
+                "{renderDescription('Hello ArtJs!')}",
+                '// &lt;p class="description"&gt;Hello ArtJs!&lt;/p&gt;'
+              ]
+            ),
+            new art.model.Member(
+              'registerAll(helpers:Object):Void',
+              'Allows you to register set of helper methods that can be used within templates at once.',
+              [
+                "registerAll({",
+                "  renderDescription: function(v) {",
+                "    return ArtJs.$B('p', {className: 'description'}, v).toString();",
+                '  }',
+                '',
+                "  renderTitle: function(v) {",
+                "    return ArtJs.$B('h1', {className: 'title'}, v).toString();",
+                '  }',
+                '});',
+                '// in the template:',
+                "{renderTitle('Welcome')}{renderDescription('Hello ArtJs!')}",
+                '// &lt;h1 class="title"&gt;Welcome&lt;/h1&gt;&lt;p class="description"&gt;Hello ArtJs!&lt;/p&gt;'
+              ]
+            )
+          ]
+        }
+      ]
+    },
+    'template/library': {
+      name: 'Library, ArtJs.TemplateLibrary',
+      package: 'com.arthwood.template',
+      description: 'Loads template files to your application using AJAX. ' +
+        'Triggers ArtJs.onLibraryLoad upon completion.',
+      sections: [
+        {
+          name: 'Static properties',
+          members: [
+            new art.model.Member(
+              'config:Object',
+              'Consists of two configuration parameters:<br/>' +
+              'PATH - remote path to template directory<br/>' +
+              'TEMPLATES - list of template files to be loaded',
+              [
+                'ArtJs.TemplateLibrary.config = {',
+                "  PATH: '/templates',",
+                "  TEMPLATES: ['doc', 'member', 'section', 'ga']",
+                '};'
+              ]
+            )
           ]
         }
       ]

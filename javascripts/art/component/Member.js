@@ -1,4 +1,4 @@
-art.Member = ArtJs.Class(
+art.component.Member = ArtJs.Class(
   function(element) {
     this.super(arguments);
     
@@ -26,6 +26,6 @@ art.Member = ArtJs.Class(
       }
     }
   },
-  {_name: 'art.Member'},
+  {_name: 'art.component.Member'},
   ArtJs.Component
 );

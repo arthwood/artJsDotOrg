@@ -15,7 +15,6 @@ var ArtJs = {
     this.DateUtils.doInjection();
     this.Selector.doInjection();
     this.ElementUtils.doInjection();
-    this.EventUtils.doInjection();
     this.Delegate.doInjection();
     this.Blind.doInjection();
   }
@@ -41,15 +40,13 @@ var com = {
   }
 };
 
-ArtJs.p = function() {
+ArtJs.log = function() {
   if (console) {
     console.log(ArtJs.$A(arguments));
   }
 };
 
-ArtJs.log = function(msg, level) {
-  console.log(msg);
-};
+ArtJs.p = ArtJs.log;
 
 ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   _name: "ObjectUtils",
@@ -734,7 +731,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
 
 ArtJs.$A = ArtJs.ArrayUtils.arrify;
 
-ArtJs.Class = function(ctor, proto, stat, superclass) {
+ArtJs.Class = com.arthwood.utils.Class = function(ctor, proto, stat, superclass) {
   var builder = new ArtJs.ClassBuilder(ctor, proto, stat, superclass);
   return builder.ctor;
 };
@@ -785,7 +782,9 @@ ArtJs.ClassBuilder.prototype = {
   },
   _defaultConstructor: function() {
     return function() {
-      this.super(arguments);
+      if (arguments.callee.superclass) {
+        this.super(arguments);
+      }
     };
   },
   _eachProto: function(k, v) {
@@ -1126,21 +1125,6 @@ ArtJs.DateUtils = com.arthwood.utils.Date = {
     proto.copy = dc(this, this.copy, true);
     proto.getDateShifted = dc(this, this.getDateShifted, true);
     proto.stripDayTime = dc(this, this.stripDayTime, true);
-  }
-};
-
-ArtJs.EventUtils = com.arthwood.utils.Event = {
-  edge: function(targets) {
-    var t = targets.origin;
-    var ct = targets.current;
-    var rt = targets.related;
-    var s = ArtJs.Selector;
-    return t == ct && !s.isDescendantOf(rt, ct) || s.isDescendantOf(t, ct) && !s.isSelfOrDescendantOf(rt, ct);
-  },
-  doInjection: function() {
-    var proto = Event.prototype;
-    var dc = ArtJs.$DC;
-    proto.edge = dc(this, this.edge, true);
   }
 };
 
@@ -1806,7 +1790,7 @@ ArtJs.Component = com.arthwood.dom.Component = ArtJs.Class(function(element) {
     ArtJs.ArrayUtils.each(ArtJs.ArrayUtils.flatten(ArtJs.ArrayUtils.map(_class.dependants, this._toInstances, this)), this._eachDependantInstance, this);
   },
   _toInstances: function(i) {
-    return i.instances = i.instances || [];
+    return i.instances;
   },
   _eachDependeeInstance: function(i) {
     var instance = arguments.callee.instance;
@@ -2322,6 +2306,8 @@ ArtJs.List = com.arthwood.data.List = ArtJs.Class(function(items) {
   }
 });
 
+ArtJs.Model = com.arthwood.data.Model = ArtJs.Class();
+
 ArtJs.Queue = com.arthwood.data.Queue = ArtJs.Class(function(data) {
   this.onChange = new ArtJs.CustomEvent("Queue::onChange");
   this.list = new ArtJs.List(data);
@@ -2430,10 +2416,18 @@ ArtJs.MouseEvent = com.arthwood.events.Mouse = ArtJs.Class(function(element, nam
   this.on = on;
 }, {
   _on: function(e) {
-    if (ArtJs.EventUtils.edge(this.getTargets(e, this.on)) && !(this.on == this.over)) {
+    if (this._edge(e) && !(this.on == this.over)) {
       this.over = this.on;
       this.super(arguments, e);
     }
+  },
+  _edge: function(e) {
+    var targets = this.getTargets(e, this.on);
+    var t = targets.origin;
+    var ct = targets.current;
+    var rt = targets.related;
+    var s = ArtJs.Selector;
+    return t == ct && !s.isDescendantOf(rt, ct) || s.isDescendantOf(t, ct) && !s.isSelfOrDescendantOf(rt, ct);
   }
 }, null, ArtJs.ElementEvent);
 
@@ -2464,35 +2458,32 @@ ArtJs.on = function(target, eventName, delegate) {
   return new ArtJs.EventMapping[eventName](target, delegate);
 };
 
-ArtJs.Timeline = com.arthwood.events.Timeline = function() {};
-
-ArtJs.Timeline.prototype = {
-  start: function() {
-    this.t1 = ArtJs.DateUtils.getTime();
-    this.markers = [];
-  },
+ArtJs.Timeline = com.arthwood.events.Timeline = ArtJs.Class(null, {
   mark: function() {
-    this.t2 = ArtJs.DateUtils.getTime();
-    this.markers.push();
-    var interval = this.t2 - this.t1;
-    this.t1 = this.t2;
+    this._t2 = ArtJs.DateUtils.getTime();
+    var interval = this._t2 - (this._t1 || this._t2);
+    this._t1 = this._t2;
     return interval;
   }
-};
+});
 
 ArtJs.Timeout = com.arthwood.events.Timeout = ArtJs.Class(function(delay) {
   this._delay = delay;
   this._onTimeoutDC = ArtJs.$DC(this, this._onTimeout);
   this.onComplete = new ArtJs.CustomEvent("Timeout:onComplete");
 }, {
-  _onTimeout: function() {
-    this.onComplete.fire(this);
-  },
-  start: function(now) {
+  start: function() {
     this._id = setTimeout(this._onTimeoutDC, this._delay);
   },
   isRunning: function() {
     return this._id !== null;
+  },
+  getDelay: function() {
+    return this._delay;
+  },
+  _onTimeout: function() {
+    delete this._id;
+    this.onComplete.fire(this);
   }
 }, {
   fire: function(delegate, delay) {
@@ -2976,21 +2967,14 @@ ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
     return ArtJs.TemplateBase.renderTemplate(templateId, scope);
   },
   renderInto: function(element, templateId, scope) {
-    return ArtJs.TemplateBase.renderTemplateInto(element, templateId, scope);
+    ArtJs.TemplateBase.renderTemplateInto(element, templateId, scope);
   },
-  renderCollection: function(template, collection) {
-    var callback = ArtJs.$DC(this, this._renderCollectionItem, false, template);
+  renderCollection: function(templateId, collection) {
+    var callback = ArtJs.$DC(this, this._renderCollectionItem, false, templateId);
     return ArtJs.ArrayUtils.map(collection, callback).join("");
   },
   renderIf: function(value, method) {
     return value ? this[method](value) : "";
-  },
-  list: function(items) {
-    var ul = ArtJs.$B("ul");
-    return ArtJs.ArrayUtils.map(items, this.renderItem, this).toString();
-  },
-  renderItem: function(i) {
-    return ArtJs.$B("li", null, i.render()).toString();
   },
   registerAll: function(helpers) {
     ArtJs.ObjectUtils.eachPair(helpers, this.register, this);
@@ -3001,9 +2985,9 @@ ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
   perform: function(action, args) {
     return this[action].apply(this, args);
   },
-  _renderCollectionItem: function(scope, idx, arr, template) {
+  _renderCollectionItem: function(scope, idx, arr, templateId) {
     scope._index = idx;
-    return this.render(template, scope);
+    return this.render(templateId, scope);
   }
 };
 
@@ -3014,8 +2998,7 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
   },
   _templates: {},
   _init: function() {
-    this.onLoad = new ArtJs.CustomEvent("Library::Load");
-    this._onLoadSuccessBind = ArtJs.$D(this, this.onLoadSuccess);
+    this._onLoadSuccessBind = ArtJs.$D(this, this._onLoadSuccess);
     ArtJs.onDocumentLoad.add(ArtJs.$D(this, this._loadAll));
   },
   _loadAll: function() {
@@ -3026,7 +3009,7 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
     var request = ArtJs.$get(this.config.PATH + "/" + i + ".html", null, this._onLoadSuccessBind);
     request.id = i;
   },
-  onLoadSuccess: function(ajax) {
+  _onLoadSuccess: function(ajax) {
     this._templates[ajax.id] = ajax.getResponseText();
     this._loadCheck();
   },
@@ -3137,7 +3120,6 @@ ArtJs.onWindowLoad = new ArtJs.CustomEvent("window:load");
 ArtJs.onLibraryLoad = new ArtJs.CustomEvent("library:load");
 
 document.addEventListener("DOMContentLoaded", function() {
-  ArtJs.Component._init();
   ArtJs.onDocumentLoad.fire();
 }, false);
 
@@ -3146,6 +3128,8 @@ window.addEventListener("load", function() {
 }, false);
 
 ArtJs.ArrayUtils._init();
+
+ArtJs.Component._init();
 
 ArtJs.ObjectUtils._init();
 

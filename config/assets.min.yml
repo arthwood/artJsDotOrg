@@ -24,6 +24,7 @@ javascripts:
     - 'artJs/com/arthwood/dom/Signature'
     - 'artJs/com/arthwood/net/Ajax'
     - 'artJs/com/arthwood/data/List'
+    - 'artJs/com/arthwood/data/Model'
     - 'artJs/com/arthwood/data/Queue'
     - 'artJs/com/arthwood/events/Clock'
     - 'artJs/com/arthwood/events/ElementEvent'
@@ -54,11 +55,12 @@ javascripts:
     - 'artJs/com/arthwood/Finalize'
   docs-min: 
     - 'Docs'
+    - 'art/model/Member'
     - 'art/DB'
     - 'art/Helpers'
-    - 'art/Sidebar'
-    - 'art/Content'
-    - 'art/Member'
+    - 'art/component/Sidebar'
+    - 'art/component/Content'
+    - 'art/component/Member'
   main-min: 'Main'
 stylesheets:
   docs-min: 'css/docs'

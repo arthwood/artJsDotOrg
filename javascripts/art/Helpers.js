@@ -1,13 +1,13 @@
 ArtJs.TemplateHelpers.registerAll({
   renderExample: function(v) {
     var exampleElement = $B('p', {className: 'example'}, 'Example:').toString();
-    var codeElement = $B('p', {className: 'block code'}, v.join('<br />')).toString();
+    var codeElement = $B('pre', {className: 'block'}, v.join('<br />')).toString();
     
     return exampleElement + codeElement;
   },
   
   renderMore: function(v) {
-    return $B('div', null, v).toString();
+    return $B('p', {className: 'container'}, v).toString();
   },
   
   renderDescription: function(v) {
