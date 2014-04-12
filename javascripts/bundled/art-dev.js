@@ -2824,7 +2824,7 @@ ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(function() {
     this.receivers = [];
   },
   run: function() {
-    this.timeline.start();
+    this.timeline.mark();
     this.runnerElement = ArtJs.$insert(document.body, this.runnerTemplate);
     ArtJs.ArrayUtils.invoke(this.specs, "execute");
     var duration = this.timeline.mark();

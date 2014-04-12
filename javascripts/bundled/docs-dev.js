@@ -1211,7 +1211,7 @@ art.DB = {
       description: "Loads template files to your application using AJAX. " + "Triggers ArtJs.onLibraryLoad upon completion.",
       sections: [ {
         name: "Static properties",
-        members: [ new art.model.Member("config:Object", "Consists of two configuration parameters:<br/>" + "  PATH - remote path to template directory<br/>" + "  TEMPLATES - list of template files to be loaded", [ "ArtJs.TemplateLibrary.config = {", "  PATH: '/templates',", "  TEMPLATES: ['doc', 'member', 'section', 'ga']", "};" ]) ]
+        members: [ new art.model.Member("config:Object", "Consists of two configuration parameters:<br/>" + "PATH - remote path to template directory<br/>" + "TEMPLATES - list of template files to be loaded", [ "ArtJs.TemplateLibrary.config = {", "  PATH: '/templates',", "  TEMPLATES: ['doc', 'member', 'section', 'ga']", "};" ]) ]
       } ]
     }
   }
