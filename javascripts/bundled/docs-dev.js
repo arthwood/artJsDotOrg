@@ -4,7 +4,7 @@ var art = {
 };
 
 ArtJs.TemplateLibrary.config = {
-  PATH: "/artJsDotOrg/templates",
+  PATH: "../templates",
   TEMPLATES: [ "doc", "member", "section", "ga" ]
 };
 
