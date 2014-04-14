@@ -266,7 +266,7 @@ spec(ArtJs.StringUtils, function() {
 
   describe('#toJson', function() {
     it('should return correct value', function() {
-      var value = "{a: 5, b: {c: 'hello'}}";
+      var value = '{"a": 5, "b": {"c": "hello"}}';
       var result = subject().toJson(value);
       
       expect(result.a).to(eq(5));
