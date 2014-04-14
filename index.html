@@ -22,48 +22,51 @@
       <a href="javascripts/bundled/art-dev.js">Download (developer)</a>
       <span class="divider">|</span>
       <a href="javascripts/bundled/art-min.js">Download (minified)</a>
+      <span class="divider">|</span>
+      <a href="spec.html">Run specs!</a>
     </div>
     <div class="text">
+      <h1>What can it do for you?</h1>
+      <p>ArtJs is JavaScript framework of general purpose. Among many features it offers:</p>
+      <ul>
+        <li>selecting or manipulation DOM elements</li>
+        <li>performing AJAX requests</li>
+        <li>lots of built in helpers for Object, Array, String, Date, etc.</li>
+        <li>templates for dynamic content rendering</li>
+        <li>component class that allows you to define behaviour of UI elements</li>
+        <li>built in testing framework</li>
+        <li>visual effects</li>
+        <li>UI library</li>
+      </ul>
+      <h1>Where can you run it?</h1>
       <p>
-        ArtJs is JavaScript framework of general purpose. It allows you to select or manipulate DOM elements,
-        perform AJAX requests, provides load of helper methods for String, Date and other native classes, etc.
+        Currently it supports FF, Chrome, Safari, Opera, IE10.
       </p>
+      <h1>How you use it?</h1>
       <p>
-        Currently it supports FF, Chrome, Safari, Opera, IE8 and IE9.
+        Just include art-min.js file in your head section.
       </p>
-      <p>
-        Just include art-min.js file in your head section.<br/>
-      </p>
-      <p>
-        Just after library is loaded there are two methods that you may want to use:
-        <span class="block code">ArtJs.globalize()</span>
-        and
-        <span class="block code">ArtJs.doInjection()</span>
-      </p>
-      <p>
-        <span class="code">ArtJs.globalize()</span> makes all the classes globally accessible in window object, 
-        as well as shorthand utility methods like:
-        <span class="block code">$, $P, $B, $D, $DC, $E.</span>
-      </p>
-      <p>
-      <span class="code">ArtJs.doInjection()</span> makes an extensions on native classes like Object, Array, Date, Element etc.
-      so that you can use:
-      </p>
-      <p class="block code">arr.first();</p>
-      <p>otherwise you are still able to call the method using:</p>
-      <p class="block code">ArtJs.ArrayUtils.first(arr);</p>
+      <h1>What are the options?</h1>
+      <div>
+        <p>You can optionally use two following methods:</p>
+        <p class="block code">ArtJs.globalize()</p>
+        <p>
+          Which makes all the classes globally accessible in window object, as well as shorthand utility methods like:
+          <span class="code">$, $P, $B, $D, $DC, $E.</span>
+        </p>
+        
+        <p class="block code">ArtJs.doInjection()</p>
+        <p>
+          Which makes an extensions on native classes like Object, Array, Date, Element etc. so that you can use:
+          <span class="code">arr.first();</span>
+        </p>
+        <p>
+          Otherwise you are still able to call the method using:
+          <span class="block code">ArtJs.ArrayUtils.first(arr);</span>
+        </p>
+      </div>
     </div>
   </div>
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-16767330-2']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+  {render('ga')}
 </body>
 </html>

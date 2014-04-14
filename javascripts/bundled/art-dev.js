@@ -3002,6 +3002,7 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
     ArtJs.onDocumentLoad.add(ArtJs.$D(this, this._loadAll));
   },
   _loadAll: function() {
+    ArtJs.ElementUtils.hide(document.body);
     ArtJs.ArrayUtils.each(this.config.TEMPLATES, this._load, this);
     this._loadCheck();
   },
@@ -3018,6 +3019,7 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
   },
   _loadCheck: function() {
     if (ArtJs.ObjectUtils.keys(this._templates).length == this.config.TEMPLATES.length) {
+      ArtJs.ElementUtils.show(document.body);
       ArtJs.TemplateBase.renderInto(document.body, document.body.innerHTML);
       ArtJs.onLibraryLoad.fire(this);
     }
@@ -3062,13 +3064,17 @@ ArtJs.Tree = com.arthwood.ui.Tree = ArtJs.Class(function(data, element) {
   var point = ArtJs.ArrayUtils.partition(ArtJs.Selector.find(element, "li"), function(item, idx) {
     return ArtJs.ArrayUtils.isNotEmpty(ArtJs.Selector.find(item, "ul"));
   });
-  var nodes = point.x;
-  var leaves = point.y;
-  ArtJs.ArrayUtils.each(nodes, ArtJs.$DC(this, this._eachNode));
-  ArtJs.ArrayUtils.each(leaves, ArtJs.$DC(this, this._eachLeaf));
+  this._nodes = point.x;
+  this._leaves = point.y;
+  ArtJs.ArrayUtils.each(this._nodes, ArtJs.$DC(this, this._eachNode));
+  ArtJs.ArrayUtils.each(this._leaves, ArtJs.$DC(this, this._eachLeaf));
 }, {
   render: function() {
     return ArtJs.$P(this._renderNode(this.data));
+  },
+  open: function() {
+    this._expandNode(ArtJs.ElementUtils.firstElement(ArtJs.ArrayUtils.first(this._nodes)));
+    this._leafAction(ArtJs.ElementUtils.firstElement(ArtJs.ArrayUtils.first(this._leaves)));
   },
   _renderNode: function(node) {
     return ArtJs.$B("ul", null, ArtJs.ObjectUtils.map(node, this._mapNode, this).join("")).toString();

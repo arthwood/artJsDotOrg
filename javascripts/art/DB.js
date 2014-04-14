@@ -3745,7 +3745,7 @@ art.DB = {
               'TEMPLATES - list of template files to be loaded',
               [
                 'ArtJs.TemplateLibrary.config = {',
-                "  PATH: '/templates',",
+                "  PATH: 'templates',",
                 "  TEMPLATES: ['doc', 'member', 'section', 'ga']",
                 '};'
               ]

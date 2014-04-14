@@ -3,6 +3,7 @@ art.component.Content = ArtJs.Class(
   {
     onDependency: function(sidebar) {
       sidebar.tree.onLeaf.add($D(this, this.onLeaf));
+      sidebar.tree.open();
     },
     
     onLeaf: function(element) {

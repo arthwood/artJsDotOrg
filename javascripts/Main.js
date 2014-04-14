@@ -1,10 +1,7 @@
-var Main = ArtJs.Class(
-  function () {
-    ArtJs.globalize();
-    ArtJs.doInjection();
-  }
-);
+ArtJs.TemplateLibrary.config = {
+  PATH: 'templates',
+  TEMPLATES: ['ga']
+};
 
-ArtJs.onDocumentLoad.add(ArtJs.$D(null, function() {
-  this.main = new Main();
-}));
+ArtJs.globalize();
+ArtJs.doInjection();
