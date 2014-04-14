@@ -50,42 +50,12 @@ art.DB = {
     "com.arthwood.net": {
       Ajax: "ajax"
     },
-    "com.arthwood.spec": {
-      "com.arthwood.matchers": {
-        A: "matchers/a",
-        Eq: "matchers/eq",
-        False: "matchers/false",
-        Null: "matchers/null",
-        Receive: "matchers/receive",
-        True: "matchers/true"
-      },
-      Actual: "actual",
-      Mock: "mock",
-      Nodes: "nodes",
-      Receiver: "receiver",
-      Runner: "runner",
-      Subject: "subject"
-    },
-    "com.arthwood.template": {
-      Helpers: "template/helpers",
-      Library: "template/library"
-    },
     "com.arthwood.transition": {
       Blind: "transition/blind"
-    },
-    "com.arthwood.ui": {
-      DatePicker: "date_picker",
-      ElementInspector: "element_inspector",
-      Flash: "flash",
-      ModalBox: "modal_box",
-      ScreenManager: "screen_manager",
-      Tabs: "tabs",
-      Tree: "tree"
     },
     "com.arthwood.utils": {
       Array: "array",
       Class: "class",
-      ClassToggler: "class_toggler",
       Date: "date",
       Element: "element",
       Log: "log",
