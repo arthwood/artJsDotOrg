@@ -981,7 +981,7 @@ ArtJs.StringUtils = com.arthwood.utils.String = {
     return str.substring(i, j);
   },
   toJson: function(str) {
-    return eval("(" + str + ")");
+    return JSON.parse(str);
   },
   doInjection: function() {
     var proto = String.prototype;
