@@ -6,23 +6,22 @@ art.component.Member = ArtJs.Class(
     
     a.onClick($D(this, this._onAnchor));
     
-    var more = element.first('.more');
+    this.more = element.first('.more');
     
-    this.height = more.getSize().y;
-    
-    if (more) {
-      more.blindTo(0, 0);
+    if (this.more) {
+      a.addClass('active');
+      
+      this.height = this.more.getSize().y;
+      
+      this.more.blindTo(0, 0);
     }
   },
   {
     _onAnchor: function(e) {
       e.preventDefault();
       
-      var a = e.currentTarget;
-      var more = a.parent().parent().first('.more');
-      
-      if (more) {
-        more.blindToggle(this.height, 0.2);
+      if (this.more) {
+        this.more.blindToggle(this.height, 0.2);
       }
     }
   },

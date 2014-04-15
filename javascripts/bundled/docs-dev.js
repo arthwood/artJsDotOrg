@@ -1192,7 +1192,7 @@ art.DB = {
 };
 
 ArtJs.TemplateHelpers.registerAll({
-  renderExample: function(v) {
+  _renderExample: function(v) {
     var exampleElement = $B("p", {
       className: "example"
     }, "Example:").toString();
@@ -1201,7 +1201,17 @@ ArtJs.TemplateHelpers.registerAll({
     }, v.join("<br />")).toString();
     return exampleElement + codeElement;
   },
-  renderMore: function(v) {
+  renderMore: function(example, more) {
+    if (example || more) {
+      var v = this.renderIf(example, "_renderExample") + this.renderIf(more, "_renderMore");
+      return $B("div", {
+        className: "more"
+      }, v).toString();
+    } else {
+      return "";
+    }
+  },
+  _renderMore: function(v) {
     return $B("p", {
       className: "container"
     }, v).toString();
@@ -1246,18 +1256,17 @@ art.component.Member = ArtJs.Class(function(element) {
   this.super(arguments);
   var a = element.first("h4").first("a");
   a.onClick($D(this, this._onAnchor));
-  var more = element.first(".more");
-  this.height = more.getSize().y;
-  if (more) {
-    more.blindTo(0, 0);
+  this.more = element.first(".more");
+  if (this.more) {
+    a.addClass("active");
+    this.height = this.more.getSize().y;
+    this.more.blindTo(0, 0);
   }
 }, {
   _onAnchor: function(e) {
     e.preventDefault();
-    var a = e.currentTarget;
-    var more = a.parent().parent().first(".more");
-    if (more) {
-      more.blindToggle(this.height, .2);
+    if (this.more) {
+      this.more.blindToggle(this.height, .2);
     }
   }
 }, {

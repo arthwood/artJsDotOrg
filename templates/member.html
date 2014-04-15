@@ -2,8 +2,5 @@
   <h4><a href="#">{header}</a></h4>
   {renderIf(description, 'renderDescription')}
   {renderIf(params, 'renderParams')}
-  <div class="more">
-    {renderIf(more, 'renderMore')}
-    {renderIf(example, 'renderExample')}
-  </div>
+  {renderMore(example, more)}
 </li>

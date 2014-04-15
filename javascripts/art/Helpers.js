@@ -1,12 +1,23 @@
 ArtJs.TemplateHelpers.registerAll({
-  renderExample: function(v) {
+  _renderExample: function(v) {
     var exampleElement = $B('p', {className: 'example'}, 'Example:').toString();
     var codeElement = $B('pre', {className: 'block'}, v.join('<br />')).toString();
     
     return exampleElement + codeElement;
   },
   
-  renderMore: function(v) {
+  renderMore: function(example, more) {
+    if (example || more) {
+      var v = this.renderIf(example, '_renderExample') + this.renderIf(more, '_renderMore');
+      
+      return $B('div', {className: 'more'}, v).toString();
+    }
+    else {
+      return '';
+    }
+  },
+  
+  _renderMore: function(v) {
     return $B('p', {className: 'container'}, v).toString();
   },
   

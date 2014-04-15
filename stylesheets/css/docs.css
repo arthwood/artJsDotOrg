@@ -96,6 +96,12 @@ ul {
         .art-component-Content ul li p:last-child {
           margin-bottom: 0; }
 
+.art-component-Member h4 a {
+  cursor: default; }
+  .art-component-Member h4 a.active {
+    cursor: pointer;
+    text-decoration: underline; }
+
 .art-component-Sidebar {
   float: left;
   width: 180px;
