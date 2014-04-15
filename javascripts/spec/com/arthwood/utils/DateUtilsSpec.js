@@ -40,25 +40,25 @@ spec(ArtJs.DateUtils, function() {
 
   describe('#toHMS', function() {
     it('should return hours, minutes, seconds format of date', function() {
-      var date = new Date('2014-02-23 14:11:32');
-      
-      expect(subject().toHMS(date)).to(eq('14:11:32'));
+      var date = new Date('Mon, 25 Dec 1995 13:30:00 GMT');
+      console.log(date);
+      expect(subject().toHMS(date)).to(eq('13:30:00'));
     });
   });
 
   describe('#toYMD', function() {
     it('should return year, month, date format of date', function() {
-      var date = new Date('2014-02-23 14:11:32');
+      var date = new Date('Mon, 25 Dec 1995 13:30:00 GMT');
 
-      expect(subject().toYMD(date, '/')).to(eq('2014/02/23'));
+      expect(subject().toYMD(date, '/')).to(eq('1995/12/25'));
     });
   });
 
   describe('#toDMY', function() {
     it('should return date, month, year format of date', function() {
-      var date = new Date('2014-02-23 14:11:32');
+      var date = new Date('Mon, 25 Dec 1995 13:30:00 GMT');
 
-      expect(subject().toDMY(date, '/')).to(eq('23/02/2014'));
+      expect(subject().toDMY(date, '/')).to(eq('25/12/1995'));
     });
   });
 
@@ -124,40 +124,40 @@ spec(ArtJs.DateUtils, function() {
 
   describe('#copy', function() {
     it('should return copy of date', function() {
-      var date = new Date('2014-02-23 14:11:32');
+      var date = new Date('Mon, 25 Dec 1995 13:30:00 GMT');
       var result = subject().copy(date);
 
-      expect(result.getFullYear()).to(eq(2014));
-      expect(result.getMonth()).to(eq(1));
-      expect(result.getDate()).to(eq(23));
-      expect(result.getHours()).to(eq(14));
-      expect(result.getMinutes()).to(eq(11));
-      expect(result.getSeconds()).to(eq(32));
+      expect(result.getFullYear()).to(eq(1995));
+      expect(result.getMonth()).to(eq(11));
+      expect(result.getDate()).to(eq(25));
+      expect(result.getHours()).to(eq(13));
+      expect(result.getMinutes()).to(eq(30));
+      expect(result.getSeconds()).to(eq(0));
     });
   });
 
   describe('#getDateShifted', function() {
     it('should return date with days offset', function() {
-      var date = new Date('2014-02-23 14:11:32');
+      var date = new Date('Mon, 25 Dec 1995 13:30:00 GMT');
       var result = subject().getDateShifted(date, -3);
 
-      expect(result.getFullYear()).to(eq(2014));
-      expect(result.getMonth()).to(eq(1));
-      expect(result.getDate()).to(eq(20));
-      expect(result.getHours()).to(eq(14));
-      expect(result.getMinutes()).to(eq(11));
-      expect(result.getSeconds()).to(eq(32));
+      expect(result.getFullYear()).to(eq(1995));
+      expect(result.getMonth()).to(eq(11));
+      expect(result.getDate()).to(eq(22));
+      expect(result.getHours()).to(eq(13));
+      expect(result.getMinutes()).to(eq(30));
+      expect(result.getSeconds()).to(eq(0));
     });
   });
 
   describe('#stripDayTime', function() {
     it('should return date with time set to 0', function() {
-      var date = new Date('2014-02-23 14:11:32');
-      var result = subject().stripDayTime(date, -3);
+      var date = new Date('Mon, 25 Dec 1995 13:30:00 GMT');
+      var result = subject().stripDayTime(date);
 
-      expect(result.getFullYear()).to(eq(2014));
-      expect(result.getMonth()).to(eq(1));
-      expect(result.getDate()).to(eq(23));
+      expect(result.getFullYear()).to(eq(1995));
+      expect(result.getMonth()).to(eq(11));
+      expect(result.getDate()).to(eq(25));
       expect(result.getHours()).to(eq(0));
       expect(result.getMinutes()).to(eq(0));
       expect(result.getSeconds()).to(eq(0));
