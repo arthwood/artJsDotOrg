@@ -50,6 +50,10 @@ art.DB = {
     "com.arthwood.net": {
       Ajax: "ajax"
     },
+    "com.arthwood.template": {
+      Helpers: "template/helpers",
+      Library: "template/library"
+    },
     "com.arthwood.transition": {
       Blind: "transition/blind"
     },
