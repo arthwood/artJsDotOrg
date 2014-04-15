@@ -43,10 +43,10 @@ art.DB = {
 //      'Runner': 'runner',
 //      'Subject': 'subject'
 //    },
-//    'com.arthwood.template': {
-//      'Helpers': 'template/helpers',
-//      'Library': 'template/library'
-//    },
+    'com.arthwood.template': {
+      'Helpers': 'template/helpers',
+      'Library': 'template/library'
+    },
     'com.arthwood.transition': {
       'Blind': 'transition/blind'
     },
