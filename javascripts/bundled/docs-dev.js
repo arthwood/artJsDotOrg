@@ -5,12 +5,8 @@ var art = {
 
 ArtJs.TemplateLibrary.config = {
   PATH: "../templates",
-  TEMPLATES: [ "doc", "member", "section", "ga" ]
+  TEMPLATES: [ "doc", "member", "section", "ga", "disqus" ]
 };
-
-ArtJs.globalize();
-
-ArtJs.doInjection();
 
 art.model.Member = ArtJs.Class(function(header, description, example, params, more) {
   this.super(arguments);
@@ -1193,10 +1189,10 @@ art.DB = {
 
 ArtJs.TemplateHelpers.registerAll({
   _renderExample: function(v) {
-    var exampleElement = $B("p", {
+    var exampleElement = ArtJs.$B("p", {
       className: "example"
     }, "Example:").toString();
-    var codeElement = $B("pre", {
+    var codeElement = ArtJs.$B("pre", {
       className: "block"
     }, v.join("<br />")).toString();
     return exampleElement + codeElement;
@@ -1204,7 +1200,7 @@ ArtJs.TemplateHelpers.registerAll({
   renderMore: function(example, more) {
     if (example || more) {
       var v = this.renderIf(example, "_renderExample") + this.renderIf(more, "_renderMore");
-      return $B("div", {
+      return ArtJs.$B("div", {
         className: "more"
       }, v).toString();
     } else {
@@ -1212,22 +1208,22 @@ ArtJs.TemplateHelpers.registerAll({
     }
   },
   _renderMore: function(v) {
-    return $B("p", {
+    return ArtJs.$B("p", {
       className: "container"
     }, v).toString();
   },
   renderDescription: function(v) {
-    return $B("p", null, v).toString();
+    return ArtJs.$B("p", null, v).toString();
   },
   renderParams: function(v) {
-    var collection = v.map(this._paramToElement, this).join("");
-    return $B("div", {
+    var collection = ArtJs.ArrayUtils.map(v, this._paramToElement, this).join("");
+    return ArtJs.$B("div", {
       className: "params"
     }, collection).toString();
   },
   _paramToElement: function(k, v) {
-    var content = $B("span", null, k).toString() + " - " + v;
-    return $B("p", null, content).toString();
+    var content = ArtJs.$B("span", null, k).toString() + " - " + v;
+    return ArtJs.$B("p", null, content).toString();
   }
 });
 
@@ -1240,11 +1236,12 @@ art.component.Sidebar = ArtJs.Class(function() {
 
 art.component.Content = ArtJs.Class(null, {
   onDependency: function(sidebar) {
-    sidebar.tree.onLeaf.add($D(this, this.onLeaf));
+    sidebar.tree.onLeaf.add(ArtJs.$D(this, this.onLeaf));
     sidebar.tree.open();
   },
   onLeaf: function(element) {
-    ArtJs.TemplateHelpers.renderInto(this.element, "doc", art.DB.content[element.getAttributes().href]);
+    var scope = art.DB.content[ArtJs.ElementUtils.getAttributes(element).href];
+    ArtJs.TemplateHelpers.renderInto(this.element, "doc", scope);
   }
 }, {
   _name: "art.component.Content"
@@ -1254,19 +1251,21 @@ art.component.Content.dependsOn(art.component.Sidebar);
 
 art.component.Member = ArtJs.Class(function(element) {
   this.super(arguments);
-  var a = element.first("h4").first("a");
-  a.onClick($D(this, this._onAnchor));
-  this.more = element.first(".more");
+  var s = ArtJs.Selector;
+  var a = s.first(s.first(element, "h4"), "a");
+  var eu = ArtJs.ElementUtils;
+  eu.onClick(a, ArtJs.$D(this, this._onAnchor));
+  this.more = s.first(element, ".more");
   if (this.more) {
-    a.addClass("active");
-    this.height = this.more.getSize().y;
-    this.more.blindTo(0, 0);
+    eu.addClass(a, "active");
+    this.height = eu.getSize(this.more).y;
+    ArtJs.Blind.blindTo(this.more, 0, 0);
   }
 }, {
   _onAnchor: function(e) {
     e.preventDefault();
     if (this.more) {
-      this.more.blindToggle(this.height, .2);
+      ArtJs.Blind.blindToggle(this.more, this.height, .2);
     }
   }
 }, {

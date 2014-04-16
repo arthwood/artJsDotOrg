@@ -2906,14 +2906,14 @@ ArtJs.TemplateBase = com.arthwood.template.Base = ArtJs.Class(function(content, 
   this.content = content;
   this.scope = scope;
 }, {
-  TAG_RE: /\{.+\}/g,
+  TAG_RE: /\{\{.+\}\}/g,
   METHOD_RE: /^(\w+)\((.*)\)$/,
   compile: function() {
     ArtJs.ArrayUtils.each(this.content.match(this.TAG_RE), this._eachTag, this);
   },
   _eachTag: function(i) {
     this.METHOD_RE.lastIndex = 0;
-    var expression = ArtJs.StringUtils.sub(i, 1, -1);
+    var expression = ArtJs.StringUtils.sub(i, 2, -2);
     var exec = this.METHOD_RE.exec(expression);
     var result;
     if (exec) {
@@ -2958,7 +2958,14 @@ ArtJs.TemplateBase = com.arthwood.template.Base = ArtJs.Class(function(content, 
   },
   render: function(element, content) {
     ArtJs.ElementUtils.setContent(element, content);
+    this._evalScripts(element);
     ArtJs.Component._scan(element);
+  },
+  _evalScripts: function(element) {
+    ArtJs.ArrayUtils.each(ArtJs.Selector.find(element, "script"), this._evalScript, this);
+  },
+  _evalScript: function(script) {
+    eval(ArtJs.ElementUtils.getContent(script));
   }
 });
 

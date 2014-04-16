@@ -1,19 +1,20 @@
 art.component.Member = ArtJs.Class(
   function(element) {
     this.super(arguments);
+    var s = ArtJs.Selector;
+    var a = s.first(s.first(element, 'h4'), 'a');
+    var eu = ArtJs.ElementUtils;
     
-    var a = element.first('h4').first('a');
+    eu.onClick(a, ArtJs.$D(this, this._onAnchor));
     
-    a.onClick($D(this, this._onAnchor));
-    
-    this.more = element.first('.more');
+    this.more = s.first(element, '.more');
     
     if (this.more) {
-      a.addClass('active');
+      eu.addClass(a, 'active');
       
-      this.height = this.more.getSize().y;
+      this.height = eu.getSize(this.more).y;
       
-      this.more.blindTo(0, 0);
+      ArtJs.Blind.blindTo(this.more, 0, 0);
     }
   },
   {
@@ -21,7 +22,7 @@ art.component.Member = ArtJs.Class(
       e.preventDefault();
       
       if (this.more) {
-        this.more.blindToggle(this.height, 0.2);
+        ArtJs.Blind.blindToggle(this.more, this.height, 0.2);
       }
     }
   },

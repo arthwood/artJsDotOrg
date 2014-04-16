@@ -5,8 +5,5 @@ var art = {
 
 ArtJs.TemplateLibrary.config = {
   PATH: '../templates',
-  TEMPLATES: ['doc', 'member', 'section', 'ga']
+  TEMPLATES: ['doc', 'member', 'section', 'ga', 'disqus']
 };
-
-ArtJs.globalize();
-ArtJs.doInjection();
