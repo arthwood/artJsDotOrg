@@ -26,7 +26,7 @@ ArtJs.TemplateHelpers.registerAll({
   },
   
   renderParams: function(v) {
-    var collection = ArtJs.ArrayUtils.map(v, this._paramToElement, this).join('');
+    var collection = ArtJs.ObjectUtils.map(v, this._paramToElement, this).join('');
       
     return ArtJs.$B('div', {className: 'params'}, collection).toString();
   },
