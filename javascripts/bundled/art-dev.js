@@ -54,6 +54,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   _init: function() {
     this._invertedRemoveValueDC = ArtJs.$DC(this, this._invertedRemoveValue);
     this._eachPairDeleteValueDC = ArtJs.$DC(this, this._eachPairDeleteValue);
+    this._eachKeyDeleteKeyDC = ArtJs.$DC(this, this._eachKeyDeleteKey);
     this._invertedIncludesDC = ArtJs.$DC(this, this._invertedIncludes);
     this._pairToQueryStringDC = ArtJs.$DC(this, this._pairToQueryString);
     this._parseArrayValueDC = ArtJs.$DC(this, this._parseArrayValue);
@@ -83,6 +84,10 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   removeValue: function(obj, val) {
     this._eachPairDeleteValueDC.delegate.args = [ obj, val ];
     this.eachPair(obj, this._eachPairDeleteValueDC);
+  },
+  removeKeys: function(obj, keys) {
+    this._eachKeyDeleteKeyDC.delegate.args = [ obj ];
+    ArtJs.ArrayUtils.each(keys, this._eachKeyDeleteKeyDC);
   },
   removeValues: function(obj, values) {
     this._invertedRemoveValueDC.delegate.args = [ obj ];
@@ -298,11 +303,26 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   },
   _eachPairDeleteValue: function(i, j, obj, val) {
     if (j === val) {
-      delete obj[i];
+      this._deleteKey(obj, i);
     }
+  },
+  _eachKeyDeleteKey: function(i, idx, arr, obj) {
+    this._deleteKey(obj, i);
+  },
+  _deleteKey: function(obj, i) {
+    delete obj[i];
   },
   _invertedRemoveValue: function(val, arr, obj) {
     this.removeValue(obj, val);
+  },
+  isNullLike: function(i) {
+    return i === null || i === undefined;
+  },
+  isPresent: function(i) {
+    return !this.isNullLike(i);
+  },
+  getDefault: function(i, defaultValue) {
+    return this.isNullLike(i) ? defaultValue : i;
   },
   doInjection: function() {
     var proto = Object.prototype;
@@ -640,10 +660,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return this.select(arr, this.isNotEmpty, this);
   },
   compact: function(arr) {
-    return this.reject(arr, this.isNullLike, this);
-  },
-  isNullLike: function(i) {
-    return i === null || i === undefined;
+    return this.reject(arr, ArtJs.ObjectUtils.isNullLike, this);
   },
   isEmpty: function(arr) {
     return arr.length == 0;
@@ -673,7 +690,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return this.map(arr, this._stringifyCallback, this);
   },
   _stringifyCallback: function(i) {
-    return this.isNullLike(i) ? "" : i.toString();
+    return ArtJs.ObjectUtils.isNullLike(i) ? "" : i.toString();
   },
   _indexOf: function(arr, item) {
     for (var i in arr) {
@@ -1207,18 +1224,17 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     ArtJs.ObjectUtils.extend(e.style, style);
   },
   transitionStyle: function(prop, duration, type, delay) {
-    return this._effectStyle(new ArtJs.Point("transition", this._getTransitionStyleValue(prop, duration, type, delay)));
+    return this._effectStyle(this._getTransitionStyleValue(prop, duration, type, delay));
   },
   _getTransitionStyleValue: function(prop, duration, type, delay) {
     return [ prop, duration + "s", type, delay + "s" ].join(" ");
   },
-  _effectStyle: function(data) {
-    this._browserMap.data = data;
+  _effectStyle: function(value) {
+    this._browserMap.value = value;
     return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(this.BROWSERS_STYLES, this._browserMap, this));
   },
   _browserMap: function(browser) {
-    var data = arguments.callee.data;
-    return [ browser + data.x, data.y ];
+    return [ browser + "transition", arguments.callee.value ];
   },
   getSizeStyle: function(e, prop) {
     return this.getSizeStyleValue(this.getStyle(e, prop));
@@ -2491,30 +2507,79 @@ ArtJs.Timeout = com.arthwood.events.Timeout = ArtJs.Class(function(delay) {
     instance.onComplete.add(delegate);
     instance.start();
     return instance;
+  },
+  defer: function(delegate) {
+    return this.fire(delegate, 0);
   }
 });
 
-ArtJs.Blind = com.arthwood.transition.Blind = {
-  EASE_IN_OUT: "ease-in-out",
-  blindToggle: function(e, value, duration, type, delay) {
-    this.blindTo(e, e.style.height == "0px" ? value : 0, duration, type, delay);
+ArtJs.TransitionBase = com.arthwood.transition.Base = ArtJs.Class(function(property, element, value, duration, type, delay, from) {
+  this.property = property;
+  this.element = element;
+  this.duration = ArtJs.ObjectUtils.getDefault(duration, 1);
+  this.value = value;
+  this.type = type || this.ctor.LINEAR;
+  this.delay = delay || 0;
+  this.from = from;
+  this._deferredD = ArtJs.$D(this, this._deferred);
+}, {
+  run: function() {
+    if (ArtJs.ObjectUtils.isPresent(this.from)) {
+      this._setStyle(this.from);
+      this._setEffectStyle("none");
+    }
+    ArtJs.Timeout.defer(this._deferredD);
   },
-  blindTo: function(e, value, duration, type, delay) {
-    var eu = ArtJs.ElementUtils;
-    var baseStyle = {
-      overflow: "hidden",
-      height: value + "px"
-    };
-    var effectStyle = eu.transitionStyle("height", duration || .4, type || this.EASE_IN_OUT, delay || 0);
-    eu.extendStyle(e, baseStyle);
-    eu.extendStyle(e, effectStyle);
+  _deferred: function() {
+    this._setEffectStyle(this.property);
+    this._setStyle(this.value);
+  },
+  _setStyle: function(value) {
+    ArtJs.ElementUtils.setStyle(this.element, this.property, value);
+  },
+  _setEffectStyle: function(prop) {
+    var effectStyle = ArtJs.ElementUtils.transitionStyle(prop, this.duration, this.type, this.delay);
+    ArtJs.ElementUtils.extendStyle(this.element, effectStyle);
+  }
+}, {
+  LINEAR: "linear",
+  EASE: "ease",
+  EASE_IN: "ease-in",
+  EASE_IN_OUT: "ease-in-out",
+  EASE_OUT: "ease-out",
+  run: function(e, value, duration, type, delay, from) {
+    var instance = new this(e, value, duration, type, delay, from);
+    instance.run();
+  }
+});
+
+ArtJs.Blind = com.arthwood.transition.Blind = ArtJs.Class(function() {
+  this.super(arguments, "height");
+}, {
+  _setStyle: function(value) {
+    this.super(arguments, value + "px");
+    ArtJs.ElementUtils.setStyle(this.element, "overflow", "hidden");
+  }
+}, {
+  toggle: function(e, value, duration, type, delay) {
+    var v = e.style.height == "0px" ? value : 0;
+    this.run(e, v, duration, type, delay);
   },
   doInjection: function() {
     var proto = Element.prototype;
-    proto.blindToggle = ArtJs.$DC(this, this.blindToggle, true);
-    proto.blindTo = ArtJs.$DC(this, this.blindTo, true);
+    proto.blindToggle = ArtJs.$DC(this, this.toggle, true);
+    proto.blindTo = ArtJs.$DC(this, this.run, true);
   }
-};
+}, ArtJs.TransitionBase);
+
+ArtJs.Fade = com.arthwood.transition.Fade = ArtJs.Class(function() {
+  this.super(arguments, "opacity");
+}, null, {
+  doInjection: function() {
+    var proto = Element.prototype;
+    proto.fadeTo = ArtJs.$DC(this, this.run, true);
+  }
+}, ArtJs.TransitionBase);
 
 ArtJs.BaseMatcher = com.arthwood.spec.matchers.Base = ArtJs.Class(function(expected, toText) {
   this.expected = expected;

@@ -1242,6 +1242,7 @@ art.component.Content = ArtJs.Class(null, {
   onLeaf: function(element) {
     var scope = art.DB.content[ArtJs.ElementUtils.getAttributes(element).href];
     ArtJs.TemplateHelpers.renderInto(this.element, "doc", scope);
+    ArtJs.Fade.run(this.element, 1, .2, null, null, 0);
   }
 }, {
   _name: "art.component.Content"
@@ -1259,13 +1260,13 @@ art.component.Member = ArtJs.Class(function(element) {
   if (this.more) {
     eu.addClass(a, "active");
     this.height = eu.getSize(this.more).y;
-    ArtJs.Blind.blindTo(this.more, 0, 0);
+    ArtJs.Blind.run(this.more, 0, 0);
   }
 }, {
   _onAnchor: function(e) {
     e.preventDefault();
     if (this.more) {
-      ArtJs.Blind.blindToggle(this.more, this.height, .2);
+      ArtJs.Blind.toggle(this.more, this.height, .2, ArtJs.TransitionBase.EASE_IN_OUT);
     }
   }
 }, {

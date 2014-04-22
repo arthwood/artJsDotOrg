@@ -14,7 +14,7 @@ art.component.Member = ArtJs.Class(
       
       this.height = eu.getSize(this.more).y;
       
-      ArtJs.Blind.blindTo(this.more, 0, 0);
+      ArtJs.Blind.run(this.more, 0, 0);
     }
   },
   {
@@ -22,7 +22,7 @@ art.component.Member = ArtJs.Class(
       e.preventDefault();
       
       if (this.more) {
-        ArtJs.Blind.blindToggle(this.more, this.height, 0.2);
+        ArtJs.Blind.toggle(this.more, this.height, 0.2, ArtJs.TransitionBase.EASE_IN_OUT);
       }
     }
   },
