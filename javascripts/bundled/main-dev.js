@@ -1,4 +1,4 @@
 ArtJs.TemplateLibrary.config = {
-  PATH: "templates",
-  TEMPLATES: [ "ga" ]
+  PATH: 'templates',
+  TEMPLATES: ['ga']
 };
