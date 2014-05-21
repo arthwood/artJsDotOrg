@@ -234,7 +234,7 @@ spec(ArtJs.ObjectUtils, function() {
       
       context('when NodeList', function() {
         it('should return false', function () {
-          var obj = document.getElementsByName();
+          var obj = document.getElementsByName('');
           var result = subject().isArray(obj);
 
           expect(result).to(beFalse());

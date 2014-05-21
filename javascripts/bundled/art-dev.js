@@ -51,6 +51,7 @@ ArtJs.p = ArtJs.log;
 ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   _name: "ObjectUtils",
   QUERY_DELIMITER: "&",
+  INJECTABLES: [ "all", "copy", "copyProps", "each", "eachPair", "extend", "keys", "values", "includes", "includesAll", "isArray", "isEmpty", "isNotEmpty", "isNull", "map", "mapKey", "mapValue", "merge", "removeValue", "removeValues", "reject", "select", "selectWithKey", "toArray", "toQueryString", "update" ],
   _init: function() {
     this._invertedRemoveValueDC = ArtJs.$DC(this, this._invertedRemoveValue);
     this._eachPairDeleteValueDC = ArtJs.$DC(this, this._eachPairDeleteValue);
@@ -187,7 +188,13 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
     return result;
   },
   isArray: function(obj) {
-    return obj.constructor === Array;
+    return this.is(obj, Array);
+  },
+  isString: function(obj) {
+    return this.is(obj, String);
+  },
+  is: function(obj, type) {
+    return obj.constructor === type;
   },
   isEmpty: function(obj) {
     for (var i in obj) {
@@ -324,40 +331,22 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   getDefault: function(i, defaultValue) {
     return this.isNull(i) ? defaultValue : i;
   },
+  prototypify: function(context, klass) {
+    arguments.callee.context = context;
+    arguments.callee.class = klass;
+    ArtJs.ArrayUtils.each(context.INJECTABLES, this._prototypifyMethod, this);
+  },
+  _prototypifyMethod: function(i) {
+    this.prototypify.class.prototype.all = ArtJs.$DC(this.prototypify.context, i, true);
+  },
   doInjection: function() {
-    var proto = Object.prototype;
-    var dc = ArtJs.$DC;
-    proto.all = dc(this, this.all, true);
-    proto.copy = dc(this, this.copy, true);
-    proto.copyProps = dc(this, this.copyProps, true);
-    proto.each = dc(this, this.each, true);
-    proto.eachPair = dc(this, this.eachPair, true);
-    proto.extend = dc(this, this.extend, true);
-    proto.keys = dc(this, this.keys, true);
-    proto.values = dc(this, this.values, true);
-    proto.includes = dc(this, this.includes, true);
-    proto.includesAll = dc(this, this.includesAll, true);
-    proto.isArray = dc(this, this.isArray, true);
-    proto.isEmpty = dc(this, this.isEmpty, true);
-    proto.isNotEmpty = dc(this, this.isNotEmpty, true);
-    proto.isNull = dc(this, this.isNull, true);
-    proto.map = dc(this, this.map, true);
-    proto.mapKey = dc(this, this.mapKey, true);
-    proto.mapValue = dc(this, this.mapValue, true);
-    proto.merge = dc(this, this.merge, true);
-    proto.removeValue = dc(this, this.removeValue, true);
-    proto.removeValues = dc(this, this.removeValues, true);
-    proto.reject = dc(this, this.reject, true);
-    proto.select = dc(this, this.select, true);
-    proto.selectWithKey = dc(this, this.selectWithKey, true);
-    proto.toArray = dc(this, this.toArray, true);
-    proto.toQueryString = dc(this, this.toQueryString, true);
-    proto.update = dc(this, this.update, true);
+    ArtJs.ObjectUtils.prototypify(this, Object);
   }
 };
 
 ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   _name: "ArrayUtils",
+  INJECTABLES: [ "all", "any", "beforeLast", "compact", "detect", "each", "eachIndex", "eachItem", "equal", "first", "flatten", "getItem", "includes", "includesAll", "inject", "insertAt", "intersection", "invoke", "isEmpty", "itemsEqual", "last", "map", "isNotEmpty", "numerize", "partition", "pluck", "print", "reject", "$reject", "removeAt", "removeItem", "second", "select", "$select", "selectNonEmpty", "stringify", "sum", "third", "transpose", "uniq" ],
   _init: function() {
     this._areItemsEqualCallback = ArtJs.$DC(this, this.areItemsEqual);
     this._invokeCallback = ArtJs.$DC(this, this._invoke);
@@ -702,48 +691,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return -1;
   },
   doInjection: function() {
-    var proto = Array.prototype;
-    var dc = ArtJs.$DC;
-    proto.all = dc(this, this.all, true);
-    proto.any = dc(this, this.any, true);
-    proto.beforeLast = dc(this, this.beforeLast, true);
-    proto.compact = dc(this, this.compact, true);
-    proto.detect = dc(this, this.detect, true);
-    proto.each = dc(this, this.each, true);
-    proto.eachIndex = dc(this, this.eachIndex, true);
-    proto.eachItem = dc(this, this.eachItem, true);
-    proto.equal = dc(this, this.equal, true);
-    proto.first = dc(this, this.first, true);
-    proto.flatten = dc(this, this.flatten, true);
-    proto.getItem = dc(this, this.getItem, true);
-    proto.includes = dc(this, this.includes, true);
-    proto.includesAll = dc(this, this.includesAll, true);
-    proto.inject = dc(this, this.inject, true);
-    proto.insertAt = dc(this, this.insertAt, true);
-    proto.intersection = dc(this, this.intersection, true);
-    proto.invoke = dc(this, this.invoke, true);
-    proto.isEmpty = dc(this, this.isEmpty, true);
-    proto.itemsEqual = dc(this, this.itemsEqual, true);
-    proto.last = dc(this, this.last, true);
-    proto.map = dc(this, this.map, true);
-    proto.isNotEmpty = dc(this, this.isNotEmpty, true);
-    proto.numerize = dc(this, this.numerize, true);
-    proto.partition = dc(this, this.partition, true);
-    proto.pluck = dc(this, this.pluck, true);
-    proto.print = dc(this, this.print, true);
-    proto.reject = dc(this, this.reject, true);
-    proto.$reject = dc(this, this.$reject, true);
-    proto.removeAt = dc(this, this.removeAt, true);
-    proto.removeItem = dc(this, this.removeItem, true);
-    proto.second = dc(this, this.second, true);
-    proto.select = dc(this, this.select, true);
-    proto.$select = dc(this, this.$select, true);
-    proto.selectNonEmpty = dc(this, this.selectNonEmpty, true);
-    proto.stringify = dc(this, this.stringify, true);
-    proto.sum = dc(this, this.sum, true);
-    proto.third = dc(this, this.third, true);
-    proto.transpose = dc(this, this.transpose, true);
-    proto.uniq = dc(this, this.uniq, true);
+    ArtJs.ObjectUtils.prototypify(this, Array);
   }
 };
 
@@ -823,7 +771,7 @@ ArtJs.ClassBuilder.prototype = {
 
 ArtJs.Delegate = com.arthwood.events.Delegate = ArtJs.Class(function(object, method) {
   this.object = object;
-  this.method = method;
+  this.method = ArtJs.ObjectUtils.isString(method) ? this.object[method] : method;
   this.args = ArtJs.$A(arguments, 2);
 }, {
   invoke: function() {
@@ -890,6 +838,7 @@ ArtJs.MathUtils = com.arthwood.utils.Math = {
 
 ArtJs.StringUtils = com.arthwood.utils.String = {
   _name: "StringUtils",
+  INJECTABLES: [ "align", "isBlank", "capitalize", "capitalizeUnderscored", "capitalizeWord", "countPattern", "first", "getMultiPattern", "isEmpty", "last", "nullifyEmpty", "singularOrPlural", "strip", "sub", "toS", "toJson", "truncate", "trim " ],
   first: function(str) {
     return str.substr(0, 1);
   },
@@ -1002,31 +951,13 @@ ArtJs.StringUtils = com.arthwood.utils.String = {
     return JSON.parse(str);
   },
   doInjection: function() {
-    var proto = String.prototype;
-    var dc = ArtJs.$DC;
-    proto.align = dc(this, this.align, true);
-    proto.isBlank = dc(this, this.isBlank, true);
-    proto.capitalize = dc(this, this.capitalize, true);
-    proto.capitalizeUnderscored = dc(this, this.capitalizeUnderscored, true);
-    proto.capitalizeWord = dc(this, this.capitalizeWord, true);
-    proto.countPattern = dc(this, this.countPattern, true);
-    proto.first = dc(this, this.first, true);
-    proto.getMultiPattern = dc(this, this.getMultiPattern, true);
-    proto.isEmpty = dc(this, this.isEmpty, true);
-    proto.last = dc(this, this.last, true);
-    proto.nullifyEmpty = dc(this, this.nullifyEmpty, true);
-    proto.singularOrPlural = dc(this, this.singularOrPlural, false);
-    proto.strip = dc(this, this.strip, true);
-    proto.sub = dc(this, this.sub, true);
-    proto.toS = dc(this, this.toS, true);
-    proto.toJson = dc(this, this.toJson, true);
-    proto.truncate = dc(this, this.truncate, true);
-    proto.trim = dc(this, this.trim, true);
+    ArtJs.ObjectUtils.prototypify(this, String);
   }
 };
 
 ArtJs.DateUtils = com.arthwood.utils.Date = {
   _name: "DateUtils",
+  INJECTABLES: [ "monthDaysNum", "firstDay", "toHMS", "toYMD", "toDMY", "copy", "getDateShifted", "stripDayTime" ],
   getTime: function() {
     return (new Date).getTime();
   },
@@ -1130,19 +1061,7 @@ ArtJs.DateUtils = com.arthwood.utils.Date = {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   },
   doInjection: function() {
-    var proto = Date.prototype;
-    var dc = ArtJs.$DC;
-    proto.monthDaysNum = dc(this, this.monthDaysNum, true);
-    proto.firstDay = dc(this, this.firstDay, true);
-    proto.toHMS = dc(this, this.toHMS, true);
-    proto.toYMD = dc(this, this.toYMD, true);
-    proto.toDMY = dc(this, this.toDMY, true);
-    proto.minutesToHM = dc(this, this.minutesToHM, false);
-    proto.hmToMinutes = dc(this, this.hmToMinutes, false);
-    proto.secondsToMS = dc(this, this.secondsToMS, false);
-    proto.copy = dc(this, this.copy, true);
-    proto.getDateShifted = dc(this, this.getDateShifted, true);
-    proto.stripDayTime = dc(this, this.stripDayTime, true);
+    ArtJs.ObjectUtils.prototypify(this, Date);
   }
 };
 
@@ -1153,6 +1072,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   SUB_OBJ_RE: /\[\w+\]/g,
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: [ "", "-o-", "-ms-", "-moz-", "-khtml-", "-webkit-" ],
+  INJECTABLES: [ "addClass", "center", "centerH", "centerV", "clone", "disable", "elements", "enable", "extendStyle", "firstElement", "getAlpha", "getAttributes", "getBounds", "getClasses", "getContent", "getPadding", "getPosition", "getSize", "getStyle", "hasClass", "hide", "insert", "isElement", "isHidden", "lastElement", "next", "onClick", "parent", "prev", "putAtBottom", "putAtTop", "putAfter", "putBefore", "remove", "removeClass", "removeStyle", "replace", "show", "serialize", "setAlpha", "setClass", "setContent", "setEnabled", "setHeight", "setPosition", "setStyle", "setVisible", "setWidth", "setX", "setY", "toggle", "toggleClass" ],
   _init: function() {
     this.detectHiddenElementDC = ArtJs.$DC(this, this.detectHiddenElement);
     ArtJs.$insert = ArtJs.$DC(this, this.insert);
@@ -1495,60 +1415,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     return "[" + k + "=" + v + "]";
   },
   doInjection: function() {
-    var proto = Element.prototype;
-    var dc = ArtJs.$DC;
-    proto.addClass = dc(this, this.addClass, true);
-    proto.center = dc(this, this.center, true);
-    proto.centerH = dc(this, this.centerH, true);
-    proto.centerV = dc(this, this.centerV, true);
-    proto.clone = dc(this, this.clone, true);
-    proto.disable = dc(this, this.disable, true);
-    proto.elements = dc(this, this.elements, true);
-    proto.enable = dc(this, this.enable, true);
-    proto.extendStyle = dc(this, this.extendStyle, true);
-    proto.firstElement = dc(this, this.firstElement, true);
-    proto.getAlpha = dc(this, this.getAlpha, true);
-    proto.getAttributes = dc(this, this.getAttributes, true);
-    proto.getBounds = dc(this, this.getBounds, true);
-    proto.getClasses = dc(this, this.getClasses, true);
-    proto.getContent = dc(this, this.getContent, true);
-    proto.getPadding = dc(this, this.getPadding, true);
-    proto.getPosition = dc(this, this.getPosition, true);
-    proto.getSize = dc(this, this.getSize, true);
-    proto.getStyle = dc(this, this.getStyle, true);
-    proto.hasClass = dc(this, this.hasClass, true);
-    proto.hide = dc(this, this.hide, true);
-    proto.insert = dc(this, this.insert, true);
-    proto.isElement = dc(this, this.isElement, true);
-    proto.isHidden = dc(this, this.isHidden, true);
-    proto.lastElement = dc(this, this.lastElement, true);
-    proto.next = dc(this, this.next, true);
-    proto.onClick = dc(this, this.onClick, true);
-    proto.parent = dc(this, this.parent, true);
-    proto.prev = dc(this, this.prev, true);
-    proto.putAtBottom = dc(this, this.putAtBottom, true);
-    proto.putAtTop = dc(this, this.putAtTop, true);
-    proto.putAfter = dc(this, this.putAfter, true);
-    proto.putBefore = dc(this, this.putBefore, true);
-    proto.remove = dc(this, this.remove, true);
-    proto.removeClass = dc(this, this.removeClass, true);
-    proto.removeStyle = dc(this, this.removeStyle, true);
-    proto.replace = dc(this, this.replace, true);
-    proto.show = dc(this, this.show, true);
-    proto.serialize = dc(this, this.serialize, true);
-    proto.setAlpha = dc(this, this.setAlpha, true);
-    proto.setClass = dc(this, this.setClass, true);
-    proto.setContent = dc(this, this.setContent, true);
-    proto.setEnabled = dc(this, this.setEnabled, true);
-    proto.setHeight = dc(this, this.setHeight, true);
-    proto.setPosition = dc(this, this.setPosition, true);
-    proto.setStyle = dc(this, this.setStyle, true);
-    proto.setVisible = dc(this, this.setVisible, true);
-    proto.setWidth = dc(this, this.setWidth, true);
-    proto.setX = dc(this, this.setX, true);
-    proto.setY = dc(this, this.setY, true);
-    proto.toggle = dc(this, this.toggle, true);
-    proto.toggleClass = dc(this, this.toggleClass, true);
+    ArtJs.ObjectUtils.prototypify(this, Element);
   }
 };
 
