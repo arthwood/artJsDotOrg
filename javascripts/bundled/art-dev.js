@@ -41,7 +41,7 @@ var com = {
 };
 
 ArtJs.log = function() {
-  if (console) {
+  if (typeof console === "object") {
     console.log(ArtJs.$A(arguments));
   }
 };
@@ -315,14 +315,14 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   _invertedRemoveValue: function(val, arr, obj) {
     this.removeValue(obj, val);
   },
-  isNullLike: function(i) {
-    return i === null || i === undefined;
+  isNull: function(i) {
+    return i == null;
   },
   isPresent: function(i) {
-    return !this.isNullLike(i);
+    return !this.isNull(i);
   },
   getDefault: function(i, defaultValue) {
-    return this.isNullLike(i) ? defaultValue : i;
+    return this.isNull(i) ? defaultValue : i;
   },
   doInjection: function() {
     var proto = Object.prototype;
@@ -340,6 +340,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
     proto.isArray = dc(this, this.isArray, true);
     proto.isEmpty = dc(this, this.isEmpty, true);
     proto.isNotEmpty = dc(this, this.isNotEmpty, true);
+    proto.isNull = dc(this, this.isNull, true);
     proto.map = dc(this, this.map, true);
     proto.mapKey = dc(this, this.mapKey, true);
     proto.mapValue = dc(this, this.mapValue, true);
@@ -660,7 +661,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return this.select(arr, this.isNotEmpty, this);
   },
   compact: function(arr) {
-    return this.reject(arr, ArtJs.ObjectUtils.isNullLike, this);
+    return this.reject(arr, ArtJs.ObjectUtils.isNull, this);
   },
   isEmpty: function(arr) {
     return arr.length == 0;
@@ -690,7 +691,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return this.map(arr, this._stringifyCallback, this);
   },
   _stringifyCallback: function(i) {
-    return ArtJs.ObjectUtils.isNullLike(i) ? "" : i.toString();
+    return ArtJs.ObjectUtils.isNull(i) ? "" : i.toString();
   },
   _indexOf: function(arr, item) {
     for (var i in arr) {

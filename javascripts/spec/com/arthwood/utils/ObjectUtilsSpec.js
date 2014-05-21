@@ -210,6 +210,40 @@ spec(ArtJs.ObjectUtils, function() {
       });
     });
   });
+  
+  describe('#isNull', function() {
+    var obj;
+    
+    context('when null', function() {
+      obj = null;
+      
+      it('should return true', function() {
+        var result = subject().isNull(obj);
+
+        expect(result).to(beTrue());
+      });
+    });
+
+    context('when undefined', function() {
+      obj = undefined;
+      
+      it('should return false', function() {
+        var result = subject().isNull(obj);
+
+        expect(result).to(beTrue());
+      });
+    });
+    
+    context('when defined', function() {
+      obj = 0;
+      
+      it('should return false', function() {
+        var result = subject().isNull(obj);
+
+        expect(result).to(beFalse());
+      });
+    });
+  });
 
   describe('#isEmpty', function() {
     context('when is empty', function() {
