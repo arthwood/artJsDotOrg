@@ -41,7 +41,7 @@ spec(ArtJs.DateUtils, function() {
   describe('#toHMS', function() {
     it('should return hours, minutes, seconds format of date', function() {
       var date = new Date('Mon, 25 Dec 1995 13:30:00');
-      console.log(date);
+      
       expect(subject().toHMS(date)).to(eq('13:30:00'));
     });
   });

@@ -187,7 +187,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
     return result;
   },
   isArray: function(obj) {
-    return typeof obj === "object" && typeof obj.length === "number";
+    return obj.constructor === Array;
   },
   isEmpty: function(obj) {
     for (var i in obj) {

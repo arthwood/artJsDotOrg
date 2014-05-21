@@ -202,11 +202,43 @@ spec(ArtJs.ObjectUtils, function() {
     });
 
     context('when not an array', function() {
-      it('should return false', function() {
-        var obj = {};
-        var result = subject().isArray(obj);
+      context('when Object', function() {
+        it('should return false', function () {
+          var obj = {};
+          var result = subject().isArray(obj);
 
-        expect(result).to(beFalse());
+          expect(result).to(beFalse());
+        });
+        
+        context('with length property', function() {
+          it('should return false', function () {
+            var obj = {length: 0};
+            var result = subject().isArray(obj);
+  
+            expect(result).to(beFalse());
+          });
+        });
+      });
+      
+      context("when 'arguments'", function() {
+        it('should return false', function () {
+          var test = function () {
+            var result = subject().isArray(arguments);
+
+            expect(result).to(beFalse());
+          };
+
+          test();
+        });
+      });
+      
+      context('when NodeList', function() {
+        it('should return false', function () {
+          var obj = document.getElementsByName();
+          var result = subject().isArray(obj);
+
+          expect(result).to(beFalse());
+        });
       });
     });
   });
