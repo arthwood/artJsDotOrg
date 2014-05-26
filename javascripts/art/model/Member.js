@@ -1,4 +1,4 @@
-art.model.Member = ArtJs.Class(
+art.model.Member = artjs.Class(
   function(header, description, example, params, more) {
     this.super(arguments);
     
@@ -7,5 +7,5 @@ art.model.Member = ArtJs.Class(
     this.example = example;
     this.params = params; 
     this.more = more;
-  }, null, null, ArtJs.Model
+  }, null, null, artjs.Model
 );

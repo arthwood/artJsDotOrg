@@ -1,13 +1,13 @@
-spec(ArtJs.Toggler, function() {
+spec(artjs.Toggler, function() {
   it('should start with null as a current', function() {
-    var toggler = new ArtJs.Toggler();
+    var toggler = new artjs.Toggler();
     
     expect(toggler.current).to(beNull());
   });
   
   describe('#toggle', function() {
     it('should change current', function() {
-      var toggler = new ArtJs.Toggler();
+      var toggler = new artjs.Toggler();
       var value = 'value';
       
       toggler.toggle(value);
@@ -16,7 +16,7 @@ spec(ArtJs.Toggler, function() {
     });
 
     it('should handle events', function() {
-      var toggler = new ArtJs.Toggler();
+      var toggler = new artjs.Toggler();
       var value1 = 'value1';
       var value2 = 'value2';
 
@@ -34,8 +34,8 @@ spec(ArtJs.Toggler, function() {
         }
       };
       
-      toggler.onActivate.add(ArtJs.$D(handler, handler.onActivate));
-      toggler.onDeactivate.add(ArtJs.$D(handler, handler.onDeactivate));
+      toggler.onActivate.add(artjs.$D(handler, handler.onActivate));
+      toggler.onDeactivate.add(artjs.$D(handler, handler.onDeactivate));
 
       expect(handler).to(receive('_onDeactivate')).withArgs(value1);
       expect(handler).to(receive('_onActivate')).withArgs(value2);

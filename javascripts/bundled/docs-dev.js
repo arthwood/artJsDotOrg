@@ -3,35 +3,34 @@ var art = {
   model: {}
 };
 
-ArtJs.TemplateLibrary.config = {
-  PATH: "../templates",
-  TEMPLATES: [ "doc", "member", "section", "ga", "disqus" ]
-};
+artjs.TemplateLibrary.config.PATH = "../templates";
 
-art.model.Member = ArtJs.Class(function(header, description, example, params, more) {
+artjs.TemplateLibrary.config.TEMPLATES = [ "doc", "member", "section", "ga", "disqus" ];
+
+art.model.Member = artjs.Class(function(header, description, example, params, more) {
   this.super(arguments);
   this.header = header;
   this.description = description;
   this.example = example;
   this.params = params;
   this.more = more;
-}, null, null, ArtJs.Model);
+}, null, null, artjs.Model);
 
 art.DB = {
   tree: {
     Global: {
-      ArtJs: "main"
+      artjs: "main"
     },
-    "com.arthwood.data": {
+    "artjs.data": {
       List: "list",
       Queue: "queue"
     },
-    "com.arthwood.dom": {
+    "artjs.dom": {
       Component: "component",
       ElementBuilder: "element_builder",
       Selector: "selector"
     },
-    "com.arthwood.events": {
+    "artjs.events": {
       Clock: "clock",
       CustomEvent: "custom_event",
       Delegate: "delegate",
@@ -39,21 +38,21 @@ art.DB = {
       Timeline: "timeline",
       Timeout: "timeout"
     },
-    "com.arthwood.math": {
+    "artjs.math": {
       Point: "point",
       Rectangle: "rectangle"
     },
-    "com.arthwood.net": {
+    "artjs.net": {
       Ajax: "ajax"
     },
-    "com.arthwood.template": {
+    "artjs.template": {
       Helpers: "template/helpers",
       Library: "template/library"
     },
-    "com.arthwood.transition": {
+    "artjs.transition": {
       Blind: "transition/blind"
     },
-    "com.arthwood.utils": {
+    "artjs.utils": {
       Array: "array",
       Class: "class",
       Date: "date",
@@ -67,15 +66,15 @@ art.DB = {
   },
   content: {
     main: {
-      name: "ArtJs",
-      "package": "ArtJs",
+      name: "artjs",
+      "package": "artjs",
       description: "This is top level object that stores information about framework and few methods that allows you to select the framework mode.",
       sections: [ {
         name: "Constants",
         members: [ new art.model.Member("VERSION:String", "Current version of framework") ]
       }, {
         name: "Methods",
-        members: [ new art.model.Member("doInjection():Void", "After calling this method you are able to call Utils methods on native objects", [ "ArtJs.doInjection();", "", "// After that action you will be able to use:", "", "myArray.last(); // 3", "", "instead of:", "", "ArtJs.ArrayUtils.last(myArray); // 3" ], null, "Some of the class methods from framework can get injected into native classes." + "For example most of com.arthwood.utils.ArrayUtils would then affect native Array object." + 'To see which native classes can be affected by framework see other parts of documentation, especially "utils" package.'), new art.model.Member("globalize():Void", "Makes all classes accessible globally in window object", [ "ArtJs.globalize();" ], null, "<p>Normally after framework is loaded you have two ways of accessing its classes:</p>" + "<ul><li>using full qualified path (com.arthwood.utils.ArrayUtils)</li><li>by looking into top ArtJs namespace (ArtJs.ArrayUtils)</li></ul>" + "<p>For now there is no classes with the same name in whole framework so accessing it via ArtJs is fine." + "However, if at some point it happens, full qualified name is necessary." + "When all framework classes are loaded and accessible (e.g. in js file following the framework file) simply use:</p>"), new art.model.Member("$():Element", "Alias for ElementUtils.getElements()", [ "var nav = ArtJs.$('.main p.item span');" ]), new art.model.Member("$D():Delegate", "Alias for Delegate.create()", [ "var delegate = ArtJs.$D(this, this.onClick);" ]), new art.model.Member("$DC():Function", "Alias for Delegate.callback()", [ "var callback = ArtJs.$DC(this, this.onClick, true);" ]), new art.model.Member("$del():Ajax", "Alias for Ajax.del()", [ "var ajax = ArtJs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$find():Array", "Alias for ElementUtils.find()", [ "var nav = ArtJs.$('navigation');", "var items = ArtJs.$down(nav, '.item');" ]), new art.model.Member("$get():Ajax", "Alias for Ajax.get()", [ "var ajax = ArtJs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("p():Void", "Debug info. If debug console is accessible output to the console; uses alert() otherwise.", [ "p('myVariable: ' +  myVariable);" ]), new art.model.Member("$P():Element", "Alias for ElementBuilder.parse()", [ "var element = ArtJs.$P('<span class=\"desc\">Blue t-shirt</span>');" ]), new art.model.Member("$post():Ajax", "Alias for Ajax.post()", [ "var ajax = ArtJs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$put():Ajax", "Alias for Ajax.$put()", [ "var ajax = ArtJs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$up():Element", "Alias for ElementUtils.up()", [ "var nav = ArtJs.$('navigation');", "var parent = ArtJs.$up(nav);" ]) ]
+        members: [ new art.model.Member("$():Element", "Alias for ElementUtils.getElements()", [ "var nav = artjs.$('.main p.item span');" ]), new art.model.Member("$D():Delegate", "Alias for Delegate.create()", [ "var delegate = artjs.$D(this, this.onClick);" ]), new art.model.Member("$DC():Function", "Alias for Delegate.callback()", [ "var callback = artjs.$DC(this, this.onClick, true);" ]), new art.model.Member("$del():Ajax", "Alias for Ajax.del()", [ "var ajax = artjs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$find():Array", "Alias for ElementUtils.find()", [ "var nav = artjs.$('navigation');", "var items = artjs.$down(nav, '.item');" ]), new art.model.Member("$get():Ajax", "Alias for Ajax.get()", [ "var ajax = artjs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("p():Void", "Debug info. If debug console is accessible output to the console; uses alert() otherwise.", [ "p('myVariable: ' +  myVariable);" ]), new art.model.Member("$P():Element", "Alias for ElementBuilder.parse()", [ "var element = artjs.$P('<span class=\"desc\">Blue t-shirt</span>');" ]), new art.model.Member("$post():Ajax", "Alias for Ajax.post()", [ "var ajax = artjs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$put():Ajax", "Alias for Ajax.$put()", [ "var ajax = artjs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$up():Element", "Alias for ElementUtils.up()", [ "var nav = artjs.$('navigation');", "var parent = artjs.$up(nav);" ]) ]
       }, {
         name: "Events",
         members: [ new art.model.Member("onDocumentLoad", "Triggered when DOM is loaded."), new art.model.Member("onWindowLoad", "Triggered when whole window is loaded (executes after onDocumentLoad)."), new art.model.Member("onLibraryLoad", "Triggered when all library templates are loaded (executes after onWindowLoad).") ]
@@ -83,7 +82,7 @@ art.DB = {
     },
     list: {
       name: "List",
-      "package": "com.arthwood.data",
+      "package": "artjs.data",
       description: "List data model implementation.",
       sections: [ {
         name: "Constructor",
@@ -97,7 +96,7 @@ art.DB = {
         members: [ {
           header: "onChange(list:List)",
           description: "Dispatched every time the collection changes",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.onChange.add(new ArtJs.Delegate(this, this.onChange));", "function onChange(list) {", "'  alert('list has changed!');'", "}" ]
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.onChange.add(new artjs.Delegate(this, this.onChange));", "function onChange(list) {", "'  alert('list has changed!');'", "}" ]
         } ]
       }, {
         name: "Properties",
@@ -218,7 +217,7 @@ art.DB = {
     },
     queue: {
       name: "Queue",
-      "package": "com.arthwood.data",
+      "package": "artjs.data",
       description: "Queue data model implementation",
       sections: [ {
         name: "Constructor",
@@ -232,7 +231,7 @@ art.DB = {
         members: [ {
           header: "onChange(list:List)",
           description: "Dispatched every time the collection changes",
-          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "", "queue.onChange.add(new ArtJs.Delegate(this, this.onChange));", "", "function onChange(queue) {", "'  alert('queue has changed!');'", "}" ]
+          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "", "queue.onChange.add(new artjs.Delegate(this, this.onChange));", "", "function onChange(queue) {", "'  alert('queue has changed!');'", "}" ]
         } ]
       }, {
         name: "Methods",
@@ -261,7 +260,7 @@ art.DB = {
     },
     component: {
       name: "Component",
-      "package": "com.arthwood.dom",
+      "package": "artjs.dom",
       description: "Components allow you to attach your own view class to element node. " + 'In order to do this simply assign "art" class to your element along with class name of your custom class ' + "e.g. com-domain-Navigation and define com.domain.Navigation class.",
       sections: [ {
         name: "Static methods",
@@ -274,7 +273,7 @@ art.DB = {
     },
     element_builder: {
       name: "ElementBuilder",
-      "package": "com.arthwood.dom",
+      "package": "artjs.dom",
       description: "Allows to create DOM elements",
       sections: [ {
         name: "Constructor",
@@ -341,7 +340,7 @@ art.DB = {
     },
     selector: {
       name: "Selector",
-      "package": "com.arthwood.dom",
+      "package": "artjs.dom",
       description: "Allows to easily traverse DOM.",
       sections: [ {
         name: "Methods",
@@ -382,7 +381,7 @@ art.DB = {
     },
     clock: {
       name: "Clock",
-      "package": "com.arthwood.events",
+      "package": "artjs.events",
       description: "Allows trigger events periodically",
       sections: [ {
         name: "Constructor",
@@ -444,7 +443,7 @@ art.DB = {
     },
     custom_event: {
       name: "CustomEvent",
-      "package": "com.arthwood.events",
+      "package": "artjs.events",
       description: "Defines object capable of dispatching events.",
       sections: [ {
         name: "Constructor",
@@ -492,7 +491,7 @@ art.DB = {
     },
     delegate: {
       name: "Delegate",
-      "package": "com.arthwood.events",
+      "package": "artjs.events",
       description: "Allows to keep context object along with function.",
       sections: [ {
         name: "Constructor",
@@ -543,7 +542,7 @@ art.DB = {
     },
     queued_clock: {
       name: "QueuedClock",
-      "package": "com.arthwood.events",
+      "package": "artjs.events",
       description: "Allows to trigger events periodically.",
       sections: [ {
         name: "Constructor",
@@ -580,7 +579,7 @@ art.DB = {
     },
     timeline: {
       name: "Timeline",
-      "package": "com.arthwood.events",
+      "package": "artjs.events",
       description: "Useful for measuring time intervals between events.",
       sections: [ {
         name: "Constructor",
@@ -597,7 +596,7 @@ art.DB = {
     },
     timeout: {
       name: "Timeout",
-      "package": "com.arthwood.events",
+      "package": "artjs.events",
       description: "Allows you to perform action with delay.",
       sections: [ {
         name: "Constructor",
@@ -635,7 +634,7 @@ art.DB = {
     },
     point: {
       name: "Point",
-      "package": "com.arthwood.math",
+      "package": "artjs.math",
       description: "Math 2-dimentional vector implementation",
       sections: [ {
         name: "Constructor",
@@ -711,7 +710,7 @@ art.DB = {
     },
     rectangle: {
       name: "Rectangle",
-      "package": "com.arthwood.math",
+      "package": "artjs.math",
       description: "Math rectangle implementation",
       sections: [ {
         name: "Constructor",
@@ -783,7 +782,7 @@ art.DB = {
     },
     ajax: {
       name: "Ajax",
-      "package": "com.arthwood.net",
+      "package": "artjs.net",
       description: "Facilitates AJAX requests",
       sections: [ {
         name: "Constructor",
@@ -794,18 +793,18 @@ art.DB = {
             data: "request data",
             method: "request method"
           },
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.onSuccess.add(new Delegate(this, this.onAjaxSuccess));", "", "ajax.request();" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.onSuccess.add(new Delegate(this, this.onAjaxSuccess));", "", "ajax.request();" ]
         } ]
       }, {
         name: "Events",
         members: [ {
           header: "onFailure(ajax:Ajax)",
           description: "Dispatched after request failed",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.onFailure.add(new Delegate(null, onAjaxFailure));", "", "function onAjaxFailure(ajax) {", "  alert('failure...');", "}", "", "ajax.request();" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.onFailure.add(new Delegate(null, onAjaxFailure));", "", "function onAjaxFailure(ajax) {", "  alert('failure...');", "}", "", "ajax.request();" ]
         }, {
           header: "onSuccess(ajax:Ajax)",
           description: "Dispatched after successful response",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));", "", "function onAjaxSuccess(ajax) {", "  alert('success!');", "}", "", "ajax.request();" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));", "", "function onAjaxSuccess(ajax) {", "  alert('success!');", "}", "", "ajax.request();" ]
         } ]
       }, {
         name: "Properties",
@@ -833,39 +832,39 @@ art.DB = {
         members: [ {
           header: "abort():Void",
           description: "Aborts request",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.request();", "", "// ... at some point during the request", "ajax.abort();" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.request();", "", "// ... at some point during the request", "ajax.abort();" ]
         }, {
           header: "getAllRequestHeaders():String",
           description: "Returns all request headers",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.getAllRequestHeaders();" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.getAllRequestHeaders();" ]
         }, {
           header: "getReadyState():Number",
           description: "Returns request ready state",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.request();", "", "// ... at some point during request", "ajax.getReadyState();" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.request();", "", "// ... at some point during request", "ajax.getReadyState();" ]
         }, {
           header: "getRequestHeader(header:String):String",
           description: "Returns request header",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.getRequestHeader('Accept');" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.getRequestHeader('Accept');" ]
         }, {
           header: "getResponseText():String",
           description: "Returns response text",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));", "", "function onAjaxSuccess(ajax) {", "  alert(ajax.getResponseText());", "}", "", "ajax.request();" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));", "", "function onAjaxSuccess(ajax) {", "  alert(ajax.getResponseText());", "}", "", "ajax.request();" ]
         }, {
           header: "getStatus():Number",
           description: "Returns request status",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.request();", "", "// ... at some point during request", "ajax.getStatus();" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.request();", "", "// ... at some point during request", "ajax.getStatus();" ]
         }, {
           header: "getStatusText():String",
           description: "Returns request status text",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.request();", "", "// ... at some point during request", "ajax.getStatusText();" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.request();", "", "// ... at some point during request", "ajax.getStatusText();" ]
         }, {
           header: "request():Void",
           description: "Performs request",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.onSuccess.add(new Delegate(this, this.onAjaxSuccess));", "", "ajax.request();" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.onSuccess.add(new Delegate(this, this.onAjaxSuccess));", "", "ajax.request();" ]
         }, {
           header: "setRequestHeader(header:String, value:String):Void",
           description: "Sets request header",
-          example: [ "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);", "", "ajax.setRequestHeader('X-My-Header', 'hello');" ]
+          example: [ "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);", "", "ajax.setRequestHeader('X-My-Header', 'hello');" ]
         } ]
       }, {
         name: "Static properties",
@@ -920,8 +919,8 @@ art.DB = {
     },
     array: {
       name: "ArrayUtils",
-      "package": "com.arthwood.utils",
-      description: "Provides set of methods that operates on any Array instance.<br/>" + 'Most of examples show optional use of a method when <span class="code">ArtJs.doInjection()</span> has been performed.',
+      "package": "artjs.utils",
+      description: "Provides set of methods that operates on any Array instance.<br/>" + 'Most of examples show optional use of a method when <span class="code">artjs.doInjection()</span> has been performed.',
       sections: [ {
         name: "Static methods",
         members: [ {
@@ -1047,7 +1046,7 @@ art.DB = {
           description: "Returns new array with items cast to Number."
         }, {
           header: "print():Void",
-          description: "Prints out every item using ArtJs.p method."
+          description: "Prints out every item using artjs.p method."
         }, {
           header: "sum():Number",
           description: "Returns sum of all elements."
@@ -1059,8 +1058,8 @@ art.DB = {
     },
     object: {
       name: "ObjectUtils",
-      "package": "com.arthwood.utils",
-      description: "Provides set of methods that operates on any Object instance.<br/>" + 'Most of examples show optional use of a method when <span class="code">ArtJs.doInjection()</span> has been performed.',
+      "package": "artjs.utils",
+      description: "Provides set of methods that operates on any Object instance.<br/>" + 'Most of examples show optional use of a method when <span class="code">artjs.doInjection()</span> has been performed.',
       sections: [ {
         name: "Static methods",
         members: [ new art.model.Member("all(object:Object, callback:Function):Boolean", 'Returns true if for all values <span class="code">callback</span> returns true; false otherwise', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.all(object, function(i) {", "  return i !== false;", "}); // true ", "// or ", "// object.all(function(i) {", "  return i !== false;", "});", "", "ObjectUtils.all(object, function(i) {", "  return !isNaN(parseInt(i));", "}); // false", "// or", "// object.all(function(i) {", "  return !isNaN(parseInt(i));", "});" ]), new art.model.Member("copy(object:Object):Object", 'Creates a copy of an <span class="param">object</span>.', [ "var object = {id: 4};", "var copy = ObjectUtils.copy(object);", "", "// or", "// var copy = object.copy();", "", "object.id = 5;", "object.id; // 5", "copy.id; // 4" ]), new art.model.Member("copyProps(source:Object, target:Object):Void", 'Copies properties from <span class="param">source</span> object to <span class="param">target</span> object.', [ "var source = {id: 4};", "var target = {active: true};", "", "ObjectUtils.copyProps(source, target);", "", "// or", "// source.copyProps(target);", "", "source; // {id: 4}", "target; // {active: true, id: 4}" ]), new art.model.Member("each(object:Object, callback:Function):Void", 'Iterates over properties and passes value to <span class="param">callback</span>', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "ObjectUtils.each(object, function(i) {", "  alert(i);", "});", "", "// or", "// object.each(function(i) {", "//   alert(i);", "// });" ]), new art.model.Member("eachKey(object:Object, callback:Function):Void", 'Iterates over properties and passes key to <span class="param">callback</span>', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "ObjectUtils.eachKey(object, function(i) {", "  alert(i);", "});", "", "// or", "// object.eachKey(function(i) {", "//   alert(i);", "// });" ]), new art.model.Member("eachPair(object:Object, callback:Function):Void", 'Iterates over properties and passes key and value to <span class="code">callback</span>', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "ObjectUtils.eachPair(object, function(k, v) {", "  alert(k + ' -> ' + v);", "});", "", "// or", "// object.eachPair(function(k, v) {", "//   alert(k + ' -> ' + v);", "// });" ]), new art.model.Member("isEmpty(object:Object):Boolean", 'Returns true if <span class="code">object</span> has no properties; false otherwise', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var empty = {};", "", "ObjectUtils.isEmpty(object); // false", "// or", "// object.isEmpty();", "", "ObjectUtils.isEmpty(empty); // true", "// or", "// empty.isEmpty();" ]), new art.model.Member("extend(target:Object, base:Object):Void", 'Copies properties from <span class="param">base</span> object to <span class="param">target</span> object.' + 'In fact it works the same as <span class="code">copyProps()</span>, the only difference is arguments order.', [ "var base = {id: 4};", "var target = {active: true};", "", "ObjectUtils.extend(target, base);", "", "// or", "// target.extend(base);", "", "base; // {id: 4}", "target; // {active: true, id: 4}" ]), new art.model.Member("fromArray(array:Array):Object", 'Transforms 2-dim <span class="code">array</span> into object', [ "var array = [['color', 'white'], ['id', 5]];", "", "ObjectUtils.fromArray(array); // {color: 'white', id: 5}" ]), new art.model.Member("include(object:Object, item:Object):Boolean", 'Returns true if any <span class="code">object</span> value is equal to <span class="code">item</span>; false otherwise', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.include(object, 5); // true", "// or", "// object.include(5);", "", "ObjectUtils.include(object, true); // false", "// or", "// object.include(true);" ]), new art.model.Member("includeAll(object:Object, subset:Object):Boolean", 'Returns true if all <span class="code">subset</span> values can be found among <span class="code">object</span>\'s values; false otherwise', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.includeAll(object, {color: 'white', id: 5}); // true", "// or", "// object.includeAll({color: 'white', id: 5});", "", "ObjectUtils.includeAll(object, {id: 5, name: 'Mike'}); // false", "// or", "// object.includeAll({id: 5, name: 'Mike'});" ]), new art.model.Member("map(object:Object, callback:Function):Array", 'Maps key and value to Array item using <span class="param">callback</span> function', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var mapped = ObjectUtils.map(object, function(k, v) {return k + ':' + v});", "", "// or", "// var mapped = object.map(function(k, v) {return k + ':' + v});", "", "mapped; // ['id:4', 'active:true', 'project_id:4', 'status:4']" ]), new art.model.Member("mapKey(object:Object, callback:Function):Object", 'Transforms key using <span class="param">callback</span> function', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var mapped = ObjectUtils.mapKey(object, function(k) {", "  return StringUtils.capitalizeUnderscored(k);", "});", "", "// or", "// var mapped = object.mapKey(function(k) {", "//   return StringUtils.capitalizeUnderscored(k);", "// });", "", "mapped; // {Id: 8, Active: 2, ProjectId: 8, Status: 8}" ]), new art.model.Member("mapValue(object:Object, callback:Function):Object", 'Transforms value using <span class="param">callback</span> function', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var mapped = ObjectUtils.mapValue(object, function(v) {return v * 2});", "", "// or", "// var mapped = object.mapValue(function(v) {return v * 2});", "", "mapped; // {id: 8, active: 2, project_id: 8, status: 8}" ]), new art.model.Member("merge(target:Object, base:Object):Object", 'Works the same as extend() but returns modified <span class="param">target</span> object.', [ "var base = {id: 4};", "var target = {active: true};", "", "ObjectUtils.merge(target, base); // {active: true, id: 4}", "", "// or", "// target.merge(base);", "", "base; // {id: 4}", "target; // {active: true, id: 4}" ]), new art.model.Member("reject(object:Object, callback:Function):Object", 'Returns copy of <span class="code">object</span> without properties for which <span class="code">callback</span> returns true', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var filtered = ObjectUtils.reject(object, function(i) {", "  return i === true;", "});", "", "// or", "// object.reject(function(i) {", "//   return i === true;", "// });", "", "filtered; // {id: 4, project_id: 4, status: '4'}" ]), new art.model.Member("removeValue(object:Object, value:Object):Void", 'Removes all <span class="param">object</span>\'s properties with value equal to <span class="param">value</span> param', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "", "ObjectUtils.removeValue(object, 4);", "", "// or", "// object.removeValue(4);", "", "object; // {active: true, status: '4'}" ]), new art.model.Member("removeValues(object:Object, values:Array):Void", 'Works the same as removeValue but you can remove many <span class="param">values</span> by passing them in array', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "", "ObjectUtils.removeValues(object, [4, '4']);", "", "// or", "// object.removeValues([4, '4']);", "", "object; // {active: true}" ]), new art.model.Member("select(object:Object, callback:Function):Object", 'Returns copy of <span class="code">object</span> containing only properties for which <span class="code">callback</span> returns true', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var filtered = ObjectUtils.select(object, function(i) { ", "  return !isNaN(parseFloat(i));", "});", "", "// or", "// object.select(function(i) {", "//   return !isNaN(parseFloat(i));", "// });", "", "filtered; // {id: 4, project_id: 4, status: '4'}" ]), new art.model.Member("selectWithKey(object:Object, callback:Function):Object", 'Same as select, but <span class="code">callback</span> receives both key and value', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var filtered = ObjectUtils.selectWithKey(object, function(k, v) {", "  return k.length > 2;", "});", "", "// or", "// object.selectWithKey(function(k, v) {", "//   return k.length > 2;", "// });", "", "filtered; // {active: true, project_id: 4, status: '4'}" ]), new art.model.Member("toArray(object:Object):Array", 'Transforms <span class="code">object</span> into array', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.toArray(object); // [['color', 'white'], ['id', 5]]", "// or", "// object.toArray();" ]), new art.model.Member("toQueryString(object:Object):String", 'Returns query string representation of <span class="code">object</span>', [ "var object = {color: 'white', id: 5, user: {name: 'Andy', id: 3}};", "", "ObjectUtils.toQueryString(object);// color=white&id=5&user[name]=Andy&user[id]=3", "// or", "// object.toQueryString()" ]) ]
@@ -1068,11 +1067,11 @@ art.DB = {
     },
     "class": {
       name: "Class",
-      "package": "com.arthwood.utils",
+      "package": "artjs.utils",
       description: "Facilitates class construction inheritance.",
       sections: [ {
         name: "Usage",
-        members: [ new art.model.Member("Class(ctor:Function = null, proto:Object = null, stat:Object = null, superclass:Function = null):Function", "Creates a new class. Returns decorated constructor function passed as a first argument. " + "If no constructor is passed a default one is created.", [ "var MyClass = ArtJs.Class(", "  function(name) {", "    this.name = this.super(attributes) + ':' + name", "  }, ", "  {", "    calculate: function(value) {", "     return this.super(attributes, 3, 'hello') + 8;", "  }, ", "  {", "    getName: function() {", "      return this.super(attributes) + ':MyClass';", "  },", "  MySuperClass", ");" ], {
+        members: [ new art.model.Member("Class(ctor:Function = null, proto:Object = null, stat:Object = null, superclass:Function = null):Function", "Creates a new class. Returns decorated constructor function passed as a first argument. " + "If no constructor is passed a default one is created.", [ "var MyClass = artjs.Class(", "  function(name) {", "    this.name = this.super(attributes) + ':' + name", "  }, ", "  {", "    calculate: function(value) {", "     return this.super(attributes, 3, 'hello') + 8;", "  }, ", "  {", "    getName: function() {", "      return this.super(attributes) + ':MyClass';", "  },", "  MySuperClass", ");" ], {
           ctor: "Constructor function",
           proto: "Prototype object. Instance properties and methods of the class.",
           stat: "Class properties and methods.",
@@ -1091,7 +1090,7 @@ art.DB = {
     },
     date: {
       name: "DateUtils",
-      "package": "com.arthwood.utils",
+      "package": "artjs.utils",
       description: "Provides set of methods that operates on any Date instance.",
       sections: [ {
         name: "Static methods",
@@ -1100,16 +1099,16 @@ art.DB = {
     },
     element: {
       name: "ElementUtils",
-      "package": "com.arthwood.utils",
+      "package": "artjs.utils",
       description: "Provides set of methods that operate on HTML Element instance.",
       sections: [ {
         name: "Static methods",
-        members: [ new art.model.Member("addClass(element:Element, name:String):Void", 'Adds class identified by <span class="param">name</span> to <span class="param">element</span>' + "(only if it doesn't already have this class)", [ "ElementUtils.addClass(element, 'nav');", "", "// or", "// element.addClass('nav');" ]), new art.model.Member("center(element:Element):Void", 'Centers <span class="param">element</span> on the screen.' + "This action takes effect only for elements with absolute position.", [ "ElementUtils.center(element);", "", "// or", "// element.center();" ]), new art.model.Member("centerH(element:Element):Void", 'Centers <span class="param">element</span> horizontally on the screen.' + "This action takes effect only for elements with absolute position.", [ "ElementUtils.centerH(element);", "", "// or", "// element.centerH();" ]), new art.model.Member("centerV(element:Element):Void", 'Centers <span class="param">element</span> vertically on the screen.' + "This action takes effect only for elements with absolute position", [ "ElementUtils.centerV(element);", "", "// or", "// element.centerV();" ]), new art.model.Member("clone(element:Element, deep:Boolean):Node", "Alias for Node.cloneNode(deep).", [ "ElementUtils.clone(element, true);", "", "// or", "// element.clone(true);" ]), new art.model.Member("disable(element:Element):Void", 'Disables the <span class="param">element</span>.', [ "ElementUtils.disable(element);", "", "// or", "// element.disable();" ]), new art.model.Member("elements(element:Element):Array", 'Returns array of immediate descendants (Elements) of <span class="param">element</span>', [ "ElementUtils.elements(element);", "", "// or", "// element.elements();" ]), new art.model.Member("enable(element:Element):Void", 'Enables the <span class="param">element</span>', [ "ElementUtils.enable(element);", "", "// or", "// element.enable();" ]), new art.model.Member("firstElement(element:Element):Element", 'Returns <span class="param">element</span>\'s first child (Element)', [ "ElementUtils.firstElement(element);", "", "// or", "// element.firstElement();" ]), new art.model.Member("getAttributes(element:Element):Object", "Returns attributes as an Object", [ "ElementUtils.getAttributes(element);", "", "// or", "// element.getAttributes();" ]), new art.model.Member("getBounds(element:Element, real:Boolean, withoutScroll:Boolean):Rectangle", 'Returns position and size of <span class="param">element</span> as a (x, y, width, height) Rectangle.', [ "ElementUtils.getBounds(element);", "", "// or", "// element.getBounds();" ], null, 'If <span class="param">real</span> is set to true size is calculated even if element is hidden' + "(otherwise size would return value of (0, 0))." + 'If <span class="param">withoutScroll</span> is set to true posision is calculated relative to' + "current view's origin; otherwise to document's origin."), new art.model.Member("getCenteredPosition(element:Element):Point", 'Returns position of <span class="param">element</span> as if it was centered on the screen', [ "ElementUtils.getCenteredPosition(element);", "", "// or", "// element.getCenteredPosition();" ]), new art.model.Member("getClasses(element:Element):Array", 'Returns array of <span class="param">element</span>\'s classes', [ "ElementUtils.getClasses(element);", "", "// or", "// element.getClasses();" ]), new art.model.Member("getContent(element:Element):String", 'Returns content (like innerHTML) of <span class="param">element</span>', [ "ElementUtils.getContent(element);", "", "// or", "// element.getContent();" ]), new art.model.Member("getDocumentSize():Point", "Returns document size", [ "ElementUtils.getDocumentSize();" ]), new art.model.Member("getPosition(element:Element, withoutScroll:Boolean):Point", 'Returns position of the <span class="param">element</span> on the screen.', [ "ElementUtils.getPosition(element);", "", "// or", "// element.getPosition();" ], null, 'If <span class="param">withoutScroll</span> is set to true posision is calculated relative to' + "current view's origin; otherwise to document's origin"), new art.model.Member("getScrollPosition():Point", "Returns scroll (x, y) values as a Point", [ "ElementUtils.getScrollPosition();" ]), new art.model.Member("getSize(element:Element):Point", 'Returns size of the <span class="param">element</span> as a com.arthwood.math.Point object' + "which x property is width and y property is height", [ "ElementUtils.getSize(element);", "", "// or", "// element.getSize();" ]), new art.model.Member("getWindowSize():Point", "Returns window size", [ "ElementUtils.getWindowSize();" ]), new art.model.Member("hasClass(element:Element, name:String):Boolean", 'Returns true if <span class="param">element</span> has class <span class="param">name</span>;' + "false otherwise", [ "ElementUtils.hasClass(element, 'nav');", "", "// or", "// element.hasClass('nav');" ]), new art.model.Member("hide(element:Element):Void", 'Hides the <span class="param">element</span>', [ "ElementUtils.hide(element);", "", "// or", "// element.hide();" ]), new art.model.Member("isElement(element:Element):Boolean", 'Returns true if <span class="param">element</span> is Element; false otherwise', [ "ElementUtils.isElement(element);", "", "// or", "// element.isElement();" ]), new art.model.Member("isHidden(element:Element):Boolean", 'Returns true if the <span class="param">element</span> is hidden; true otherwise', [ "ElementUtils.isHidden(element);", "", "// or", "// element.isHidden();" ]), new art.model.Member("next(element:Element):Node", 'Returns <span class="param">element</span>\'s next sibling (Element)', [ "ElementUtils.next(element);", "", "// or", "// element.next();" ]), new art.model.Member("parent(element:Element):Element", 'Returns <span class="param">element</span>\'s parent element', [ "ElementUtils.parent(element);", "", "// or", "// element.parent();" ]), new art.model.Member("prev(element:Element):Node", 'Returns <span class="param">element</span>\'s previous sibling (Element)', [ "ElementUtils.prev(element);", "", "// or", "// element.prev();" ]), new art.model.Member("putAfter(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as next sibling of <span class="param">ref</span> node', [ "ElementUtils.putAfter(element, child);", "", "// or", "// element.putAfter(child);" ]), new art.model.Member("putAtBottom(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as the last child of <span class="param">ref</span> node', [ "ElementUtils.putAtBottom(element, container);", "", "// or", "// element.putAtBottom(container);" ]), new art.model.Member("putAtTop(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as the first child of <span class="param">ref</span> node', [ "ElementUtils.putAtTop(element, container);", "", "// or", "// element.putAtTop(container);" ]), new art.model.Member("putBefore(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as previous sibling of <span class="param">ref</span> node', [ "ElementUtils.putBefore(element, child);", "", "// or", "// element.putBefore(child);" ]), new art.model.Member("remove(element:Element):Node", 'Removes the <span class="param">element</span>', [ "ElementUtils.remove(element);", "", "// or", "// element.remove();" ]), new art.model.Member("removeClass(element:Element, name:String):Void", 'Removes class identified by <span class="param">name</span> from <span class="param">element</span> (only if it have this class)', [ "ElementUtils.removeClass(element, 'nav');", "", "// or", "// element.removeClass('nav');" ]), new art.model.Member("replace(element:Element, ref:Node, clone:Boolean):Node", 'Replaces <span class="param">ref</span> with an <span class="param">element</span> ' + '(or its clone if <span class="param">clone</span> is set to true)', [ "ElementUtils.replace(element, oldElement, true);", "", "// or", "// element.replace(oldElement, true);" ]), new art.model.Member("serialize(element:Element):Object", 'Serializes content of <span class="param">element</span> (usually form) and returns its data as Object', [ "ElementUtils.serialize(element);", "", "// or", "// element.serialize();" ]), new art.model.Member("setAlpha(element:Element, value:Number):Void", 'Sets <span class="param">element</span>\'s transparency; <span class="param">value</span> 0 means transparent, 1 means opaque', [ "ElementUtils.setAlpha(element, 0.4);", "", "// or", "// element.setAlpha(0.4);" ]), new art.model.Member("setClass(element:Element, name:String, add:Boolean):Void", 'If <span class="param">add</span> is true it adds, otherwise removes class identified by' + '<span class="param">name</span> to <span class="param">element</span>', [ "ElementUtils.setClass(element, 'nav', true);", "", "// or", "// element.setClass('nav', true);" ]), new art.model.Member("setContent(element:Element, content:String):Void", 'Sets the content (like innerHTML) of <span class="param">element</span>', [ "ElementUtils.setContent(element, 'hello &lt;span&gt;world&lt;/span&gt;!');", "", "// or", "// element.setContent('hello &lt;span&gt;world&lt;/span&gt;!');" ]), new art.model.Member("setEnabled(element:Element, enabled:Boolean):Void", 'Enables <span class="param">element</span> if <span class="param">enabled</span> is true; disables otherwise', [ "ElementUtils.setEnabled(element, true);", "", "// or", "// element.setEnabled(true);" ]), new art.model.Member("setPosition(element:Element, position:Point):Void", 'Sets the position of <span class="param">element</span> on the screen. ' + "This action has effect for elements with absolute position", [ "ElementUtils.setPosition(element, point);", "", "// or", "// element.setPosition(point);" ]), new art.model.Member("setVisible(element:Element, visible:Boolean):Void", 'Shows the <span class="param">element</span> if <span class="param">visible</span> argument is set to true; hides otherwise', [ "ElementUtils.setVisible(element, true);", "", "// or", "// element.setVisible(true);" ]), new art.model.Member("setX(element:Element, value:Number):Void", 'Sets x position of <span class="param">element</span> on the screen. ' + "This action has effect for elements with absolute position", [ "ElementUtils.setX(130);", "", "// or", "// element.setX(130);" ]), new art.model.Member("setY(element:Element, value:Number):Void", 'Sets y position of <span class="param">element</span> on the screen. ' + "This action has effect for elements with absolute position", [ "ElementUtils.setY(130);", "", "// or", "// element.setY(130);" ]), new art.model.Member("show(element:Element):Void", 'Shows the <span class="param">element</span>', [ "ElementUtils.show(element);", "", "// or", "// element.show();" ]), new art.model.Member("toggle(element:Element):Void", 'Shows the <span class="param">element</span> if it\'s hidden; hides otherwise', [ "ElementUtils.toggle(element);", "", "// or", "// element.toggle();" ]), new art.model.Member("toggleClass(element:Element, name:String):Void", 'Toggles class identified by <span class="param">name</span> of <span class="param">element</span>', [ "ElementUtils.toggleClass(element, 'nav');", "", "// or", "// element.toggleClass('nav');" ]) ]
+        members: [ new art.model.Member("addClass(element:Element, name:String):Void", 'Adds class identified by <span class="param">name</span> to <span class="param">element</span>' + "(only if it doesn't already have this class)", [ "ElementUtils.addClass(element, 'nav');", "", "// or", "// element.addClass('nav');" ]), new art.model.Member("center(element:Element):Void", 'Centers <span class="param">element</span> on the screen.' + "This action takes effect only for elements with absolute position.", [ "ElementUtils.center(element);", "", "// or", "// element.center();" ]), new art.model.Member("centerH(element:Element):Void", 'Centers <span class="param">element</span> horizontally on the screen.' + "This action takes effect only for elements with absolute position.", [ "ElementUtils.centerH(element);", "", "// or", "// element.centerH();" ]), new art.model.Member("centerV(element:Element):Void", 'Centers <span class="param">element</span> vertically on the screen.' + "This action takes effect only for elements with absolute position", [ "ElementUtils.centerV(element);", "", "// or", "// element.centerV();" ]), new art.model.Member("clone(element:Element, deep:Boolean):Node", "Alias for Node.cloneNode(deep).", [ "ElementUtils.clone(element, true);", "", "// or", "// element.clone(true);" ]), new art.model.Member("disable(element:Element):Void", 'Disables the <span class="param">element</span>.', [ "ElementUtils.disable(element);", "", "// or", "// element.disable();" ]), new art.model.Member("elements(element:Element):Array", 'Returns array of immediate descendants (Elements) of <span class="param">element</span>', [ "ElementUtils.elements(element);", "", "// or", "// element.elements();" ]), new art.model.Member("enable(element:Element):Void", 'Enables the <span class="param">element</span>', [ "ElementUtils.enable(element);", "", "// or", "// element.enable();" ]), new art.model.Member("firstElement(element:Element):Element", 'Returns <span class="param">element</span>\'s first child (Element)', [ "ElementUtils.firstElement(element);", "", "// or", "// element.firstElement();" ]), new art.model.Member("getAttributes(element:Element):Object", "Returns attributes as an Object", [ "ElementUtils.getAttributes(element);", "", "// or", "// element.getAttributes();" ]), new art.model.Member("getBounds(element:Element, real:Boolean, withoutScroll:Boolean):Rectangle", 'Returns position and size of <span class="param">element</span> as a (x, y, width, height) Rectangle.', [ "ElementUtils.getBounds(element);", "", "// or", "// element.getBounds();" ], null, 'If <span class="param">real</span> is set to true size is calculated even if element is hidden' + "(otherwise size would return value of (0, 0))." + 'If <span class="param">withoutScroll</span> is set to true posision is calculated relative to' + "current view's origin; otherwise to document's origin."), new art.model.Member("getCenteredPosition(element:Element):Point", 'Returns position of <span class="param">element</span> as if it was centered on the screen', [ "ElementUtils.getCenteredPosition(element);", "", "// or", "// element.getCenteredPosition();" ]), new art.model.Member("getClasses(element:Element):Array", 'Returns array of <span class="param">element</span>\'s classes', [ "ElementUtils.getClasses(element);", "", "// or", "// element.getClasses();" ]), new art.model.Member("getContent(element:Element):String", 'Returns content (like innerHTML) of <span class="param">element</span>', [ "ElementUtils.getContent(element);", "", "// or", "// element.getContent();" ]), new art.model.Member("getDocumentSize():Point", "Returns document size", [ "ElementUtils.getDocumentSize();" ]), new art.model.Member("getPosition(element:Element, withoutScroll:Boolean):Point", 'Returns position of the <span class="param">element</span> on the screen.', [ "ElementUtils.getPosition(element);", "", "// or", "// element.getPosition();" ], null, 'If <span class="param">withoutScroll</span> is set to true posision is calculated relative to' + "current view's origin; otherwise to document's origin"), new art.model.Member("getScrollPosition():Point", "Returns scroll (x, y) values as a Point", [ "ElementUtils.getScrollPosition();" ]), new art.model.Member("getSize(element:Element):Point", 'Returns size of the <span class="param">element</span> as a artjs.math.Point object' + "which x property is width and y property is height", [ "ElementUtils.getSize(element);", "", "// or", "// element.getSize();" ]), new art.model.Member("getWindowSize():Point", "Returns window size", [ "ElementUtils.getWindowSize();" ]), new art.model.Member("hasClass(element:Element, name:String):Boolean", 'Returns true if <span class="param">element</span> has class <span class="param">name</span>;' + "false otherwise", [ "ElementUtils.hasClass(element, 'nav');", "", "// or", "// element.hasClass('nav');" ]), new art.model.Member("hide(element:Element):Void", 'Hides the <span class="param">element</span>', [ "ElementUtils.hide(element);", "", "// or", "// element.hide();" ]), new art.model.Member("isElement(element:Element):Boolean", 'Returns true if <span class="param">element</span> is Element; false otherwise', [ "ElementUtils.isElement(element);", "", "// or", "// element.isElement();" ]), new art.model.Member("isHidden(element:Element):Boolean", 'Returns true if the <span class="param">element</span> is hidden; true otherwise', [ "ElementUtils.isHidden(element);", "", "// or", "// element.isHidden();" ]), new art.model.Member("next(element:Element):Node", 'Returns <span class="param">element</span>\'s next sibling (Element)', [ "ElementUtils.next(element);", "", "// or", "// element.next();" ]), new art.model.Member("parent(element:Element):Element", 'Returns <span class="param">element</span>\'s parent element', [ "ElementUtils.parent(element);", "", "// or", "// element.parent();" ]), new art.model.Member("prev(element:Element):Node", 'Returns <span class="param">element</span>\'s previous sibling (Element)', [ "ElementUtils.prev(element);", "", "// or", "// element.prev();" ]), new art.model.Member("putAfter(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as next sibling of <span class="param">ref</span> node', [ "ElementUtils.putAfter(element, child);", "", "// or", "// element.putAfter(child);" ]), new art.model.Member("putAtBottom(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as the last child of <span class="param">ref</span> node', [ "ElementUtils.putAtBottom(element, container);", "", "// or", "// element.putAtBottom(container);" ]), new art.model.Member("putAtTop(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as the first child of <span class="param">ref</span> node', [ "ElementUtils.putAtTop(element, container);", "", "// or", "// element.putAtTop(container);" ]), new art.model.Member("putBefore(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as previous sibling of <span class="param">ref</span> node', [ "ElementUtils.putBefore(element, child);", "", "// or", "// element.putBefore(child);" ]), new art.model.Member("remove(element:Element):Node", 'Removes the <span class="param">element</span>', [ "ElementUtils.remove(element);", "", "// or", "// element.remove();" ]), new art.model.Member("removeClass(element:Element, name:String):Void", 'Removes class identified by <span class="param">name</span> from <span class="param">element</span> (only if it have this class)', [ "ElementUtils.removeClass(element, 'nav');", "", "// or", "// element.removeClass('nav');" ]), new art.model.Member("replace(element:Element, ref:Node, clone:Boolean):Node", 'Replaces <span class="param">ref</span> with an <span class="param">element</span> ' + '(or its clone if <span class="param">clone</span> is set to true)', [ "ElementUtils.replace(element, oldElement, true);", "", "// or", "// element.replace(oldElement, true);" ]), new art.model.Member("serialize(element:Element):Object", 'Serializes content of <span class="param">element</span> (usually form) and returns its data as Object', [ "ElementUtils.serialize(element);", "", "// or", "// element.serialize();" ]), new art.model.Member("setAlpha(element:Element, value:Number):Void", 'Sets <span class="param">element</span>\'s transparency; <span class="param">value</span> 0 means transparent, 1 means opaque', [ "ElementUtils.setAlpha(element, 0.4);", "", "// or", "// element.setAlpha(0.4);" ]), new art.model.Member("setClass(element:Element, name:String, add:Boolean):Void", 'If <span class="param">add</span> is true it adds, otherwise removes class identified by' + '<span class="param">name</span> to <span class="param">element</span>', [ "ElementUtils.setClass(element, 'nav', true);", "", "// or", "// element.setClass('nav', true);" ]), new art.model.Member("setContent(element:Element, content:String):Void", 'Sets the content (like innerHTML) of <span class="param">element</span>', [ "ElementUtils.setContent(element, 'hello &lt;span&gt;world&lt;/span&gt;!');", "", "// or", "// element.setContent('hello &lt;span&gt;world&lt;/span&gt;!');" ]), new art.model.Member("setEnabled(element:Element, enabled:Boolean):Void", 'Enables <span class="param">element</span> if <span class="param">enabled</span> is true; disables otherwise', [ "ElementUtils.setEnabled(element, true);", "", "// or", "// element.setEnabled(true);" ]), new art.model.Member("setPosition(element:Element, position:Point):Void", 'Sets the position of <span class="param">element</span> on the screen. ' + "This action has effect for elements with absolute position", [ "ElementUtils.setPosition(element, point);", "", "// or", "// element.setPosition(point);" ]), new art.model.Member("setVisible(element:Element, visible:Boolean):Void", 'Shows the <span class="param">element</span> if <span class="param">visible</span> argument is set to true; hides otherwise', [ "ElementUtils.setVisible(element, true);", "", "// or", "// element.setVisible(true);" ]), new art.model.Member("setX(element:Element, value:Number):Void", 'Sets x position of <span class="param">element</span> on the screen. ' + "This action has effect for elements with absolute position", [ "ElementUtils.setX(130);", "", "// or", "// element.setX(130);" ]), new art.model.Member("setY(element:Element, value:Number):Void", 'Sets y position of <span class="param">element</span> on the screen. ' + "This action has effect for elements with absolute position", [ "ElementUtils.setY(130);", "", "// or", "// element.setY(130);" ]), new art.model.Member("show(element:Element):Void", 'Shows the <span class="param">element</span>', [ "ElementUtils.show(element);", "", "// or", "// element.show();" ]), new art.model.Member("toggle(element:Element):Void", 'Shows the <span class="param">element</span> if it\'s hidden; hides otherwise', [ "ElementUtils.toggle(element);", "", "// or", "// element.toggle();" ]), new art.model.Member("toggleClass(element:Element, name:String):Void", 'Toggles class identified by <span class="param">name</span> of <span class="param">element</span>', [ "ElementUtils.toggleClass(element, 'nav');", "", "// or", "// element.toggleClass('nav');" ]) ]
       } ]
     },
     math: {
       name: "MathUtils",
-      "package": "com.arthwood.utils",
+      "package": "artjs.utils",
       description: "Provides set of math functions.",
       sections: [ {
         name: "Static methods",
@@ -1118,7 +1117,7 @@ art.DB = {
     },
     string: {
       name: "StringUtils",
-      "package": "com.arthwood.utils",
+      "package": "artjs.utils",
       description: "Provides set of methods that operates on any String instance.",
       sections: [ {
         name: "Static methods",
@@ -1127,7 +1126,7 @@ art.DB = {
     },
     toggler: {
       name: "Toggler",
-      "package": "com.arthwood.utils",
+      "package": "artjs.utils",
       description: "Defines a single element container. " + "Whenever you put a new one the old pops out and appropriate events are triggered",
       sections: [ {
         name: "Constructor",
@@ -1147,7 +1146,7 @@ art.DB = {
     },
     log: {
       name: "Log",
-      "package": "com.arthwood.utils",
+      "package": "artjs.utils",
       description: "Allows you to output debug messages.",
       sections: [ {
         name: "Static methods",
@@ -1156,7 +1155,7 @@ art.DB = {
     },
     "transition/blind": {
       name: "Blind",
-      "package": "com.arthwood.transition",
+      "package": "artjs.transition",
       description: 'Allows to apply "Blind" visual effect.',
       sections: [ {
         name: "Static methods",
@@ -1167,32 +1166,32 @@ art.DB = {
       } ]
     },
     "template/helpers": {
-      name: "Helpers, ArtJs.TemplateHelpers",
-      "package": "com.arthwood.template",
+      name: "Helpers, artjs.TemplateHelpers",
+      "package": "artjs.template",
       description: "This class can be used both in regular JS and in html templates." + "Defines set of methods that allows to generate dynamic content.",
       sections: [ {
         name: "Static methods",
-        members: [ new art.model.Member("render(templateId:String, scope:Object):String", 'Returns content on template identified by <span class="param">templateId</span> with template data ' + 'substituded with data from <span class="param">scope</span> object.', [ "/*", " * Suppose that there is a template named myTemplate.html with content:", ' * &lt;p class="title"&gt;{title}&lt;/p&gt;', " */", "", "var content = ArtJs.TemplateHelpers.render('myTemplate', {title: 'Hello');", "", '// &lt;p class="container"&gt;Hello&lt;/p&gt;' ], null, "To read more about templates, navigate to com.arthwood.template.Library section."), new art.model.Member("renderInto(element:Element, templateId:String, scope:Object):Void", "Does the same job as render() but instead of returning a content, puts it directly to element's body."), new art.model.Member("renderCollection(templateId:String, collection:Array):String", 'For each scope in <span class=""param"">collection</span> renders a template and returns the result.', [ "// myTemplate.html: &lt;li&gt;{id}&lt;/li&gt;", "var collection = [{id: 1}, {id: 2}];", "var content = ArtJs.TemplateHelpers.renderCollection('myTemplate', collection);", "", "// &lt;li>1&lt;/li>&lt;li&gt;2&lt;/li&gt;" ]), new art.model.Member("renderIf(value:Object, method:String):String", "Returns result of <span>method</span> call on a Helper but only if <span>value</span> is present." + "Otherwise returns empty string. It's useful when you have your custom helper methods " + "and they may be used in templates for null values", [ "// Suppose you have following custom helper method:", "// renderDescription: function(v) {", "//   return $B('p', null, v).toString();", "// }", "var value;", "", "value = 'Hi there!';", "renderIf(value, 'renderDescription'); // '&lt;p&gt;Hi There!&lt;/p&gt;'", "", "value = null;", "renderIf(value, 'renderDescription'); // ''" ]), new art.model.Member("register(name:String, method:Function):Void", "Allows you to register custom helper methods that can be used within templates.", [ "register('renderDescription', function(v) {", "  return ArtJs.$B('p', {className: 'description'}, v).toString();", "});", "// in the template:", "{renderDescription('Hello ArtJs!')}", '// &lt;p class="description"&gt;Hello ArtJs!&lt;/p&gt;' ]), new art.model.Member("registerAll(helpers:Object):Void", "Allows you to register set of helper methods that can be used within templates at once.", [ "registerAll({", "  renderDescription: function(v) {", "    return ArtJs.$B('p', {className: 'description'}, v).toString();", "  }", "", "  renderTitle: function(v) {", "    return ArtJs.$B('h1', {className: 'title'}, v).toString();", "  }", "});", "// in the template:", "{renderTitle('Welcome')}{renderDescription('Hello ArtJs!')}", '// &lt;h1 class="title"&gt;Welcome&lt;/h1&gt;&lt;p class="description"&gt;Hello ArtJs!&lt;/p&gt;' ]) ]
+        members: [ new art.model.Member("render(templateId:String, scope:Object):String", 'Returns content on template identified by <span class="param">templateId</span> with template data ' + 'substituded with data from <span class="param">scope</span> object.', [ "/*", " * Suppose that there is a template named myTemplate.html with content:", ' * &lt;p class="title"&gt;{title}&lt;/p&gt;', " */", "", "var content = artjs.TemplateHelpers.render('myTemplate', {title: 'Hello');", "", '// &lt;p class="container"&gt;Hello&lt;/p&gt;' ], null, "To read more about templates, navigate to artjs.template.Library section."), new art.model.Member("renderInto(element:Element, templateId:String, scope:Object):Void", "Does the same job as render() but instead of returning a content, puts it directly to element's body."), new art.model.Member("renderCollection(templateId:String, collection:Array):String", 'For each scope in <span class=""param"">collection</span> renders a template and returns the result.', [ "// myTemplate.html: &lt;li&gt;{id}&lt;/li&gt;", "var collection = [{id: 1}, {id: 2}];", "var content = artjs.TemplateHelpers.renderCollection('myTemplate', collection);", "", "// &lt;li>1&lt;/li>&lt;li&gt;2&lt;/li&gt;" ]), new art.model.Member("renderIf(value:Object, method:String):String", "Returns result of <span>method</span> call on a Helper but only if <span>value</span> is present." + "Otherwise returns empty string. It's useful when you have your custom helper methods " + "and they may be used in templates for null values", [ "// Suppose you have following custom helper method:", "// renderDescription: function(v) {", "//   return $B('p', null, v).toString();", "// }", "var value;", "", "value = 'Hi there!';", "renderIf(value, 'renderDescription'); // '&lt;p&gt;Hi There!&lt;/p&gt;'", "", "value = null;", "renderIf(value, 'renderDescription'); // ''" ]), new art.model.Member("register(name:String, method:Function):Void", "Allows you to register custom helper methods that can be used within templates.", [ "register('renderDescription', function(v) {", "  return artjs.$B('p', {className: 'description'}, v).toString();", "});", "// in the template:", "{renderDescription('Hello artjs!')}", '// &lt;p class="description"&gt;Hello artjs!&lt;/p&gt;' ]), new art.model.Member("registerAll(helpers:Object):Void", "Allows you to register set of helper methods that can be used within templates at once.", [ "registerAll({", "  renderDescription: function(v) {", "    return artjs.$B('p', {className: 'description'}, v).toString();", "  }", "", "  renderTitle: function(v) {", "    return artjs.$B('h1', {className: 'title'}, v).toString();", "  }", "});", "// in the template:", "{renderTitle('Welcome')}{renderDescription('Hello artjs!')}", '// &lt;h1 class="title"&gt;Welcome&lt;/h1&gt;&lt;p class="description"&gt;Hello artjs!&lt;/p&gt;' ]) ]
       } ]
     },
     "template/library": {
-      name: "Library, ArtJs.TemplateLibrary",
-      "package": "com.arthwood.template",
-      description: "Loads template files to your application using AJAX. " + "Triggers ArtJs.onLibraryLoad upon completion.",
+      name: "Library, artjs.TemplateLibrary",
+      "package": "artjs.template",
+      description: "Loads template files to your application using AJAX. " + "Triggers artjs.onLibraryLoad upon completion.",
       sections: [ {
         name: "Static properties",
-        members: [ new art.model.Member("config:Object", "Consists of two configuration parameters:<br/>" + "PATH - remote path to template directory<br/>" + "TEMPLATES - list of template files to be loaded", [ "ArtJs.TemplateLibrary.config = {", "  PATH: 'templates',", "  TEMPLATES: ['doc', 'member', 'section', 'ga']", "};" ]) ]
+        members: [ new art.model.Member("config:Object", "Consists of two configuration parameters:<br/>" + "PATH - remote path to template directory<br/>" + "TEMPLATES - list of template files to be loaded", [ "artjs.TemplateLibrary.config = {", "  PATH: 'templates',", "  TEMPLATES: ['doc', 'member', 'section', 'ga']", "};" ]) ]
       } ]
     }
   }
 };
 
-ArtJs.TemplateHelpers.registerAll({
+artjs.TemplateHelpers.registerAll({
   _renderExample: function(v) {
-    var exampleElement = ArtJs.$B("p", {
+    var exampleElement = artjs.$B("p", {
       className: "example"
     }, "Example:").toString();
-    var codeElement = ArtJs.$B("pre", {
+    var codeElement = artjs.$B("pre", {
       className: "block"
     }, v.join("<br />")).toString();
     return exampleElement + codeElement;
@@ -1200,7 +1199,7 @@ ArtJs.TemplateHelpers.registerAll({
   renderMore: function(example, more) {
     if (example || more) {
       var v = this.renderIf(example, "_renderExample") + this.renderIf(more, "_renderMore");
-      return ArtJs.$B("div", {
+      return artjs.$B("div", {
         className: "more"
       }, v).toString();
     } else {
@@ -1208,67 +1207,67 @@ ArtJs.TemplateHelpers.registerAll({
     }
   },
   _renderMore: function(v) {
-    return ArtJs.$B("p", {
+    return artjs.$B("p", {
       className: "container"
     }, v).toString();
   },
   renderDescription: function(v) {
-    return ArtJs.$B("p", null, v).toString();
+    return artjs.$B("p", null, v).toString();
   },
   renderParams: function(v) {
-    var collection = ArtJs.ObjectUtils.map(v, this._paramToElement, this).join("");
-    return ArtJs.$B("div", {
+    var collection = artjs.ObjectUtils.map(v, this._paramToElement, this).join("");
+    return artjs.$B("div", {
       className: "params"
     }, collection).toString();
   },
   _paramToElement: function(k, v) {
-    var content = ArtJs.$B("span", null, k).toString() + " - " + v;
-    return ArtJs.$B("p", null, content).toString();
+    var content = artjs.$B("span", null, k).toString() + " - " + v;
+    return artjs.$B("p", null, content).toString();
   }
 });
 
-art.component.Sidebar = ArtJs.Class(function() {
+art.component.Sidebar = artjs.Class(function() {
   this.super(arguments);
-  this.tree = new ArtJs.Tree(art.DB.tree, this.element);
+  this.tree = new artjs.Tree(art.DB.tree, this.element);
 }, null, {
   _name: "art.component.Sidebar"
-}, ArtJs.Component);
+}, artjs.Component);
 
-art.component.Content = ArtJs.Class(null, {
+art.component.Content = artjs.Class(null, {
   onDependency: function(sidebar) {
-    sidebar.tree.onLeaf.add(ArtJs.$D(this, this.onLeaf));
+    sidebar.tree.onLeaf.add(artjs.$D(this, this.onLeaf));
     sidebar.tree.open();
   },
   onLeaf: function(element) {
-    var scope = art.DB.content[ArtJs.ElementUtils.getAttributes(element).href];
-    ArtJs.TemplateHelpers.renderInto(this.element, "doc", scope);
-    ArtJs.Fade.run(this.element, 1, .2, null, null, 0);
+    var scope = art.DB.content[artjs.ElementUtils.getAttributes(element).href];
+    artjs.TemplateHelpers.renderInto(this.element, "doc", scope);
+    artjs.Fade.run(this.element, 1, .2, null, null, 0);
   }
 }, {
   _name: "art.component.Content"
-}, ArtJs.Component);
+}, artjs.Component);
 
 art.component.Content.dependsOn(art.component.Sidebar);
 
-art.component.Member = ArtJs.Class(function(element) {
+art.component.Member = artjs.Class(function(element) {
   this.super(arguments);
-  var s = ArtJs.Selector;
+  var s = artjs.Selector;
   var a = s.first(s.first(element, "h4"), "a");
-  var eu = ArtJs.ElementUtils;
-  eu.onClick(a, ArtJs.$D(this, this._onAnchor));
+  var eu = artjs.ElementUtils;
+  eu.onClick(a, artjs.$D(this, this._onAnchor));
   this.more = s.first(element, ".more");
   if (this.more) {
     eu.addClass(a, "active");
     this.height = eu.getSize(this.more).y;
-    ArtJs.Blind.run(this.more, 0, 0);
+    artjs.Blind.run(this.more, 0, 0);
   }
 }, {
   _onAnchor: function(e) {
     e.preventDefault();
     if (this.more) {
-      ArtJs.Blind.toggle(this.more, this.height, .2, ArtJs.TransitionBase.EASE_IN_OUT);
+      artjs.Blind.toggle(this.more, this.height, .2, artjs.TransitionBase.EASE_IN_OUT);
     }
   }
 }, {
   _name: "art.component.Member"
-}, ArtJs.Component);
+}, artjs.Component);

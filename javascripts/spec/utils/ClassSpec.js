@@ -1,4 +1,4 @@
-spec(ArtJs.Class, function() {
+spec(artjs.Class, function() {
   var Grand = subject()(function(name) {
     this.name = name;
   }, {
@@ -13,7 +13,7 @@ spec(ArtJs.Class, function() {
     classname: 'Grand'
   });
   
-  var Parent = ArtJs.Class(function(name) {
+  var Parent = artjs.Class(function(name) {
     this.super(arguments, name);
   }, {
     instanceMethod: function(value) {
@@ -28,7 +28,7 @@ spec(ArtJs.Class, function() {
     Grand
   );
 
-  var Child = ArtJs.Class(function(name) {
+  var Child = artjs.Class(function(name) {
     this.super(arguments, name);
   }, {
     instanceMethod: function(value) {

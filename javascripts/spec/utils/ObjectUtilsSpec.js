@@ -1,4 +1,4 @@
-spec(ArtJs.ObjectUtils, function() {
+spec(artjs.ObjectUtils, function() {
   describe('#copy', function() {
     it('should return copy of the object', function() {
       var source = {a: 5, b: function() {}};
@@ -6,7 +6,7 @@ spec(ArtJs.ObjectUtils, function() {
       
       expect(result.a).to(eq(source.a));
       expect(result.b).to(eq(source.b));
-      expect(ArtJs.ObjectUtils.keys(result)).to(eq(['a', 'b']));
+      expect(artjs.ObjectUtils.keys(result)).to(eq(['a', 'b']));
     });
   });
 
@@ -19,7 +19,7 @@ spec(ArtJs.ObjectUtils, function() {
 
       expect(target.a).to(eq(source.a));
       expect(target.b).to(eq(source.b));
-      expect(ArtJs.ObjectUtils.keys(target)).to(eq(['c', 'b', 'a']));
+      expect(artjs.ObjectUtils.keys(target)).to(eq(['c', 'b', 'a']));
     });
   });
 
@@ -67,7 +67,7 @@ spec(ArtJs.ObjectUtils, function() {
 
       subject().removeValue(obj, 5);
       
-      expect(ArtJs.ObjectUtils.keys(obj)).to(eq('b'));
+      expect(artjs.ObjectUtils.keys(obj)).to(eq('b'));
     });
   });
 
@@ -77,7 +77,7 @@ spec(ArtJs.ObjectUtils, function() {
 
       subject().removeValues(obj, [7, 5]);
 
-      expect(ArtJs.ObjectUtils.keys(obj)).to(eq('d'));
+      expect(artjs.ObjectUtils.keys(obj)).to(eq('d'));
     });
   });
 
@@ -117,7 +117,7 @@ spec(ArtJs.ObjectUtils, function() {
 
       var result = subject().mapValue(obj, function(v) { return v + 1; });
 
-      expect(ArtJs.ObjectUtils.values(result)).to(eq([6, 8, 9]));
+      expect(artjs.ObjectUtils.values(result)).to(eq([6, 8, 9]));
     });
   });
 
@@ -127,7 +127,7 @@ spec(ArtJs.ObjectUtils, function() {
 
       var result = subject().mapKey(obj, function(k) { return k + k; });
 
-      expect(ArtJs.ObjectUtils.keys(result)).to(eq(['aa', 'bb', 'cc']));
+      expect(artjs.ObjectUtils.keys(result)).to(eq(['aa', 'bb', 'cc']));
     });
   });
 
@@ -169,7 +169,7 @@ spec(ArtJs.ObjectUtils, function() {
       var obj = {a: 5, b: 7, c: -8};
       var result = subject().select(obj, function(i) { return i > 0; });
 
-      expect(ArtJs.ObjectUtils.keys(result)).to(eq(['a', 'b']));
+      expect(artjs.ObjectUtils.keys(result)).to(eq(['a', 'b']));
     });
   });
 
@@ -178,7 +178,7 @@ spec(ArtJs.ObjectUtils, function() {
       var obj = {a: 'a', b: 7, c: 'c'};
       var result = subject().selectWithKey(obj, function(k, v) { return k == v; });
 
-      expect(ArtJs.ObjectUtils.keys(result)).to(eq(['a', 'c']));
+      expect(artjs.ObjectUtils.keys(result)).to(eq(['a', 'c']));
     });
   });
 
@@ -187,7 +187,7 @@ spec(ArtJs.ObjectUtils, function() {
       var obj = {a: 5, b: 7, c: -8};
       var result = subject().reject(obj, function(i) { return i > 0; });
 
-      expect(ArtJs.ObjectUtils.keys(result)).to(eq(['c']));
+      expect(artjs.ObjectUtils.keys(result)).to(eq(['c']));
     });
   });
 
@@ -299,11 +299,11 @@ spec(ArtJs.ObjectUtils, function() {
 
   describe('#build', function() {
     it('should return new object', function() {
-      var array = [new ArtJs.Point('a', 5)];
+      var array = [new artjs.Point('a', 5)];
       var result = subject().fromPoints(array);
 
-      expect(ArtJs.ObjectUtils.keys(result)).to(eq(['a']));
-      expect(ArtJs.ObjectUtils.values(result)).to(eq([5]));
+      expect(artjs.ObjectUtils.keys(result)).to(eq(['a']));
+      expect(artjs.ObjectUtils.values(result)).to(eq([5]));
     });
   });
 
@@ -312,8 +312,8 @@ spec(ArtJs.ObjectUtils, function() {
       var array = [['a', 5]];
       var result = subject().fromArray(array);
 
-      expect(ArtJs.ObjectUtils.keys(result)).to(eq(['a']));
-      expect(ArtJs.ObjectUtils.values(result)).to(eq([5]));
+      expect(artjs.ObjectUtils.keys(result)).to(eq(['a']));
+      expect(artjs.ObjectUtils.values(result)).to(eq([5]));
     });
   });
 

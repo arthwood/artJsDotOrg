@@ -1,64 +1,40 @@
-var ArtJs = {
+var artjs = {
   VERSION: "2.0",
-  name: "ArtJs",
-  globalize: function() {
-    var copy = this.ObjectUtils.copy(this);
-    delete copy.globalize;
-    delete copy.doInjection;
-    delete copy.VERSION;
-    this.ObjectUtils.copyProps(copy, window);
+  data: {
+    tree: {}
   },
-  doInjection: function() {
-    this.ArrayUtils.doInjection();
-    this.ObjectUtils.doInjection();
-    this.StringUtils.doInjection();
-    this.DateUtils.doInjection();
-    this.Selector.doInjection();
-    this.ElementUtils.doInjection();
-    this.Delegate.doInjection();
-    this.Blind.doInjection();
-  }
+  dom: {},
+  events: {},
+  math: {},
+  module: {},
+  net: {},
+  spec: {
+    matchers: {}
+  },
+  template: {},
+  transition: {},
+  ui: {},
+  utils: {}
 };
 
-var com = {
-  arthwood: {
-    data: {
-      tree: {}
-    },
-    dom: {},
-    events: {},
-    math: {},
-    module: {},
-    net: {},
-    spec: {
-      matchers: {}
-    },
-    template: {},
-    transition: {},
-    ui: {},
-    utils: {}
-  }
-};
-
-ArtJs.log = function() {
+artjs.log = function() {
   if (typeof console === "object") {
-    console.log(ArtJs.$A(arguments));
+    console.log(artjs.$A(arguments));
   }
 };
 
-ArtJs.p = ArtJs.log;
+artjs.p = artjs.log;
 
-ArtJs.ObjectUtils = com.arthwood.utils.Object = {
+artjs.ObjectUtils = artjs.utils.Object = {
   _name: "ObjectUtils",
   QUERY_DELIMITER: "&",
-  INJECTABLES: [ "all", "copy", "copyProps", "each", "eachPair", "extend", "keys", "values", "includes", "includesAll", "isArray", "isEmpty", "isNotEmpty", "isNull", "map", "mapKey", "mapValue", "merge", "removeValue", "removeValues", "reject", "select", "selectWithKey", "toArray", "toQueryString", "update" ],
   _init: function() {
-    this._invertedRemoveValueDC = ArtJs.$DC(this, this._invertedRemoveValue);
-    this._eachPairDeleteValueDC = ArtJs.$DC(this, this._eachPairDeleteValue);
-    this._eachKeyDeleteKeyDC = ArtJs.$DC(this, this._eachKeyDeleteKey);
-    this._invertedIncludesDC = ArtJs.$DC(this, this._invertedIncludes);
-    this._pairToQueryStringDC = ArtJs.$DC(this, this._pairToQueryString);
-    this._parseArrayValueDC = ArtJs.$DC(this, this._parseArrayValue);
+    this._invertedRemoveValueDC = artjs.$DC(this, this._invertedRemoveValue);
+    this._eachPairDeleteValueDC = artjs.$DC(this, this._eachPairDeleteValue);
+    this._eachKeyDeleteKeyDC = artjs.$DC(this, this._eachKeyDeleteKey);
+    this._invertedIncludesDC = artjs.$DC(this, this._invertedIncludes);
+    this._pairToQueryStringDC = artjs.$DC(this, this._pairToQueryString);
+    this._parseArrayValueDC = artjs.$DC(this, this._parseArrayValue);
   },
   copy: function(obj) {
     var copy = {};
@@ -88,11 +64,11 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   },
   removeKeys: function(obj, keys) {
     this._eachKeyDeleteKeyDC.delegate.args = [ obj ];
-    ArtJs.ArrayUtils.each(keys, this._eachKeyDeleteKeyDC);
+    artjs.ArrayUtils.each(keys, this._eachKeyDeleteKeyDC);
   },
   removeValues: function(obj, values) {
     this._invertedRemoveValueDC.delegate.args = [ obj ];
-    ArtJs.ArrayUtils.eachItem(values, this._invertedRemoveValueDC);
+    artjs.ArrayUtils.eachItem(values, this._invertedRemoveValueDC);
   },
   keys: function(obj) {
     var result = [];
@@ -171,9 +147,9 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   },
   selectWithKey: function(obj, func, context) {
     var result = {};
-    this.eachPair(obj, function(i, j) {
-      if (func.call(context, i, j)) {
-        result[i] = j;
+    this.eachPair(obj, function(k, v) {
+      if (func.call(context, k, v)) {
+        result[k] = v;
       }
     });
     return result;
@@ -272,13 +248,13 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   },
   _pairToQueryString: function(key, value, prefix) {
     var result;
-    prefix = ArtJs.StringUtils.isBlank(prefix) ? key : prefix + "[" + key + "]";
+    prefix = artjs.StringUtils.isBlank(prefix) ? key : prefix + "[" + key + "]";
     if (typeof value == "object") {
       if (isNaN(value.length)) {
         result = this._toQueryStringWithPrefix(value, prefix);
       } else {
         this._parseArrayValueDC.delegate.args = [ prefix + "[]" ];
-        result = ArtJs.ArrayUtils.map(value, this._parseArrayValueDC).join(this.QUERY_DELIMITER);
+        result = artjs.ArrayUtils.map(value, this._parseArrayValueDC).join(this.QUERY_DELIMITER);
       }
     } else {
       result = prefix + "=" + encodeURIComponent(this._primitiveToQueryString(value));
@@ -330,26 +306,14 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   },
   getDefault: function(i, defaultValue) {
     return this.isNull(i) ? defaultValue : i;
-  },
-  prototypify: function(context, klass) {
-    arguments.callee.context = context;
-    arguments.callee.class = klass;
-    ArtJs.ArrayUtils.each(context.INJECTABLES, this._prototypifyMethod, this);
-  },
-  _prototypifyMethod: function(i) {
-    this.prototypify.class.prototype.all = ArtJs.$DC(this.prototypify.context, i, true);
-  },
-  doInjection: function() {
-    ArtJs.ObjectUtils.prototypify(this, Object);
   }
 };
 
-ArtJs.ArrayUtils = com.arthwood.utils.Array = {
+artjs.ArrayUtils = artjs.utils.Array = {
   _name: "ArrayUtils",
-  INJECTABLES: [ "all", "any", "beforeLast", "compact", "detect", "each", "eachIndex", "eachItem", "equal", "first", "flatten", "getItem", "includes", "includesAll", "inject", "insertAt", "intersection", "invoke", "isEmpty", "itemsEqual", "last", "map", "isNotEmpty", "numerize", "partition", "pluck", "print", "reject", "$reject", "removeAt", "removeItem", "second", "select", "$select", "selectNonEmpty", "stringify", "sum", "third", "transpose", "uniq" ],
   _init: function() {
-    this._areItemsEqualCallback = ArtJs.$DC(this, this.areItemsEqual);
-    this._invokeCallback = ArtJs.$DC(this, this._invoke);
+    this._areItemsEqualCallback = artjs.$DC(this, this.areItemsEqual);
+    this._invokeCallback = artjs.$DC(this, this._invoke);
   },
   build: function(n, func) {
     var arr = new Array(n);
@@ -597,7 +561,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return i;
   },
   partition: function(arr, func, context) {
-    var point = new ArtJs.Point([], []);
+    var point = new artjs.Point([], []);
     var item;
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
@@ -622,13 +586,13 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
         item = arr[i];
         group = String(test.call(context || this, item, parseInt(i, 10)));
         if (values[group] == undefined) {
-          result.push(new ArtJs.Point(group, values[group] = []));
+          result.push(new artjs.Point(group, values[group] = []));
         }
         values[group].push(item);
       }
     }
     if (!keepOrder) {
-      result = ArtJs.ObjectUtils.fromPoints(result);
+      result = artjs.ObjectUtils.fromPoints(result);
     }
     return result;
   },
@@ -650,7 +614,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return this.select(arr, this.isNotEmpty, this);
   },
   compact: function(arr) {
-    return this.reject(arr, ArtJs.ObjectUtils.isNull, this);
+    return this.reject(arr, artjs.ObjectUtils.isNull, this);
   },
   isEmpty: function(arr) {
     return arr.length == 0;
@@ -665,7 +629,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     this.eachItem(arr, this._printEach, this);
   },
   _printEach: function(i) {
-    ArtJs.p(i);
+    artjs.p(i);
   },
   _numerizeCallback: function(i) {
     return Number(i);
@@ -680,7 +644,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return this.map(arr, this._stringifyCallback, this);
   },
   _stringifyCallback: function(i) {
-    return ArtJs.ObjectUtils.isNull(i) ? "" : i.toString();
+    return artjs.ObjectUtils.isNull(i) ? "" : i.toString();
   },
   _indexOf: function(arr, item) {
     for (var i in arr) {
@@ -689,37 +653,34 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       }
     }
     return -1;
-  },
-  doInjection: function() {
-    ArtJs.ObjectUtils.prototypify(this, Array);
   }
 };
 
-ArtJs.$A = ArtJs.ArrayUtils.arrify;
+artjs.$A = artjs.ArrayUtils.arrify;
 
-ArtJs.Class = com.arthwood.utils.Class = function(ctor, proto, stat, superclass) {
-  var builder = new ArtJs.ClassBuilder(ctor, proto, stat, superclass);
+artjs.Class = artjs.utils.Class = function(ctor, proto, stat, superclass) {
+  var builder = new artjs.ClassBuilder(ctor, proto, stat, superclass);
   return builder.ctor;
 };
 
-ArtJs.Class._name = "Class";
+artjs.Class._name = "Class";
 
-ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
+artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor = ctor || this._defaultConstructor();
   this.ctor._onCreated = this._defaultOnCreated;
   this.ctor._onExtended = this._defaultOnExtended;
   if (superclass) {
     var _super_ = function() {
       var ctor = arguments.callee.ctor;
-      var _arguments_ = ArtJs.$A(arguments);
+      var _arguments_ = artjs.$A(arguments);
       var __arguments__ = _arguments_.shift();
       var _callee_ = __arguments__.callee;
       var _super_ = _callee_.superclass || _callee_.super;
-      return _super_.apply(this, _arguments_.concat(ArtJs.$A(__arguments__)));
+      return _super_.apply(this, _arguments_.concat(artjs.$A(__arguments__)));
     };
     _super_.ctor = this.ctor;
-    ArtJs.ObjectUtils.extend(this.ctor, superclass);
-    ArtJs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
+    artjs.ObjectUtils.extend(this.ctor, superclass);
+    artjs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
     this.ctor.superclass = superclass;
     this.ctor.super = _super_;
     this.ctor.prototype.super = _super_;
@@ -728,10 +689,10 @@ ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
   }
   this.ctor.prototype.ctor = this.ctor;
   if (proto) {
-    ArtJs.ObjectUtils.eachPair(proto, this._eachProto, this);
+    artjs.ObjectUtils.eachPair(proto, this._eachProto, this);
   }
   if (stat) {
-    ArtJs.ObjectUtils.eachPair(stat, this._eachStat, this);
+    artjs.ObjectUtils.eachPair(stat, this._eachStat, this);
   }
   this.ctor._onCreated();
   if (superclass) {
@@ -739,7 +700,7 @@ ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
   }
 };
 
-ArtJs.ClassBuilder.prototype = {
+artjs.ClassBuilder.prototype = {
   _defaultOnCreated: function() {
     this.subclasses = [];
   },
@@ -769,20 +730,20 @@ ArtJs.ClassBuilder.prototype = {
   }
 };
 
-ArtJs.Delegate = com.arthwood.events.Delegate = ArtJs.Class(function(object, method) {
+artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
   this.object = object;
-  this.method = ArtJs.ObjectUtils.isString(method) ? this.object[method] : method;
-  this.args = ArtJs.$A(arguments, 2);
+  this.method = artjs.ObjectUtils.isString(method) ? this.object[method] : method;
+  this.args = artjs.$A(arguments, 2);
 }, {
   invoke: function() {
-    var args = ArtJs.$A(arguments).concat(this.args);
+    var args = artjs.$A(arguments).concat(this.args);
     return this.method.apply(this.object, args);
   },
   callback: function(withSource) {
     var result = function() {
       var callee = arguments.callee;
       var delegate = callee.delegate;
-      var args = ArtJs.$A(arguments);
+      var args = artjs.$A(arguments);
       if (callee.withSource) {
         args.unshift(this);
       }
@@ -795,29 +756,39 @@ ArtJs.Delegate = com.arthwood.events.Delegate = ArtJs.Class(function(object, met
 }, {
   injected: false,
   callback: function(object, method, withSource) {
-    var delegate = new ArtJs.Delegate(object, method);
+    var delegate = new this(object, method);
     var callback = delegate.callback(withSource);
-    delegate.args = ArtJs.$A(arguments, 3);
+    delegate.args = artjs.$A(arguments, 3);
     return callback;
   },
   create: function(object, method) {
-    var delegate = new ArtJs.Delegate(object, method);
-    delegate.args = ArtJs.$A(arguments, 2);
+    var delegate = new this(object, method);
+    delegate.args = artjs.$A(arguments, 2);
     return delegate;
   },
-  doInjection: function() {
-    Function.prototype.bind = function(obj, withSource) {
-      return ArtJs.$DC.apply(ArtJs.$DC, [ obj, this, withSource ].concat(ArtJs.$A(arguments, 2)));
-    };
-    this.injected = true;
+  bindAll: function(context) {
+    var container = context.ctor ? context.ctor.prototype : context;
+    var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.selectWithKey(container, this._isCallback, this));
+    var all = callbacks.concat(artjs.$A(arguments, 1));
+    this._bindEach.context = context;
+    this._bindEach.container = container;
+    artjs.ArrayUtils.each(all, this._bindEach, this);
+  },
+  _isCallback: function(k, v) {
+    return artjs.StringUtils.startsWith(k, "_on") && v instanceof Function;
+  },
+  _bindEach: function(i) {
+    arguments.callee.container[i] = this.callback(arguments.callee.context, i);
   }
 });
 
-ArtJs.$DC = ArtJs.Delegate.callback;
+artjs.$DC = artjs.Delegate.callback(artjs.Delegate, "callback");
 
-ArtJs.$D = ArtJs.Delegate.create;
+artjs.$D = artjs.Delegate.callback(artjs.Delegate, "create");
 
-ArtJs.MathUtils = com.arthwood.utils.Math = {
+artjs.$BA = artjs.Delegate.callback(artjs.Delegate, "bindAll");
+
+artjs.MathUtils = artjs.utils.Math = {
   _name: "MathUtils",
   sgn: function(x) {
     return x === 0 ? 0 : Math.abs(x) / x;
@@ -836,9 +807,8 @@ ArtJs.MathUtils = com.arthwood.utils.Math = {
   }
 };
 
-ArtJs.StringUtils = com.arthwood.utils.String = {
+artjs.StringUtils = artjs.utils.String = {
   _name: "StringUtils",
-  INJECTABLES: [ "align", "isBlank", "capitalize", "capitalizeUnderscored", "capitalizeWord", "countPattern", "first", "getMultiPattern", "isEmpty", "last", "nullifyEmpty", "singularOrPlural", "strip", "sub", "toS", "toJson", "truncate", "trim " ],
   first: function(str) {
     return str.substr(0, 1);
   },
@@ -914,7 +884,7 @@ ArtJs.StringUtils = com.arthwood.utils.String = {
     return text + (n == 1 ? "" : "s");
   },
   capitalize: function(str) {
-    return ArtJs.ArrayUtils.map(str.split(" "), this.capitalizeWord).join(" ");
+    return artjs.ArrayUtils.map(str.split(" "), this.capitalizeWord).join(" ");
   },
   capitalizeWord: function(str) {
     return str.charAt(0).toUpperCase() + str.substr(1);
@@ -950,14 +920,13 @@ ArtJs.StringUtils = com.arthwood.utils.String = {
   toJson: function(str) {
     return JSON.parse(str);
   },
-  doInjection: function() {
-    ArtJs.ObjectUtils.prototypify(this, String);
+  startsWith: function(str, substr) {
+    return str.match(new RegExp("^" + substr));
   }
 };
 
-ArtJs.DateUtils = com.arthwood.utils.Date = {
+artjs.DateUtils = artjs.utils.Date = {
   _name: "DateUtils",
-  INJECTABLES: [ "monthDaysNum", "firstDay", "toHMS", "toYMD", "toDMY", "copy", "getDateShifted", "stripDayTime" ],
   getTime: function() {
     return (new Date).getTime();
   },
@@ -976,12 +945,12 @@ ArtJs.DateUtils = com.arthwood.utils.Date = {
     return this.firstDate(date).getDay();
   },
   toHMS: function(date, separator) {
-    var su = ArtJs.StringUtils;
+    var su = artjs.StringUtils;
     separator = separator || ":";
     return su.addZeros(date.getHours().toString(), 2, false) + separator + su.addZeros(date.getMinutes().toString(), 2, false) + separator + su.addZeros(date.getSeconds().toString(), 2, false);
   },
   toYMD: function(date, separator) {
-    var su = ArtJs.StringUtils;
+    var su = artjs.StringUtils;
     separator = separator || "-";
     return date.getFullYear() + separator + su.addZeros((date.getMonth() + 1).toString(), 2, false) + separator + su.addZeros(date.getDate().toString(), 2, false);
   },
@@ -995,18 +964,18 @@ ArtJs.DateUtils = com.arthwood.utils.Date = {
   fromYMD: function(str, separator) {
     separator = separator || "-";
     var arr = str.split(separator);
-    var au = ArtJs.ArrayUtils;
+    var au = artjs.ArrayUtils;
     return new Date(parseInt(au.first(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.third(arr), 10));
   },
   fromDMY: function(str, separator) {
     separator = separator || "-";
     var arr = str.split(separator);
-    var au = ArtJs.ArrayUtils;
+    var au = artjs.ArrayUtils;
     return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
   },
   minutesToHM: function(minutes, separator) {
     separator = separator || ":";
-    return Math.floor(minutes / 60) + separator + ArtJs.StringUtils.addZeros((minutes % 60).toString(), 2);
+    return Math.floor(minutes / 60) + separator + artjs.StringUtils.addZeros((minutes % 60).toString(), 2);
   },
   hmToMinutes: function(hm, separator) {
     separator = separator || ":";
@@ -1016,7 +985,7 @@ ArtJs.DateUtils = com.arthwood.utils.Date = {
   secondsToMS: function(s, separator) {
     var seconds = s % 60;
     var minutes = (s - seconds) / 60;
-    var su = ArtJs.StringUtils;
+    var su = artjs.StringUtils;
     separator = separator || ":";
     return su.addZeros(minutes.toString(), 2) + separator + su.addZeros(seconds.toString(), 2);
   },
@@ -1029,7 +998,7 @@ ArtJs.DateUtils = com.arthwood.utils.Date = {
     var seconds = s % 60;
     var minutes = (s - seconds) / 60;
     separator = separator || ":";
-    return this.minutesToHM(minutes, separator) + separator + ArtJs.StringUtils.addZeros(seconds.toString(), 2);
+    return this.minutesToHM(minutes, separator) + separator + artjs.StringUtils.addZeros(seconds.toString(), 2);
   },
   miliToHMSM: function(v) {
     var mili = v % 1e3;
@@ -1039,7 +1008,7 @@ ArtJs.DateUtils = com.arthwood.utils.Date = {
     var minutes = totalMinutes % 60;
     var totalHours = (totalMinutes - minutes) / 60;
     var hours = totalHours;
-    return hours.toString() + ":" + ArtJs.StringUtils.addZeros(minutes.toString(), 2) + ":" + ArtJs.StringUtils.addZeros(seconds.toString(), 2) + "." + ArtJs.StringUtils.addZeros(mili.toString(), 3);
+    return hours.toString() + ":" + artjs.StringUtils.addZeros(minutes.toString(), 2) + ":" + artjs.StringUtils.addZeros(seconds.toString(), 2) + "." + artjs.StringUtils.addZeros(mili.toString(), 3);
   },
   miliToMSM: function(v) {
     var mili = v % 1e3;
@@ -1047,7 +1016,7 @@ ArtJs.DateUtils = com.arthwood.utils.Date = {
     var seconds = totalSeconds % 60;
     var totalMinutes = (totalSeconds - seconds) / 60;
     var minutes = totalMinutes;
-    return minutes.toString() + ":" + ArtJs.StringUtils.addZeros(seconds.toString(), 2) + "." + ArtJs.StringUtils.addZeros(mili.toString(), 3);
+    return minutes.toString() + ":" + artjs.StringUtils.addZeros(seconds.toString(), 2) + "." + artjs.StringUtils.addZeros(mili.toString(), 3);
   },
   copy: function(date) {
     return new Date(date);
@@ -1059,27 +1028,23 @@ ArtJs.DateUtils = com.arthwood.utils.Date = {
   },
   stripDayTime: function(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  },
-  doInjection: function() {
-    ArtJs.ObjectUtils.prototypify(this, Date);
   }
 };
 
-ArtJs.ElementUtils = com.arthwood.utils.Element = {
+artjs.ElementUtils = artjs.utils.Element = {
   HIDDEN_ELEMENTS: [],
   DEFAULT_DISPLAY: "",
   MAIN_OBJ_RE: /^\w+/,
   SUB_OBJ_RE: /\[\w+\]/g,
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: [ "", "-o-", "-ms-", "-moz-", "-khtml-", "-webkit-" ],
-  INJECTABLES: [ "addClass", "center", "centerH", "centerV", "clone", "disable", "elements", "enable", "extendStyle", "firstElement", "getAlpha", "getAttributes", "getBounds", "getClasses", "getContent", "getPadding", "getPosition", "getSize", "getStyle", "hasClass", "hide", "insert", "isElement", "isHidden", "lastElement", "next", "onClick", "parent", "prev", "putAtBottom", "putAtTop", "putAfter", "putBefore", "remove", "removeClass", "removeStyle", "replace", "show", "serialize", "setAlpha", "setClass", "setContent", "setEnabled", "setHeight", "setPosition", "setStyle", "setVisible", "setWidth", "setX", "setY", "toggle", "toggleClass" ],
   _init: function() {
-    this.detectHiddenElementDC = ArtJs.$DC(this, this.detectHiddenElement);
-    ArtJs.$insert = ArtJs.$DC(this, this.insert);
+    this.detectHiddenElementDC = artjs.$DC(this, this.detectHiddenElement);
+    artjs.$insert = artjs.$DC(this, this.insert);
   },
   show: function(e) {
     var hidden = this.getHidden(e);
-    ArtJs.ArrayUtils.removeItem(this.HIDDEN_ELEMENTS, hidden);
+    artjs.ArrayUtils.removeItem(this.HIDDEN_ELEMENTS, hidden);
     var display = hidden && hidden.display || e.style.display;
     e.style.display = display == "none" ? this.DEFAULT_DISPLAY : display;
   },
@@ -1109,7 +1074,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   },
   getHidden: function(e) {
     this.detectHiddenElementDC.delegate.args = [ e ];
-    return ArtJs.ArrayUtils.detect(this.HIDDEN_ELEMENTS, this.detectHiddenElementDC);
+    return artjs.ArrayUtils.detect(this.HIDDEN_ELEMENTS, this.detectHiddenElementDC);
   },
   detectHiddenElement: function(i, e) {
     return i.element == e;
@@ -1123,7 +1088,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
       this.show(e);
     }
     var b = e.getBoundingClientRect();
-    var layout = new ArtJs.Rectangle(b.left, b.top, b.right, b.bottom);
+    var layout = new artjs.Rectangle(b.left, b.top, b.right, b.bottom);
     if (!withoutScroll) {
       layout.moveBy(this.getScrollPosition());
     }
@@ -1142,7 +1107,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     e.style[prop] = v;
   },
   extendStyle: function(e, style) {
-    ArtJs.ObjectUtils.extend(e.style, style);
+    artjs.ObjectUtils.extend(e.style, style);
   },
   transitionStyle: function(prop, duration, type, delay) {
     return this._effectStyle(this._getTransitionStyleValue(prop, duration, type, delay));
@@ -1152,7 +1117,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   },
   _effectStyle: function(value) {
     this._browserMap.value = value;
-    return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(this.BROWSERS_STYLES, this._browserMap, this));
+    return artjs.ObjectUtils.fromArray(artjs.ArrayUtils.map(this.BROWSERS_STYLES, this._browserMap, this));
   },
   _browserMap: function(browser) {
     return [ browser + "transition", arguments.callee.value ];
@@ -1165,13 +1130,13 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     return v && Number(v[1]) || 0;
   },
   children: function(e) {
-    return ArtJs.$A(e.childNodes);
+    return artjs.$A(e.childNodes);
   },
   elements: function(e) {
     return this.filterElements(this.children(e));
   },
   filterElements: function(items) {
-    return ArtJs.ArrayUtils.select(items, this.isElement, this);
+    return artjs.ArrayUtils.select(items, this.isElement, this);
   },
   isElement: function(e) {
     return e.nodeType == Node.ELEMENT_NODE;
@@ -1186,10 +1151,10 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     return e.parentNode;
   },
   firstElement: function(e) {
-    return ArtJs.ArrayUtils.first(this.elements(e));
+    return artjs.ArrayUtils.first(this.elements(e));
   },
   lastElement: function(e) {
-    return ArtJs.ArrayUtils.last(this.elements(e));
+    return artjs.ArrayUtils.last(this.elements(e));
   },
   prev: function(e) {
     var result = e;
@@ -1217,7 +1182,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     return result;
   },
   putAtTop: function(e, ref) {
-    var first = ArtJs.ArrayUtils.first(this.children(ref));
+    var first = artjs.ArrayUtils.first(this.children(ref));
     return first ? this.putBefore(e, first) : this.putAtBottom(e, ref);
   },
   putAfter: function(e, ref) {
@@ -1277,8 +1242,8 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     }
   },
   serialize: function(e) {
-    var s = ArtJs.Selector;
-    var au = ArtJs.ArrayUtils;
+    var s = artjs.Selector;
+    var au = artjs.ArrayUtils;
     var textfields = s.find(e, "input[type=text]");
     var checkboxes = au.select(s.find(e, "input[type=checkbox]"), this.selectChecked, this);
     var radios = au.select(s.down(e, "input[type=radio]"), this.selectChecked, this);
@@ -1294,9 +1259,9 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   serializeInject: function(mem, i, idx) {
     var name = i.name;
     var value = i.value;
-    var main = ArtJs.ArrayUtils.first(name.match(this.MAIN_OBJ_RE));
+    var main = artjs.ArrayUtils.first(name.match(this.MAIN_OBJ_RE));
     var subobjectMatches = name.match(this.SUB_OBJ_RE);
-    var props = subobjectMatches && ArtJs.ArrayUtils.map(ArtJs.$A(subobjectMatches), this.mapSub, this) || [];
+    var props = subobjectMatches && artjs.ArrayUtils.map(artjs.$A(subobjectMatches), this.mapSub, this) || [];
     props.unshift(main);
     var obj = mem;
     var n = props.length - 1;
@@ -1312,7 +1277,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     return mem;
   },
   mapSub: function(i, idx) {
-    return ArtJs.StringUtils.sub(i, 1, -1);
+    return artjs.StringUtils.sub(i, 1, -1);
   },
   getContent: function(e) {
     return e.innerHTML;
@@ -1321,11 +1286,11 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     e.innerHTML = v;
   },
   hasClass: function(e, className) {
-    return ArtJs.ArrayUtils.includes(this.getClasses(e), className);
+    return artjs.ArrayUtils.includes(this.getClasses(e), className);
   },
   getClasses: function(e) {
-    var className = ArtJs.StringUtils.trim(e.className);
-    return ArtJs.StringUtils.isBlank(className) ? [] : className.split(" ");
+    var className = artjs.StringUtils.trim(e.className);
+    return artjs.StringUtils.isBlank(className) ? [] : className.split(" ");
   },
   setClass: function(e, className, add) {
     if (add) {
@@ -1344,7 +1309,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   removeClass: function(e, className) {
     var classes = this.getClasses(e);
     if (this.hasClass(e, className)) {
-      ArtJs.ArrayUtils.removeItem(classes, className);
+      artjs.ArrayUtils.removeItem(classes, className);
       e.className = classes.join(" ");
     }
   },
@@ -1352,7 +1317,18 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     this.setClass(e, className, !this.hasClass(e, className));
   },
   getAttributes: function(e) {
-    return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(ArtJs.$A(e.attributes), this.mapAttribute, this));
+    return artjs.ObjectUtils.fromArray(artjs.ArrayUtils.map(artjs.$A(e.attributes), this.mapAttribute, this));
+  },
+  getData: function(e) {
+    var attrs = this.getAttributes(e);
+    var data = artjs.ObjectUtils.selectWithKey(attrs, this._isDataAttribute, this);
+    return artjs.ObjectUtils.mapKey(data, this._removeDataPrefix, this);
+  },
+  _isDataAttribute: function(k, v) {
+    return artjs.StringUtils.startsWith(k, "data-");
+  },
+  _removeDataPrefix: function(k) {
+    return k.replace(/^data\-/, "");
   },
   mapAttribute: function(i) {
     return [ i.name, i.value ];
@@ -1364,7 +1340,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   getAlpha: function(e) {
     if (e.style.filter) {
       var re = /alpha\(opacity=(\d+(\.\d+)?)\)/;
-      return Number(ArtJs.ArrayUtils.second(e.style.filter.match(re)));
+      return Number(artjs.ArrayUtils.second(e.style.filter.match(re)));
     } else {
       return e.style.opacity;
     }
@@ -1377,30 +1353,30 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     }
   },
   getPadding: function(e) {
-    return new ArtJs.Rectangle(this.getSizeStyle(e, "padding-left") || this.getSizeStyle(e, "paddingLeft"), this.getSizeStyle(e, "padding-top") || this.getSizeStyle(e, "paddingTop"), this.getSizeStyle(e, "padding-right") || this.getSizeStyle(e, "paddingRight"), this.getSizeStyle(e, "padding-bottom") || this.getSizeStyle(e, "paddingBottom"));
+    return new artjs.Rectangle(this.getSizeStyle(e, "padding-left") || this.getSizeStyle(e, "paddingLeft"), this.getSizeStyle(e, "padding-top") || this.getSizeStyle(e, "paddingTop"), this.getSizeStyle(e, "padding-right") || this.getSizeStyle(e, "paddingRight"), this.getSizeStyle(e, "padding-bottom") || this.getSizeStyle(e, "paddingBottom"));
   },
   getDocumentSize: function() {
     var doc = window.document;
     var body = doc.body;
-    return new ArtJs.Point(body.clientWidth || doc.width, body.clientHeight || doc.height);
+    return new artjs.Point(body.clientWidth || doc.width, body.clientHeight || doc.height);
   },
   getWindowSize: function() {
     var de = document.documentElement;
-    return new ArtJs.Point(de.clientWidth || window.innerWidth, de.clientHeight || window.innerHeight);
+    return new artjs.Point(de.clientWidth || window.innerWidth, de.clientHeight || window.innerHeight);
   },
   getScrollPosition: function() {
     var de = document.documentElement;
-    return new ArtJs.Point(de.scrollLeft || window.scrollX, de.scrollTop || window.scrollY);
+    return new artjs.Point(de.scrollLeft || window.scrollX, de.scrollTop || window.scrollY);
   },
   onClick: function(e, delegate) {
-    return ArtJs.on(e, "click", delegate);
+    return artjs.on(e, "click", delegate);
   },
   toString: function(e) {
     var classes = this.getClasses(e);
     var attr = this.getAttributes(e);
     delete attr["id"];
     delete attr["class"];
-    return this.toTagString(e) + this.toIdString(e) + ArtJs.ArrayUtils.map(classes, this.toClassString).join("") + ArtJs.ObjectUtils.map(attr, this.toAttrString).join("");
+    return this.toTagString(e) + this.toIdString(e) + artjs.ArrayUtils.map(classes, this.toClassString).join("") + artjs.ObjectUtils.map(attr, this.toAttrString).join("");
   },
   toTagString: function(e) {
     return e.tagName.toLowerCase();
@@ -1413,17 +1389,14 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   },
   toAttrString: function(k, v) {
     return "[" + k + "=" + v + "]";
-  },
-  doInjection: function() {
-    ArtJs.ObjectUtils.prototypify(this, Element);
   }
 };
 
-ArtJs.Toggler = com.arthwood.utils.Toggler = ArtJs.Class(function(unique) {
+artjs.Toggler = artjs.utils.Toggler = artjs.Class(function(unique) {
   this.unique = unique;
   this.current = null;
-  this.onActivate = new ArtJs.CustomEvent("Toggler::onActivate");
-  this.onDeactivate = new ArtJs.CustomEvent("Toggler::onDeactivate");
+  this.onActivate = new artjs.CustomEvent("Toggler::onActivate");
+  this.onDeactivate = new artjs.CustomEvent("Toggler::onDeactivate");
 }, {
   toggle: function(item) {
     if (!(this.unique && this.current == item)) {
@@ -1436,13 +1409,13 @@ ArtJs.Toggler = com.arthwood.utils.Toggler = ArtJs.Class(function(unique) {
   _name: "Toggler"
 });
 
-ArtJs.ClassToggler = com.arthwood.utils.ClassToggler = ArtJs.Class(function(className) {
+artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(function(className) {
   this._className = className;
-  this._toggler = new ArtJs.Toggler;
-  this._toggler.onActivate.add(ArtJs.$D(this, this._onActivate));
-  this._toggler.onDeactivate.add(ArtJs.$D(this, this._onDeactivate));
-  this.onActivate = new ArtJs.CustomEvent("ClassToggler::onActivate");
-  this.onDeactivate = new ArtJs.CustomEvent("ClassToggler::onDeactivate");
+  this._toggler = new artjs.Toggler;
+  this._toggler.onActivate.add(artjs.$D(this, this._onActivate));
+  this._toggler.onDeactivate.add(artjs.$D(this, this._onDeactivate));
+  this.onActivate = new artjs.CustomEvent("ClassToggler::onActivate");
+  this.onDeactivate = new artjs.CustomEvent("ClassToggler::onDeactivate");
 }, {
   toggle: function(item) {
     this._toggler.toggle(item);
@@ -1451,26 +1424,26 @@ ArtJs.ClassToggler = com.arthwood.utils.ClassToggler = ArtJs.Class(function(clas
     return this._toggler.current;
   },
   _onActivate: function(t) {
-    if (t.current) ArtJs.ElementUtils.addClass(t.current, this._className);
+    if (t.current) artjs.ElementUtils.addClass(t.current, this._className);
     this.onActivate.fire(this);
   },
   _onDeactivate: function(t) {
-    if (t.current) ArtJs.ElementUtils.removeClass(t.current, this._className);
+    if (t.current) artjs.ElementUtils.removeClass(t.current, this._className);
     this.onDeactivate.fire(this);
   }
 }, {
   _name: "ClassToggler"
 });
 
-ArtJs.Locator = com.arthwood.module.Locator = {
+artjs.Locator = artjs.module.Locator = {
   register: function(object) {
     object.instances = [];
-    ArtJs.ObjectUtils.extend(object, this.extensions);
+    artjs.ObjectUtils.extend(object, this.extensions);
   },
   extensions: {
     find: function(i) {
       this.identifier = i;
-      return ArtJs.ArrayUtils.detect(this.instances, this.found, this);
+      return artjs.ArrayUtils.detect(this.instances, this.found, this);
     },
     found: function(i) {
       return i.getIdentifier() == this.identifier;
@@ -1478,21 +1451,21 @@ ArtJs.Locator = com.arthwood.module.Locator = {
   }
 };
 
-ArtJs.DelegateCollection = com.arthwood.events.DelegateCollection = ArtJs.Class(function(items) {
+artjs.DelegateCollection = artjs.events.DelegateCollection = artjs.Class(function(items) {
   this._items = items || [];
 }, {
   invoke: function() {
-    this._args = ArtJs.$A(arguments);
-    return ArtJs.ArrayUtils.map(this._items, this._delegateToResult, this);
+    this._args = artjs.$A(arguments);
+    return artjs.ArrayUtils.map(this._items, this._delegateToResult, this);
   },
   add: function(delegate) {
     this._items.push(delegate);
   },
   removeAt: function(i) {
-    ArtJs.ArrayUtils.removeAt(this._items, i);
+    artjs.ArrayUtils.removeAt(this._items, i);
   },
   remove: function(delegate) {
-    ArtJs.ArrayUtils.removeItem(this._items, delegate);
+    artjs.ArrayUtils.removeItem(this._items, delegate);
   },
   clear: function() {
     this._items.splice(0);
@@ -1505,12 +1478,12 @@ ArtJs.DelegateCollection = com.arthwood.events.DelegateCollection = ArtJs.Class(
   }
 });
 
-ArtJs.CustomEvent = com.arthwood.events.CustomEvent = ArtJs.Class(function(name) {
+artjs.CustomEvent = artjs.events.CustomEvent = artjs.Class(function(name) {
   this.name = name;
-  this.collection = new ArtJs.DelegateCollection;
+  this.collection = new artjs.DelegateCollection;
 }, {
   fire: function() {
-    return this.collection.invoke.apply(this.collection, ArtJs.$A(arguments));
+    return this.collection.invoke.apply(this.collection, artjs.$A(arguments));
   },
   add: function(delegate) {
     this.collection.add(delegate);
@@ -1526,12 +1499,12 @@ ArtJs.CustomEvent = com.arthwood.events.CustomEvent = ArtJs.Class(function(name)
   }
 });
 
-ArtJs.Point = com.arthwood.math.Point = function(x, y) {
+artjs.Point = artjs.math.Point = function(x, y) {
   this.x = x;
   this.y = y;
 };
 
-ArtJs.Point.prototype = {
+artjs.Point.prototype = {
   getLength: function() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   },
@@ -1539,7 +1512,7 @@ ArtJs.Point.prototype = {
     return this.x * p.x + this.y * p.y;
   },
   add: function(p) {
-    return new ArtJs.Point(this.x + p.x, this.y + p.y);
+    return new artjs.Point(this.x + p.x, this.y + p.y);
   },
   sub: function(p) {
     return this.add(p.getReversed());
@@ -1562,7 +1535,7 @@ ArtJs.Point.prototype = {
     return this;
   },
   getTransposed: function() {
-    return new ArtJs.Point(this.y, this.x);
+    return new artjs.Point(this.y, this.x);
   },
   reverse: function() {
     this.reverseX();
@@ -1570,21 +1543,21 @@ ArtJs.Point.prototype = {
     return this;
   },
   times: function(k) {
-    return new ArtJs.Point(k * this.x, k * this.y);
+    return new artjs.Point(k * this.x, k * this.y);
   },
   toString: function() {
     return "[" + this.x + ", " + this.y + "]";
   }
 };
 
-ArtJs.Rectangle = com.arthwood.math.Rectangle = function(left, top, right, bottom) {
+artjs.Rectangle = artjs.math.Rectangle = function(left, top, right, bottom) {
   this.left = left;
   this.top = top;
   this.right = right;
   this.bottom = bottom;
 };
 
-ArtJs.Rectangle.prototype = {
+artjs.Rectangle.prototype = {
   getWidth: function() {
     return this.right - this.left;
   },
@@ -1595,19 +1568,19 @@ ArtJs.Rectangle.prototype = {
     return this.getWidth() * this.getHeight();
   },
   getLeftTop: function() {
-    return new ArtJs.Point(this.left, this.top);
+    return new artjs.Point(this.left, this.top);
   },
   getRightTop: function() {
-    return new ArtJs.Point(this.right, this.top);
+    return new artjs.Point(this.right, this.top);
   },
   getRightBottom: function() {
-    return new ArtJs.Point(this.right, this.bottom);
+    return new artjs.Point(this.right, this.bottom);
   },
   getLeftBottom: function() {
-    return new ArtJs.Point(this.left, this.bottom);
+    return new artjs.Point(this.left, this.bottom);
   },
   getSize: function() {
-    return new ArtJs.Point(this.getWidth(), this.getHeight());
+    return new artjs.Point(this.getWidth(), this.getHeight());
   },
   moveBy: function(p) {
     this.left += p.x;
@@ -1617,15 +1590,15 @@ ArtJs.Rectangle.prototype = {
   }
 };
 
-ArtJs.Component = com.arthwood.dom.Component = ArtJs.Class(function(element) {
+artjs.Component = artjs.dom.Component = artjs.Class(function(element) {
   this.element = element;
 }, {
   onDependency: function() {}
 }, {
   _name: "Component",
   dependsOn: function() {
-    this.dependees = ArtJs.$A(arguments);
-    ArtJs.ArrayUtils.each(this.dependees, this._eachDependee, this);
+    this.dependees = artjs.$A(arguments);
+    artjs.ArrayUtils.each(this.dependees, this._eachDependee, this);
   },
   _onExtended: function() {
     this.super(arguments);
@@ -1633,45 +1606,46 @@ ArtJs.Component = com.arthwood.dom.Component = ArtJs.Class(function(element) {
     this.dependants = [];
   },
   _init: function() {
-    var clock = new ArtJs.Clock(2e3);
-    clock.onChange.add(ArtJs.$D(this, this._onSweep));
+    var clock = new artjs.Clock(2e3);
+    clock.onChange.add(artjs.$D(this, this._onSweep));
     clock.start();
   },
   _onSweep: function(clock) {
-    ArtJs.ArrayUtils.each(this.subclasses, this._sweepInstances, this);
+    artjs.ArrayUtils.each(this.subclasses, this._sweepInstances, this);
   },
   _sweepInstances: function(i) {
-    ArtJs.ArrayUtils.$select(i.instances, this._isOnStage, this);
+    artjs.ArrayUtils.$select(i.instances, this._isOnStage, this);
   },
   _isOnStage: function(i) {
-    return ArtJs.Selector.isDescendantOf(i.element);
+    return artjs.Selector.isDescendantOf(i.element);
   },
   _eachDependee: function(i) {
     i.dependants.push(this);
   },
   _scan: function(element) {
-    ArtJs.ArrayUtils.each(ArtJs.$find(element, ".art"), this._onFound, this);
+    artjs.ArrayUtils.each(artjs.$find(element, ".art"), this._onFound, this);
   },
   _onFound: function(i) {
     this._element = i;
-    var classnames = ArtJs.ElementUtils.getClasses(i);
-    ArtJs.ArrayUtils.removeItem(classnames, "art");
-    ArtJs.ArrayUtils.each(classnames, this._eachClassName, this);
+    var classnames = artjs.ElementUtils.getClasses(i);
+    artjs.ArrayUtils.removeItem(classnames, "art");
+    artjs.ArrayUtils.each(classnames, this._eachClassName, this);
   },
   _eachClassName: function(i) {
     var path = i.split("-");
-    var _class = ArtJs.ArrayUtils.inject(path, window, this._injectPathChunk, this);
+    var _class = artjs.ArrayUtils.inject(path, window, this._injectPathChunk, this);
     if (_class instanceof Function) {
       this._create(_class);
     }
   },
-  _create: function(_class) {
-    var instance = new _class(this._element);
-    _class.instances.push(instance);
+  _create: function(klass) {
+    var instance = new klass(this._element);
+    klass.instances.push(instance);
     this._eachDependeeInstance.instance = instance;
-    ArtJs.ArrayUtils.each(ArtJs.ArrayUtils.flatten(ArtJs.ArrayUtils.map(_class.dependees, this._toInstances, this)), this._eachDependeeInstance, this);
+    var au = artjs.ArrayUtils;
+    au.each(au.flatten(au.map(klass.dependees, this._toInstances, this)), this._eachDependeeInstance, this);
     this._eachDependantInstance.instance = instance;
-    ArtJs.ArrayUtils.each(ArtJs.ArrayUtils.flatten(ArtJs.ArrayUtils.map(_class.dependants, this._toInstances, this)), this._eachDependantInstance, this);
+    au.each(au.flatten(au.map(klass.dependants, this._toInstances, this)), this._eachDependantInstance, this);
   },
   _toInstances: function(i) {
     return i.instances;
@@ -1689,14 +1663,14 @@ ArtJs.Component = com.arthwood.dom.Component = ArtJs.Class(function(element) {
   }
 });
 
-ArtJs.ElementBuilder = com.arthwood.dom.ElementBuilder = ArtJs.Class(function(name, attributes, value, isEmpty) {
+artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, attributes, value, isEmpty) {
   this.name = name;
   this.attributes = attributes;
   this.value = value;
   this.isEmpty = Boolean(isEmpty);
 }, {
   toString: function() {
-    var attributes = this.attributes && ArtJs.ObjectUtils.isNotEmpty(this.attributes) ? " " + this.ctor._attributesString(this.attributes) + " " : "";
+    var attributes = this.attributes && artjs.ObjectUtils.isNotEmpty(this.attributes) ? " " + this.ctor._attributesString(this.attributes) + " " : "";
     var part;
     if (this.value) {
       part = ">" + this.value + "</" + this.name + ">";
@@ -1713,7 +1687,7 @@ ArtJs.ElementBuilder = com.arthwood.dom.ElementBuilder = ArtJs.Class(function(na
     var e = document.createElement(this.name);
     var sa = this.ctor._setAttribute;
     sa.e = e;
-    ArtJs.ObjectUtils.eachPair(this.attributes, sa);
+    artjs.ObjectUtils.eachPair(this.attributes, sa);
     if (this.value && !this.isEmpty) {
       e.innerHTML = this.value;
     }
@@ -1725,10 +1699,10 @@ ArtJs.ElementBuilder = com.arthwood.dom.ElementBuilder = ArtJs.Class(function(na
     forField: "for"
   },
   _init: function() {
-    ArtJs.$B = ArtJs.$DC(this, this.build);
-    ArtJs.$C = ArtJs.$DC(this, this.create);
-    ArtJs.$E = ArtJs.$DC(this, this.getElement);
-    ArtJs.$P = ArtJs.$DC(this, this.parse);
+    artjs.$B = artjs.$DC(this, this.build);
+    artjs.$C = artjs.$DC(this, this.create);
+    artjs.$E = artjs.$DC(this, this.getElement);
+    artjs.$P = artjs.$DC(this, this.parse);
   },
   build: function(name, attributes, value, empty) {
     return new this(name, attributes, value, empty);
@@ -1746,13 +1720,13 @@ ArtJs.ElementBuilder = com.arthwood.dom.ElementBuilder = ArtJs.Class(function(na
   },
   getCollection: function(n, element) {
     this._getElement.element = element;
-    return ArtJs.ArrayUtils.build(n, this._getElement).join("");
+    return artjs.ArrayUtils.build(n, this._getElement).join("");
   },
   _getElement: function(i) {
     return arguments.callee.element;
   },
   _attributesString: function(attrs) {
-    return ArtJs.ArrayUtils.map(ArtJs.ObjectUtils.toArray(attrs), this._attributePairToString, this).join(" ");
+    return artjs.ArrayUtils.map(artjs.ObjectUtils.toArray(attrs), this._attributePairToString, this).join(" ");
   },
   _setAttribute: function(k, v) {
     arguments.callee.e.setAttribute(k, v);
@@ -1764,35 +1738,35 @@ ArtJs.ElementBuilder = com.arthwood.dom.ElementBuilder = ArtJs.Class(function(na
   }
 });
 
-ArtJs.Selector = com.arthwood.dom.Selector = {
+artjs.Selector = artjs.dom.Selector = {
   _init: function() {
-    ArtJs.$ = ArtJs.$DC(this, this.getElements);
-    ArtJs.$find = ArtJs.$DC(this, this.find);
-    ArtJs.$parent = ArtJs.$DC(this, this.parent);
+    artjs.$ = artjs.$DC(this, this.getElements);
+    artjs.$find = artjs.$DC(this, this.find);
+    artjs.$parent = artjs.$DC(this, this.parent);
   },
   find: function(element, selector) {
     return this.getElements(selector, element);
   },
   first: function(element, selector) {
-    return ArtJs.ArrayUtils.first(this.find(element, selector));
+    return artjs.ArrayUtils.first(this.find(element, selector));
   },
   last: function(element, selector) {
-    return ArtJs.ArrayUtils.last(this.find(element, selector));
+    return artjs.ArrayUtils.last(this.find(element, selector));
   },
   parent: function(element, selector) {
-    this._signature = new ArtJs.Signature(selector || "");
-    return ArtJs.ArrayUtils.detect(this._getDescendants(element), this._signature.checkNode, this._signature);
+    this._signature = new artjs.Signature(selector || "");
+    return artjs.ArrayUtils.detect(this._getDescendants(element), this._signature.checkNode, this._signature);
   },
   getElements: function(selector, element) {
     this._root = element;
-    var elements = this._findBySignature(new ArtJs.Signature(selector));
-    var descendants = ArtJs.ArrayUtils.map(elements, this._elementToDescendants, this);
-    descendants = ArtJs.ArrayUtils.select(descendants, this._hasElementDescendants, this);
-    return ArtJs.ArrayUtils.pluck(descendants, "x");
+    var elements = this._findBySignature(new artjs.Signature(selector));
+    var descendants = artjs.ArrayUtils.map(elements, this._elementToDescendants, this);
+    descendants = artjs.ArrayUtils.select(descendants, this._hasElementDescendants, this);
+    return artjs.ArrayUtils.pluck(descendants, "x");
   },
   isDescendantOf: function(element, root) {
     var descendants = this._getDescendants(element, root);
-    return !ArtJs.ArrayUtils.isEmpty(descendants);
+    return !artjs.ArrayUtils.isEmpty(descendants);
   },
   isSelfOrDescendantOf: function(element, root) {
     return element == root || this.isDescendantOf(element, root);
@@ -1801,13 +1775,13 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     return document.getElementById(v);
   },
   getElementsByTagName: function(v) {
-    return ArtJs.$A(document.getElementsByTagName(v));
+    return artjs.$A(document.getElementsByTagName(v));
   },
   getElementsByClassName: function(v) {
-    return document.getElementsByClassName ? ArtJs.$A(document.getElementsByClassName(v)) : this._findByClassName(v);
+    return document.getElementsByClassName ? artjs.$A(document.getElementsByClassName(v)) : this._findByClassName(v);
   },
   _elementToDescendants: function(element) {
-    return new ArtJs.Point(element, this._toDescendants(element));
+    return new artjs.Point(element, this._toDescendants(element));
   },
   _toDescendants: function(i) {
     return this._getDescendants(i, this._root);
@@ -1835,67 +1809,54 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     }
     if (signature.tag) {
       var elementsByTag = this.getElementsByTagName(signature.tag);
-      if (ArtJs.ArrayUtils.isEmpty(elementsByTag)) {
+      if (artjs.ArrayUtils.isEmpty(elementsByTag)) {
         return [];
       } else {
-        if (ArtJs.ArrayUtils.isEmpty(elements)) {
+        if (artjs.ArrayUtils.isEmpty(elements)) {
           elements = elementsByTag;
         } else {
-          elements = ArtJs.ArrayUtils.intersection([ elements, elementsByTag ]);
-          if (ArtJs.ArrayUtils.isEmpty(elements)) {
+          elements = artjs.ArrayUtils.intersection([ elements, elementsByTag ]);
+          if (artjs.ArrayUtils.isEmpty(elements)) {
             return [];
           }
         }
       }
     }
-    if (!ArtJs.ArrayUtils.isEmpty(signature.classes)) {
+    if (!artjs.ArrayUtils.isEmpty(signature.classes)) {
       var elementsByClass = this._findByClassNames(signature.classes);
-      if (ArtJs.ArrayUtils.isEmpty(elementsByClass)) {
+      if (artjs.ArrayUtils.isEmpty(elementsByClass)) {
         return [];
       }
-      if (ArtJs.ArrayUtils.isEmpty(elements)) {
+      if (artjs.ArrayUtils.isEmpty(elements)) {
         elements = elementsByClass;
       } else {
-        elements = ArtJs.ArrayUtils.intersection([ elements, elementsByClass ]);
-        if (ArtJs.ArrayUtils.isEmpty(elements)) {
+        elements = artjs.ArrayUtils.intersection([ elements, elementsByClass ]);
+        if (artjs.ArrayUtils.isEmpty(elements)) {
           return [];
         }
       }
     }
     this._filterByAttributes.attributes = signature.attributes;
-    return ArtJs.ArrayUtils.compact(ArtJs.ArrayUtils.select(elements, this._filterByAttributes, this));
+    return artjs.ArrayUtils.compact(artjs.ArrayUtils.select(elements, this._filterByAttributes, this));
   },
   _findByClassNames: function(v) {
-    return ArtJs.ArrayUtils.intersection(ArtJs.ArrayUtils.map(v, this.getElementsByClassName, this));
+    return artjs.ArrayUtils.intersection(artjs.ArrayUtils.map(v, this.getElementsByClassName, this));
   },
   _elementHasClassName: function(e) {
-    return ArtJs.ElementUtils.hasClass(e, arguments.callee.className);
+    return artjs.ElementUtils.hasClass(e, arguments.callee.className);
   },
   _filterByAttributes: function(i) {
     var attributes = arguments.callee.attributes;
-    return ArtJs.ObjectUtils.includesAll(ArtJs.ElementUtils.getAttributes(i), attributes);
+    return artjs.ObjectUtils.includesAll(artjs.ElementUtils.getAttributes(i), attributes);
   },
   _findByClassName: function(v) {
-    var elements = ArtJs.ElementUtils.filterElements(ArtJs.$A(document.all));
+    var elements = artjs.ElementUtils.filterElements(artjs.$A(document.all));
     this._elementHasClassName.className = v;
-    return ArtJs.ArrayUtils.select(elements, this._elementHasClassName);
-  },
-  doInjection: function() {
-    var proto = Element.prototype;
-    var dc = ArtJs.$DC;
-    proto.find = dc(this, this.find, true);
-    proto.first = dc(this, this.first, true);
-    proto.getElementById = dc(this, this.getElementById, true);
-    proto.getElementsByTagName = dc(this, this.getElementsByTagName, true);
-    proto.getElementsByClassName = dc(this, this.getElementsByClassName, true);
-    proto.isDescendantOf = dc(this, this.isDescendantOf, true);
-    proto.last = dc(this, this.last, true);
-    proto.parent = dc(this, this.parent, true);
-    proto.isSelfOrDescendantOf = dc(this, this.isSelfOrDescendantOf, true);
+    return artjs.ArrayUtils.select(elements, this._elementHasClassName);
   }
 };
 
-ArtJs.Signature = com.arthwood.dom.Signature = ArtJs.Class(function(selector) {
+artjs.Signature = artjs.dom.Signature = artjs.Class(function(selector) {
   this._selector = selector;
   this.tag = this._getTag();
   this.id = this._getId();
@@ -1907,30 +1868,30 @@ ArtJs.Signature = com.arthwood.dom.Signature = ArtJs.Class(function(selector) {
   _idRE: /#[\w\-]+/gi,
   _attrsRE: /\[.*\]/gi,
   checkNode: function(e) {
-    return (!this.tag || e.tagName.toLowerCase() == this.tag) && (!this.id || e.id == this.id) && this._checkInclusion(ArtJs.ArrayUtils, this.classes, e.className.split(" ")) && this._checkInclusion(ArtJs.ObjectUtils, this.attributes, e.attributes);
+    return (!this.tag || e.tagName.toLowerCase() == this.tag) && (!this.id || e.id == this.id) && this._checkInclusion(artjs.ArrayUtils, this.classes, e.className.split(" ")) && this._checkInclusion(artjs.ObjectUtils, this.attributes, e.attributes);
   },
   _checkInclusion: function(utils, object, subset) {
-    return utils.isEmpty(object) || ArtJs.ArrayUtils.includesAll(subset, object);
+    return utils.isEmpty(object) || artjs.ArrayUtils.includesAll(subset, object);
   },
   _getTag: function() {
     var matches = this._selector.match(this._tagRE);
-    return matches && ArtJs.ArrayUtils.first(matches);
+    return matches && artjs.ArrayUtils.first(matches);
   },
   _getId: function() {
-    var match = ArtJs.ArrayUtils.first(this._match(this._selector, this._idRE));
+    var match = artjs.ArrayUtils.first(this._match(this._selector, this._idRE));
     return match && this._stripIdSelector(match);
   },
   _getClasses: function() {
-    return ArtJs.ArrayUtils.map(this._match(this._selector, this._classesRE), this._stripClassSelector, this);
+    return artjs.ArrayUtils.map(this._match(this._selector, this._classesRE), this._stripClassSelector, this);
   },
   _getAttributes: function() {
-    var matches = ArtJs.ArrayUtils.map(this._match(this._selector, this._attrsRE), this._stripAttributeSelector, this);
-    var arr = ArtJs.ArrayUtils.map(matches[0] && matches[0].split(",") || [], this._attrToArray, this);
-    return ArtJs.ObjectUtils.fromArray(arr);
+    var matches = artjs.ArrayUtils.map(this._match(this._selector, this._attrsRE), this._stripAttributeSelector, this);
+    var arr = artjs.ArrayUtils.map(matches[0] && matches[0].split(",") || [], this._attrToArray, this);
+    return artjs.ObjectUtils.fromArray(arr);
   },
   _match: function(str, re) {
     var matches = str.match(re);
-    return matches && ArtJs.$A(matches) || [];
+    return matches && artjs.$A(matches) || [];
   },
   _attrToArray: function(i) {
     return i.split("=");
@@ -1946,20 +1907,20 @@ ArtJs.Signature = com.arthwood.dom.Signature = ArtJs.Class(function(selector) {
   }
 });
 
-ArtJs.Ajax = com.arthwood.net.Ajax = ArtJs.Class(function(url, data, method) {
-  this._onReadyStateChangeDC = ArtJs.$DC(this, this._onReadyStateChange, true);
-  this._onProgressDC = ArtJs.$DC(this, this._onProgress, true);
-  this._onErrorDC = ArtJs.$DC(this, this._onError, true);
-  this.onSuccess = new ArtJs.CustomEvent("Ajax:onSuccess");
-  this.onFailure = new ArtJs.CustomEvent("Ajax:onFailure");
-  this.onProgress = new ArtJs.CustomEvent("Ajax:onProgress");
-  var methods = ArtJs.Ajax.Methods;
+artjs.Ajax = artjs.net.Ajax = artjs.Class(function(url, data, method) {
+  this._onReadyStateChangeDC = artjs.$DC(this, this._onReadyStateChange, true);
+  this._onProgressDC = artjs.$DC(this, this._onProgress, true);
+  this._onErrorDC = artjs.$DC(this, this._onError, true);
+  this.onSuccess = new artjs.CustomEvent("Ajax:onSuccess");
+  this.onFailure = new artjs.CustomEvent("Ajax:onFailure");
+  this.onProgress = new artjs.CustomEvent("Ajax:onProgress");
+  var methods = artjs.Ajax.Methods;
   this.url = url;
   this.data = data;
   this.method = method;
   this.requestData = data;
   this.requestMethod = method || methods.GET;
-  if (!ArtJs.ArrayUtils.includes(ArtJs.Ajax.SupportedMethods, this.requestMethod)) {
+  if (!artjs.ArrayUtils.includes(artjs.Ajax.SupportedMethods, this.requestMethod)) {
     this.requestData = this.requestData || {};
     this.requestData._method = this.requestMethod;
     this.requestMethod = methods.POST;
@@ -1967,7 +1928,7 @@ ArtJs.Ajax = com.arthwood.net.Ajax = ArtJs.Class(function(url, data, method) {
   this._request = new XMLHttpRequest;
   this.requestUrl = this.url;
   if (this.requestData) {
-    this.requestQueryData = ArtJs.ObjectUtils.toQueryString(this.requestData);
+    this.requestQueryData = artjs.ObjectUtils.toQueryString(this.requestData);
     if (this.requestMethod == methods.GET) {
       this.requestUrl += "?" + this.requestQueryData;
       this.requestQueryData = null;
@@ -1975,7 +1936,7 @@ ArtJs.Ajax = com.arthwood.net.Ajax = ArtJs.Class(function(url, data, method) {
   }
   this._request.open(this.requestMethod, this.requestUrl, true);
   this.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-  this.setRequestHeader("X-ArtJs-Version", ArtJs.VERSION);
+  this.setRequestHeader("X-artjs-Version", artjs.VERSION);
   this.setRequestHeader("Accept", "text/javascript, text/html, application/xml, text/xml, */*");
   if (this.requestMethod == methods.POST) {
     this.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -2022,7 +1983,7 @@ ArtJs.Ajax = com.arthwood.net.Ajax = ArtJs.Class(function(url, data, method) {
     this.onFailure.fire(this);
   },
   _onReadyStateChange: function(request) {
-    if (this.getReadyState() == ArtJs.Ajax.ReadyState.LOADED) {
+    if (this.getReadyState() == artjs.Ajax.ReadyState.LOADED) {
       this.onSuccess.fire(this);
     }
   }
@@ -2041,19 +2002,19 @@ ArtJs.Ajax = com.arthwood.net.Ajax = ArtJs.Class(function(url, data, method) {
     LOADED: 4
   },
   get: function(url, data, onSuccess) {
-    return ArtJs.Ajax.request(url, data, ArtJs.Ajax.Methods.GET, onSuccess);
+    return artjs.Ajax.request(url, data, artjs.Ajax.Methods.GET, onSuccess);
   },
   post: function(url, data, onSuccess) {
-    return ArtJs.Ajax.request(url, data, ArtJs.Ajax.Methods.POST, onSuccess);
+    return artjs.Ajax.request(url, data, artjs.Ajax.Methods.POST, onSuccess);
   },
   put: function(url, data, onSuccess) {
-    return ArtJs.Ajax.request(url, data, ArtJs.Ajax.Methods.PUT, onSuccess);
+    return artjs.Ajax.request(url, data, artjs.Ajax.Methods.PUT, onSuccess);
   },
   del: function(url, data, onSuccess) {
-    return ArtJs.Ajax.request(url, data, ArtJs.Ajax.Methods.DELETE, onSuccess);
+    return artjs.Ajax.request(url, data, artjs.Ajax.Methods.DELETE, onSuccess);
   },
   request: function(url, data, method, onSuccess) {
-    var ajax = new ArtJs.Ajax(url, data, method);
+    var ajax = new artjs.Ajax(url, data, method);
     if (onSuccess) {
       ajax.onSuccess.add(onSuccess);
     }
@@ -2062,20 +2023,20 @@ ArtJs.Ajax = com.arthwood.net.Ajax = ArtJs.Class(function(url, data, method) {
   }
 });
 
-ArtJs.Ajax.SupportedMethods = [ ArtJs.Ajax.Methods.GET, ArtJs.Ajax.Methods.POST ];
+artjs.Ajax.SupportedMethods = [ artjs.Ajax.Methods.GET, artjs.Ajax.Methods.POST ];
 
-ArtJs.$get = ArtJs.Ajax.get;
+artjs.$get = artjs.Ajax.get;
 
-ArtJs.$post = ArtJs.Ajax.post;
+artjs.$post = artjs.Ajax.post;
 
-ArtJs.$put = ArtJs.Ajax.put;
+artjs.$put = artjs.Ajax.put;
 
-ArtJs.$del = ArtJs.Ajax.del;
+artjs.$del = artjs.Ajax.del;
 
-ArtJs.List = com.arthwood.data.List = ArtJs.Class(function(items) {
+artjs.List = artjs.data.List = artjs.Class(function(items) {
   this.items = items || {};
   this.i = 0;
-  this.onChange = new ArtJs.CustomEvent("List::onChange");
+  this.onChange = new artjs.CustomEvent("List::onChange");
   this.allowDuplicates = true;
   this.loop = false;
 }, {
@@ -2090,7 +2051,7 @@ ArtJs.List = com.arthwood.data.List = ArtJs.Class(function(items) {
   },
   addItemAt: function(item, position, noEvent) {
     if (this.allowDuplicates || !this.hasItem(item)) {
-      this.items = ArtJs.ArrayUtils.insertAt(this.items, position, item);
+      this.items = artjs.ArrayUtils.insertAt(this.items, position, item);
       if (!noEvent) {
         this.onChange.fire(this);
       }
@@ -2098,14 +2059,14 @@ ArtJs.List = com.arthwood.data.List = ArtJs.Class(function(items) {
     return this.getLength();
   },
   removeItem: function(item, onlyFirst, noEvent) {
-    ArtJs.ArrayUtils.removeItem(this.items, item, onlyFirst);
+    artjs.ArrayUtils.removeItem(this.items, item, onlyFirst);
     if (!noEvent) {
       this.onChange.fire(this);
     }
     return this.getLength();
   },
   removeItemAt: function(position, noEvent) {
-    ArtJs.ArrayUtils.removeAt(this.items, position);
+    artjs.ArrayUtils.removeAt(this.items, position);
     if (!noEvent) {
       this.onChange.fire(this);
     }
@@ -2118,7 +2079,7 @@ ArtJs.List = com.arthwood.data.List = ArtJs.Class(function(items) {
     }
   },
   getItemAt: function(position) {
-    position = this.loop ? ArtJs.MathUtils.sawtooth(position, 0, this.getLength()) : position;
+    position = this.loop ? artjs.MathUtils.sawtooth(position, 0, this.getLength()) : position;
     return this.items[position];
   },
   getItemIndex: function(item) {
@@ -2140,11 +2101,11 @@ ArtJs.List = com.arthwood.data.List = ArtJs.Class(function(items) {
     this.onChange.fire(this);
   },
   hasItem: function(item) {
-    return ArtJs.ArrayUtils.includes(this.items, item);
+    return artjs.ArrayUtils.includes(this.items, item);
   },
   setPointerAtItem: function(item) {
     if (!this.hasItem(item)) {
-      ArtJs.p("{List} There is no item " + item + " in List!");
+      artjs.p("{List} There is no item " + item + " in List!");
       return;
     }
     this.setPointer(this.getItemIndex(item));
@@ -2174,13 +2135,13 @@ ArtJs.List = com.arthwood.data.List = ArtJs.Class(function(items) {
     return this.getItemAt(this.i + 1);
   },
   getFirst: function() {
-    return ArtJs.ArrayUtils.first(this.items);
+    return artjs.ArrayUtils.first(this.items);
   },
   getLast: function() {
-    return ArtJs.ArrayUtils.last(this.items);
+    return artjs.ArrayUtils.last(this.items);
   },
   isEmpty: function() {
-    return ArtJs.ArrayUtils.isEmpty(this.items);
+    return artjs.ArrayUtils.isEmpty(this.items);
   },
   isLast: function() {
     return this.i == this.getLength() - 1;
@@ -2190,12 +2151,12 @@ ArtJs.List = com.arthwood.data.List = ArtJs.Class(function(items) {
   }
 });
 
-ArtJs.Model = com.arthwood.data.Model = ArtJs.Class();
+artjs.Model = artjs.data.Model = artjs.Class();
 
-ArtJs.Queue = com.arthwood.data.Queue = ArtJs.Class(function(data) {
-  this.onChange = new ArtJs.CustomEvent("Queue::onChange");
-  this.list = new ArtJs.List(data);
-  this.list.onChange.add(ArtJs.$D(this, this._onChange));
+artjs.Queue = artjs.data.Queue = artjs.Class(function(data) {
+  this.onChange = new artjs.CustomEvent("Queue::onChange");
+  this.list = new artjs.List(data);
+  this.list.onChange.add(artjs.$D(this, this._onChange));
 }, {
   _onChange: function() {
     this.onChange.fire(this);
@@ -2209,7 +2170,7 @@ ArtJs.Queue = com.arthwood.data.Queue = ArtJs.Class(function(data) {
     return item;
   },
   setData: function(data) {
-    this.list = new ArtJs.List(data);
+    this.list = new artjs.List(data);
   },
   getLength: function() {
     return this.list.getLength();
@@ -2222,14 +2183,14 @@ ArtJs.Queue = com.arthwood.data.Queue = ArtJs.Class(function(data) {
   }
 });
 
-ArtJs.Clock = com.arthwood.events.Clock = ArtJs.Class(function(interval, repeat) {
+artjs.Clock = artjs.events.Clock = artjs.Class(function(interval, repeat) {
   this._interval = interval;
   this._repeat = repeat;
   this._id = null;
   this._counter = 0;
-  this._tickDC = ArtJs.$DC(this, this._tick);
-  this.onChange = new ArtJs.CustomEvent("Clock:onChange");
-  this.onComplete = new ArtJs.CustomEvent("Clock:onComplete");
+  this._tickDC = artjs.$DC(this, this._tick);
+  this.onChange = new artjs.CustomEvent("Clock:onChange");
+  this.onComplete = new artjs.CustomEvent("Clock:onComplete");
 }, {
   start: function(now) {
     this.stop();
@@ -2262,10 +2223,10 @@ ArtJs.Clock = com.arthwood.events.Clock = ArtJs.Class(function(interval, repeat)
   }
 });
 
-ArtJs.ElementEvent = com.arthwood.events.Element = ArtJs.Class(function(element, name, delegate) {
+artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, delegate) {
   this.element = element;
   this.delegate = delegate;
-  var on = ArtJs.$DC(this, this._on, false);
+  var on = artjs.$DC(this, this._on, false);
   if (element.addEventListener) {
     element.addEventListener(name, on, false);
   } else {
@@ -2294,7 +2255,7 @@ ArtJs.ElementEvent = com.arthwood.events.Element = ArtJs.Class(function(element,
   }
 });
 
-ArtJs.MouseEvent = com.arthwood.events.Mouse = ArtJs.Class(function(element, name, delegate, on) {
+artjs.MouseEvent = artjs.events.Mouse = artjs.Class(function(element, name, delegate, on) {
   this.super(arguments, element, name, delegate);
   this.over = false;
   this.on = on;
@@ -2310,51 +2271,51 @@ ArtJs.MouseEvent = com.arthwood.events.Mouse = ArtJs.Class(function(element, nam
     var t = targets.origin;
     var ct = targets.current;
     var rt = targets.related;
-    var s = ArtJs.Selector;
+    var s = artjs.Selector;
     return t == ct && !s.isDescendantOf(rt, ct) || s.isDescendantOf(t, ct) && !s.isSelfOrDescendantOf(rt, ct);
   }
-}, null, ArtJs.ElementEvent);
+}, null, artjs.ElementEvent);
 
-ArtJs.ClickEvent = com.arthwood.events.Click = ArtJs.Class(function(element, delegate) {
+artjs.ClickEvent = artjs.events.Click = artjs.Class(function(element, delegate) {
   this.super(arguments, element, "click", delegate);
-}, null, null, ArtJs.ElementEvent);
+}, null, null, artjs.ElementEvent);
 
-ArtJs.MouseMoveEvent = com.arthwood.events.MouseMove = ArtJs.Class(function(element, delegate) {
+artjs.MouseMoveEvent = artjs.events.MouseMove = artjs.Class(function(element, delegate) {
   this.super(arguments, element, "mousemove", delegate);
-}, null, null, ArtJs.ElementEvent);
+}, null, null, artjs.ElementEvent);
 
-ArtJs.MouseOverEvent = com.arthwood.events.MouseOver = ArtJs.Class(function(element, delegate) {
+artjs.MouseOverEvent = artjs.events.MouseOver = artjs.Class(function(element, delegate) {
   this.super(arguments, element, "mouseover", delegate, true);
-}, null, null, ArtJs.MouseEvent);
+}, null, null, artjs.MouseEvent);
 
-ArtJs.MouseOutEvent = com.arthwood.events.MouseOut = ArtJs.Class(function(element, delegate) {
+artjs.MouseOutEvent = artjs.events.MouseOut = artjs.Class(function(element, delegate) {
   this.super(arguments, element, "mouseout", delegate, false);
-}, null, null, ArtJs.MouseEvent);
+}, null, null, artjs.MouseEvent);
 
-ArtJs.EventMapping = {
-  mousemove: ArtJs.MouseMoveEvent,
-  mouseover: ArtJs.MouseOverEvent,
-  mouseout: ArtJs.MouseOutEvent,
-  click: ArtJs.ClickEvent
+artjs.EventMapping = {
+  mousemove: artjs.MouseMoveEvent,
+  mouseover: artjs.MouseOverEvent,
+  mouseout: artjs.MouseOutEvent,
+  click: artjs.ClickEvent
 };
 
-ArtJs.on = function(target, eventName, delegate) {
-  return new ArtJs.EventMapping[eventName](target, delegate);
+artjs.on = function(target, eventName, delegate) {
+  return new artjs.EventMapping[eventName](target, delegate);
 };
 
-ArtJs.Timeline = com.arthwood.events.Timeline = ArtJs.Class(null, {
+artjs.Timeline = artjs.events.Timeline = artjs.Class(null, {
   mark: function() {
-    this._t2 = ArtJs.DateUtils.getTime();
+    this._t2 = artjs.DateUtils.getTime();
     var interval = this._t2 - (this._t1 || this._t2);
     this._t1 = this._t2;
     return interval;
   }
 });
 
-ArtJs.Timeout = com.arthwood.events.Timeout = ArtJs.Class(function(delay) {
+artjs.Timeout = artjs.events.Timeout = artjs.Class(function(delay) {
   this._delay = delay;
-  this._onTimeoutDC = ArtJs.$DC(this, this._onTimeout);
-  this.onComplete = new ArtJs.CustomEvent("Timeout:onComplete");
+  this._onTimeoutDC = artjs.$DC(this, this._onTimeout);
+  this.onComplete = new artjs.CustomEvent("Timeout:onComplete");
 }, {
   start: function() {
     this._id = setTimeout(this._onTimeoutDC, this._delay);
@@ -2381,33 +2342,33 @@ ArtJs.Timeout = com.arthwood.events.Timeout = ArtJs.Class(function(delay) {
   }
 });
 
-ArtJs.TransitionBase = com.arthwood.transition.Base = ArtJs.Class(function(property, element, value, duration, type, delay, from) {
+artjs.TransitionBase = artjs.transition.Base = artjs.Class(function(property, element, value, duration, type, delay, from) {
   this.property = property;
   this.element = element;
-  this.duration = ArtJs.ObjectUtils.getDefault(duration, 1);
+  this.duration = artjs.ObjectUtils.getDefault(duration, 1);
   this.value = value;
   this.type = type || this.ctor.LINEAR;
   this.delay = delay || 0;
   this.from = from;
-  this._deferredD = ArtJs.$D(this, this._deferred);
+  this._deferredD = artjs.$D(this, this._deferred);
 }, {
   run: function() {
-    if (ArtJs.ObjectUtils.isPresent(this.from)) {
+    if (artjs.ObjectUtils.isPresent(this.from)) {
       this._setStyle(this.from);
       this._setEffectStyle("none");
     }
-    ArtJs.Timeout.defer(this._deferredD);
+    artjs.Timeout.defer(this._deferredD);
   },
   _deferred: function() {
     this._setEffectStyle(this.property);
     this._setStyle(this.value);
   },
   _setStyle: function(value) {
-    ArtJs.ElementUtils.setStyle(this.element, this.property, value);
+    artjs.ElementUtils.setStyle(this.element, this.property, value);
   },
   _setEffectStyle: function(prop) {
-    var effectStyle = ArtJs.ElementUtils.transitionStyle(prop, this.duration, this.type, this.delay);
-    ArtJs.ElementUtils.extendStyle(this.element, effectStyle);
+    var effectStyle = artjs.ElementUtils.transitionStyle(prop, this.duration, this.type, this.delay);
+    artjs.ElementUtils.extendStyle(this.element, effectStyle);
   }
 }, {
   LINEAR: "linear",
@@ -2421,35 +2382,25 @@ ArtJs.TransitionBase = com.arthwood.transition.Base = ArtJs.Class(function(prope
   }
 });
 
-ArtJs.Blind = com.arthwood.transition.Blind = ArtJs.Class(function() {
+artjs.Blind = artjs.transition.Blind = artjs.Class(function() {
   this.super(arguments, "height");
 }, {
   _setStyle: function(value) {
     this.super(arguments, value + "px");
-    ArtJs.ElementUtils.setStyle(this.element, "overflow", "hidden");
+    artjs.ElementUtils.setStyle(this.element, "overflow", "hidden");
   }
 }, {
   toggle: function(e, value, duration, type, delay) {
     var v = e.style.height == "0px" ? value : 0;
     this.run(e, v, duration, type, delay);
-  },
-  doInjection: function() {
-    var proto = Element.prototype;
-    proto.blindToggle = ArtJs.$DC(this, this.toggle, true);
-    proto.blindTo = ArtJs.$DC(this, this.run, true);
   }
-}, ArtJs.TransitionBase);
+}, artjs.TransitionBase);
 
-ArtJs.Fade = com.arthwood.transition.Fade = ArtJs.Class(function() {
+artjs.Fade = artjs.transition.Fade = artjs.Class(function() {
   this.super(arguments, "opacity");
-}, null, {
-  doInjection: function() {
-    var proto = Element.prototype;
-    proto.fadeTo = ArtJs.$DC(this, this.run, true);
-  }
-}, ArtJs.TransitionBase);
+}, null, null, artjs.TransitionBase);
 
-ArtJs.BaseMatcher = com.arthwood.spec.matchers.Base = ArtJs.Class(function(expected, toText) {
+artjs.BaseMatcher = artjs.spec.matchers.Base = artjs.Class(function(expected, toText) {
   this.expected = expected;
   this.toText = toText || "be";
 }, {
@@ -2464,55 +2415,55 @@ ArtJs.BaseMatcher = com.arthwood.spec.matchers.Base = ArtJs.Class(function(expec
   }
 });
 
-ArtJs.AMatcher = com.arthwood.spec.matchers.A = ArtJs.Class(function(expected) {
+artjs.AMatcher = artjs.spec.matchers.A = artjs.Class(function(expected) {
   this.super(arguments, expected);
 }, {
   resolve: function(actual) {
     return typeof actual.value === this.expected;
   }
-}, null, ArtJs.BaseMatcher);
+}, null, artjs.BaseMatcher);
 
 function beA(expected) {
-  return new ArtJs.AMatcher(expected);
+  return new artjs.AMatcher(expected);
 }
 
-ArtJs.EqMatcher = com.arthwood.spec.matchers.Eq = ArtJs.Class(function(expected) {
+artjs.EqMatcher = artjs.spec.matchers.Eq = artjs.Class(function(expected) {
   this.super(arguments, expected, "equal");
 }, {
   resolve: function(actual) {
-    if (ArtJs.ObjectUtils.isArray(actual.value)) {
-      return ArtJs.ArrayUtils.equal([ actual.value, this.expected ]);
+    if (artjs.ObjectUtils.isArray(actual.value)) {
+      return artjs.ArrayUtils.equal([ actual.value, this.expected ]);
     } else {
       return this.super(arguments, actual);
     }
   }
-}, null, ArtJs.BaseMatcher);
+}, null, artjs.BaseMatcher);
 
 function eq(expected) {
-  return new ArtJs.EqMatcher(expected);
+  return new artjs.EqMatcher(expected);
 }
 
-ArtJs.FalseMatcher = com.arthwood.spec.matchers.False = ArtJs.Class(function() {
+artjs.FalseMatcher = artjs.spec.matchers.False = artjs.Class(function() {
   this.super(arguments, false);
-}, null, null, ArtJs.BaseMatcher);
+}, null, null, artjs.BaseMatcher);
 
 function beFalse() {
-  return new ArtJs.FalseMatcher;
+  return new artjs.FalseMatcher;
 }
 
-ArtJs.NullMatcher = com.arthwood.spec.matchers.Null = ArtJs.Class(function() {
+artjs.NullMatcher = artjs.spec.matchers.Null = artjs.Class(function() {
   this.super(arguments, null);
-}, null, null, ArtJs.BaseMatcher);
+}, null, null, artjs.BaseMatcher);
 
 function beNull() {
-  return new ArtJs.NullMatcher;
+  return new artjs.NullMatcher;
 }
 
-ArtJs.ReceiveMatcher = com.arthwood.spec.matchers.Receive = ArtJs.Class(function(expected) {
+artjs.ReceiveMatcher = artjs.spec.matchers.Receive = artjs.Class(function(expected) {
   this.super(arguments, expected, "receive");
 }, {
   resolve: function(actual) {
-    this.receiver = new ArtJs.SpecReceiver(this, actual);
+    this.receiver = new artjs.SpecReceiver(this, actual);
     runner.receivers.push(this.receiver);
     return this.receiver;
   },
@@ -2533,49 +2484,49 @@ ArtJs.ReceiveMatcher = com.arthwood.spec.matchers.Receive = ArtJs.Class(function
     return "[" + i.join(", ") + "]";
   },
   _argsString: function(args) {
-    return "(" + (this.receiver.isInSeries() ? ArtJs.ArrayUtils.map(args, this._mapArgs, this) : args).join(", ") + ")";
+    return "(" + (this.receiver.isInSeries() ? artjs.ArrayUtils.map(args, this._mapArgs, this) : args).join(", ") + ")";
   }
-}, null, ArtJs.BaseMatcher);
+}, null, artjs.BaseMatcher);
 
 function receive(expected) {
-  return new ArtJs.ReceiveMatcher(expected);
+  return new artjs.ReceiveMatcher(expected);
 }
 
-ArtJs.TrueMatcher = com.arthwood.spec.matchers.True = ArtJs.Class(function() {
+artjs.TrueMatcher = artjs.spec.matchers.True = artjs.Class(function() {
   this.super(arguments, true);
-}, null, null, ArtJs.BaseMatcher);
+}, null, null, artjs.BaseMatcher);
 
 function beTrue() {
-  return new ArtJs.TrueMatcher;
+  return new artjs.TrueMatcher;
 }
 
-ArtJs.Actual = com.arthwood.spec.Actual = ArtJs.Class(function(value) {
+artjs.Actual = artjs.spec.Actual = artjs.Class(function(value) {
   this.value = value;
 }, {
   to: function(matcher) {
     var value = matcher.resolve(this);
     if (typeof value == "boolean") {
-      runner.pushResult(new ArtJs.SpecResult(this, matcher, value));
+      runner.pushResult(new artjs.SpecResult(this, matcher, value));
     }
     return value;
   }
 });
 
 function expect(value) {
-  return new ArtJs.Actual(value);
+  return new artjs.Actual(value);
 }
 
-ArtJs.Mock = com.arthwood.spec.Mock = ArtJs.Class(function() {}, {
+artjs.Mock = artjs.spec.Mock = artjs.Class(function() {}, {
   toString: function() {
     return "mock";
   }
 });
 
 function mock() {
-  return new ArtJs.Mock;
+  return new artjs.Mock;
 }
 
-ArtJs.SpecNode = com.arthwood.spec.Node = ArtJs.Class(function(facet, body) {
+artjs.SpecNode = artjs.spec.Node = artjs.Class(function(facet, body) {
   this.facet = facet;
   this.body = body;
 }, {
@@ -2586,28 +2537,28 @@ ArtJs.SpecNode = com.arthwood.spec.Node = ArtJs.Class(function(facet, body) {
   }
 });
 
-ArtJs.Spec = ArtJs.Class(null, {
+artjs.Spec = artjs.Class(null, {
   execute: function() {
     runner.subject = this.facet;
     this.super(arguments);
   }
-}, null, ArtJs.SpecNode);
+}, null, artjs.SpecNode);
 
-ArtJs.Describe = ArtJs.Class(null, null, null, ArtJs.SpecNode);
+artjs.Describe = artjs.Class(null, null, null, artjs.SpecNode);
 
-ArtJs.Context = ArtJs.Class(null, null, null, ArtJs.SpecNode);
+artjs.Context = artjs.Class(null, null, null, artjs.SpecNode);
 
-ArtJs.It = ArtJs.Class(null, {
+artjs.It = artjs.Class(null, {
   execute: function() {
     runner.it = this;
     runner.receivers = [];
     this.super(arguments);
     runner._testReceivers();
   }
-}, null, ArtJs.SpecNode);
+}, null, artjs.SpecNode);
 
 function spec(facet, body) {
-  var node = new ArtJs.Spec(facet, body);
+  var node = new artjs.Spec(facet, body);
   runner.specs.push(node);
 }
 
@@ -2617,25 +2568,25 @@ function _executeNode(type, facet, body) {
 }
 
 function describe(facet, body) {
-  _executeNode(ArtJs.Describe, facet, body);
+  _executeNode(artjs.Describe, facet, body);
 }
 
 function context(facet, body) {
-  _executeNode(ArtJs.Context, facet, body);
+  _executeNode(artjs.Context, facet, body);
 }
 
 function it(facet, body) {
-  _executeNode(ArtJs.It, facet, body);
+  _executeNode(artjs.It, facet, body);
 }
 
-ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, actual) {
+artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(function(matcher, actual) {
   this._matcher = matcher;
   this._actual = actual;
   var actualValue = this._actual.value;
   var expected = this._matcher.expected;
-  var dc = ArtJs.$DC(this, this.resolve);
+  var dc = artjs.$DC(this, this.resolve);
   if (!this._isForMock()) {
-    this._original = ArtJs.$D(actualValue, actualValue[expected]);
+    this._original = artjs.$D(actualValue, actualValue[expected]);
   }
   actualValue[expected] = dc;
   this._successCounter = 0;
@@ -2646,7 +2597,7 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, 
   this._inSeries = null;
 }, {
   resolve: function() {
-    var args = ArtJs.$A(arguments);
+    var args = artjs.$A(arguments);
     var returnValue;
     if (this._callOriginal) {
       this._original.args = args;
@@ -2658,7 +2609,7 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, 
       this._successCounter++;
     } else {
       var expectedArgs = this._inSeries ? this._args[this._callCounter] : this._args;
-      if (ArtJs.ArrayUtils.equal([ args, expectedArgs ])) {
+      if (artjs.ArrayUtils.equal([ args, expectedArgs ])) {
         this._successCounter++;
       }
     }
@@ -2678,7 +2629,7 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, 
     return this;
   },
   withArgs: function() {
-    this._args = ArtJs.$A(arguments);
+    this._args = artjs.$A(arguments);
     return this;
   },
   andReturn: function(returnValue) {
@@ -2688,7 +2639,7 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, 
   andCallOriginal: function() {
     var forMock = this._isForMock();
     if (forMock) {
-      ArtJs.log('WARNING: Using "andCallOriginal" for mock has no result.');
+      artjs.log('WARNING: Using "andCallOriginal" for mock has no result.');
     }
     this._callOriginal = !forMock;
     return this;
@@ -2718,7 +2669,7 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, 
     var times = this._inSeries ? this._args.length : this._times;
     var n = this._successCounter;
     var value = times == null ? n > 0 : n == times;
-    return new ArtJs.SpecResult(this._actual, this._matcher, value);
+    return new artjs.SpecResult(this._actual, this._matcher, value);
   },
   rollback: function() {
     if (!this._isForMock()) {
@@ -2726,11 +2677,11 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(function(matcher, 
     }
   },
   _isForMock: function() {
-    return this._actual.value instanceof ArtJs.Mock;
+    return this._actual.value instanceof artjs.Mock;
   }
 });
 
-ArtJs.SpecResult = com.arthwood.spec.Result = ArtJs.Class(function(actual, matcher, value) {
+artjs.SpecResult = artjs.spec.Result = artjs.Class(function(actual, matcher, value) {
   this.path = runner.path.concat();
   this.actual = actual;
   this.matcher = matcher;
@@ -2741,15 +2692,15 @@ ArtJs.SpecResult = com.arthwood.spec.Result = ArtJs.Class(function(actual, match
   }
 });
 
-ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(function() {
-  this.timeline = new ArtJs.Timeline;
+artjs.SpecRunner = artjs.spec.Runner = artjs.Class(function() {
+  this.timeline = new artjs.Timeline;
   this.init();
 }, {
-  runnerTemplate: ArtJs.ElementBuilder.create("div", {
+  runnerTemplate: artjs.ElementBuilder.create("div", {
     className: "runner"
   }),
-  testTemplate: ArtJs.ElementBuilder.create("span"),
-  resultsTemplate: ArtJs.ElementBuilder.create("div"),
+  testTemplate: artjs.ElementBuilder.create("span"),
+  resultsTemplate: artjs.ElementBuilder.create("div"),
   init: function() {
     this.specs = [];
     this.path = [];
@@ -2758,50 +2709,50 @@ ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(function() {
   },
   run: function() {
     this.timeline.mark();
-    this.runnerElement = ArtJs.$insert(document.body, this.runnerTemplate);
-    ArtJs.ArrayUtils.invoke(this.specs, "execute");
+    this.runnerElement = artjs.$insert(document.body, this.runnerTemplate);
+    artjs.ArrayUtils.invoke(this.specs, "execute");
     var duration = this.timeline.mark();
-    var failures = ArtJs.ArrayUtils.select(this.results, this._isFailure, this);
-    var success = ArtJs.ArrayUtils.isEmpty(failures);
+    var failures = artjs.ArrayUtils.select(this.results, this._isFailure, this);
+    var success = artjs.ArrayUtils.isEmpty(failures);
     var classNames = [ "results" ];
     var n = this.results.length;
     var k = failures.length;
     classNames.push(success ? "success" : "failure");
     this.resultsTemplate.className = classNames.join(" ");
-    this.resultsElement = ArtJs.$insert(document.body, this.resultsTemplate);
+    this.resultsElement = artjs.$insert(document.body, this.resultsTemplate);
     var resultText = success ? "Success!" : "Failure!";
     var statsText = success ? n + " assertions in total." : k + " assertions failed of " + n + " total.";
-    var durationText = "Duration: " + ArtJs.DateUtils.miliToHMSM(duration);
-    var resultElement = ArtJs.$E("p", {
+    var durationText = "Duration: " + artjs.DateUtils.miliToHMSM(duration);
+    var resultElement = artjs.$E("p", {
       className: "result"
     }, resultText);
-    var statElement = ArtJs.$E("p", {
+    var statElement = artjs.$E("p", {
       className: "stat"
     }, statsText + "<br/>" + durationText);
-    ArtJs.$insert(this.resultsElement, resultElement);
-    ArtJs.$insert(this.resultsElement, statElement);
+    artjs.$insert(this.resultsElement, resultElement);
+    artjs.$insert(this.resultsElement, statElement);
     if (!success) {
-      var list = ArtJs.$E("ul");
+      var list = artjs.$E("ul");
       this._getFailureHtml.list = list;
-      ArtJs.ArrayUtils.each(failures, this._getFailureHtml, this);
-      ArtJs.$insert(this.resultsElement, list);
+      artjs.ArrayUtils.each(failures, this._getFailureHtml, this);
+      artjs.$insert(this.resultsElement, list);
     }
   },
   alreadyFailed: function() {
-    var lastResult = ArtJs.ArrayUtils.last(this.results);
+    var lastResult = artjs.ArrayUtils.last(this.results);
     return lastResult && lastResult.it == this.it && !lastResult.value;
   },
   pushResult: function(result) {
     if (!this.alreadyFailed()) {
       result.it = this.it;
       this.results.push(result);
-      ArtJs.ElementUtils.setContent(this.testTemplate, result.value ? "." : "F");
+      artjs.ElementUtils.setContent(this.testTemplate, result.value ? "." : "F");
       this.testTemplate.className = result.value ? "success" : "failure";
-      ArtJs.ElementUtils.insert(this.runnerElement, this.testTemplate);
+      artjs.ElementUtils.insert(this.runnerElement, this.testTemplate);
     }
   },
   _testReceivers: function() {
-    ArtJs.ArrayUtils.each(this.receivers, this.testReceiver, this);
+    artjs.ArrayUtils.each(this.receivers, this.testReceiver, this);
   },
   testReceiver: function(receiver) {
     var result = receiver.getResult();
@@ -2809,18 +2760,18 @@ ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(function() {
     receiver.rollback();
   },
   _getFailureHtml: function(i) {
-    var path = ArtJs.ArrayUtils.map(i.path, this._nodeToString).join(" ");
+    var path = artjs.ArrayUtils.map(i.path, this._nodeToString).join(" ");
     var info = i.failureText();
-    var pathElement = ArtJs.$E("p", {
+    var pathElement = artjs.$E("p", {
       className: "path"
     }, path);
-    var infoElement = ArtJs.$E("p", {
+    var infoElement = artjs.$E("p", {
       className: "info"
     }, info);
-    var item = ArtJs.$E("li");
-    ArtJs.$insert(item, pathElement);
-    ArtJs.$insert(item, infoElement);
-    ArtJs.$insert(arguments.callee.list, item);
+    var item = artjs.$E("li");
+    artjs.$insert(item, pathElement);
+    artjs.$insert(item, infoElement);
+    artjs.$insert(arguments.callee.list, item);
   },
   _nodeToString: function(i) {
     var facet = i.facet;
@@ -2835,27 +2786,27 @@ function subject() {
   return runner.subject;
 }
 
-ArtJs.TemplateBase = com.arthwood.template.Base = ArtJs.Class(function(content, scope) {
+artjs.TemplateBase = artjs.template.Base = artjs.Class(function(content, scope) {
   this.content = content;
   this.scope = scope;
 }, {
   TAG_RE: /\{\{.+\}\}/g,
   METHOD_RE: /^(\w+)\((.*)\)$/,
   compile: function() {
-    ArtJs.ArrayUtils.each(this.content.match(this.TAG_RE), this._eachTag, this);
+    artjs.ArrayUtils.each(this.content.match(this.TAG_RE), this._eachTag, this);
   },
   _eachTag: function(i) {
     this.METHOD_RE.lastIndex = 0;
-    var expression = ArtJs.StringUtils.sub(i, 2, -2);
+    var expression = artjs.StringUtils.sub(i, 2, -2);
     var exec = this.METHOD_RE.exec(expression);
     var result;
     if (exec) {
       exec.shift();
       var action = exec.shift();
-      var argsStr = ArtJs.ArrayUtils.first(exec);
-      var args = ArtJs.ArrayUtils.map(argsStr.split(","), this._stripArg, this);
-      var argsValues = ArtJs.ArrayUtils.map(args, this._parseArg, this);
-      result = ArtJs.TemplateHelpers.perform(action, argsValues);
+      var argsStr = artjs.ArrayUtils.first(exec);
+      var args = artjs.ArrayUtils.map(argsStr.split(","), this._stripArg, this);
+      var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
+      result = artjs.TemplateHelpers.perform(action, argsValues);
     } else {
       result = this._fromScope(expression);
     }
@@ -2863,15 +2814,15 @@ ArtJs.TemplateBase = com.arthwood.template.Base = ArtJs.Class(function(content, 
   },
   _parseArg: function(i) {
     var str = i;
-    str = ArtJs.StringUtils.trim(str, "'");
-    str = ArtJs.StringUtils.trim(str, '"');
+    str = artjs.StringUtils.trim(str, "'");
+    str = artjs.StringUtils.trim(str, '"');
     return str == i ? this.scope[i] || "" : str;
   },
   _fromScope: function(i) {
     return this.scope[i];
   },
   _stripArg: function(i) {
-    return ArtJs.StringUtils.strip(i);
+    return artjs.StringUtils.strip(i);
   }
 }, {
   renderContent: function(content, scope) {
@@ -2883,41 +2834,41 @@ ArtJs.TemplateBase = com.arthwood.template.Base = ArtJs.Class(function(content, 
     this.render(element, this.renderContent(content, scope));
   },
   renderTemplate: function(templateId, scope) {
-    var template = ArtJs.TemplateLibrary.getTemplate(templateId);
+    var template = artjs.TemplateLibrary.getTemplate(templateId);
     return this.renderContent(template, scope);
   },
   renderTemplateInto: function(element, templateId, scope) {
     this.render(element, this.renderTemplate(templateId, scope));
   },
   render: function(element, content) {
-    ArtJs.ElementUtils.setContent(element, content);
+    artjs.ElementUtils.setContent(element, content);
     this._evalScripts(element);
-    ArtJs.Component._scan(element);
+    artjs.Component._scan(element);
   },
   _evalScripts: function(element) {
-    ArtJs.ArrayUtils.each(ArtJs.Selector.find(element, "script"), this._evalScript, this);
+    artjs.ArrayUtils.each(artjs.Selector.find(element, "script"), this._evalScript, this);
   },
   _evalScript: function(script) {
-    eval(ArtJs.ElementUtils.getContent(script));
+    eval(artjs.ElementUtils.getContent(script));
   }
 });
 
-ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
+artjs.TemplateHelpers = artjs.template.Helpers = {
   render: function(templateId, scope) {
-    return ArtJs.TemplateBase.renderTemplate(templateId, scope);
+    return artjs.TemplateBase.renderTemplate(templateId, scope);
   },
   renderInto: function(element, templateId, scope) {
-    ArtJs.TemplateBase.renderTemplateInto(element, templateId, scope);
+    artjs.TemplateBase.renderTemplateInto(element, templateId, scope);
   },
   renderCollection: function(templateId, collection) {
-    var callback = ArtJs.$DC(this, this._renderCollectionItem, false, templateId);
-    return ArtJs.ArrayUtils.map(collection, callback).join("");
+    var callback = artjs.$DC(this, this._renderCollectionItem, false, templateId);
+    return artjs.ArrayUtils.map(collection, callback).join("");
   },
   renderIf: function(value, method) {
     return value ? this[method](value) : "";
   },
   registerAll: function(helpers) {
-    ArtJs.ObjectUtils.eachPair(helpers, this.register, this);
+    artjs.ObjectUtils.eachPair(helpers, this.register, this);
   },
   register: function(name, method) {
     this[name] = method;
@@ -2931,23 +2882,25 @@ ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
   }
 };
 
-ArtJs.TemplateLibrary = com.arthwood.template.Library = {
+artjs.TemplateLibrary = artjs.template.Library = {
+  BASE_TEMPLATES: [ "calendar" ],
   config: {
     PATH: "/templates",
     TEMPLATES: []
   },
   _templates: {},
   _init: function() {
-    this._onLoadSuccessBind = ArtJs.$D(this, this._onLoadSuccess);
-    ArtJs.onDocumentLoad.add(ArtJs.$D(this, this._loadAll));
+    artjs.$BA(this);
+    artjs.onDocumentLoad.add(this._onLoadAll.delegate);
   },
-  _loadAll: function() {
-    ArtJs.ElementUtils.hide(document.body);
-    ArtJs.ArrayUtils.each(this.config.TEMPLATES, this._load, this);
+  _onLoadAll: function() {
+    this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
+    artjs.ElementUtils.hide(document.body);
+    artjs.ArrayUtils.each(this._templatesToLoad, this._load, this);
     this._loadCheck();
   },
   _load: function(i) {
-    var request = ArtJs.$get(this.config.PATH + "/" + i + ".html", null, this._onLoadSuccessBind);
+    var request = artjs.$get(this.config.PATH + "/" + i + ".html", null, this._onLoadSuccess.delegate);
     request.id = i;
   },
   _onLoadSuccess: function(ajax) {
@@ -2958,24 +2911,233 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
     return this._templates[id];
   },
   _loadCheck: function() {
-    if (ArtJs.ObjectUtils.keys(this._templates).length == this.config.TEMPLATES.length) {
-      ArtJs.ElementUtils.show(document.body);
-      ArtJs.TemplateBase.renderInto(document.body, document.body.innerHTML);
-      ArtJs.onLibraryLoad.fire(this);
+    if (artjs.ObjectUtils.keys(this._templates).length == this._templatesToLoad.length) {
+      var body = document.body;
+      artjs.ElementUtils.show(body);
+      artjs.TemplateBase.renderInto(body, body.innerHTML);
+      artjs.onLibraryLoad.fire(this);
     }
   }
 };
 
-ArtJs.ElementInspector = com.arthwood.ui.ElementInspector = ArtJs.Class(function() {
-  ArtJs.on(document, "mousemove", ArtJs.$D(this, this._onMouseMove));
-  this._toggler = new ArtJs.Toggler(true);
-  this._toggler.onActivate.add(ArtJs.$D(this, this._onActivate));
-  this._toggler.onDeactivate.add(ArtJs.$D(this, this._onDeactivate));
+artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(function() {
+  this.super(arguments);
+  artjs.$BA(this);
+  var now = new Date;
+  var year = now.getFullYear();
+  var data = artjs.ElementUtils.getData(this.element);
+  this.yearSpan = new artjs.Point(parseInt(data["year-from"]) || year - 100, parseInt(data["year-to"]) || year + 20);
+  this.firstDay = parseInt(data["first-day"]) || 0;
+  var img = artjs.ElementUtils.putAfter(artjs.$C("img", {
+    src: "../images/cal.png",
+    alt: "calendar_icon",
+    className: "artjs-DatepickerImg"
+  }), this.element);
+  this.element.editable = false;
+  artjs.ElementUtils.onClick(img, this._onImg.delegate);
+}, {
+  onDependency: function(calendar) {
+    this.super(arguments);
+    this.calendar = calendar;
+  },
+  _onImg: function(e) {
+    e.preventDefault();
+    var img = e.currentTarget;
+    var imgRT = artjs.ElementUtils.getBounds(img).getRightTop();
+    var position = imgRT.add(new artjs.Point(4, 2));
+    this.calendar.toggle(this, position);
+  }
+}, null, artjs.Component);
+
+artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(dp) {
+  this.super(arguments);
+  var au = artjs.ArrayUtils;
+  var eu = artjs.ElementUtils;
+  var eb = artjs.ElementBuilder;
+  var s = artjs.Selector;
+  artjs.$BA(this, "_buildYearSpan");
+  var selectMonthOptions = au.map(this.ctor.MONTHS, this.ctor._monthToOption).join("");
+  var headElement = artjs.$B("th", null, "&nbsp;");
+  var headRow = artjs.$B("tr", null, eb.getCollection(7, headElement));
+  var cellElement = artjs.$B("td", null, "&nbsp;");
+  var row = artjs.$B("tr", null, eb.getCollection(7, cellElement));
+  var rows = eb.getCollection(5, row);
+  var nav = s.first(this.element, ".nav");
+  var arrows = s.find(nav, "a");
+  var selects = s.find(nav, "select");
+  var table = s.first(this.element, "table");
+  var monthSelect = selects[0];
+  eu.setContent(table, headRow + rows);
+  eu.setContent(monthSelect, selectMonthOptions);
+  this.prevMonth = arrows[0];
+  this.nextMonth = arrows[1];
+  eu.onClick(this.prevMonth, this._onPrevMonth.delegate);
+  eu.onClick(this.nextMonth, this._onNextMonth.delegate);
+  this.monthSelect = selects[0];
+  this.yearSelect = selects[1];
+  this.monthSelect.onchange = this._onMonthSelect;
+  this.yearSelect.onchange = this._onYearSelect;
+  this.headers = s.find(this.element, "th");
+  this.rows = s.find(this.element, "tr").slice(1);
+  this.items = s.find(this.element, "td");
+  this.field = null;
+  au.each(this.items, this._initItem, this);
+}, {
+  toggle: function(datePicker, position) {
+    if (this._isHidden()) {
+      this._show(datePicker, position);
+    } else {
+      this._hide();
+    }
+  },
+  _show: function(datePicker, position) {
+    this.firstDay = datePicker.firstDay;
+    this._setYearSpan(datePicker.yearSpan);
+    this.field = datePicker.element;
+    var value = this.field.value;
+    var nav = artjs.Selector.first(datePicker.element, ".nav");
+    var selectYearOptions = artjs.ArrayUtils.map(this.years, this.ctor._yearToOption).join("");
+    var selects = artjs.Selector.find(nav, "select");
+    var yearSelect = selects[1];
+    artjs.ElementUtils.setContent(yearSelect, selectYearOptions);
+    this.selectedDate = artjs.StringUtils.isEmpty(value) ? new Date : artjs.DateUtils.fromYMD(value, this.ctor.SEPARATOR);
+    this.currentDate = new Date(this.selectedDate);
+    this._update();
+    artjs.ElementUtils.setPosition(this.element, position);
+    artjs.ElementUtils.show(this.element);
+  },
+  _hide: function() {
+    this.field = null;
+    artjs.ElementUtils.hide(this.element);
+  },
+  _isHidden: function() {
+    return artjs.ElementUtils.isHidden(this.element);
+  },
+  _update: function() {
+    var au = artjs.ArrayUtils;
+    var du = artjs.DateUtils;
+    var mu = artjs.MathUtils;
+    var monthFirstDate = du.firstDate(this.currentDate);
+    var monthFirstDay = monthFirstDate.getDay();
+    var monthDaysNum = du.monthDaysNum(this.currentDate);
+    this.startIndex = mu.sawtooth(monthFirstDay - this.firstDay, 0, 7);
+    this.rowsNum = mu.stairs(this.startIndex + monthDaysNum - 1, 0, 7) + 1;
+    this.monthSelect.value = this.currentDate.getMonth() + 1;
+    this.yearSelect.value = this.currentDate.getFullYear();
+    au.each(this.rows, this._updateRowVisibility, this);
+    au.each(this.headers, this._updateHeader, this);
+    au.each(this.items, this._updateItem, this);
+  },
+  _updateRowVisibility: function(row, idx) {
+    artjs.ElementUtils.setVisible(row, idx < this.rowsNum);
+  },
+  _updateHeader: function(header, idx) {
+    var index = artjs.MathUtils.sawtooth(this.firstDay + idx, 0, 7);
+    artjs.ElementUtils.setContent(header, this.ctor.DAYS[index]);
+  },
+  _updateItem: function(item, idx) {
+    var date = new Date(this.currentDate);
+    date.setDate(idx - this.startIndex + 1);
+    var value = date.getDate();
+    var valid = date.getMonth() == this.currentDate.getMonth();
+    var weekend = artjs.ArrayUtils.includes(this.ctor.WEEKEND_DAYS, (idx + this.firstDay) % 7);
+    var selected = date.getTime() == this.selectedDate.getTime();
+    item.style.background = this.ctor.CELL_BG[valid ? weekend ? "weekend" : "valid" : "invalid"];
+    artjs.ElementUtils.setClass(item, "selected", selected);
+    artjs.ElementUtils.setClass(item, "invalid", !valid);
+    artjs.ElementUtils.setContent(item, value);
+  },
+  _initItem: function(item) {
+    artjs.ElementUtils.onClick(item, this._onItem.delegate);
+  },
+  _onItem: function(e) {
+    var item = e.currentTarget;
+    var value = artjs.ElementUtils.getContent(item);
+    var valid = !artjs.ElementUtils.hasClass(item, "invalid");
+    if (valid) {
+      this.selectedDate.setFullYear(this.currentDate.getFullYear());
+      this.selectedDate.setMonth(this.currentDate.getMonth());
+      this.selectedDate.setDate(parseInt(value, 10));
+      this._update();
+      this.field.value = artjs.DateUtils.toYMD(this.selectedDate, this.ctor.SEPARATOR);
+      this._hide();
+    }
+    return false;
+  },
+  _onPrevMonth: function(e) {
+    e.preventDefault();
+    this._onMonth(-1);
+  },
+  _onNextMonth: function(e) {
+    e.preventDefault();
+    this._onMonth(1);
+  },
+  _onMonth: function(v) {
+    this.currentDate.setMonth(this.currentDate.getMonth() + v);
+    this.monthSelect.value = this.currentDate.getMonth() + 1;
+    this.yearSelect.value = this.currentDate.getFullYear();
+    this._update();
+  },
+  _onMonthSelect: function(e) {
+    var select = e.currentTarget;
+    this.currentDate.setMonth(parseInt(select.value, 10) - 1);
+    this._update();
+  },
+  _onYearSelect: function(e) {
+    var select = e.currentTarget;
+    this.currentDate.setFullYear(parseInt(select.value, 10));
+    this._update();
+  },
+  _setYearSpan: function(span) {
+    this.yearSpan = span;
+    this.years = artjs.ArrayUtils.build(this.yearSpan.y - this.yearSpan.x + 1, this._buildYearSpan);
+  },
+  _buildYearSpan: function(i) {
+    return this.yearSpan.x + i;
+  }
+}, {
+  MONTHS: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
+  DAYS: [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ],
+  WEEKEND_DAYS: [ 6, 0 ],
+  SEPARATOR: "-",
+  CELL_BG: {
+    valid: "none",
+    weekend: "#CFFFDF",
+    invalid: "#AAAAAA"
+  },
+  _monthToOption: function(i, idx) {
+    return new artjs.ElementBuilder("option", {
+      value: idx + 1
+    }, i);
+  },
+  _yearToOption: function(i, idx) {
+    return new artjs.ElementBuilder("option", {
+      value: i
+    }, i);
+  },
+  _init: function() {
+    artjs.onLibraryLoad.add(artjs.$D(this, "_onLibraryLoad"));
+  },
+  _onLibraryLoad: function() {
+    var content = artjs.TemplateLibrary.getTemplate("calendar");
+    var element = artjs.ElementBuilder.parse(content);
+    var result = artjs.ElementUtils.insert(document.body, element);
+    artjs.Component._onFound(result);
+  }
+}, artjs.Component);
+
+artjs.DatePicker.dependsOn(artjs.Calendar);
+
+artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
+  artjs.on(document, "mousemove", artjs.$D(this, this._onMouseMove));
+  this._toggler = new artjs.Toggler(true);
+  this._toggler.onActivate.add(artjs.$D(this, this._onActivate));
+  this._toggler.onDeactivate.add(artjs.$D(this, this._onDeactivate));
 }, {
   _onMouseMove: function(e, ee) {
     var targets = ee.getTargets(e);
     var origin = targets.origin;
-    var eu = ArtJs.ElementUtils;
+    var eu = artjs.ElementUtils;
     if (eu.children(origin).any(eu.isText)) {
       this._toggler.toggle(origin);
     }
@@ -2983,53 +3145,53 @@ ArtJs.ElementInspector = com.arthwood.ui.ElementInspector = ArtJs.Class(function
   _onActivate: function(toggler) {
     var current = toggler.current;
     if (current) {
-      ArtJs.ElementUtils.addClass(current, "inspected");
+      artjs.ElementUtils.addClass(current, "inspected");
     }
   },
   _onDeactivate: function(toggler) {
     var current = toggler.current;
     if (current) {
-      ArtJs.ElementUtils.removeClass(current, "inspected");
+      artjs.ElementUtils.removeClass(current, "inspected");
     }
   }
 });
 
-ArtJs.Tree = com.arthwood.ui.Tree = ArtJs.Class(function(data, element) {
+artjs.Tree = artjs.ui.Tree = artjs.Class(function(data, element) {
   this.data = data;
-  this._onNodeDelegate = ArtJs.$D(this, this._onNode);
-  this._onLeafDelegate = ArtJs.$D(this, this._onLeaf);
-  this._leafClassToggler = new ArtJs.ClassToggler("selected");
-  this.onLeaf = new ArtJs.CustomEvent("onLeaf");
-  ArtJs.ElementUtils.insert(element, this.render());
-  var point = ArtJs.ArrayUtils.partition(ArtJs.Selector.find(element, "li"), function(item, idx) {
-    return ArtJs.ArrayUtils.isNotEmpty(ArtJs.Selector.find(item, "ul"));
+  this._onNodeDelegate = artjs.$D(this, this._onNode);
+  this._onLeafDelegate = artjs.$D(this, this._onLeaf);
+  this._leafClassToggler = new artjs.ClassToggler("selected");
+  this.onLeaf = new artjs.CustomEvent("onLeaf");
+  artjs.ElementUtils.insert(element, this.render());
+  var point = artjs.ArrayUtils.partition(artjs.Selector.find(element, "li"), function(item, idx) {
+    return artjs.ArrayUtils.isNotEmpty(artjs.Selector.find(item, "ul"));
   });
   this._nodes = point.x;
   this._leaves = point.y;
-  ArtJs.ArrayUtils.each(this._nodes, ArtJs.$DC(this, this._eachNode));
-  ArtJs.ArrayUtils.each(this._leaves, ArtJs.$DC(this, this._eachLeaf));
+  artjs.ArrayUtils.each(this._nodes, artjs.$DC(this, this._eachNode));
+  artjs.ArrayUtils.each(this._leaves, artjs.$DC(this, this._eachLeaf));
 }, {
   render: function() {
-    return ArtJs.$P(this._renderNode(this.data));
+    return artjs.$P(this._renderNode(this.data));
   },
   open: function() {
-    this._expandNode(ArtJs.ElementUtils.firstElement(ArtJs.ArrayUtils.first(this._nodes)));
-    this._leafAction(ArtJs.ElementUtils.firstElement(ArtJs.ArrayUtils.first(this._leaves)));
+    this._expandNode(artjs.ElementUtils.firstElement(artjs.ArrayUtils.first(this._nodes)));
+    this._leafAction(artjs.ElementUtils.firstElement(artjs.ArrayUtils.first(this._leaves)));
   },
   _renderNode: function(node) {
-    return ArtJs.$B("ul", null, ArtJs.ObjectUtils.map(node, this._mapNode, this).join("")).toString();
+    return artjs.$B("ul", null, artjs.ObjectUtils.map(node, this._mapNode, this).join("")).toString();
   },
   _mapNode: function(k, v) {
     var leaf = typeof v == "string";
     var href = leaf ? v : "#";
-    var value = ArtJs.$B("a", {
+    var value = artjs.$B("a", {
       href: href
     }, k).toString() + (leaf ? "" : this._renderNode(v));
-    return ArtJs.$B("li", null, value).toString();
+    return artjs.$B("li", null, value).toString();
   },
   _eachNode: function(i) {
-    ArtJs.ElementUtils.onClick(ArtJs.ElementUtils.firstElement(i), this._onNodeDelegate);
-    ArtJs.ElementUtils.hide(ArtJs.ArrayUtils.first(ArtJs.Selector.find(i, "ul")));
+    artjs.ElementUtils.onClick(artjs.ElementUtils.firstElement(i), this._onNodeDelegate);
+    artjs.ElementUtils.hide(artjs.ArrayUtils.first(artjs.Selector.find(i, "ul")));
     i.style.listStyleImage = this.ctor.FOLDED;
   },
   _onNode: function(originalEvent, elementEvent) {
@@ -3037,12 +3199,12 @@ ArtJs.Tree = com.arthwood.ui.Tree = ArtJs.Class(function(data, element) {
     this._expandNode(elementEvent.element);
   },
   _expandNode: function(a) {
-    var ul = ArtJs.ElementUtils.next(a);
-    ArtJs.ElementUtils.toggle(ul);
-    ArtJs.Selector.parent(a).style.listStyleImage = ArtJs.ElementUtils.isHidden(ul) ? this.ctor.FOLDED : this.ctor.UNFOLDED;
+    var ul = artjs.ElementUtils.next(a);
+    artjs.ElementUtils.toggle(ul);
+    artjs.Selector.parent(a).style.listStyleImage = artjs.ElementUtils.isHidden(ul) ? this.ctor.FOLDED : this.ctor.UNFOLDED;
   },
   _eachLeaf: function(i) {
-    ArtJs.ElementUtils.onClick(ArtJs.ElementUtils.firstElement(i), this._onLeafDelegate);
+    artjs.ElementUtils.onClick(artjs.ElementUtils.firstElement(i), this._onLeafDelegate);
     i.style.listStyleImage = this.ctor.LEAF;
   },
   _onLeaf: function(originalEvent, elementEvent) {
@@ -3059,30 +3221,32 @@ ArtJs.Tree = com.arthwood.ui.Tree = ArtJs.Class(function(data, element) {
   LEAF: "url(../images/leaf.png)"
 });
 
-ArtJs.onDocumentLoad = new ArtJs.CustomEvent("document:load");
+artjs.onDocumentLoad = new artjs.CustomEvent("document:load");
 
-ArtJs.onWindowLoad = new ArtJs.CustomEvent("window:load");
+artjs.onWindowLoad = new artjs.CustomEvent("window:load");
 
-ArtJs.onLibraryLoad = new ArtJs.CustomEvent("library:load");
+artjs.onLibraryLoad = new artjs.CustomEvent("library:load");
 
 document.addEventListener("DOMContentLoaded", function() {
-  ArtJs.onDocumentLoad.fire();
+  artjs.onDocumentLoad.fire();
 }, false);
 
 window.addEventListener("load", function() {
-  ArtJs.onWindowLoad.fire();
+  artjs.onWindowLoad.fire();
 }, false);
 
-ArtJs.ArrayUtils._init();
+artjs.ArrayUtils._init();
 
-ArtJs.Component._init();
+artjs.Component._init();
 
-ArtJs.ObjectUtils._init();
+artjs.ObjectUtils._init();
 
-ArtJs.ElementBuilder._init();
+artjs.ElementBuilder._init();
 
-ArtJs.ElementUtils._init();
+artjs.ElementUtils._init();
 
-ArtJs.Selector._init();
+artjs.Selector._init();
 
-ArtJs.TemplateLibrary._init();
+artjs.TemplateLibrary._init();
+
+artjs.Calendar._init();

@@ -1,4 +1,4 @@
-spec(ArtJs.ArrayUtils, function() {
+spec(artjs.ArrayUtils, function() {
   describe('#build', function() {
     it('should return new array', function() {
       expect(subject().build(3, function(i) {
@@ -198,7 +198,7 @@ spec(ArtJs.ArrayUtils, function() {
           var value = [6, 3];
           var result = subject().inject(value, {a: 4}, this._callback, this);
           
-          expect(ArtJs.ObjectUtils.keys(result)).to(eq(['a', 'd_0', 'd_1']));
+          expect(artjs.ObjectUtils.keys(result)).to(eq(['a', 'd_0', 'd_1']));
           expect(result.a).to(eq(4));
           expect(result.d_0).to(eq(6));
           expect(result.d_1).to(eq(3));
@@ -464,7 +464,7 @@ spec(ArtJs.ArrayUtils, function() {
       it('should return valid collection', function() {
         var testObject = {
           _callback: function(i, idx) {
-            return ArtJs.StringUtils.last((i * i).toString());
+            return artjs.StringUtils.last((i * i).toString());
           },
           
           action: function() {
@@ -603,7 +603,7 @@ spec(ArtJs.ArrayUtils, function() {
     it('should print all the values', function() {
       var value = ['hello', 3];
 
-      expect(ArtJs).to(receive('p')).inSeries().withArgs(['hello'], [3]);
+      expect(artjs).to(receive('p')).inSeries().withArgs(['hello'], [3]);
       
       subject().print(value);
     });

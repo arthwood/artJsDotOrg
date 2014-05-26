@@ -3,7 +3,5 @@ var art = {
   model: {}
 };
 
-ArtJs.TemplateLibrary.config = {
-  PATH: '../templates',
-  TEMPLATES: ['doc', 'member', 'section', 'ga', 'disqus']
-};
+artjs.TemplateLibrary.config.PATH = '../templates';
+artjs.TemplateLibrary.config.TEMPLATES = ['doc', 'member', 'section', 'ga', 'disqus'];

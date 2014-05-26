@@ -1,4 +1,4 @@
-spec(ArtJs.StringUtils, function() {
+spec(artjs.StringUtils, function() {
   describe('#first', function() {
     it('should return valid value', function() {
       expect(subject().first('asdf')).to(eq('a'));
@@ -51,7 +51,7 @@ spec(ArtJs.StringUtils, function() {
       var isEmpty = true;
 
       it('should return true', function() {
-        expect(ArtJs.StringUtils).to(receive('isEmpty')).withArgs(value).andReturn(isEmpty);
+        expect(artjs.StringUtils).to(receive('isEmpty')).withArgs(value).andReturn(isEmpty);
         expect(subject().isBlank(value)).to(beTrue());
       });
     });
@@ -61,7 +61,7 @@ spec(ArtJs.StringUtils, function() {
       var isEmpty = false;
 
       it('should return true', function() {
-        expect(ArtJs.StringUtils).to(receive('isEmpty')).withArgs(value).andReturn(isEmpty);
+        expect(artjs.StringUtils).to(receive('isEmpty')).withArgs(value).andReturn(isEmpty);
         expect(subject().isBlank(value)).to(beFalse());
       });
     });
@@ -73,7 +73,7 @@ spec(ArtJs.StringUtils, function() {
       var isEmpty = true;
 
       it('should return null', function() {
-        expect(ArtJs.StringUtils).to(receive('isEmpty')).withArgs(value).andReturn(isEmpty);
+        expect(artjs.StringUtils).to(receive('isEmpty')).withArgs(value).andReturn(isEmpty);
         expect(subject().nullifyEmpty(value)).to(beNull());
       });
     });
@@ -83,7 +83,7 @@ spec(ArtJs.StringUtils, function() {
       var isEmpty = false;
 
       it('should return true', function() {
-        expect(ArtJs.StringUtils).to(receive('isEmpty')).withArgs(value).andReturn(isEmpty);
+        expect(artjs.StringUtils).to(receive('isEmpty')).withArgs(value).andReturn(isEmpty);
         expect(subject().nullifyEmpty(value)).to(eq(value));
       });
     });
@@ -91,7 +91,7 @@ spec(ArtJs.StringUtils, function() {
 
   describe('#toS', function() {
     context('when argument is falsy', function() {
-      ArtJs.ArrayUtils.each([null, undefined, '', false], function(i) {
+      artjs.ArrayUtils.each([null, undefined, '', false], function(i) {
         it('should return empty string', function() {
           expect(subject().toS(i)).to(eq(''));
         });

@@ -1,18 +1,18 @@
 art.DB = {
   tree: {
     'Global': {
-      'ArtJs': 'main'
+      'artjs': 'main'
     },
-    'com.arthwood.data': {
+    'artjs.data': {
       'List': 'list',
       'Queue': 'queue'
     },
-    'com.arthwood.dom': {
+    'artjs.dom': {
       'Component': 'component',
       'ElementBuilder': 'element_builder',
       'Selector': 'selector'
     },
-    'com.arthwood.events': {
+    'artjs.events': {
       'Clock': 'clock',
       'CustomEvent': 'custom_event',
       'Delegate': 'delegate',
@@ -20,15 +20,15 @@ art.DB = {
       'Timeline': 'timeline',
       'Timeout': 'timeout'
     },
-    'com.arthwood.math': {
+    'artjs.math': {
       'Point': 'point',
       'Rectangle': 'rectangle'
     },
-    'com.arthwood.net': {
+    'artjs.net': {
       'Ajax': 'ajax'
     },
-//    'com.arthwood.spec': {
-//      'com.arthwood.matchers': {
+//    'artjs.spec': {
+//      'artjs.matchers': {
 //        'A': 'matchers/a',
 //        'Eq': 'matchers/eq',
 //        'False': 'matchers/false',
@@ -43,14 +43,14 @@ art.DB = {
 //      'Runner': 'runner',
 //      'Subject': 'subject'
 //    },
-    'com.arthwood.template': {
+    'artjs.template': {
       'Helpers': 'template/helpers',
       'Library': 'template/library'
     },
-    'com.arthwood.transition': {
+    'artjs.transition': {
       'Blind': 'transition/blind'
     },
-//    'com.arthwood.ui': {
+//    'artjs.ui': {
 //      'DatePicker': 'date_picker',
 //      'ElementInspector': 'element_inspector',
 //      'Flash': 'flash',
@@ -59,7 +59,7 @@ art.DB = {
 //      'Tabs': 'tabs',
 //      'Tree': 'tree'
 //    },
-    'com.arthwood.utils': {
+    'artjs.utils': {
       'Array': 'array',
       'Class': 'class',
 //      'ClassToggler': 'class_toggler',
@@ -74,8 +74,8 @@ art.DB = {
   },
   content: {
     main: {
-      name: 'ArtJs',
-      package: 'ArtJs',
+      name: 'artjs',
+      package: 'artjs',
       description: 'This is top level object that stores information about framework and few methods that allows you to select the framework mode.',
       sections: [
         {
@@ -91,78 +91,46 @@ art.DB = {
           name: 'Methods',
           members: [
             new art.model.Member(
-              'doInjection():Void',
-              'After calling this method you are able to call Utils methods on native objects',
-              [
-                'ArtJs.doInjection();',
-                '',
-                '// After that action you will be able to use:',
-                '',
-                'myArray.last(); // 3',
-                '',
-                'instead of:',
-                '',
-                'ArtJs.ArrayUtils.last(myArray); // 3'
-              ],
-              null,
-              'Some of the class methods from framework can get injected into native classes.' +
-                'For example most of com.arthwood.utils.ArrayUtils would then affect native Array object.' +
-                'To see which native classes can be affected by framework see other parts of documentation, especially "utils" package.'
-            ),
-            new art.model.Member(
-              'globalize():Void',
-              'Makes all classes accessible globally in window object',
-              [
-                'ArtJs.globalize();'
-              ],
-              null,
-              '<p>Normally after framework is loaded you have two ways of accessing its classes:</p>' +
-                '<ul><li>using full qualified path (com.arthwood.utils.ArrayUtils)</li><li>by looking into top ArtJs namespace (ArtJs.ArrayUtils)</li></ul>' +
-                '<p>For now there is no classes with the same name in whole framework so accessing it via ArtJs is fine.' + 
-                'However, if at some point it happens, full qualified name is necessary.' +
-                'When all framework classes are loaded and accessible (e.g. in js file following the framework file) simply use:</p>'
-            ),
-            new art.model.Member(
               '$():Element',
               'Alias for ElementUtils.getElements()',
               [
-                "var nav = ArtJs.$('.main p.item span');"
+                "var nav = artjs.$('.main p.item span');"
               ]
             ),
             new art.model.Member(
               '$D():Delegate',
               'Alias for Delegate.create()',
               [
-                'var delegate = ArtJs.$D(this, this.onClick);'
+                'var delegate = artjs.$D(this, this.onClick);'
               ]
             ),
             new art.model.Member(
               '$DC():Function',
               'Alias for Delegate.callback()',
               [
-                'var callback = ArtJs.$DC(this, this.onClick, true);'
+                'var callback = artjs.$DC(this, this.onClick, true);'
               ]
             ),
             new art.model.Member(
               '$del():Ajax',
               'Alias for Ajax.del()',
               [
-                "var ajax = ArtJs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
+                "var ajax = artjs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
               ]
             ),
             new art.model.Member(
               '$find():Array',
               'Alias for ElementUtils.find()',
               [
-                "var nav = ArtJs.$('navigation');",
-                "var items = ArtJs.$down(nav, '.item');"
+                "var nav = artjs.$('navigation');",
+                "var items = artjs.$down(nav, '.item');"
               ]
             ),
             new art.model.Member(
               '$get():Ajax',
               'Alias for Ajax.get()',
               [
-                "var ajax = ArtJs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));"
+                "var ajax = artjs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));"
               ]
             ),
             new art.model.Member(
@@ -176,29 +144,29 @@ art.DB = {
               '$P():Element',
               'Alias for ElementBuilder.parse()',
               [
-                "var element = ArtJs.$P('<span class=\"desc\">Blue t-shirt</span>');"
+                "var element = artjs.$P('<span class=\"desc\">Blue t-shirt</span>');"
               ]
             ),
             new art.model.Member(
               '$post():Ajax',
               'Alias for Ajax.post()',
               [
-                "var ajax = ArtJs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
+                "var ajax = artjs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
               ]
             ),
             new art.model.Member(
               '$put():Ajax',
               'Alias for Ajax.$put()',
               [
-                "var ajax = ArtJs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
+                "var ajax = artjs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
               ]
             ),
             new art.model.Member(
               '$up():Element',
               'Alias for ElementUtils.up()',
               [
-                "var nav = ArtJs.$('navigation');",
-                'var parent = ArtJs.$up(nav);'
+                "var nav = artjs.$('navigation');",
+                'var parent = artjs.$up(nav);'
               ]
             )
           ]
@@ -224,7 +192,7 @@ art.DB = {
     },
     list: {
       name: 'List',
-      package: 'com.arthwood.data',
+      package: 'artjs.data',
       description: 'List data model implementation.',
       sections: [
         {
@@ -248,7 +216,7 @@ art.DB = {
               example: [ 
                 'var list = new List([1, 2, 3, 4, 5]);',
                 '',
-                'list.onChange.add(new ArtJs.Delegate(this, this.onChange));',
+                'list.onChange.add(new artjs.Delegate(this, this.onChange));',
                 'function onChange(list) {',
                 "'  alert('list has changed!');'",
                 '}'
@@ -544,7 +512,7 @@ art.DB = {
     },
     queue: {
       name: 'Queue',
-      package: 'com.arthwood.data',
+      package: 'artjs.data',
       description: 'Queue data model implementation',
       sections: [
         {
@@ -568,7 +536,7 @@ art.DB = {
               example: [
                 'var queue = new Queue([1, 2, 3, 4, 5]);',
                 '',
-                'queue.onChange.add(new ArtJs.Delegate(this, this.onChange));',
+                'queue.onChange.add(new artjs.Delegate(this, this.onChange));',
                 '',
                 'function onChange(queue) {',
                 "'  alert('queue has changed!');'",
@@ -643,7 +611,7 @@ art.DB = {
     },
     component: {
       name: 'Component',
-      package: 'com.arthwood.dom',
+      package: 'artjs.dom',
       description: 
         'Components allow you to attach your own view class to element node. ' +
         'In order to do this simply assign "art" class to your element along with class name of your custom class ' +
@@ -671,7 +639,7 @@ art.DB = {
     },
     element_builder: {
       name: 'ElementBuilder',
-      package: 'com.arthwood.dom',
+      package: 'artjs.dom',
       description: 'Allows to create DOM elements',
       sections: [
         {
@@ -794,7 +762,7 @@ art.DB = {
     },
     selector: {
       name: 'Selector',
-      package: 'com.arthwood.dom',
+      package: 'artjs.dom',
       description: 'Allows to easily traverse DOM.',
       sections: [
         {
@@ -851,7 +819,7 @@ art.DB = {
     },
     clock: {
       name: 'Clock',
-      package: 'com.arthwood.events',
+      package: 'artjs.events',
       description: 'Allows trigger events periodically',
       sections: [
         {
@@ -989,7 +957,7 @@ art.DB = {
     },
     custom_event: {
       name: 'CustomEvent',
-      package: 'com.arthwood.events',
+      package: 'artjs.events',
       description: 'Defines object capable of dispatching events.',
       sections: [
         {
@@ -1117,7 +1085,7 @@ art.DB = {
     },
     delegate: {
       name: 'Delegate',
-      package: 'com.arthwood.events',
+      package: 'artjs.events',
       description: 'Allows to keep context object along with function.',
       sections: [
         {
@@ -1251,7 +1219,7 @@ art.DB = {
     },
     queued_clock: {
       name: 'QueuedClock',
-      package: 'com.arthwood.events',
+      package: 'artjs.events',
       description: 'Allows to trigger events periodically.',
       sections: [
         {
@@ -1327,7 +1295,7 @@ art.DB = {
     },
     timeline: {
       name: 'Timeline',
-      package: 'com.arthwood.events',
+      package: 'artjs.events',
       description: 'Useful for measuring time intervals between events.',
       sections: [
         {
@@ -1351,7 +1319,7 @@ art.DB = {
     },
     timeout: {
       name: 'Timeout',
-      package: 'com.arthwood.events',
+      package: 'artjs.events',
       description: 'Allows you to perform action with delay.',
       sections: [
         {
@@ -1404,7 +1372,7 @@ art.DB = {
     },
     point: {
       name: 'Point',
-      package: 'com.arthwood.math',
+      package: 'artjs.math',
       description: 'Math 2-dimentional vector implementation',
       sections: [
         {
@@ -1562,7 +1530,7 @@ art.DB = {
     },
     rectangle: {
       name: 'Rectangle',
-      package: 'com.arthwood.math',
+      package: 'artjs.math',
       description: 'Math rectangle implementation',
       sections: [
         {
@@ -1694,7 +1662,7 @@ art.DB = {
     },
     ajax: {
       name: 'Ajax',
-      package: 'com.arthwood.net',
+      package: 'artjs.net',
       description: 'Facilitates AJAX requests',
       sections: [
         {
@@ -1708,7 +1676,7 @@ art.DB = {
                 method: 'request method'
               },
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 'ajax.onSuccess.add(new Delegate(this, this.onAjaxSuccess));',
                 '',
@@ -1724,7 +1692,7 @@ art.DB = {
               header: 'onFailure(ajax:Ajax)',
               description: 'Dispatched after request failed',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 'ajax.onFailure.add(new Delegate(null, onAjaxFailure));',
                 '',
@@ -1739,7 +1707,7 @@ art.DB = {
               header: 'onSuccess(ajax:Ajax)',
               description: 'Dispatched after successful response',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 'ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));',
                 '',
@@ -1788,7 +1756,7 @@ art.DB = {
               header: 'abort():Void',
               description: 'Aborts request',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 'ajax.request();',
                 '',
@@ -1800,7 +1768,7 @@ art.DB = {
               header: 'getAllRequestHeaders():String',
               description: 'Returns all request headers',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 'ajax.getAllRequestHeaders();'
               ]
@@ -1809,7 +1777,7 @@ art.DB = {
               header: 'getReadyState():Number',
               description: 'Returns request ready state',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 'ajax.request();',
                 '',
@@ -1821,7 +1789,7 @@ art.DB = {
               header: 'getRequestHeader(header:String):String',
               description: 'Returns request header',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 "ajax.getRequestHeader('Accept');"
               ]
@@ -1830,7 +1798,7 @@ art.DB = {
               header: 'getResponseText():String',
               description: 'Returns response text',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 'ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));',
                 '',
@@ -1845,7 +1813,7 @@ art.DB = {
               header: 'getStatus():Number',
               description: 'Returns request status',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 'ajax.request();',
                 '',
@@ -1857,7 +1825,7 @@ art.DB = {
               header: 'getStatusText():String',
               description: 'Returns request status text',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 'ajax.request();',
                 '',
@@ -1869,7 +1837,7 @@ art.DB = {
               header: 'request():Void',
               description: 'Performs request',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 'ajax.onSuccess.add(new Delegate(this, this.onAjaxSuccess));',
                 '',
@@ -1880,7 +1848,7 @@ art.DB = {
               header: 'setRequestHeader(header:String, value:String):Void',
               description: 'Sets request header',
               example: [
-                "var ajax = new Ajax('/users', {only_active: 1}, ArtJs.Ajax.Methods.GET);",
+                "var ajax = new Ajax('/users', {only_active: 1}, artjs.Ajax.Methods.GET);",
                 '',
                 "ajax.setRequestHeader('X-My-Header', 'hello');"
               ]
@@ -1965,10 +1933,10 @@ art.DB = {
     },
     array: {
       name: 'ArrayUtils',
-      package: 'com.arthwood.utils',
+      package: 'artjs.utils',
       description: 
         'Provides set of methods that operates on any Array instance.<br/>' +
-        'Most of examples show optional use of a method when <span class="code">ArtJs.doInjection()</span> has been performed.',
+        'Most of examples show optional use of a method when <span class="code">artjs.doInjection()</span> has been performed.',
       sections: [
         {
           name: 'Static methods',
@@ -2183,7 +2151,7 @@ art.DB = {
             },
             {
               header: 'print():Void',
-              description: 'Prints out every item using ArtJs.p method.'
+              description: 'Prints out every item using artjs.p method.'
             },
             {
               header: 'sum():Number',
@@ -2199,10 +2167,10 @@ art.DB = {
     },
     object: {
       name: 'ObjectUtils',
-      package: 'com.arthwood.utils',
+      package: 'artjs.utils',
       description: 
         'Provides set of methods that operates on any Object instance.<br/>' +
-        'Most of examples show optional use of a method when <span class="code">ArtJs.doInjection()</span> has been performed.',
+        'Most of examples show optional use of a method when <span class="code">artjs.doInjection()</span> has been performed.',
       sections: [
         {
           name: 'Static methods',
@@ -2544,7 +2512,7 @@ art.DB = {
     },
     class: {
       name: 'Class',
-      package: 'com.arthwood.utils',
+      package: 'artjs.utils',
       description: 'Facilitates class construction inheritance.',
       sections: [
         {
@@ -2555,7 +2523,7 @@ art.DB = {
               'Creates a new class. Returns decorated constructor function passed as a first argument. ' +
               'If no constructor is passed a default one is created.',
               [
-                'var MyClass = ArtJs.Class(',
+                'var MyClass = artjs.Class(',
                 '  function(name) {',
                 "    this.name = this.super(attributes) + ':' + name",
                 '  }, ',
@@ -2641,7 +2609,7 @@ art.DB = {
     },
     date: {
       name: 'DateUtils',
-      package: 'com.arthwood.utils',
+      package: 'artjs.utils',
       description: 'Provides set of methods that operates on any Date instance.',
       sections: [
         {
@@ -2787,7 +2755,7 @@ art.DB = {
     },
     element: {
       name: 'ElementUtils',
-      package: 'com.arthwood.utils',
+      package: 'artjs.utils',
       description: 'Provides set of methods that operate on HTML Element instance.',
       sections: [
         {
@@ -2971,7 +2939,7 @@ art.DB = {
             ),
             new art.model.Member(
               'getSize(element:Element):Point',
-              'Returns size of the <span class="param">element</span> as a com.arthwood.math.Point object' +
+              'Returns size of the <span class="param">element</span> as a artjs.math.Point object' +
                 'which x property is width and y property is height',
               [
                 'ElementUtils.getSize(element);',
@@ -3259,7 +3227,7 @@ art.DB = {
     },
     math: {
       name: 'MathUtils',
-      package: 'com.arthwood.utils',
+      package: 'artjs.utils',
       description: 'Provides set of math functions.',
       sections: [
         {
@@ -3308,7 +3276,7 @@ art.DB = {
     },
     string: {
       name: 'StringUtils',
-      package: 'com.arthwood.utils',
+      package: 'artjs.utils',
       description: 'Provides set of methods that operates on any String instance.',
       sections: [
         {
@@ -3530,7 +3498,7 @@ art.DB = {
     },
     toggler: {
       name: 'Toggler',
-      package: 'com.arthwood.utils',
+      package: 'artjs.utils',
       description: 
         'Defines a single element container. ' +
         'Whenever you put a new one the old pops out and appropriate events are triggered',
@@ -3587,7 +3555,7 @@ art.DB = {
     },
     log: {
       name: 'Log',
-      package: 'com.arthwood.utils',
+      package: 'artjs.utils',
       description: 'Allows you to output debug messages.',
       sections: [
         {
@@ -3607,7 +3575,7 @@ art.DB = {
     },
     'transition/blind': {
       name: 'Blind',
-      package: 'com.arthwood.transition',
+      package: 'artjs.transition',
       description: 'Allows to apply "Blind" visual effect.',
       sections: [
         {
@@ -3636,8 +3604,8 @@ art.DB = {
       ]
     },
     'template/helpers': {
-      name: 'Helpers, ArtJs.TemplateHelpers',
-      package: 'com.arthwood.template',
+      name: 'Helpers, artjs.TemplateHelpers',
+      package: 'artjs.template',
       description: 'This class can be used both in regular JS and in html templates.' +
         'Defines set of methods that allows to generate dynamic content.',
       sections: [
@@ -3654,12 +3622,12 @@ art.DB = {
                 ' * &lt;p class="title"&gt;{title}&lt;/p&gt;',
                 ' */',
                 '',
-                "var content = ArtJs.TemplateHelpers.render('myTemplate', {title: 'Hello');",
+                "var content = artjs.TemplateHelpers.render('myTemplate', {title: 'Hello');",
                 '',
                 '// &lt;p class="container"&gt;Hello&lt;/p&gt;'
               ],
               null, 
-              'To read more about templates, navigate to com.arthwood.template.Library section.'
+              'To read more about templates, navigate to artjs.template.Library section.'
             ),
             new art.model.Member(
               'renderInto(element:Element, templateId:String, scope:Object):Void',
@@ -3671,7 +3639,7 @@ art.DB = {
               [
                 '// myTemplate.html: &lt;li&gt;{id}&lt;/li&gt;',
                 'var collection = [{id: 1}, {id: 2}];',
-                "var content = ArtJs.TemplateHelpers.renderCollection('myTemplate', collection);",
+                "var content = artjs.TemplateHelpers.renderCollection('myTemplate', collection);",
                 '',
                 '// &lt;li>1&lt;/li>&lt;li&gt;2&lt;/li&gt;'
               ]
@@ -3700,11 +3668,11 @@ art.DB = {
               'Allows you to register custom helper methods that can be used within templates.',
               [
                 "register('renderDescription', function(v) {",
-                "  return ArtJs.$B('p', {className: 'description'}, v).toString();",
+                "  return artjs.$B('p', {className: 'description'}, v).toString();",
                 '});',
                 '// in the template:',
-                "{renderDescription('Hello ArtJs!')}",
-                '// &lt;p class="description"&gt;Hello ArtJs!&lt;/p&gt;'
+                "{renderDescription('Hello artjs!')}",
+                '// &lt;p class="description"&gt;Hello artjs!&lt;/p&gt;'
               ]
             ),
             new art.model.Member(
@@ -3713,16 +3681,16 @@ art.DB = {
               [
                 "registerAll({",
                 "  renderDescription: function(v) {",
-                "    return ArtJs.$B('p', {className: 'description'}, v).toString();",
+                "    return artjs.$B('p', {className: 'description'}, v).toString();",
                 '  }',
                 '',
                 "  renderTitle: function(v) {",
-                "    return ArtJs.$B('h1', {className: 'title'}, v).toString();",
+                "    return artjs.$B('h1', {className: 'title'}, v).toString();",
                 '  }',
                 '});',
                 '// in the template:',
-                "{renderTitle('Welcome')}{renderDescription('Hello ArtJs!')}",
-                '// &lt;h1 class="title"&gt;Welcome&lt;/h1&gt;&lt;p class="description"&gt;Hello ArtJs!&lt;/p&gt;'
+                "{renderTitle('Welcome')}{renderDescription('Hello artjs!')}",
+                '// &lt;h1 class="title"&gt;Welcome&lt;/h1&gt;&lt;p class="description"&gt;Hello artjs!&lt;/p&gt;'
               ]
             )
           ]
@@ -3730,10 +3698,10 @@ art.DB = {
       ]
     },
     'template/library': {
-      name: 'Library, ArtJs.TemplateLibrary',
-      package: 'com.arthwood.template',
+      name: 'Library, artjs.TemplateLibrary',
+      package: 'artjs.template',
       description: 'Loads template files to your application using AJAX. ' +
-        'Triggers ArtJs.onLibraryLoad upon completion.',
+        'Triggers artjs.onLibraryLoad upon completion.',
       sections: [
         {
           name: 'Static properties',
@@ -3744,7 +3712,7 @@ art.DB = {
               'PATH - remote path to template directory<br/>' +
               'TEMPLATES - list of template files to be loaded',
               [
-                'ArtJs.TemplateLibrary.config = {',
+                'artjs.TemplateLibrary.config = {',
                 "  PATH: 'templates',",
                 "  TEMPLATES: ['doc', 'member', 'section', 'ga']",
                 '};'

@@ -1,4 +1,4 @@
-spec(ArtJs.MathUtils, function() {
+spec(artjs.MathUtils, function() {
   describe('#sgn', function() {
     context('when number negative', function() {
       it('should return -1', function() {
