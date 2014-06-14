@@ -52,6 +52,9 @@ art.DB = {
     "artjs.transition": {
       Blind: "transition/blind"
     },
+    "artjs.ui": {
+      DatePicker: "date_picker"
+    },
     "artjs.utils": {
       Array: "array",
       Class: "class",
@@ -1182,6 +1185,11 @@ art.DB = {
         name: "Static properties",
         members: [ new art.model.Member("config:Object", "Consists of two configuration parameters:<br/>" + "PATH - remote path to template directory<br/>" + "TEMPLATES - list of template files to be loaded", [ "artjs.TemplateLibrary.config = {", "  PATH: 'templates',", "  TEMPLATES: ['doc', 'member', 'section', 'ga']", "};" ]) ]
       } ]
+    },
+    date_picker: {
+      name: "DatePicker",
+      "package": "artjs.ui",
+      description: "Allows any text input element to act as a date picker component. " + "Just set it's class to 'art artjs-DatePicker'."
     }
   }
 };

@@ -50,15 +50,15 @@ art.DB = {
     'artjs.transition': {
       'Blind': 'transition/blind'
     },
-//    'artjs.ui': {
-//      'DatePicker': 'date_picker',
+    'artjs.ui': {
+      'DatePicker': 'date_picker'
 //      'ElementInspector': 'element_inspector',
 //      'Flash': 'flash',
 //      'ModalBox': 'modal_box',
 //      'ScreenManager': 'screen_manager',
 //      'Tabs': 'tabs',
 //      'Tree': 'tree'
-//    },
+    },
     'artjs.utils': {
       'Array': 'array',
       'Class': 'class',
@@ -3721,6 +3721,12 @@ art.DB = {
           ]
         }
       ]
+    },
+    date_picker: {
+      name: 'DatePicker',
+      package: 'artjs.ui',
+      description: "Allows any text input element to act as a date picker component. " +
+        "Just set it's class to 'art artjs-DatePicker'."
     }
   }
 };

@@ -1,80 +1,12 @@
-body
-  margin: 0
-  color: #555
-  font-family: Verdana
-  font-size: 12px
-  overflow-y: scroll
-
-.clearfix:after
-  content: "."
-  display: block
-  height: 0
-  clear: both
-  visibility: hidden
-
-h1
-  margin: 0 0 10px
-  font-size: 16px
-
-h2
-  margin: 0 0 10px
-  font-size: 20px
-  color: #FF0077
-
-h3
-  margin: 0 0 10px
-  font-size: 14px
-
-h4
-  margin: 0 0 8px
-  font-size: 12px
-
-a
-  text-decoration: none
-  color: #16c
-
-  &:hover
-    color: #05b
-
-img
-  border: none
-
-p
-  margin: 0 0 10px
-  line-height: 20px
-  
-  &:last-child
-    margin-bottom: 0
-
-ul
-  padding-left: 20px
-  margin: 0
-
+.header a span
+  font-size: 24px
+    
 .params p span, .param
   font-weight: bold
 
-.label
-  width: 70px
-  font-weight: bold
-
-.label,
-.package
-  float: left
-
-.main
-  margin: 0 auto
-  padding: 20px
-  width: 920px
-
-.header
-  margin-bottom: 20px
-
 .art-component-Content
   float: right
-  padding: 20px
-  border: 1px solid #ccc
-  background: #eee
-  width: 640px
+  width: 620px
 
   ul
     padding: 6px 14px
@@ -91,7 +23,7 @@ ul
         border-bottom: none
         
       a
-        font-size: 12px
+        font-size: 14px
 
       p
         margin-bottom: 4px
@@ -107,35 +39,46 @@ ul
       &.active
         cursor: pointer
         text-decoration: underline
-    
+
 .art-component-Sidebar
   float: left
   width: 180px
-  padding: 20px
-  border: 1px solid #ccc
-  background: #eee
-
-  li
-    line-height: 18px
 
   > ul
-    margin-left: 2px
+    margin-top: 20px
+  
+  ul
+    padding-left: 0px
+    list-style-type: none
+    
+    li
+      ul
+        margin-left: 16px
+        
+      line-height: 28px
+      
+      &.expanded
+        a
+          background: url(../../images/expanded.png) no-repeat left center
+      
+      &.leaf
+        a
+          padding: 2px 8px
+          background: none
 
-    li ul
-      margin: 4px 0
+      a
+        font-size: 14px
+        padding: 2px 4px 2px 16px
+        background: url(../../images/collapsed.png) no-repeat left center
+    
+        &.selected
+          background: #FF0077
+          color: white
 
-  ul li a
-    font-size: 11px
-    padding: 2px
-
-    &.selected
-      background: #FF0077
-      color: white
 
 pre
-  font-family: Courier New
+  font-family: Menlo, Monaco, Consolas, Courier New
   font-size: 12px
-  line-height: 16px
 
 .more 
   .container
@@ -147,6 +90,7 @@ pre
   margin: 10px 0
   border: 1px solid #CCC
   background: #DFF1FF
+  overflow-x: auto
 
 .example
   font-weight: bold
@@ -154,3 +98,6 @@ pre
 .inspected
   color: lightgreen !important
 
+h4.package
+  span
+    font-weight: normal

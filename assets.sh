@@ -1,5 +1,6 @@
 #!/bin/sh
 
+sass stylesheets/sass/shared.sass stylesheets/css/shared.css
 sass stylesheets/sass/docs.sass stylesheets/css/docs.css
 sass stylesheets/sass/main.sass stylesheets/css/main.css
 sass stylesheets/sass/spec.sass stylesheets/css/spec.css

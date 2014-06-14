@@ -1600,6 +1600,12 @@ artjs.Component = artjs.dom.Component = artjs.Class(function(element) {
     this.dependees = artjs.$A(arguments);
     artjs.ArrayUtils.each(this.dependees, this._eachDependee, this);
   },
+  onFound: function(i) {
+    this._element = i;
+    var classnames = artjs.ElementUtils.getClasses(i);
+    artjs.ArrayUtils.removeItem(classnames, "art");
+    artjs.ArrayUtils.each(classnames, this._eachClassName, this);
+  },
   _onExtended: function() {
     this.super(arguments);
     this.instances = [];
@@ -1623,13 +1629,7 @@ artjs.Component = artjs.dom.Component = artjs.Class(function(element) {
     i.dependants.push(this);
   },
   _scan: function(element) {
-    artjs.ArrayUtils.each(artjs.$find(element, ".art"), this._onFound, this);
-  },
-  _onFound: function(i) {
-    this._element = i;
-    var classnames = artjs.ElementUtils.getClasses(i);
-    artjs.ArrayUtils.removeItem(classnames, "art");
-    artjs.ArrayUtils.each(classnames, this._eachClassName, this);
+    artjs.ArrayUtils.each(artjs.$find(element, ".art"), this.onFound, this);
   },
   _eachClassName: function(i) {
     var path = i.split("-");
@@ -2796,30 +2796,31 @@ artjs.TemplateBase = artjs.template.Base = artjs.Class(function(content, scope) 
     artjs.ArrayUtils.each(this.content.match(this.TAG_RE), this._eachTag, this);
   },
   _eachTag: function(i) {
-    this.METHOD_RE.lastIndex = 0;
     var expression = artjs.StringUtils.sub(i, 2, -2);
-    var exec = this.METHOD_RE.exec(expression);
-    var result;
-    if (exec) {
-      exec.shift();
-      var action = exec.shift();
-      var argsStr = artjs.ArrayUtils.first(exec);
-      var args = artjs.ArrayUtils.map(argsStr.split(","), this._stripArg, this);
-      var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
-      result = artjs.TemplateHelpers.perform(action, argsValues);
-    } else {
-      result = this._fromScope(expression);
-    }
+    var result = this._parseExpression(expression);
     this.content = this.content.replace(i, result);
+  },
+  _parseExpression: function(expression) {
+    this.METHOD_RE.lastIndex = 0;
+    var exec = this.METHOD_RE.exec(expression);
+    return exec ? this._parseMethod(exec) : this._fromScope(expression);
+  },
+  _parseMethod: function(exec) {
+    exec.shift();
+    var action = exec.shift();
+    var argsStr = artjs.ArrayUtils.first(exec);
+    var args = artjs.ArrayUtils.map(argsStr.split(","), this._stripArg, this);
+    var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
+    return artjs.TemplateHelpers.perform(action, argsValues);
   },
   _parseArg: function(i) {
     var str = i;
     str = artjs.StringUtils.trim(str, "'");
     str = artjs.StringUtils.trim(str, '"');
-    return str == i ? this.scope[i] || "" : str;
+    return str == i ? this._parseExpression(i) : str;
   },
   _fromScope: function(i) {
-    return this.scope[i];
+    return this.scope[i] || "";
   },
   _stripArg: function(i) {
     return artjs.StringUtils.strip(i);
@@ -2832,6 +2833,9 @@ artjs.TemplateBase = artjs.template.Base = artjs.Class(function(content, scope) 
   },
   renderInto: function(element, content, scope) {
     this.render(element, this.renderContent(content, scope));
+  },
+  renderElement: function(element, scope) {
+    this.renderInto(element, element.innerHTML, scope);
   },
   renderTemplate: function(templateId, scope) {
     var template = artjs.TemplateLibrary.getTemplate(templateId);
@@ -2866,6 +2870,31 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   },
   renderIf: function(value, method) {
     return value ? this[method](value) : "";
+  },
+  renderSelect: function(options, selected) {
+    this._selectedOption = selected;
+    return artjs.$B("select", null, artjs.ArrayUtils.map(options, this._renderOption, this).join()).toString();
+  },
+  renderTable: function(table) {
+    return artjs.$B("table", null, artjs.ArrayUtils.map(table, this._renderTableRow, this).join()).toString();
+  },
+  _renderOption: function(i) {
+    var attrs = {
+      value: i.value
+    };
+    if (i.value == this._selectedOption) {
+      attrs.selected = "selected";
+    }
+    return artjs.$B("option", attrs, i.text).toString();
+  },
+  _renderTableRow: function(i) {
+    return artjs.$B("tr", null, artjs.ArrayUtils.map(i, this._renderTableCell, this).join()).toString();
+  },
+  _renderTableCell: function(i) {
+    return artjs.$B("td", null, i).toString();
+  },
+  bindable: function(i) {
+    return i;
   },
   registerAll: function(helpers) {
     artjs.ObjectUtils.eachPair(helpers, this.register, this);
@@ -2914,7 +2943,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
     if (artjs.ObjectUtils.keys(this._templates).length == this._templatesToLoad.length) {
       var body = document.body;
       artjs.ElementUtils.show(body);
-      artjs.TemplateBase.renderInto(body, body.innerHTML);
+      artjs.TemplateBase.renderElement(body);
       artjs.onLibraryLoad.fire(this);
     }
   }
@@ -2944,44 +2973,17 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(function() {
     e.preventDefault();
     var img = e.currentTarget;
     var imgRT = artjs.ElementUtils.getBounds(img).getRightTop();
-    var position = imgRT.add(new artjs.Point(4, 2));
+    var position = imgRT.add(new artjs.Point(2, 2));
     this.calendar.toggle(this, position);
   }
 }, null, artjs.Component);
 
-artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(dp) {
+artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
   this.super(arguments);
-  var au = artjs.ArrayUtils;
-  var eu = artjs.ElementUtils;
-  var eb = artjs.ElementBuilder;
-  var s = artjs.Selector;
-  artjs.$BA(this, "_buildYearSpan");
-  var selectMonthOptions = au.map(this.ctor.MONTHS, this.ctor._monthToOption).join("");
-  var headElement = artjs.$B("th", null, "&nbsp;");
-  var headRow = artjs.$B("tr", null, eb.getCollection(7, headElement));
-  var cellElement = artjs.$B("td", null, "&nbsp;");
-  var row = artjs.$B("tr", null, eb.getCollection(7, cellElement));
-  var rows = eb.getCollection(5, row);
-  var nav = s.first(this.element, ".nav");
-  var arrows = s.find(nav, "a");
-  var selects = s.find(nav, "select");
-  var table = s.first(this.element, "table");
-  var monthSelect = selects[0];
-  eu.setContent(table, headRow + rows);
-  eu.setContent(monthSelect, selectMonthOptions);
-  this.prevMonth = arrows[0];
-  this.nextMonth = arrows[1];
-  eu.onClick(this.prevMonth, this._onPrevMonth.delegate);
-  eu.onClick(this.nextMonth, this._onNextMonth.delegate);
-  this.monthSelect = selects[0];
-  this.yearSelect = selects[1];
-  this.monthSelect.onchange = this._onMonthSelect;
-  this.yearSelect.onchange = this._onYearSelect;
-  this.headers = s.find(this.element, "th");
-  this.rows = s.find(this.element, "tr").slice(1);
-  this.items = s.find(this.element, "td");
-  this.field = null;
-  au.each(this.items, this._initItem, this);
+  console.log("hello");
+  this.years = [];
+  this.months = [];
+  artjs.TemplateBase.renderElement(element, this);
 }, {
   toggle: function(datePicker, position) {
     if (this._isHidden()) {
@@ -3115,14 +3117,12 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(dp) {
       value: i
     }, i);
   },
-  _init: function() {
-    artjs.onLibraryLoad.add(artjs.$D(this, "_onLibraryLoad"));
-  },
+  _init: function() {},
   _onLibraryLoad: function() {
     var content = artjs.TemplateLibrary.getTemplate("calendar");
     var element = artjs.ElementBuilder.parse(content);
     var result = artjs.ElementUtils.insert(document.body, element);
-    artjs.Component._onFound(result);
+    this.onFound(result);
   }
 }, artjs.Component);
 
@@ -3175,7 +3175,7 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(function(data, element) {
     return artjs.$P(this._renderNode(this.data));
   },
   open: function() {
-    this._expandNode(artjs.ElementUtils.firstElement(artjs.ArrayUtils.first(this._nodes)));
+    this._toggleNode(artjs.ElementUtils.firstElement(artjs.ArrayUtils.first(this._nodes)));
     this._leafAction(artjs.ElementUtils.firstElement(artjs.ArrayUtils.first(this._leaves)));
   },
   _renderNode: function(node) {
@@ -3192,20 +3192,19 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(function(data, element) {
   _eachNode: function(i) {
     artjs.ElementUtils.onClick(artjs.ElementUtils.firstElement(i), this._onNodeDelegate);
     artjs.ElementUtils.hide(artjs.ArrayUtils.first(artjs.Selector.find(i, "ul")));
-    i.style.listStyleImage = this.ctor.FOLDED;
   },
   _onNode: function(originalEvent, elementEvent) {
     originalEvent.preventDefault();
-    this._expandNode(elementEvent.element);
+    this._toggleNode(elementEvent.element);
   },
-  _expandNode: function(a) {
+  _toggleNode: function(a) {
     var ul = artjs.ElementUtils.next(a);
     artjs.ElementUtils.toggle(ul);
-    artjs.Selector.parent(a).style.listStyleImage = artjs.ElementUtils.isHidden(ul) ? this.ctor.FOLDED : this.ctor.UNFOLDED;
+    artjs.ElementUtils.setClass(artjs.Selector.parent(a), "expanded", !artjs.ElementUtils.isHidden(ul));
   },
   _eachLeaf: function(i) {
     artjs.ElementUtils.onClick(artjs.ElementUtils.firstElement(i), this._onLeafDelegate);
-    i.style.listStyleImage = this.ctor.LEAF;
+    artjs.ElementUtils.addClass(i, "leaf");
   },
   _onLeaf: function(originalEvent, elementEvent) {
     originalEvent.preventDefault();
@@ -3215,10 +3214,6 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(function(data, element) {
     this._leafClassToggler.toggle(element);
     this.onLeaf.fire(element);
   }
-}, {
-  FOLDED: "url(../images/plus.png)",
-  UNFOLDED: "url(../images/minus.png)",
-  LEAF: "url(../images/leaf.png)"
 });
 
 artjs.onDocumentLoad = new artjs.CustomEvent("document:load");

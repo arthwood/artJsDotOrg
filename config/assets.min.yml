@@ -66,6 +66,7 @@ javascripts:
     - 'art/component/Member'
   main-min: 'Main'
 stylesheets:
+  shared-min: 'css/shared'
   docs-min: 'css/docs'
   main-min: 'css/main'
   artjs-min: 'css/artjs'

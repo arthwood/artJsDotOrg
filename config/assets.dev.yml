@@ -66,6 +66,7 @@ javascripts:
     - 'art/component/Member'
   main-dev: 'Main'
 stylesheets:
+  shared-dev: 'css/shared'
   docs-dev: 'css/docs'
   main-dev: 'css/main'
   artjs-dev: 'css/artjs'
