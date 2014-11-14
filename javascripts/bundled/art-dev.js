@@ -28,13 +28,13 @@ artjs.p = artjs.log;
 artjs.ObjectUtils = artjs.utils.Object = {
   _name: "ObjectUtils",
   QUERY_DELIMITER: "&",
-  _init: function() {
-    this._invertedRemoveValueDC = artjs.$DC(this, this._invertedRemoveValue);
-    this._eachPairDeleteValueDC = artjs.$DC(this, this._eachPairDeleteValue);
-    this._eachKeyDeleteKeyDC = artjs.$DC(this, this._eachKeyDeleteKey);
-    this._invertedIncludesDC = artjs.$DC(this, this._invertedIncludes);
-    this._pairToQueryStringDC = artjs.$DC(this, this._pairToQueryString);
-    this._parseArrayValueDC = artjs.$DC(this, this._parseArrayValue);
+  init: function() {
+    this._invertedRemoveValueDC = artjs.$DC(this, "_invertedRemoveValue");
+    this._eachPairDeleteValueDC = artjs.$DC(this, "_eachPairDeleteValue");
+    this._eachKeyDeleteKeyDC = artjs.$DC(this, "_eachKeyDeleteKey");
+    this._invertedIncludesDC = artjs.$DC(this, "_invertedIncludes");
+    this._pairToQueryStringDC = artjs.$DC(this, "_pairToQueryString");
+    this._parseArrayValueDC = artjs.$DC(this, "_parseArrayValue");
   },
   copy: function(obj) {
     var copy = {};
@@ -138,29 +138,41 @@ artjs.ObjectUtils = artjs.utils.Object = {
   },
   select: function(obj, func, context) {
     var result = {};
-    this.eachPair(obj, function(i, j) {
-      if (func.call(context, j)) {
-        result[i] = j;
+    var j;
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        j = obj[i];
+        if (func.call(context, j)) {
+          result[i] = j;
+        }
       }
-    });
+    }
     return result;
   },
   selectWithKey: function(obj, func, context) {
     var result = {};
-    this.eachPair(obj, function(k, v) {
-      if (func.call(context, k, v)) {
-        result[k] = v;
+    var j;
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        j = obj[i];
+        if (func.call(context, i, j)) {
+          result[i] = j;
+        }
       }
-    });
+    }
     return result;
   },
   reject: function(obj, func, context) {
     var result = {};
-    this.eachPair(obj, function(i, j) {
-      if (!func.call(context, j)) {
-        result[i] = j;
+    var j;
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        j = obj[i];
+        if (!func.call(context, j)) {
+          result[i] = j;
+        }
       }
-    });
+    }
     return result;
   },
   isArray: function(obj) {
@@ -311,9 +323,9 @@ artjs.ObjectUtils = artjs.utils.Object = {
 
 artjs.ArrayUtils = artjs.utils.Array = {
   _name: "ArrayUtils",
-  _init: function() {
-    this._areItemsEqualCallback = artjs.$DC(this, this.areItemsEqual);
-    this._invokeCallback = artjs.$DC(this, this._invoke);
+  init: function() {
+    this._areItemsEqualCallback = artjs.$DC(this, "areItemsEqual");
+    this._invokeCallback = artjs.$DC(this, "_invoke");
   },
   build: function(n, func) {
     var arr = new Array(n);
@@ -1038,9 +1050,9 @@ artjs.ElementUtils = artjs.utils.Element = {
   SUB_OBJ_RE: /\[\w+\]/g,
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: [ "", "-o-", "-ms-", "-moz-", "-khtml-", "-webkit-" ],
-  _init: function() {
-    this.detectHiddenElementDC = artjs.$DC(this, this.detectHiddenElement);
-    artjs.$insert = artjs.$DC(this, this.insert);
+  init: function() {
+    this.detectHiddenElementDC = artjs.$DC(this, "detectHiddenElement");
+    artjs.$insert = artjs.$DC(this, "insert");
   },
   show: function(e) {
     var hidden = this.getHidden(e);
@@ -1317,7 +1329,7 @@ artjs.ElementUtils = artjs.utils.Element = {
     this.setClass(e, className, !this.hasClass(e, className));
   },
   getAttributes: function(e) {
-    return artjs.ObjectUtils.fromArray(artjs.ArrayUtils.map(artjs.$A(e.attributes), this.mapAttribute, this));
+    return artjs.ObjectUtils.fromArray(artjs.ArrayUtils.map(artjs.$A(e.attributes), this._mapAttribute, this));
   },
   getData: function(e) {
     var attrs = this.getAttributes(e);
@@ -1330,7 +1342,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   _removeDataPrefix: function(k) {
     return k.replace(/^data\-/, "");
   },
-  mapAttribute: function(i) {
+  _mapAttribute: function(i) {
     return [ i.name, i.value ];
   },
   setAlpha: function(e, v) {
@@ -1412,8 +1424,8 @@ artjs.Toggler = artjs.utils.Toggler = artjs.Class(function(unique) {
 artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(function(className) {
   this._className = className;
   this._toggler = new artjs.Toggler;
-  this._toggler.onActivate.add(artjs.$D(this, this._onActivate));
-  this._toggler.onDeactivate.add(artjs.$D(this, this._onDeactivate));
+  this._toggler.onActivate.add(artjs.$D(this, "_onActivate"));
+  this._toggler.onDeactivate.add(artjs.$D(this, "_onDeactivate"));
   this.onActivate = new artjs.CustomEvent("ClassToggler::onActivate");
   this.onDeactivate = new artjs.CustomEvent("ClassToggler::onDeactivate");
 }, {
@@ -1592,76 +1604,76 @@ artjs.Rectangle.prototype = {
 
 artjs.Component = artjs.dom.Component = artjs.Class(function(element) {
   this.element = element;
-}, {
-  onDependency: function() {}
-}, {
+}, null, {
   _name: "Component",
-  dependsOn: function() {
-    this.dependees = artjs.$A(arguments);
-    artjs.ArrayUtils.each(this.dependees, this._eachDependee, this);
+  idToComponent: {},
+  _onExtended: function() {
+    this.super(arguments);
+    this.instances = [];
   },
-  onFound: function(i) {
+  find: function(id) {
+    return this.idToComponent[id];
+  }
+});
+
+artjs.ComponentScanner = {
+  _events: {},
+  scan: function(element) {
+    artjs.ArrayUtils.each(artjs.$find(element, ".art"), this._onFound, this);
+  },
+  addListener: function(id, delegate) {
+    var event = this._events[id];
+    if (!event) {
+      event = this._events[id] = new artjs.CustomEvent("Component::Load::" + id);
+    }
+    event.add(delegate);
+  },
+  _onFound: function(i) {
+    this.initElement(i);
+  },
+  initElement: function(i) {
     this._element = i;
     var classnames = artjs.ElementUtils.getClasses(i);
     artjs.ArrayUtils.removeItem(classnames, "art");
     artjs.ArrayUtils.each(classnames, this._eachClassName, this);
   },
-  _onExtended: function() {
-    this.super(arguments);
-    this.instances = [];
-    this.dependants = [];
+  _eachClassName: function(i) {
+    var path = i.split("-");
+    var _class = artjs.ArrayUtils.inject(path, window, this._injectPathChunk, this);
+    if (_class instanceof Function) {
+      var instance = new _class(this._element);
+      instance.ctor.instances.push(instance);
+      var id = artjs.ElementUtils.getAttributes(instance.element).id;
+      if (id) {
+        artjs.Component.idToComponent[id] = instance;
+      }
+      var event = this._events[id];
+      if (event) {
+        event.fire(instance);
+      }
+    }
   },
-  _init: function() {
+  _injectPathChunk: function(result, i) {
+    return result && result[i];
+  }
+};
+
+artjs.ComponentSweeper = {
+  init: function() {
     var clock = new artjs.Clock(2e3);
-    clock.onChange.add(artjs.$D(this, this._onSweep));
+    clock.onChange.add(artjs.$D(this, "_onSweep"));
     clock.start();
   },
   _onSweep: function(clock) {
-    artjs.ArrayUtils.each(this.subclasses, this._sweepInstances, this);
+    artjs.ArrayUtils.each(artjs.Component.subclasses, this._sweepInstances, this);
   },
   _sweepInstances: function(i) {
     artjs.ArrayUtils.$select(i.instances, this._isOnStage, this);
   },
   _isOnStage: function(i) {
     return artjs.Selector.isDescendantOf(i.element);
-  },
-  _eachDependee: function(i) {
-    i.dependants.push(this);
-  },
-  _scan: function(element) {
-    artjs.ArrayUtils.each(artjs.$find(element, ".art"), this.onFound, this);
-  },
-  _eachClassName: function(i) {
-    var path = i.split("-");
-    var _class = artjs.ArrayUtils.inject(path, window, this._injectPathChunk, this);
-    if (_class instanceof Function) {
-      this._create(_class);
-    }
-  },
-  _create: function(klass) {
-    var instance = new klass(this._element);
-    klass.instances.push(instance);
-    this._eachDependeeInstance.instance = instance;
-    var au = artjs.ArrayUtils;
-    au.each(au.flatten(au.map(klass.dependees, this._toInstances, this)), this._eachDependeeInstance, this);
-    this._eachDependantInstance.instance = instance;
-    au.each(au.flatten(au.map(klass.dependants, this._toInstances, this)), this._eachDependantInstance, this);
-  },
-  _toInstances: function(i) {
-    return i.instances;
-  },
-  _eachDependeeInstance: function(i) {
-    var instance = arguments.callee.instance;
-    instance.onDependency(i);
-  },
-  _eachDependantInstance: function(i) {
-    var instance = arguments.callee.instance;
-    i.onDependency(instance);
-  },
-  _injectPathChunk: function(result, i) {
-    return result && result[i];
   }
-});
+};
 
 artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, attributes, value, isEmpty) {
   this.name = name;
@@ -1698,11 +1710,11 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, att
     className: "class",
     forField: "for"
   },
-  _init: function() {
-    artjs.$B = artjs.$DC(this, this.build);
-    artjs.$C = artjs.$DC(this, this.create);
-    artjs.$E = artjs.$DC(this, this.getElement);
-    artjs.$P = artjs.$DC(this, this.parse);
+  init: function() {
+    artjs.$B = artjs.$DC(this, "build");
+    artjs.$C = artjs.$DC(this, "create");
+    artjs.$E = artjs.$DC(this, "getElement");
+    artjs.$P = artjs.$DC(this, "parse");
   },
   build: function(name, attributes, value, empty) {
     return new this(name, attributes, value, empty);
@@ -1713,7 +1725,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, att
     return node.firstChild;
   },
   create: function(name, attributes, value, empty) {
-    return this.parse(this.build(name, attributes, value, empty));
+    return this.parse(this.build(name, attributes, value, empty).toString());
   },
   getElement: function(name, attributes, value, empty) {
     return this.build(name, attributes, value, empty).getElement();
@@ -1739,10 +1751,11 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, att
 });
 
 artjs.Selector = artjs.dom.Selector = {
-  _init: function() {
-    artjs.$ = artjs.$DC(this, this.getElements);
-    artjs.$find = artjs.$DC(this, this.find);
-    artjs.$parent = artjs.$DC(this, this.parent);
+  init: function() {
+    artjs.$ = artjs.$DC(this, "getElements");
+    artjs.$find = artjs.$DC(this, "find");
+    artjs.$first = artjs.$DC(this, "first");
+    artjs.$parent = artjs.$DC(this, "parent");
   },
   find: function(element, selector) {
     return this.getElements(selector, element);
@@ -2223,6 +2236,19 @@ artjs.Clock = artjs.events.Clock = artjs.Class(function(interval, repeat) {
   }
 });
 
+artjs.Broadcaster = artjs.events.Broadcaster = {
+  _events: {},
+  register: function(id, event) {
+    this._events[id] = event;
+  },
+  addListener: function(id, delegate) {
+    this._events[id].add(delegate);
+  },
+  fire: function(id, data) {
+    this._events[id].fire(data);
+  }
+};
+
 artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, delegate) {
   this.element = element;
   this.delegate = delegate;
@@ -2292,11 +2318,16 @@ artjs.MouseOutEvent = artjs.events.MouseOut = artjs.Class(function(element, dele
   this.super(arguments, element, "mouseout", delegate, false);
 }, null, null, artjs.MouseEvent);
 
+artjs.ChangeEvent = artjs.events.Change = artjs.Class(function(element, delegate) {
+  this.super(arguments, element, "change", delegate, false);
+}, null, null, artjs.ElementEvent);
+
 artjs.EventMapping = {
   mousemove: artjs.MouseMoveEvent,
   mouseover: artjs.MouseOverEvent,
   mouseout: artjs.MouseOutEvent,
-  click: artjs.ClickEvent
+  click: artjs.ClickEvent,
+  change: artjs.ChangeEvent
 };
 
 artjs.on = function(target, eventName, delegate) {
@@ -2786,23 +2817,25 @@ function subject() {
   return runner.subject;
 }
 
-artjs.TemplateBase = artjs.template.Base = artjs.Class(function(content, scope) {
-  this.content = content;
-  this.scope = scope;
+artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content, scope) {
+  this._tagRegEx = /\{\{.+\}\}/g;
+  this._methodRegEx = /^(\w+)\((.*)\)$/;
+  this._content = content;
+  this._scope = scope;
 }, {
-  TAG_RE: /\{\{.+\}\}/g,
-  METHOD_RE: /^(\w+)\((.*)\)$/,
   compile: function() {
-    artjs.ArrayUtils.each(this.content.match(this.TAG_RE), this._eachTag, this);
+    var tags = this._content.match(this._tagRegEx);
+    artjs.ArrayUtils.each(tags, this._eachTag, this);
+    return this._content;
   },
   _eachTag: function(i) {
     var expression = artjs.StringUtils.sub(i, 2, -2);
     var result = this._parseExpression(expression);
-    this.content = this.content.replace(i, result);
+    this._content = this._content.replace(i, result);
   },
   _parseExpression: function(expression) {
-    this.METHOD_RE.lastIndex = 0;
-    var exec = this.METHOD_RE.exec(expression);
+    this._methodRegEx.lastIndex = 0;
+    var exec = this._methodRegEx.exec(expression);
     return exec ? this._parseMethod(exec) : this._fromScope(expression);
   },
   _parseMethod: function(exec) {
@@ -2811,7 +2844,7 @@ artjs.TemplateBase = artjs.template.Base = artjs.Class(function(content, scope) 
     var argsStr = artjs.ArrayUtils.first(exec);
     var args = artjs.ArrayUtils.map(argsStr.split(","), this._stripArg, this);
     var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
-    return artjs.TemplateHelpers.perform(action, argsValues);
+    return artjs.TemplateHelpers.perform(action, argsValues, this._scope);
   },
   _parseArg: function(i) {
     var str = i;
@@ -2820,63 +2853,65 @@ artjs.TemplateBase = artjs.template.Base = artjs.Class(function(content, scope) 
     return str == i ? this._parseExpression(i) : str;
   },
   _fromScope: function(i) {
-    return this.scope[i] || "";
+    return this._scope[i] || "";
   },
   _stripArg: function(i) {
     return artjs.StringUtils.strip(i);
   }
-}, {
-  renderContent: function(content, scope) {
-    var instance = new this(content, scope);
-    instance.compile();
-    return instance.content;
+});
+
+artjs.TemplateBase = artjs.template.Base = {
+  render: function(content, scope) {
+    var compiler = new artjs.TemplateCompiler(content, scope);
+    return compiler.compile(content, scope);
   },
   renderInto: function(element, content, scope) {
-    this.render(element, this.renderContent(content, scope));
+    artjs.ElementUtils.setContent(element, this.render(content, scope));
+    this.evalScripts(element);
+    artjs.ComponentScanner.scan(element);
   },
   renderElement: function(element, scope) {
     this.renderInto(element, element.innerHTML, scope);
   },
-  renderTemplate: function(templateId, scope) {
-    var template = artjs.TemplateLibrary.getTemplate(templateId);
-    return this.renderContent(template, scope);
-  },
   renderTemplateInto: function(element, templateId, scope) {
-    this.render(element, this.renderTemplate(templateId, scope));
+    var template = artjs.TemplateLibrary.getTemplate(templateId);
+    this.renderInto(element, template, scope);
   },
-  render: function(element, content) {
-    artjs.ElementUtils.setContent(element, content);
-    this._evalScripts(element);
-    artjs.Component._scan(element);
+  evalScripts: function(element) {
+    artjs.ArrayUtils.each(artjs.Selector.find(element, "script"), this.evalScript, this);
   },
-  _evalScripts: function(element) {
-    artjs.ArrayUtils.each(artjs.Selector.find(element, "script"), this._evalScript, this);
-  },
-  _evalScript: function(script) {
+  evalScript: function(script) {
     eval(artjs.ElementUtils.getContent(script));
   }
-});
+};
 
 artjs.TemplateHelpers = artjs.template.Helpers = {
   render: function(templateId, scope) {
-    return artjs.TemplateBase.renderTemplate(templateId, scope);
+    var template = artjs.TemplateLibrary.getTemplate(templateId);
+    return artjs.TemplateBase.render(template, scope);
   },
   renderInto: function(element, templateId, scope) {
     artjs.TemplateBase.renderTemplateInto(element, templateId, scope);
   },
   renderCollection: function(templateId, collection) {
     var callback = artjs.$DC(this, this._renderCollectionItem, false, templateId);
-    return artjs.ArrayUtils.map(collection, callback).join("");
+    return this._map(collection, callback);
   },
   renderIf: function(value, method) {
     return value ? this[method](value) : "";
   },
   renderSelect: function(options, selected) {
     this._selectedOption = selected;
-    return artjs.$B("select", null, artjs.ArrayUtils.map(options, this._renderOption, this).join()).toString();
+    return this._renderElement("select", options, this.renderOptions(options));
+  },
+  renderOptions: function(options) {
+    return this._map(options, this._renderOption);
   },
   renderTable: function(table) {
-    return artjs.$B("table", null, artjs.ArrayUtils.map(table, this._renderTableRow, this).join()).toString();
+    return this._renderElement("table", null, this._map(table, this._renderTableRow));
+  },
+  _map: function(coll, func) {
+    return artjs.ArrayUtils.map(coll, func, this).join("");
   },
   _renderOption: function(i) {
     var attrs = {
@@ -2885,16 +2920,16 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     if (i.value == this._selectedOption) {
       attrs.selected = "selected";
     }
-    return artjs.$B("option", attrs, i.text).toString();
+    return this._renderElement("option", attrs, i.text);
   },
   _renderTableRow: function(i) {
-    return artjs.$B("tr", null, artjs.ArrayUtils.map(i, this._renderTableCell, this).join()).toString();
+    return this._renderElement("tr", null, this._map(i, this._renderTableCell));
   },
   _renderTableCell: function(i) {
-    return artjs.$B("td", null, i).toString();
+    return this._renderElement("td", null, i);
   },
-  bindable: function(i) {
-    return i;
+  _renderElement: function(name, attrs, value) {
+    return artjs.$B(name, attrs, value).toString();
   },
   registerAll: function(helpers) {
     artjs.ObjectUtils.eachPair(helpers, this.register, this);
@@ -2902,8 +2937,8 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   register: function(name, method) {
     this[name] = method;
   },
-  perform: function(action, args) {
-    return this[action].apply(this, args);
+  perform: function(action, args, scope) {
+    return this[action].apply(this, args.concat(scope));
   },
   _renderCollectionItem: function(scope, idx, arr, templateId) {
     scope._index = idx;
@@ -2912,15 +2947,21 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
 };
 
 artjs.TemplateLibrary = artjs.template.Library = {
-  BASE_TEMPLATES: [ "calendar" ],
+  BASE_TEMPLATES: [ "artjs/calendar" ],
   config: {
     PATH: "/templates",
     TEMPLATES: []
   },
   _templates: {},
-  _init: function() {
+  init: function() {
     artjs.$BA(this);
     artjs.onDocumentLoad.add(this._onLoadAll.delegate);
+  },
+  getTemplate: function(id) {
+    return this._templates[id];
+  },
+  loadTemplate: function(id) {
+    artjs.TemplateBase.renderElement(artjs.ElementUtils.insert(this._templatesContainer, artjs.$E("div", null, artjs.TemplateLibrary.getTemplate(id))));
   },
   _onLoadAll: function() {
     this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
@@ -2936,16 +2977,19 @@ artjs.TemplateLibrary = artjs.template.Library = {
     this._templates[ajax.id] = ajax.getResponseText();
     this._loadCheck();
   },
-  getTemplate: function(id) {
-    return this._templates[id];
-  },
   _loadCheck: function() {
     if (artjs.ObjectUtils.keys(this._templates).length == this._templatesToLoad.length) {
-      var body = document.body;
-      artjs.ElementUtils.show(body);
-      artjs.TemplateBase.renderElement(body);
-      artjs.onLibraryLoad.fire(this);
+      this._onAllLoaded();
     }
+  },
+  _onAllLoaded: function() {
+    var body = document.body;
+    artjs.ElementUtils.show(body);
+    artjs.TemplateBase.renderElement(body, window);
+    this._templatesContainer = artjs.ElementUtils.insert(document.body, artjs.$E("div", {
+      id: "artjs-Templates"
+    }));
+    artjs.onLibraryLoad.fire(this);
   }
 };
 
@@ -2964,27 +3008,54 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(function() {
   }), this.element);
   this.element.editable = false;
   artjs.ElementUtils.onClick(img, this._onImg.delegate);
+  this.calendar = artjs.$first(this.element, ".artjs-Calendar");
 }, {
-  onDependency: function(calendar) {
-    this.super(arguments);
-    this.calendar = calendar;
-  },
   _onImg: function(e) {
     e.preventDefault();
     var img = e.currentTarget;
     var imgRT = artjs.ElementUtils.getBounds(img).getRightTop();
     var position = imgRT.add(new artjs.Point(2, 2));
+    this.calendar.source = this;
     this.calendar.toggle(this, position);
   }
 }, null, artjs.Component);
 
 artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
   this.super(arguments);
-  console.log("hello");
-  this.years = [];
-  this.months = [];
-  artjs.TemplateBase.renderElement(element, this);
+  this.years = [ {
+    value: 1999,
+    text: "1999"
+  }, {
+    value: 2e3,
+    text: "2000"
+  } ];
+  this.year = 2e3;
+  this.months = [ {
+    value: "October",
+    text: "October"
+  }, {
+    value: "November",
+    text: "November"
+  } ];
+  this.month = "November";
+  this.table = [ [ 1 ], [ 2 ] ];
+  artjs.ComponentScanner.addListener("artjs-Calendar-years", artjs.$D(this, "_onYearsLoaded"));
+  artjs.ComponentScanner.addListener("artjs-Calendar-months", artjs.$D(this, "_onMonthsLoaded"));
 }, {
+  _onYearsLoaded: function(component) {
+    component.setOptions(this.years);
+    component.setSelected(this.year);
+  },
+  _onMonthsLoaded: function(component) {
+    component.setOptions(this.months);
+    component.setSelected(this.month);
+  },
+  getYear: function() {
+    return this._year;
+  },
+  setYear: function(v) {
+    this._year = v;
+  },
   toggle: function(datePicker, position) {
     if (this._isHidden()) {
       this._show(datePicker, position);
@@ -3107,6 +3178,9 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
     weekend: "#CFFFDF",
     invalid: "#AAAAAA"
   },
+  init: function() {
+    artjs.onLibraryLoad.add(artjs.$D(this, "_onLibraryLoad"));
+  },
   _monthToOption: function(i, idx) {
     return new artjs.ElementBuilder("option", {
       value: idx + 1
@@ -3117,16 +3191,10 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
       value: i
     }, i);
   },
-  _init: function() {},
   _onLibraryLoad: function() {
-    var content = artjs.TemplateLibrary.getTemplate("calendar");
-    var element = artjs.ElementBuilder.parse(content);
-    var result = artjs.ElementUtils.insert(document.body, element);
-    this.onFound(result);
+    artjs.TemplateLibrary.loadTemplate("artjs/calendar");
   }
 }, artjs.Component);
-
-artjs.DatePicker.dependsOn(artjs.Calendar);
 
 artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
   artjs.on(document, "mousemove", artjs.$D(this, this._onMouseMove));
@@ -3156,10 +3224,28 @@ artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
   }
 });
 
+artjs.Select = artjs.ui.Select = artjs.Class(null, {
+  setOptions: function(options) {
+    this._options = options;
+    this._update();
+  },
+  setSelected: function(selected) {
+    var oldOption = artjs.$first(this.element, "option[selected=selected]");
+    if (oldOption) {
+      oldOption.removeAttribute("selected");
+    }
+    var newOption = artjs.$first(this.element, "option[value=" + selected + "]");
+    newOption.setAttribute("selected", "selected");
+  },
+  _update: function() {
+    artjs.ElementUtils.setContent(this.element, artjs.TemplateHelpers.renderOptions(this._options));
+  }
+}, null, artjs.Component);
+
 artjs.Tree = artjs.ui.Tree = artjs.Class(function(data, element) {
   this.data = data;
-  this._onNodeDelegate = artjs.$D(this, this._onNode);
-  this._onLeafDelegate = artjs.$D(this, this._onLeaf);
+  this._onNodeDelegate = artjs.$D(this, "_onNode");
+  this._onLeafDelegate = artjs.$D(this, "_onLeaf");
   this._leafClassToggler = new artjs.ClassToggler("selected");
   this.onLeaf = new artjs.CustomEvent("onLeaf");
   artjs.ElementUtils.insert(element, this.render());
@@ -3212,7 +3298,10 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(function(data, element) {
   },
   _leafAction: function(element) {
     this._leafClassToggler.toggle(element);
-    this.onLeaf.fire(element);
+    this.onLeaf.fire(this);
+  },
+  getCurrent: function() {
+    return this._leafClassToggler.getCurrent();
   }
 });
 
@@ -3230,18 +3319,18 @@ window.addEventListener("load", function() {
   artjs.onWindowLoad.fire();
 }, false);
 
-artjs.ArrayUtils._init();
+artjs.ArrayUtils.init();
 
-artjs.Component._init();
+artjs.ComponentSweeper.init();
 
-artjs.ObjectUtils._init();
+artjs.ObjectUtils.init();
 
-artjs.ElementBuilder._init();
+artjs.ElementBuilder.init();
 
-artjs.ElementUtils._init();
+artjs.ElementUtils.init();
 
-artjs.Selector._init();
+artjs.Selector.init();
 
-artjs.TemplateLibrary._init();
+artjs.TemplateLibrary.init();
 
-artjs.Calendar._init();
+artjs.Calendar.init();

@@ -846,7 +846,7 @@ art.DB = {
               example: [
                 'var clock = new Clock(1000, 5);',
                 '',
-                'clock.onChange.add(new Delegate(this, this.onClockChange);',
+                'clock.onChange.add(new Delegate(this, this.onClockChange));',
                 '',
                 'function onClockChange(clock) {',
                 "  console.log('clock change!');",

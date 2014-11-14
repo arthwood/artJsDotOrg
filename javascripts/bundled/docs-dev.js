@@ -1,11 +1,16 @@
 var art = {
   component: {},
-  model: {}
+  model: {},
+  events: {
+    ON_SIDEBAR: "Sidebar::onClick"
+  }
 };
 
 artjs.TemplateLibrary.config.PATH = "../templates";
 
 artjs.TemplateLibrary.config.TEMPLATES = [ "doc", "member", "section", "ga", "disqus" ];
+
+artjs.Broadcaster.register(art.events.ON_SIDEBAR, new artjs.CustomEvent(art.events.ON_SIDEBAR));
 
 art.model.Member = artjs.Class(function(header, description, example, params, more) {
   this.super(arguments);
@@ -401,7 +406,7 @@ art.DB = {
         members: [ {
           header: "onChange(clock:Clock)",
           description: "Triggered on each tick",
-          example: [ "var clock = new Clock(1000, 5);", "", "clock.onChange.add(new Delegate(this, this.onClockChange);", "", "function onClockChange(clock) {", "  console.log('clock change!');", "}" ]
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.onChange.add(new Delegate(this, this.onClockChange));", "", "function onClockChange(clock) {", "  console.log('clock change!');", "}" ]
         }, {
           header: "onFinish(clock:Clock)",
           description: "Triggered after last tick",
@@ -1196,66 +1201,68 @@ art.DB = {
 
 artjs.TemplateHelpers.registerAll({
   _renderExample: function(v) {
-    var exampleElement = artjs.$B("p", {
+    var exampleElement = this._renderElement("p", {
       className: "example"
-    }, "Example:").toString();
-    var codeElement = artjs.$B("pre", {
+    }, "Example:");
+    var codeElement = this._renderElement("pre", {
       className: "block"
-    }, v.join("<br />")).toString();
+    }, v.join("<br />"));
     return exampleElement + codeElement;
   },
   renderMore: function(example, more) {
     if (example || more) {
       var v = this.renderIf(example, "_renderExample") + this.renderIf(more, "_renderMore");
-      return artjs.$B("div", {
+      return this._renderElement("div", {
         className: "more"
-      }, v).toString();
+      }, v);
     } else {
       return "";
     }
   },
   _renderMore: function(v) {
-    return artjs.$B("p", {
+    return this._renderElement("p", {
       className: "container"
-    }, v).toString();
+    }, v);
   },
   renderDescription: function(v) {
-    return artjs.$B("p", null, v).toString();
+    return this._renderElement("p", null, v);
   },
   renderParams: function(v) {
     var collection = artjs.ObjectUtils.map(v, this._paramToElement, this).join("");
-    return artjs.$B("div", {
+    return this._renderElement("div", {
       className: "params"
-    }, collection).toString();
+    }, collection);
   },
   _paramToElement: function(k, v) {
-    var content = artjs.$B("span", null, k).toString() + " - " + v;
-    return artjs.$B("p", null, content).toString();
+    var content = this._renderElement("span", null, k) + " - " + v;
+    return this._renderElement("p", null, content);
   }
 });
 
 art.component.Sidebar = artjs.Class(function() {
   this.super(arguments);
   this.tree = new artjs.Tree(art.DB.tree, this.element);
-}, null, {
+  this.tree.onLeaf.add(artjs.$D(this, "_onLeaf"));
+}, {
+  _onLeaf: function(tree) {
+    var data = art.DB.content[artjs.ElementUtils.getAttributes(tree.getCurrent()).href];
+    artjs.Broadcaster.fire(art.events.ON_SIDEBAR, data);
+  }
+}, {
   _name: "art.component.Sidebar"
 }, artjs.Component);
 
-art.component.Content = artjs.Class(null, {
-  onDependency: function(sidebar) {
-    sidebar.tree.onLeaf.add(artjs.$D(this, this.onLeaf));
-    sidebar.tree.open();
-  },
-  onLeaf: function(element) {
-    var scope = art.DB.content[artjs.ElementUtils.getAttributes(element).href];
-    artjs.TemplateHelpers.renderInto(this.element, "doc", scope);
+art.component.Content = artjs.Class(function() {
+  this.super(arguments);
+  artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, "_onLeaf"));
+}, {
+  _onLeaf: function(data) {
+    artjs.TemplateHelpers.renderInto(this.element, "doc", data);
     artjs.Fade.run(this.element, 1, .2, null, null, 0);
   }
 }, {
   _name: "art.component.Content"
 }, artjs.Component);
-
-art.component.Content.dependsOn(art.component.Sidebar);
 
 art.component.Member = artjs.Class(function(element) {
   this.super(arguments);

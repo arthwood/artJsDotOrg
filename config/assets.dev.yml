@@ -27,6 +27,7 @@ javascripts:
     - 'artJs/data/Model'
     - 'artJs/data/Queue'
     - 'artJs/events/Clock'
+    - 'artJs/events/Broadcaster'
     - 'artJs/events/ElementEvent'
     - 'artJs/events/Timeline'
     - 'artJs/events/Timeout'
@@ -54,6 +55,7 @@ javascripts:
     - 'artJs/template/Library'
     - 'artJs/ui/DatePicker'
     - 'artJs/ui/ElementInspector'
+    - 'artJs/ui/Select'
     - 'artJs/ui/Tree'
     - 'artJs/Finalize'
   docs-dev: 

@@ -1,15 +1,12 @@
 art.component.Content = artjs.Class(
-  null,
-  {
-    onDependency: function(sidebar) {
-      sidebar.tree.onLeaf.add(artjs.$D(this, this.onLeaf));
-      sidebar.tree.open();
-    },
+  function() {
+    this.super(arguments);
     
-    onLeaf: function(element) {
-      var scope = art.DB.content[artjs.ElementUtils.getAttributes(element).href];
-      
-      artjs.TemplateHelpers.renderInto(this.element, 'doc', scope);
+    artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, '_onLeaf'));
+  },
+  {
+    _onLeaf: function(data) {
+      artjs.TemplateHelpers.renderInto(this.element, 'doc', data);
       
       artjs.Fade.run(this.element, 1, 0.2, null, null, 0);
     }
@@ -17,5 +14,3 @@ art.component.Content = artjs.Class(
   {_name: 'art.component.Content'},
   artjs.Component
 );
-
-art.component.Content.dependsOn(art.component.Sidebar);

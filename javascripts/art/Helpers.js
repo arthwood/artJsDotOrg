@@ -1,7 +1,7 @@
 artjs.TemplateHelpers.registerAll({
   _renderExample: function(v) {
-    var exampleElement = artjs.$B('p', {className: 'example'}, 'Example:').toString();
-    var codeElement = artjs.$B('pre', {className: 'block'}, v.join('<br />')).toString();
+    var exampleElement = this._renderElement('p', {className: 'example'}, 'Example:');
+    var codeElement = this._renderElement('pre', {className: 'block'}, v.join('<br />'));
     
     return exampleElement + codeElement;
   },
@@ -10,7 +10,7 @@ artjs.TemplateHelpers.registerAll({
     if (example || more) {
       var v = this.renderIf(example, '_renderExample') + this.renderIf(more, '_renderMore');
       
-      return artjs.$B('div', {className: 'more'}, v).toString();
+      return this._renderElement('div', {className: 'more'}, v);
     }
     else {
       return '';
@@ -18,22 +18,22 @@ artjs.TemplateHelpers.registerAll({
   },
   
   _renderMore: function(v) {
-    return artjs.$B('p', {className: 'container'}, v).toString();
+    return this._renderElement('p', {className: 'container'}, v);
   },
   
   renderDescription: function(v) {
-    return artjs.$B('p', null, v).toString();
+    return this._renderElement('p', null, v);
   },
   
   renderParams: function(v) {
     var collection = artjs.ObjectUtils.map(v, this._paramToElement, this).join('');
       
-    return artjs.$B('div', {className: 'params'}, collection).toString();
+    return this._renderElement('div', {className: 'params'}, collection);
   },
   
   _paramToElement: function(k, v) {
-    var content = artjs.$B('span', null, k).toString() + ' - ' + v;
+    var content = this._renderElement('span', null, k) + ' - ' + v;
     
-    return artjs.$B('p', null, content).toString();
+    return this._renderElement('p', null, content);
   }
 });
