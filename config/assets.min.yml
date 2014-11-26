@@ -55,7 +55,9 @@ javascripts:
     - 'artJs/template/Library'
     - 'artJs/ui/DatePicker'
     - 'artJs/ui/ElementInspector'
+    - 'artJs/ui/Link'
     - 'artJs/ui/Select'
+    - 'artJs/ui/Table'
     - 'artJs/ui/Tree'
     - 'artJs/Finalize'
   docs-min: 
