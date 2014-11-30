@@ -142,20 +142,7 @@ artjs.ObjectUtils = artjs.utils.Object = {
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
         j = obj[i];
-        if (func.call(context, j)) {
-          result[i] = j;
-        }
-      }
-    }
-    return result;
-  },
-  selectWithKey: function(obj, func, context) {
-    var result = {};
-    var j;
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        j = obj[i];
-        if (func.call(context, i, j)) {
+        if (func.call(context, j, i)) {
           result[i] = j;
         }
       }
@@ -774,7 +761,6 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
     return result;
   }
 }, {
-  injected: false,
   callback: function(object, method, withSource) {
     var delegate = new this(object, method);
     var callback = delegate.callback(withSource);
@@ -788,17 +774,16 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
   },
   bindAll: function(context) {
     var container = context.ctor ? context.ctor.prototype : context;
-    var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.selectWithKey(container, this._isCallback, this));
+    var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(container, this._isCallback, this));
     var all = callbacks.concat(artjs.$A(arguments, 1));
-    this._bindEach.context = context;
-    this._bindEach.container = container;
+    this._bindContext = context;
     artjs.ArrayUtils.each(all, this._bindEach, this);
   },
-  _isCallback: function(k, v) {
+  _isCallback: function(v, k) {
     return artjs.StringUtils.startsWith(k, "_on") && v instanceof Function;
   },
   _bindEach: function(i) {
-    arguments.callee.container[i] = this.callback(arguments.callee.context, i);
+    this._bindContext[i] = this.callback(this._bindContext, i);
   }
 });
 
@@ -1344,10 +1329,10 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   getData: function(e) {
     var attrs = this.getAttributes(e);
-    var data = artjs.ObjectUtils.selectWithKey(attrs, this._isDataAttribute, this);
+    var data = artjs.ObjectUtils.select(attrs, this._isDataAttribute, this);
     return artjs.ObjectUtils.mapKey(data, this._removeDataPrefix, this);
   },
-  _isDataAttribute: function(k, v) {
+  _isDataAttribute: function(v, k) {
     return artjs.StringUtils.startsWith(k, "data-");
   },
   _removeDataPrefix: function(k) {
@@ -2271,11 +2256,11 @@ artjs.Broadcaster = artjs.events.Broadcaster = {
 artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, delegate) {
   this.element = element;
   this.delegate = delegate;
-  var on = artjs.$DC(this, this._on, false);
+  artjs.$BA(this);
   if (element.addEventListener) {
-    element.addEventListener(name, on, false);
+    element.addEventListener(name, this._onEvent, false);
   } else {
-    element.attachEvent("on" + name, on);
+    element.attachEvent("on" + name, this._onEvent);
   }
 }, {
   getTargets: function(e, over) {
@@ -2295,7 +2280,7 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, 
       };
     }
   },
-  _on: function(e) {
+  _onEvent: function(e) {
     this.delegate.invoke(e, this);
   }
 });
@@ -2305,7 +2290,7 @@ artjs.MouseEvent = artjs.events.Mouse = artjs.Class(function(element, name, dele
   this.over = false;
   this.on = on;
 }, {
-  _on: function(e) {
+  _onEvent: function(e) {
     if (this._edge(e) && !(this.on == this.over)) {
       this.over = this.on;
       this.super(arguments, e);
@@ -2334,23 +2319,23 @@ artjs.MouseOverEvent = artjs.events.MouseOver = artjs.Class(function(element, de
 }, null, null, artjs.MouseEvent);
 
 artjs.MouseOutEvent = artjs.events.MouseOut = artjs.Class(function(element, delegate) {
-  this.super(arguments, element, "mouseout", delegate, false);
+  this.super(arguments, element, "mouseout", delegate);
 }, null, null, artjs.MouseEvent);
 
 artjs.ChangeEvent = artjs.events.Change = artjs.Class(function(element, delegate) {
-  this.super(arguments, element, "change", delegate, false);
+  this.super(arguments, element, "change", delegate);
 }, null, null, artjs.ElementEvent);
 
 artjs.EventMapping = {
-  mousemove: artjs.MouseMoveEvent,
-  mouseover: artjs.MouseOverEvent,
-  mouseout: artjs.MouseOutEvent,
-  click: artjs.ClickEvent,
-  change: artjs.ChangeEvent
+  mousemove: "MouseMoveEvent",
+  mouseover: "MouseOverEvent",
+  mouseout: "MouseOutEvent",
+  click: "ClickEvent",
+  change: "ChangeEvent"
 };
 
 artjs.on = function(eventName, target, delegate) {
-  return new artjs.EventMapping[eventName](target, delegate);
+  return new artjs[artjs.EventMapping[eventName]](target, delegate);
 };
 
 artjs.Timeline = artjs.events.Timeline = artjs.Class(null, {
@@ -2514,7 +2499,7 @@ artjs.ReceiveMatcher = artjs.spec.matchers.Receive = artjs.Class(function(expect
 }, {
   resolve: function(actual) {
     this.receiver = new artjs.SpecReceiver(this, actual);
-    runner.receivers.push(this.receiver);
+    artjs.SpecRunner.pushReceiver(this.receiver);
     return this.receiver;
   },
   _failureData: function(actual) {
@@ -2556,7 +2541,7 @@ artjs.Actual = artjs.spec.Actual = artjs.Class(function(value) {
   to: function(matcher) {
     var value = matcher.resolve(this);
     if (typeof value == "boolean") {
-      runner.pushResult(new artjs.SpecResult(this, matcher, value));
+      artjs.SpecRunner.pushResult(new artjs.SpecResult(this, matcher, value));
     }
     return value;
   }
@@ -2581,15 +2566,15 @@ artjs.SpecNode = artjs.spec.Node = artjs.Class(function(facet, body) {
   this.body = body;
 }, {
   execute: function() {
-    runner.path.push(this);
+    artjs.SpecRunner.pushNode(this);
     this.body();
-    runner.path.pop();
+    artjs.SpecRunner.popNode();
   }
 });
 
 artjs.Spec = artjs.Class(null, {
   execute: function() {
-    runner.subject = this.facet;
+    artjs.SpecRunner.setSubject(this.facet);
     this.super(arguments);
   }
 }, null, artjs.SpecNode);
@@ -2600,16 +2585,16 @@ artjs.Context = artjs.Class(null, null, null, artjs.SpecNode);
 
 artjs.It = artjs.Class(null, {
   execute: function() {
-    runner.it = this;
-    runner.receivers = [];
+    artjs.SpecRunner.setIt(this);
+    artjs.SpecRunner.resetReceivers();
     this.super(arguments);
-    runner._testReceivers();
+    artjs.SpecRunner.testReceivers();
   }
 }, null, artjs.SpecNode);
 
 function spec(facet, body) {
   var node = new artjs.Spec(facet, body);
-  runner.specs.push(node);
+  artjs.SpecRunner.pushSpec(node);
 }
 
 function _executeNode(type, facet, body) {
@@ -2732,7 +2717,7 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(function(matcher, actual)
 });
 
 artjs.SpecResult = artjs.spec.Result = artjs.Class(function(actual, matcher, value) {
-  this.path = runner.path.concat();
+  this.path = artjs.SpecRunner.getPath().concat();
   this.actual = actual;
   this.matcher = matcher;
   this.value = value;
@@ -2742,34 +2727,115 @@ artjs.SpecResult = artjs.spec.Result = artjs.Class(function(actual, matcher, val
   }
 });
 
-artjs.SpecRunner = artjs.spec.Runner = artjs.Class(function() {
-  this.timeline = new artjs.Timeline;
-  this.init();
-}, {
-  runnerTemplate: artjs.ElementBuilder.create("div", {
-    className: "runner"
-  }),
-  testTemplate: artjs.ElementBuilder.create("span"),
-  resultsTemplate: artjs.ElementBuilder.create("div"),
+artjs.SpecRunner = artjs.spec.Runner = {
+  _specs: [],
+  _duration: null,
+  _it: null,
+  _subject: null,
+  _path: [],
+  _results: [],
+  _receivers: [],
+  _timeline: new artjs.Timeline,
+  onComplete: new artjs.CustomEvent("artjs.SpecRunner::onComplete"),
+  onResult: new artjs.CustomEvent("artjs.SpecRunner::onResult"),
+  run: function() {
+    this._timeline.mark();
+    artjs.ArrayUtils.invoke(this._specs, "execute");
+    this._duration = this._timeline.mark();
+    this.onComplete.fire(this);
+  },
+  pushSpec: function(spec) {
+    this._specs.push(spec);
+  },
+  pushNode: function(node) {
+    this._path.push(node);
+  },
+  popNode: function(node) {
+    this._path.pop();
+  },
+  setSubject: function(subject) {
+    this._subject = subject;
+  },
+  setIt: function(it) {
+    this._it = it;
+  },
+  getDuration: function() {
+    return this._duration;
+  },
+  getSubject: function() {
+    return this._subject;
+  },
+  getPath: function() {
+    return this._path;
+  },
+  getResults: function() {
+    return this._results;
+  },
+  getLastResult: function() {
+    return artjs.ArrayUtils.last(this._results);
+  },
+  alreadyFailed: function() {
+    var lastResult = this.getLastResult();
+    return lastResult && lastResult.it == this._it && !lastResult.value;
+  },
+  pushReceiver: function(receiver) {
+    this._receivers.push(receiver);
+  },
+  resetReceivers: function() {
+    this._receivers = [];
+  },
+  testReceivers: function() {
+    artjs.ArrayUtils.each(this._receivers, this.testReceiver, this);
+  },
+  testReceiver: function(receiver) {
+    var result = receiver.getResult();
+    this.pushResult(result);
+    receiver.rollback();
+  },
+  pushResult: function(result) {
+    if (!this.alreadyFailed()) {
+      result.it = this._it;
+      this._results.push(result);
+      this.onResult.fire(this);
+    }
+  }
+};
+
+function subject() {
+  return artjs.SpecRunner.getSubject();
+}
+
+artjs.SpecView = artjs.spec.View = {
   init: function() {
-    this.specs = [];
-    this.path = [];
-    this.results = [];
-    this.receivers = [];
+    this._runnerTemplate = artjs.$C("div", {
+      className: "runner"
+    });
+    this._testTemplate = artjs.$C("span");
+    this._resultsTemplate = artjs.$C("div");
+    artjs.SpecRunner.onResult.add(artjs.$D(this, "_onResult"));
+    artjs.SpecRunner.onComplete.add(artjs.$D(this, "_onComplete"));
   },
   run: function() {
-    this.timeline.mark();
-    this.runnerElement = artjs.$insert(document.body, this.runnerTemplate);
-    artjs.ArrayUtils.invoke(this.specs, "execute");
-    var duration = this.timeline.mark();
-    var failures = artjs.ArrayUtils.select(this.results, this._isFailure, this);
+    this._element = artjs.$insert(document.body, this._runnerTemplate);
+    artjs.SpecRunner.run();
+  },
+  _onResult: function(runner) {
+    var result = runner.getLastResult();
+    artjs.ElementUtils.setContent(this._testTemplate, result.value ? "." : "F");
+    this._testTemplate.className = result.value ? "success" : "failure";
+    artjs.ElementUtils.insert(this._element, this._testTemplate);
+  },
+  _onComplete: function(runner) {
+    var results = runner.getResults();
+    var duration = runner.getDuration();
+    var failures = artjs.ArrayUtils.select(results, this._isFailure, this);
     var success = artjs.ArrayUtils.isEmpty(failures);
     var classNames = [ "results" ];
-    var n = this.results.length;
+    var n = results.length;
     var k = failures.length;
     classNames.push(success ? "success" : "failure");
-    this.resultsTemplate.className = classNames.join(" ");
-    this.resultsElement = artjs.$insert(document.body, this.resultsTemplate);
+    this._resultsTemplate.className = classNames.join(" ");
+    var resultsElement = artjs.$insert(document.body, this._resultsTemplate);
     var resultText = success ? "Success!" : "Failure!";
     var statsText = success ? n + " assertions in total." : k + " assertions failed of " + n + " total.";
     var durationText = "Duration: " + artjs.DateUtils.miliToHMSM(duration);
@@ -2779,35 +2845,14 @@ artjs.SpecRunner = artjs.spec.Runner = artjs.Class(function() {
     var statElement = artjs.$E("p", {
       className: "stat"
     }, statsText + "<br/>" + durationText);
-    artjs.$insert(this.resultsElement, resultElement);
-    artjs.$insert(this.resultsElement, statElement);
+    artjs.$insert(resultsElement, resultElement);
+    artjs.$insert(resultsElement, statElement);
     if (!success) {
       var list = artjs.$E("ul");
       this._getFailureHtml.list = list;
       artjs.ArrayUtils.each(failures, this._getFailureHtml, this);
-      artjs.$insert(this.resultsElement, list);
+      artjs.$insert(resultsElement, list);
     }
-  },
-  alreadyFailed: function() {
-    var lastResult = artjs.ArrayUtils.last(this.results);
-    return lastResult && lastResult.it == this.it && !lastResult.value;
-  },
-  pushResult: function(result) {
-    if (!this.alreadyFailed()) {
-      result.it = this.it;
-      this.results.push(result);
-      artjs.ElementUtils.setContent(this.testTemplate, result.value ? "." : "F");
-      this.testTemplate.className = result.value ? "success" : "failure";
-      artjs.ElementUtils.insert(this.runnerElement, this.testTemplate);
-    }
-  },
-  _testReceivers: function() {
-    artjs.ArrayUtils.each(this.receivers, this.testReceiver, this);
-  },
-  testReceiver: function(receiver) {
-    var result = receiver.getResult();
-    this.pushResult(result);
-    receiver.rollback();
   },
   _getFailureHtml: function(i) {
     var path = artjs.ArrayUtils.map(i.path, this._nodeToString).join(" ");
@@ -2830,11 +2875,7 @@ artjs.SpecRunner = artjs.spec.Runner = artjs.Class(function() {
   _isFailure: function(i) {
     return !i.value;
   }
-});
-
-function subject() {
-  return runner.subject;
-}
+};
 
 artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content, scope) {
   this._tagRegEx = /\{\{.+\}\}/g;
@@ -3222,34 +3263,6 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function() {
   }
 }, artjs.Component);
 
-artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
-  artjs.on("mousemove", document, artjs.$D(this, this._onMouseMove));
-  this._toggler = new artjs.Toggler(true);
-  this._toggler.onActivate.add(artjs.$D(this, this._onActivate));
-  this._toggler.onDeactivate.add(artjs.$D(this, this._onDeactivate));
-}, {
-  _onMouseMove: function(e, ee) {
-    var targets = ee.getTargets(e);
-    var origin = targets.origin;
-    var eu = artjs.ElementUtils;
-    if (eu.children(origin).any(eu.isText)) {
-      this._toggler.toggle(origin);
-    }
-  },
-  _onActivate: function(toggler) {
-    var current = toggler.current;
-    if (current) {
-      artjs.ElementUtils.addClass(current, "inspected");
-    }
-  },
-  _onDeactivate: function(toggler) {
-    var current = toggler.current;
-    if (current) {
-      artjs.ElementUtils.removeClass(current, "inspected");
-    }
-  }
-});
-
 artjs.Link = artjs.ui.Link = artjs.Class(function() {
   this.super(arguments);
   this.onClick = new artjs.CustomEvent("artjs.Link::onClick");
@@ -3388,6 +3401,34 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(function() {
   }
 }, null, artjs.Component);
 
+artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
+  artjs.on("mousemove", document, artjs.$D(this, this._onMouseMove));
+  this._toggler = new artjs.Toggler(true);
+  this._toggler.onActivate.add(artjs.$D(this, this._onActivate));
+  this._toggler.onDeactivate.add(artjs.$D(this, this._onDeactivate));
+}, {
+  _onMouseMove: function(e, ee) {
+    var targets = ee.getTargets(e);
+    var origin = targets.origin;
+    var eu = artjs.ElementUtils;
+    if (eu.children(origin).any(eu.isText)) {
+      this._toggler.toggle(origin);
+    }
+  },
+  _onActivate: function(toggler) {
+    var current = toggler.current;
+    if (current) {
+      artjs.ElementUtils.addClass(current, "inspected");
+    }
+  },
+  _onDeactivate: function(toggler) {
+    var current = toggler.current;
+    if (current) {
+      artjs.ElementUtils.removeClass(current, "inspected");
+    }
+  }
+});
+
 artjs.onDocumentLoad = new artjs.CustomEvent("document:load");
 
 artjs.onWindowLoad = new artjs.CustomEvent("window:load");
@@ -3417,3 +3458,5 @@ artjs.Selector.init();
 artjs.TemplateLibrary.init();
 
 artjs.Calendar.init();
+
+artjs.SpecView.init();

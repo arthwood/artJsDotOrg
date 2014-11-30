@@ -2455,33 +2455,16 @@ art.DB = {
               'Returns copy of <span class="code">object</span> containing only properties for which <span class="code">callback</span> returns true',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
-                'var filtered = ObjectUtils.select(object, function(i) { ',
-                '  return !isNaN(parseFloat(i));', 
+                'var filtered = ObjectUtils.select(object, function(v, k) { ',
+                '  return !isNaN(parseFloat(v));', 
                 '});',
                 '',
                 '// or',
-                '// object.select(function(i) {',
-                '//   return !isNaN(parseFloat(i));', 
+                '// object.select(function(v, k) {',
+                '//   return !isNaN(parseFloat(v));', 
                 '// });',
                 '',
                 "filtered; // {id: 4, project_id: 4, status: '4'}"
-              ]
-            ),
-            new art.model.Member(
-              'selectWithKey(object:Object, callback:Function):Object',
-              'Same as select, but <span class="code">callback</span> receives both key and value',
-              [
-                "var object = {id: 4, active: true, project_id: 4, status: '4'};",
-                'var filtered = ObjectUtils.selectWithKey(object, function(k, v) {', 
-                '  return k.length > 2;', 
-                '});',
-                '',
-                '// or' ,
-                '// object.selectWithKey(function(k, v) {', 
-                '//   return k.length > 2;',
-                '// });',
-                '',
-                "filtered; // {active: true, project_id: 4, status: '4'}"
               ]
             ),
             new art.model.Member(

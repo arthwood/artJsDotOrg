@@ -167,18 +167,9 @@ spec(artjs.ObjectUtils, function() {
   describe('#select', function() {
     it('should return filtered array', function() {
       var obj = {a: 5, b: 7, c: -8};
-      var result = subject().select(obj, function(i) { return i > 0; });
+      var result = subject().select(obj, function(v, k) { return v > 0; });
 
       expect(artjs.ObjectUtils.keys(result)).to(eq(['a', 'b']));
-    });
-  });
-
-  describe('#selectWithKey', function() {
-    it('should return filtered array', function() {
-      var obj = {a: 'a', b: 7, c: 'c'};
-      var result = subject().selectWithKey(obj, function(k, v) { return k == v; });
-
-      expect(artjs.ObjectUtils.keys(result)).to(eq(['a', 'c']));
     });
   });
 
