@@ -42,6 +42,7 @@ javascripts:
     - 'artJs/spec/matchers/Receive'
     - 'artJs/spec/matchers/True'
     - 'artJs/spec/Actual'
+    - 'artJs/spec/Api'
     - 'artJs/spec/Definition'
     - 'artJs/spec/Mock'
     - 'artJs/spec/Node'
