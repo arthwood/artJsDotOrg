@@ -273,4 +273,22 @@ spec(artjs.StringUtils, function() {
       expect(result.b.c).to(eq('hello'));
     });
   });
+  
+  describe('#startsWith', function() {
+    context('when string starts with pattern', function() {
+      it('should return true', function() {
+        var result = subject().startsWith('artJs', 'art');
+        
+        expect(result).to(beTrue());
+      });
+    });
+    
+    context('when string does not start with pattern', function() {
+      it('should return true', function() {
+        var result = subject().startsWith('artJs', 'moo');
+        
+        expect(result).to(beFalse());
+      });
+    });
+  });
 });
