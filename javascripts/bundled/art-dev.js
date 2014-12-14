@@ -1,15 +1,15 @@
 var artjs = {
-  VERSION: "2.0",
-  data: {
-    tree: {}
-  },
+  VERSION: "0.0.9",
+  component: {},
+  data: {},
   dom: {},
   events: {},
   math: {},
   module: {},
   net: {},
   spec: {
-    matchers: {}
+    matcher: {},
+    node: {}
   },
   template: {},
   transition: {},
@@ -776,14 +776,27 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
     var container = context.ctor ? context.ctor.prototype : context;
     var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(container, this._isCallback, this));
     var all = callbacks.concat(artjs.$A(arguments, 1));
-    this._bindContext = context;
+    this._bindSource = context;
+    this._bindTarget = context;
     artjs.ArrayUtils.each(all, this._bindEach, this);
   },
+  delegateTo: function(source, target) {
+    var functions = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(source, this._isPublicMethod, this));
+    this._bindSource = source;
+    this._bindTarget = target;
+    artjs.ArrayUtils.each(functions, this._bindEach, this);
+  },
   _isCallback: function(v, k) {
-    return artjs.StringUtils.startsWith(k, "_on") && v instanceof Function;
+    return artjs.StringUtils.startsWith(k, "_on") && this._isFunction(v, k);
+  },
+  _isPublicMethod: function(v, k) {
+    return !artjs.StringUtils.startsWith(k, "_") && this._isFunction(v, k);
+  },
+  _isFunction: function(v, k) {
+    return v instanceof Function;
   },
   _bindEach: function(i) {
-    this._bindContext[i] = this.callback(this._bindContext, i);
+    this._bindTarget[i] = this.callback(this._bindSource, i);
   }
 });
 
@@ -792,6 +805,8 @@ artjs.$DC = artjs.Delegate.callback(artjs.Delegate, "callback");
 artjs.$D = artjs.Delegate.callback(artjs.Delegate, "create");
 
 artjs.$BA = artjs.Delegate.callback(artjs.Delegate, "bindAll");
+
+artjs.$DT = artjs.Delegate.callback(artjs.Delegate, "delegateTo");
 
 artjs.MathUtils = artjs.utils.Math = {
   _name: "MathUtils",
@@ -929,7 +944,8 @@ artjs.StringUtils = artjs.utils.String = {
     return JSON.parse(str);
   },
   startsWith: function(str, substr) {
-    return str.match(new RegExp("^" + substr));
+    var re = new RegExp("^" + substr);
+    return re.test(str);
   }
 };
 
@@ -1993,7 +2009,7 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(function(url, data, method) {
     return this._request.getAllResponseHeaders();
   },
   _onProgress: function(request, event) {
-    var r = event.position / event.totalSize;
+    var r = event.loaded / event.total;
     this.onProgress.fire(this, r);
   },
   _onError: function(request, event) {
@@ -2435,7 +2451,7 @@ artjs.Fade = artjs.transition.Fade = artjs.Class(function() {
   this.super(arguments, "opacity");
 }, null, null, artjs.TransitionBase);
 
-artjs.BaseMatcher = artjs.spec.matchers.Base = artjs.Class(function(expected, toText) {
+artjs.BaseMatcher = artjs.spec.matcher.Base = artjs.Class(function(expected, toText) {
   this.expected = expected;
   this.toText = toText || "be";
 }, {
@@ -2450,7 +2466,7 @@ artjs.BaseMatcher = artjs.spec.matchers.Base = artjs.Class(function(expected, to
   }
 });
 
-artjs.AMatcher = artjs.spec.matchers.A = artjs.Class(function(expected) {
+artjs.AMatcher = artjs.spec.matcher.A = artjs.Class(function(expected) {
   this.super(arguments, expected);
 }, {
   resolve: function(actual) {
@@ -2458,11 +2474,7 @@ artjs.AMatcher = artjs.spec.matchers.A = artjs.Class(function(expected) {
   }
 }, null, artjs.BaseMatcher);
 
-function beA(expected) {
-  return new artjs.AMatcher(expected);
-}
-
-artjs.EqMatcher = artjs.spec.matchers.Eq = artjs.Class(function(expected) {
+artjs.EqMatcher = artjs.spec.matcher.Eq = artjs.Class(function(expected) {
   this.super(arguments, expected, "equal");
 }, {
   resolve: function(actual) {
@@ -2474,27 +2486,15 @@ artjs.EqMatcher = artjs.spec.matchers.Eq = artjs.Class(function(expected) {
   }
 }, null, artjs.BaseMatcher);
 
-function eq(expected) {
-  return new artjs.EqMatcher(expected);
-}
-
-artjs.FalseMatcher = artjs.spec.matchers.False = artjs.Class(function() {
+artjs.FalseMatcher = artjs.spec.matcher.False = artjs.Class(function() {
   this.super(arguments, false);
 }, null, null, artjs.BaseMatcher);
 
-function beFalse() {
-  return new artjs.FalseMatcher;
-}
-
-artjs.NullMatcher = artjs.spec.matchers.Null = artjs.Class(function() {
+artjs.NullMatcher = artjs.spec.matcher.Null = artjs.Class(function() {
   this.super(arguments, null);
 }, null, null, artjs.BaseMatcher);
 
-function beNull() {
-  return new artjs.NullMatcher;
-}
-
-artjs.ReceiveMatcher = artjs.spec.matchers.Receive = artjs.Class(function(expected) {
+artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(function(expected) {
   this.super(arguments, expected, "receive");
 }, {
   resolve: function(actual) {
@@ -2523,17 +2523,37 @@ artjs.ReceiveMatcher = artjs.spec.matchers.Receive = artjs.Class(function(expect
   }
 }, null, artjs.BaseMatcher);
 
-function receive(expected) {
-  return new artjs.ReceiveMatcher(expected);
-}
-
-artjs.TrueMatcher = artjs.spec.matchers.True = artjs.Class(function() {
+artjs.TrueMatcher = artjs.spec.matcher.True = artjs.Class(function() {
   this.super(arguments, true);
 }, null, null, artjs.BaseMatcher);
 
-function beTrue() {
-  return new artjs.TrueMatcher;
-}
+artjs.SpecNode = artjs.spec.node.Base = artjs.Class(function(facet, body) {
+  this.facet = facet;
+  this.body = body;
+}, {
+  execute: function() {
+    artjs.SpecRunner.pushNode(this);
+    this.body();
+    artjs.SpecRunner.popNode();
+  }
+});
+
+artjs.Context = artjs.spec.node.Context = artjs.Class(null, null, null, artjs.SpecNode);
+
+artjs.Describe = artjs.spec.node.Describe = artjs.Class(null, null, null, artjs.SpecNode);
+
+artjs.It = artjs.spec.node.It = artjs.Class(null, {
+  execute: function() {
+    artjs.SpecRunner.executeIt(this, arguments);
+  }
+}, null, artjs.SpecNode);
+
+artjs.Spec = artjs.spec.node.Spec = artjs.Class(null, {
+  execute: function() {
+    artjs.SpecRunner.setSubject(this.facet);
+    this.super(arguments);
+  }
+}, null, artjs.SpecNode);
 
 artjs.Actual = artjs.spec.Actual = artjs.Class(function(value) {
   this.value = value;
@@ -2547,72 +2567,59 @@ artjs.Actual = artjs.spec.Actual = artjs.Class(function(value) {
   }
 });
 
-function expect(value) {
-  return new artjs.Actual(value);
-}
+artjs.SpecApi = artjs.spec.Api = {
+  spec: function(facet, body) {
+    var node = new artjs.Spec(facet, body);
+    artjs.SpecRunner.pushSpec(node);
+  },
+  _executeNode: function(type, facet, body) {
+    var node = new type(facet, body);
+    node.execute();
+    return node;
+  },
+  describe: function(facet, body) {
+    this._executeNode(artjs.Describe, facet, body);
+  },
+  context: function(facet, body) {
+    this._executeNode(artjs.Context, facet, body);
+  },
+  it: function(facet, body) {
+    this._executeNode(artjs.It, facet, body);
+  },
+  eq: function(expected) {
+    return new artjs.EqMatcher(expected);
+  },
+  beA: function(expected) {
+    return new artjs.AMatcher(expected);
+  },
+  beFalse: function() {
+    return new artjs.FalseMatcher;
+  },
+  beNull: function() {
+    return new artjs.NullMatcher;
+  },
+  receive: function(expected) {
+    return new artjs.ReceiveMatcher(expected);
+  },
+  beTrue: function() {
+    return new artjs.TrueMatcher;
+  },
+  expect: function(value) {
+    return new artjs.Actual(value);
+  },
+  mock: function() {
+    return new artjs.Mock;
+  },
+  subject: function() {
+    return artjs.SpecRunner.getSubject();
+  }
+};
 
 artjs.Mock = artjs.spec.Mock = artjs.Class(function() {}, {
   toString: function() {
     return "mock";
   }
 });
-
-function mock() {
-  return new artjs.Mock;
-}
-
-artjs.SpecNode = artjs.spec.Node = artjs.Class(function(facet, body) {
-  this.facet = facet;
-  this.body = body;
-}, {
-  execute: function() {
-    artjs.SpecRunner.pushNode(this);
-    this.body();
-    artjs.SpecRunner.popNode();
-  }
-});
-
-artjs.Spec = artjs.Class(null, {
-  execute: function() {
-    artjs.SpecRunner.setSubject(this.facet);
-    this.super(arguments);
-  }
-}, null, artjs.SpecNode);
-
-artjs.Describe = artjs.Class(null, null, null, artjs.SpecNode);
-
-artjs.Context = artjs.Class(null, null, null, artjs.SpecNode);
-
-artjs.It = artjs.Class(null, {
-  execute: function() {
-    artjs.SpecRunner.setIt(this);
-    artjs.SpecRunner.resetReceivers();
-    this.super(arguments);
-    artjs.SpecRunner.testReceivers();
-  }
-}, null, artjs.SpecNode);
-
-function spec(facet, body) {
-  var node = new artjs.Spec(facet, body);
-  artjs.SpecRunner.pushSpec(node);
-}
-
-function _executeNode(type, facet, body) {
-  var node = new type(facet, body);
-  node.execute();
-}
-
-function describe(facet, body) {
-  _executeNode(artjs.Describe, facet, body);
-}
-
-function context(facet, body) {
-  _executeNode(artjs.Context, facet, body);
-}
-
-function it(facet, body) {
-  _executeNode(artjs.It, facet, body);
-}
 
 artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(function(matcher, actual) {
   this._matcher = matcher;
@@ -2721,17 +2728,28 @@ artjs.SpecResult = artjs.spec.Result = artjs.Class(function(actual, matcher, val
   this.actual = actual;
   this.matcher = matcher;
   this.value = value;
+  this.it = null;
 }, {
   failureText: function() {
     return this.matcher.failureText(this.actual);
+  },
+  getPathAsString: function() {
+    return artjs.ArrayUtils.map(this.path, this.ctor._nodeToString).join(" ");
+  }
+}, {
+  _nodeToString: function(i) {
+    var facet = i.facet;
+    return typeof facet == "string" ? facet : facet._name;
   }
 });
 
 artjs.SpecRunner = artjs.spec.Runner = {
   _specs: [],
-  _duration: null,
+  _duration: undefined,
   _it: null,
-  _subject: null,
+  _subject: undefined,
+  _itsCount: undefined,
+  _countMode: undefined,
   _path: [],
   _results: [],
   _receivers: [],
@@ -2744,6 +2762,25 @@ artjs.SpecRunner = artjs.spec.Runner = {
     this._duration = this._timeline.mark();
     this.onComplete.fire(this);
   },
+  count: function() {
+    this._itsCount = 0;
+    this._countMode = true;
+    artjs.ArrayUtils.invoke(this._specs, "execute");
+    this._countMode = false;
+    var result = this._itsCount;
+    this._itsCount = undefined;
+    return result;
+  },
+  executeIt: function(it, itsArguments) {
+    if (this._countMode) {
+      this._itsCount++;
+    } else {
+      this._it = it;
+      this._receivers = [];
+      it.super(itsArguments);
+      artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
+    }
+  },
   pushSpec: function(spec) {
     this._specs.push(spec);
   },
@@ -2755,9 +2792,6 @@ artjs.SpecRunner = artjs.spec.Runner = {
   },
   setSubject: function(subject) {
     this._subject = subject;
-  },
-  setIt: function(it) {
-    this._it = it;
   },
   getDuration: function() {
     return this._duration;
@@ -2781,29 +2815,25 @@ artjs.SpecRunner = artjs.spec.Runner = {
   pushReceiver: function(receiver) {
     this._receivers.push(receiver);
   },
-  resetReceivers: function() {
-    this._receivers = [];
-  },
-  testReceivers: function() {
-    artjs.ArrayUtils.each(this._receivers, this.testReceiver, this);
-  },
-  testReceiver: function(receiver) {
-    var result = receiver.getResult();
-    this.pushResult(result);
-    receiver.rollback();
-  },
   pushResult: function(result) {
     if (!this.alreadyFailed()) {
       result.it = this._it;
       this._results.push(result);
       this.onResult.fire(this);
     }
+  },
+  getTotalSpecsNum: function() {
+    return this._specs.length;
+  },
+  getTotalItsNum: function() {
+    return this._itsCount;
+  },
+  _testReceiver: function(receiver) {
+    var result = receiver.getResult();
+    this.pushResult(result);
+    receiver.rollback();
   }
 };
-
-function subject() {
-  return artjs.SpecRunner.getSubject();
-}
 
 artjs.SpecView = artjs.spec.View = {
   init: function() {
@@ -2814,6 +2844,7 @@ artjs.SpecView = artjs.spec.View = {
     this._resultsTemplate = artjs.$C("div");
     artjs.SpecRunner.onResult.add(artjs.$D(this, "_onResult"));
     artjs.SpecRunner.onComplete.add(artjs.$D(this, "_onComplete"));
+    artjs.$DT(artjs.SpecApi, window);
   },
   run: function() {
     this._element = artjs.$insert(document.body, this._runnerTemplate);
@@ -3065,7 +3096,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
   }
 };
 
-artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(function() {
+artjs.DatePicker = artjs.component.DatePicker = artjs.Class(function() {
   this.super(arguments);
   artjs.$BA(this);
   var now = new Date;
@@ -3263,7 +3294,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function() {
   }
 }, artjs.Component);
 
-artjs.Link = artjs.ui.Link = artjs.Class(function() {
+artjs.Link = artjs.component.Link = artjs.Class(function() {
   this.super(arguments);
   this.onClick = new artjs.CustomEvent("artjs.Link::onClick");
   artjs.on("click", this.element, artjs.$D(this, "_onClick"));
@@ -3273,7 +3304,7 @@ artjs.Link = artjs.ui.Link = artjs.Class(function() {
   }
 }, null, artjs.Component);
 
-artjs.Select = artjs.ui.Select = artjs.Class(function() {
+artjs.Select = artjs.component.Select = artjs.Class(function() {
   this.super(arguments);
   this.onChange = new artjs.CustomEvent("artjs.Select::onChange");
   artjs.on("change", this.element, artjs.$D(this, "_onChange"));
@@ -3301,7 +3332,7 @@ artjs.Select = artjs.ui.Select = artjs.Class(function() {
   }
 }, null, artjs.Component);
 
-artjs.Table = artjs.ui.Table = artjs.Class(function() {
+artjs.Table = artjs.component.Table = artjs.Class(function() {
   this.super(arguments);
   artjs.$BA(this);
   this.onItem = new artjs.CustomEvent("artjs.Table::onItem");
@@ -3339,7 +3370,7 @@ artjs.Table = artjs.ui.Table = artjs.Class(function() {
   }
 }, null, artjs.Component);
 
-artjs.Tree = artjs.ui.Tree = artjs.Class(function() {
+artjs.Tree = artjs.component.Tree = artjs.Class(function() {
   this.super(arguments);
   artjs.$BA(this);
   this._leafClassToggler = new artjs.ClassToggler("selected");

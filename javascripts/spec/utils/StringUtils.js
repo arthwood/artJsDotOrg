@@ -284,7 +284,7 @@ spec(artjs.StringUtils, function() {
     });
     
     context('when string does not start with pattern', function() {
-      it('should return true', function() {
+      it('should return false', function() {
         var result = subject().startsWith('artJs', 'moo');
         
         expect(result).to(beFalse());
