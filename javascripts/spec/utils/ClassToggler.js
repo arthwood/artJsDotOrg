@@ -1,9 +1,11 @@
 spec(artjs.ClassToggler, function() {
-  it('should start with null as a current', function() {
-    var className = 'class';
-    var toggler = new artjs.ClassToggler(className);
-
-    expect(toggler.getCurrent()).to(beNull());
+  describe('#getCurrent', function() {
+    it('should start with null as a current', function() {
+      var className = 'class';
+      var toggler = new artjs.ClassToggler(className);
+  
+      expect(toggler.getCurrent()).to(beNull());
+    });
   });
 
   describe('#toggle', function() {

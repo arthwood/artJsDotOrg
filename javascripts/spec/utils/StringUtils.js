@@ -171,7 +171,9 @@ spec(artjs.StringUtils, function() {
       });
       
       context('with custom ending', function() {
-        expect(subject().truncate(text, n, false, ' |')).to(eq('this text ne |'));
+        it('should return valid text', function() {
+          expect(subject().truncate(text, n, false, ' |')).to(eq('this text ne |'));
+        });
       });
       
       context('when onlyWords is set to true', function() {

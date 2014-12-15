@@ -28,6 +28,9 @@ artjs.p = artjs.log;
 artjs.ObjectUtils = artjs.utils.Object = {
   _name: "ObjectUtils",
   QUERY_DELIMITER: "&",
+  toString: function() {
+    return this._name;
+  },
   init: function() {
     this._invertedRemoveValueDC = artjs.$DC(this, "_invertedRemoveValue");
     this._eachPairDeleteValueDC = artjs.$DC(this, "_eachPairDeleteValue");
@@ -310,9 +313,8 @@ artjs.ObjectUtils = artjs.utils.Object = {
 
 artjs.ArrayUtils = artjs.utils.Array = {
   _name: "ArrayUtils",
-  init: function() {
-    this._areItemsEqualCallback = artjs.$DC(this, "areItemsEqual");
-    this._invokeCallback = artjs.$DC(this, "_invoke");
+  toString: function() {
+    return this._name;
   },
   build: function(n, func, context) {
     var arr = new Array(n);
@@ -397,8 +399,8 @@ artjs.ArrayUtils = artjs.utils.Array = {
     return result;
   },
   invoke: function(arr, meth) {
-    this._invokeCallback.delegate.args = [ meth, this.arrify(arguments, 2) ];
-    return this.map(arr, this._invokeCallback);
+    var delegate = artjs.$D(this, "_invoke", meth, this.arrify(arguments, 2));
+    return this.map(arr, delegate.callback());
   },
   _invoke: function(i, idx, arr, meth, args) {
     return i[meth].apply(i, args);
@@ -520,8 +522,8 @@ artjs.ArrayUtils = artjs.utils.Array = {
     return null;
   },
   equal: function(arr, func, context) {
-    this._areItemsEqualCallback.delegate.args = [ func, context ];
-    return this.all(this.transpose(arr), this._areItemsEqualCallback, this);
+    var delegate = artjs.$D(this, "areItemsEqual", func, context);
+    return this.all(this.transpose(arr), delegate.callback(), this);
   },
   areItemsEqual: function(i, idx, arr, func, context) {
     return this.uniq(i, func, context).length == 1;
@@ -672,6 +674,10 @@ artjs.Class = artjs.utils.Class = function(ctor, proto, stat, superclass) {
 
 artjs.Class._name = "Class";
 
+artjs.Class.toString = function() {
+  return this._name;
+};
+
 artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor = ctor || this._defaultConstructor();
   this.ctor._onCreated = this._defaultOnCreated;
@@ -810,6 +816,9 @@ artjs.$DT = artjs.Delegate.callback(artjs.Delegate, "delegateTo");
 
 artjs.MathUtils = artjs.utils.Math = {
   _name: "MathUtils",
+  toString: function() {
+    return this._name;
+  },
   sgn: function(x) {
     return x === 0 ? 0 : Math.abs(x) / x;
   },
@@ -829,6 +838,9 @@ artjs.MathUtils = artjs.utils.Math = {
 
 artjs.StringUtils = artjs.utils.String = {
   _name: "StringUtils",
+  toString: function() {
+    return this._name;
+  },
   first: function(str) {
     return str.substr(0, 1);
   },
@@ -951,6 +963,9 @@ artjs.StringUtils = artjs.utils.String = {
 
 artjs.DateUtils = artjs.utils.Date = {
   _name: "DateUtils",
+  toString: function() {
+    return this._name;
+  },
   getTime: function() {
     return (new Date).getTime();
   },
@@ -1062,6 +1077,10 @@ artjs.ElementUtils = artjs.utils.Element = {
   SUB_OBJ_RE: /\[\w+\]/g,
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: [ "", "-o-", "-ms-", "-moz-", "-khtml-", "-webkit-" ],
+  _name: "ElementUtils",
+  toString: function() {
+    return this._name;
+  },
   init: function() {
     this.detectHiddenElementDC = artjs.$DC(this, "detectHiddenElement");
     artjs.$insert = artjs.$DC(this, "insert");
@@ -1395,7 +1414,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   onClick: function(e, delegate) {
     return artjs.on("click", e, delegate);
   },
-  toString: function(e) {
+  render: function(e) {
     var classes = this.getClasses(e);
     var attr = this.getAttributes(e);
     delete attr["id"];
@@ -1430,7 +1449,10 @@ artjs.Toggler = artjs.utils.Toggler = artjs.Class(function(unique) {
     }
   }
 }, {
-  _name: "Toggler"
+  _name: "Toggler",
+  toString: function() {
+    return this._name;
+  }
 });
 
 artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(function(className) {
@@ -1456,7 +1478,10 @@ artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(function(className) 
     this.onDeactivate.fire(this);
   }
 }, {
-  _name: "ClassToggler"
+  _name: "ClassToggler",
+  toString: function() {
+    return this._name;
+  }
 });
 
 artjs.Locator = artjs.module.Locator = {
@@ -2535,6 +2560,9 @@ artjs.SpecNode = artjs.spec.node.Base = artjs.Class(function(facet, body) {
     artjs.SpecRunner.pushNode(this);
     this.body();
     artjs.SpecRunner.popNode();
+  },
+  toString: function() {
+    return this.facet.toString();
   }
 });
 
@@ -2542,9 +2570,27 @@ artjs.Context = artjs.spec.node.Context = artjs.Class(null, null, null, artjs.Sp
 
 artjs.Describe = artjs.spec.node.Describe = artjs.Class(null, null, null, artjs.SpecNode);
 
-artjs.It = artjs.spec.node.It = artjs.Class(null, {
+artjs.It = artjs.spec.node.It = artjs.Class(function() {
+  this.super(arguments);
+  this._results = [];
+}, {
   execute: function() {
     artjs.SpecRunner.executeIt(this, arguments);
+  },
+  pushResult: function(result) {
+    this._results.push(result);
+  },
+  getResults: function() {
+    return this._results;
+  },
+  setPath: function(path) {
+    this._path = path;
+  },
+  getPath: function() {
+    return this._path;
+  },
+  isSuccess: function() {
+    return artjs.ArrayUtils.all(artjs.ArrayUtils.pluck(this.getResults(), "value"));
   }
 }, null, artjs.SpecNode);
 
@@ -2724,22 +2770,12 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(function(matcher, actual)
 });
 
 artjs.SpecResult = artjs.spec.Result = artjs.Class(function(actual, matcher, value) {
-  this.path = artjs.SpecRunner.getPath().concat();
   this.actual = actual;
   this.matcher = matcher;
   this.value = value;
-  this.it = null;
 }, {
   failureText: function() {
     return this.matcher.failureText(this.actual);
-  },
-  getPathAsString: function() {
-    return artjs.ArrayUtils.map(this.path, this.ctor._nodeToString).join(" ");
-  }
-}, {
-  _nodeToString: function(i) {
-    var facet = i.facet;
-    return typeof facet == "string" ? facet : facet._name;
   }
 });
 
@@ -2748,14 +2784,14 @@ artjs.SpecRunner = artjs.spec.Runner = {
   _duration: undefined,
   _it: null,
   _subject: undefined,
-  _itsCount: undefined,
+  _itsPreCount: undefined,
   _countMode: undefined,
   _path: [],
-  _results: [],
+  _its: [],
   _receivers: [],
   _timeline: new artjs.Timeline,
   onComplete: new artjs.CustomEvent("artjs.SpecRunner::onComplete"),
-  onResult: new artjs.CustomEvent("artjs.SpecRunner::onResult"),
+  onItComplete: new artjs.CustomEvent("artjs.SpecRunner::onItComplete"),
   run: function() {
     this._timeline.mark();
     artjs.ArrayUtils.invoke(this._specs, "execute");
@@ -2763,22 +2799,23 @@ artjs.SpecRunner = artjs.spec.Runner = {
     this.onComplete.fire(this);
   },
   count: function() {
-    this._itsCount = 0;
+    this._itsPreCount = 0;
     this._countMode = true;
     artjs.ArrayUtils.invoke(this._specs, "execute");
     this._countMode = false;
-    var result = this._itsCount;
-    this._itsCount = undefined;
-    return result;
+    return this._itsPreCount;
   },
   executeIt: function(it, itsArguments) {
     if (this._countMode) {
-      this._itsCount++;
+      this._itsPreCount++;
     } else {
       this._it = it;
       this._receivers = [];
+      this._it.setPath(this._path.concat());
+      this._its.push(this._it);
       it.super(itsArguments);
       artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
+      this.onItComplete.fire(this);
     }
   },
   pushSpec: function(spec) {
@@ -2799,34 +2836,20 @@ artjs.SpecRunner = artjs.spec.Runner = {
   getSubject: function() {
     return this._subject;
   },
-  getPath: function() {
-    return this._path;
-  },
-  getResults: function() {
-    return this._results;
-  },
-  getLastResult: function() {
-    return artjs.ArrayUtils.last(this._results);
-  },
-  alreadyFailed: function() {
-    var lastResult = this.getLastResult();
-    return lastResult && lastResult.it == this._it && !lastResult.value;
-  },
   pushReceiver: function(receiver) {
     this._receivers.push(receiver);
   },
   pushResult: function(result) {
-    if (!this.alreadyFailed()) {
-      result.it = this._it;
-      this._results.push(result);
-      this.onResult.fire(this);
-    }
+    this._it.pushResult(result);
   },
   getTotalSpecsNum: function() {
     return this._specs.length;
   },
-  getTotalItsNum: function() {
-    return this._itsCount;
+  getIts: function() {
+    return this._its;
+  },
+  getCurrentTest: function() {
+    return this._it;
   },
   _testReceiver: function(receiver) {
     var result = receiver.getResult();
@@ -2842,33 +2865,34 @@ artjs.SpecView = artjs.spec.View = {
     });
     this._testTemplate = artjs.$C("span");
     this._resultsTemplate = artjs.$C("div");
-    artjs.SpecRunner.onResult.add(artjs.$D(this, "_onResult"));
+    artjs.SpecRunner.onItComplete.add(artjs.$D(this, "_onItComplete"));
     artjs.SpecRunner.onComplete.add(artjs.$D(this, "_onComplete"));
     artjs.$DT(artjs.SpecApi, window);
   },
   run: function() {
     this._element = artjs.$insert(document.body, this._runnerTemplate);
+    artjs.SpecRunner.count();
     artjs.SpecRunner.run();
   },
-  _onResult: function(runner) {
-    var result = runner.getLastResult();
-    artjs.ElementUtils.setContent(this._testTemplate, result.value ? "." : "F");
-    this._testTemplate.className = result.value ? "success" : "failure";
+  _onItComplete: function(runner) {
+    var success = runner.getCurrentTest().isSuccess();
+    artjs.ElementUtils.setContent(this._testTemplate, success ? "." : "F");
+    this._testTemplate.className = success ? "success" : "failure";
     artjs.ElementUtils.insert(this._element, this._testTemplate);
   },
   _onComplete: function(runner) {
-    var results = runner.getResults();
+    var its = runner.getIts();
     var duration = runner.getDuration();
-    var failures = artjs.ArrayUtils.select(results, this._isFailure, this);
+    var failures = artjs.ArrayUtils.reject(artjs.ArrayUtils.pluck(its, "success"));
     var success = artjs.ArrayUtils.isEmpty(failures);
     var classNames = [ "results" ];
-    var n = results.length;
+    var n = its.length;
     var k = failures.length;
     classNames.push(success ? "success" : "failure");
     this._resultsTemplate.className = classNames.join(" ");
     var resultsElement = artjs.$insert(document.body, this._resultsTemplate);
     var resultText = success ? "Success!" : "Failure!";
-    var statsText = success ? n + " assertions in total." : k + " assertions failed of " + n + " total.";
+    var statsText = success ? n + " tests in total." : k + " tests failed of " + n + " total.";
     var durationText = "Duration: " + artjs.DateUtils.miliToHMSM(duration);
     var resultElement = artjs.$E("p", {
       className: "result"
@@ -2902,9 +2926,6 @@ artjs.SpecView = artjs.spec.View = {
   _nodeToString: function(i) {
     var facet = i.facet;
     return typeof facet == "string" ? facet : facet._name;
-  },
-  _isFailure: function(i) {
-    return !i.value;
   }
 };
 
@@ -3473,8 +3494,6 @@ document.addEventListener("DOMContentLoaded", function() {
 window.addEventListener("load", function() {
   artjs.onWindowLoad.fire();
 }, false);
-
-artjs.ArrayUtils.init();
 
 artjs.ComponentSweeper.init();
 
