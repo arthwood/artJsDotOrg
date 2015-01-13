@@ -38,7 +38,7 @@ module.exports = function(config) {
       'javascripts/artJs/template/*.js',
       'javascripts/artJs/transition/*.js',
       'javascripts/artJs/ui/*.js',
-      'javascripts/spec/Init.js',
+      'javascripts/artJs/Shortcuts.js',
       'javascripts/spec/**/*.js'
     ],
 
@@ -75,8 +75,7 @@ module.exports = function(config) {
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
-
-
+    
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['Chrome'],

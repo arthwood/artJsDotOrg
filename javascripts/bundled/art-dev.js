@@ -9,7 +9,9 @@ var artjs = {
   net: {},
   spec: {
     matcher: {},
-    node: {}
+    node: {},
+    runner: {},
+    view: {}
   },
   template: {},
   transition: {},
@@ -24,292 +26,6 @@ artjs.log = function() {
 };
 
 artjs.p = artjs.log;
-
-artjs.ObjectUtils = artjs.utils.Object = {
-  _name: "ObjectUtils",
-  QUERY_DELIMITER: "&",
-  toString: function() {
-    return this._name;
-  },
-  init: function() {
-    this._invertedRemoveValueDC = artjs.$DC(this, "_invertedRemoveValue");
-    this._eachPairDeleteValueDC = artjs.$DC(this, "_eachPairDeleteValue");
-    this._eachKeyDeleteKeyDC = artjs.$DC(this, "_eachKeyDeleteKey");
-    this._invertedIncludesDC = artjs.$DC(this, "_invertedIncludes");
-    this._pairToQueryStringDC = artjs.$DC(this, "_pairToQueryString");
-    this._parseArrayValueDC = artjs.$DC(this, "_parseArrayValue");
-  },
-  copy: function(obj) {
-    var copy = {};
-    this.copyProps(obj, copy);
-    return copy;
-  },
-  copyProps: function(source, target) {
-    for (var i in source) {
-      if (source.hasOwnProperty(i)) {
-        target[i] = source[i];
-      }
-    }
-  },
-  extend: function(target, source) {
-    this.copyProps(source, target);
-  },
-  merge: function(target, source) {
-    this.extend(target, source);
-    return target;
-  },
-  update: function(target, source) {
-    return this.merge(target, source);
-  },
-  removeValue: function(obj, val) {
-    this._eachPairDeleteValueDC.delegate.args = [ obj, val ];
-    this.eachPair(obj, this._eachPairDeleteValueDC);
-  },
-  removeKeys: function(obj, keys) {
-    this._eachKeyDeleteKeyDC.delegate.args = [ obj ];
-    artjs.ArrayUtils.each(keys, this._eachKeyDeleteKeyDC);
-  },
-  removeValues: function(obj, values) {
-    this._invertedRemoveValueDC.delegate.args = [ obj ];
-    artjs.ArrayUtils.eachItem(values, this._invertedRemoveValueDC);
-  },
-  keys: function(obj) {
-    var result = [];
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        result.push(i);
-      }
-    }
-    return result;
-  },
-  values: function(obj) {
-    var result = [];
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        result.push(obj[i]);
-      }
-    }
-    return result;
-  },
-  map: function(obj, func, context) {
-    var result = [];
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        result.push(func.call(context, i, obj[i]));
-      }
-    }
-    return result;
-  },
-  mapValue: function(obj, func, context) {
-    var result = {};
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        result[i] = func.call(context, obj[i]);
-      }
-    }
-    return result;
-  },
-  mapKey: function(obj, func, context) {
-    var result = {};
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        result[func.call(context, i)] = obj[i];
-      }
-    }
-    return result;
-  },
-  each: function(obj, func, context) {
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        func.call(context, obj[i]);
-      }
-    }
-  },
-  eachKey: function(obj, func, context) {
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        func.call(context, i);
-      }
-    }
-  },
-  eachPair: function(obj, func, context) {
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        func.call(context, i, obj[i]);
-      }
-    }
-  },
-  select: function(obj, func, context) {
-    var result = {};
-    var j;
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        j = obj[i];
-        if (func.call(context, j, i)) {
-          result[i] = j;
-        }
-      }
-    }
-    return result;
-  },
-  reject: function(obj, func, context) {
-    var result = {};
-    var j;
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        j = obj[i];
-        if (!func.call(context, j)) {
-          result[i] = j;
-        }
-      }
-    }
-    return result;
-  },
-  isArray: function(obj) {
-    return this.is(obj, Array);
-  },
-  isString: function(obj) {
-    return this.is(obj, String);
-  },
-  is: function(obj, type) {
-    return obj.constructor === type;
-  },
-  isEmpty: function(obj) {
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        return false;
-      }
-    }
-    return true;
-  },
-  isNotEmpty: function(obj) {
-    return !this.isEmpty(obj);
-  },
-  build: function(arr, func, context) {
-    var result = {};
-    var item;
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        item = arr[i];
-        result[item] = func.call(context, item);
-      }
-    }
-    return result;
-  },
-  fromPoints: function(arr) {
-    var result = {};
-    var item;
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        item = arr[i];
-        result[item.x] = item.y;
-      }
-    }
-    return result;
-  },
-  fromArray: function(arr) {
-    var result = {};
-    var item;
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        item = arr[i];
-        result[item[0]] = item[1];
-      }
-    }
-    return result;
-  },
-  toArray: function(obj) {
-    return this.map(obj, this._keyValueArray, this);
-  },
-  includes: function(obj, item) {
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i) && obj[i] === item) {
-        return true;
-      }
-    }
-    return false;
-  },
-  includesAll: function(obj, subset) {
-    this._invertedIncludesDC.delegate.args = [ obj ];
-    return this.all(subset, this._invertedIncludesDC);
-  },
-  all: function(obj, func) {
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i) && !func(obj[i])) {
-        return false;
-      }
-    }
-    return true;
-  },
-  toQueryString: function(obj) {
-    return this._toQueryStringWithPrefix(obj, "");
-  },
-  _toQueryStringWithPrefix: function(obj, prefix) {
-    this._pairToQueryStringDC.delegate.args = [ prefix ];
-    return this.map(obj, this._pairToQueryStringDC).join(this.QUERY_DELIMITER);
-  },
-  _pairToQueryString: function(key, value, prefix) {
-    var result;
-    prefix = artjs.StringUtils.isBlank(prefix) ? key : prefix + "[" + key + "]";
-    if (typeof value == "object") {
-      if (isNaN(value.length)) {
-        result = this._toQueryStringWithPrefix(value, prefix);
-      } else {
-        this._parseArrayValueDC.delegate.args = [ prefix + "[]" ];
-        result = artjs.ArrayUtils.map(value, this._parseArrayValueDC).join(this.QUERY_DELIMITER);
-      }
-    } else {
-      result = prefix + "=" + encodeURIComponent(this._primitiveToQueryString(value));
-    }
-    return result;
-  },
-  _parseArrayValue: function(value, idx, prefix) {
-    return this._pairToQueryString(prefix, value);
-  },
-  _primitiveToQueryString: function(obj) {
-    var result;
-    switch (typeof obj) {
-     case "number":
-      result = obj.toString();
-      break;
-     case "boolean":
-      result = Number(obj).toString();
-      break;
-     default:
-      result = obj;
-    }
-    return result;
-  },
-  _invertedIncludes: function(item, obj) {
-    return this.includes(obj, item);
-  },
-  _keyValueArray: function(key, value) {
-    return [ key, value ];
-  },
-  _eachPairDeleteValue: function(i, j, obj, val) {
-    if (j === val) {
-      this._deleteKey(obj, i);
-    }
-  },
-  _eachKeyDeleteKey: function(i, idx, arr, obj) {
-    this._deleteKey(obj, i);
-  },
-  _deleteKey: function(obj, i) {
-    delete obj[i];
-  },
-  _invertedRemoveValue: function(val, arr, obj) {
-    this.removeValue(obj, val);
-  },
-  isNull: function(i) {
-    return i == null;
-  },
-  isPresent: function(i) {
-    return !this.isNull(i);
-  },
-  getDefault: function(i, defaultValue) {
-    return this.isNull(i) ? defaultValue : i;
-  }
-};
 
 artjs.ArrayUtils = artjs.utils.Array = {
   _name: "ArrayUtils",
@@ -665,7 +381,283 @@ artjs.ArrayUtils = artjs.utils.Array = {
   }
 };
 
-artjs.$A = artjs.ArrayUtils.arrify;
+artjs.ObjectUtils = artjs.utils.Object = {
+  _name: "ObjectUtils",
+  QUERY_DELIMITER: "&",
+  toString: function() {
+    return this._name;
+  },
+  copy: function(obj) {
+    var copy = {};
+    this.copyProps(obj, copy);
+    return copy;
+  },
+  copyProps: function(source, target) {
+    for (var i in source) {
+      if (source.hasOwnProperty(i)) {
+        target[i] = source[i];
+      }
+    }
+  },
+  extend: function(target, source) {
+    this.copyProps(source, target);
+  },
+  merge: function(target, source) {
+    this.extend(target, source);
+    return target;
+  },
+  update: function(target, source) {
+    return this.merge(target, source);
+  },
+  removeValue: function(obj, val) {
+    var delegate = artjs.$D(this, "_eachPairDeleteValue", obj, val);
+    this.eachPair(obj, delegate.callback());
+  },
+  removeKeys: function(obj, keys) {
+    var delegate = artjs.$D(this, "_eachKeyDeleteKey", obj);
+    artjs.ArrayUtils.each(keys, delegate.callback());
+  },
+  removeValues: function(obj, values) {
+    var delegate = artjs.$D(this, "_invertedRemoveValue", obj);
+    artjs.ArrayUtils.eachItem(values, delegate.callback());
+  },
+  keys: function(obj) {
+    var result = [];
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        result.push(i);
+      }
+    }
+    return result;
+  },
+  values: function(obj) {
+    var result = [];
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        result.push(obj[i]);
+      }
+    }
+    return result;
+  },
+  map: function(obj, func, context) {
+    var result = [];
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        result.push(func.call(context, i, obj[i]));
+      }
+    }
+    return result;
+  },
+  mapValue: function(obj, func, context) {
+    var result = {};
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        result[i] = func.call(context, obj[i]);
+      }
+    }
+    return result;
+  },
+  mapKey: function(obj, func, context) {
+    var result = {};
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        result[func.call(context, i)] = obj[i];
+      }
+    }
+    return result;
+  },
+  each: function(obj, func, context) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        func.call(context, obj[i]);
+      }
+    }
+  },
+  eachKey: function(obj, func, context) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        func.call(context, i);
+      }
+    }
+  },
+  eachPair: function(obj, func, context) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        func.call(context, i, obj[i]);
+      }
+    }
+  },
+  select: function(obj, func, context) {
+    var result = {};
+    var j;
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        j = obj[i];
+        if (func.call(context, j, i)) {
+          result[i] = j;
+        }
+      }
+    }
+    return result;
+  },
+  reject: function(obj, func, context) {
+    var result = {};
+    var j;
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        j = obj[i];
+        if (!func.call(context, j)) {
+          result[i] = j;
+        }
+      }
+    }
+    return result;
+  },
+  isArray: function(obj) {
+    return this.is(obj, Array);
+  },
+  isString: function(obj) {
+    return this.is(obj, String);
+  },
+  is: function(obj, type) {
+    return obj.constructor === type;
+  },
+  isEmpty: function(obj) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        return false;
+      }
+    }
+    return true;
+  },
+  isNotEmpty: function(obj) {
+    return !this.isEmpty(obj);
+  },
+  build: function(arr, func, context) {
+    var result = {};
+    var item;
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        result[item] = func.call(context, item);
+      }
+    }
+    return result;
+  },
+  fromPoints: function(arr) {
+    var result = {};
+    var item;
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        result[item.x] = item.y;
+      }
+    }
+    return result;
+  },
+  fromArray: function(arr) {
+    var result = {};
+    var item;
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        result[item[0]] = item[1];
+      }
+    }
+    return result;
+  },
+  toArray: function(obj) {
+    return this.map(obj, this._keyValueArray, this);
+  },
+  includes: function(obj, item) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i) && obj[i] === item) {
+        return true;
+      }
+    }
+    return false;
+  },
+  includesAll: function(obj, subset) {
+    var delegate = artjs.$D(this, "_invertedIncludes", obj);
+    return this.all(subset, delegate.callback());
+  },
+  all: function(obj, func) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i) && !func(obj[i])) {
+        return false;
+      }
+    }
+    return true;
+  },
+  toQueryString: function(obj) {
+    return this._toQueryStringWithPrefix(obj, "");
+  },
+  _toQueryStringWithPrefix: function(obj, prefix) {
+    var delegate = artjs.$D(this, "_pairToQueryString", prefix);
+    return this.map(obj, delegate.callback()).join(this.QUERY_DELIMITER);
+  },
+  _pairToQueryString: function(key, value, prefix) {
+    var result;
+    prefix = artjs.StringUtils.isBlank(prefix) ? key : prefix + "[" + key + "]";
+    if (typeof value == "object") {
+      if (isNaN(value.length)) {
+        result = this._toQueryStringWithPrefix(value, prefix);
+      } else {
+        var delegate = artjs.$D(this, "_parseArrayValue", prefix + "[]");
+        result = artjs.ArrayUtils.map(value, delegate.callback()).join(this.QUERY_DELIMITER);
+      }
+    } else {
+      result = prefix + "=" + encodeURIComponent(this._primitiveToQueryString(value));
+    }
+    return result;
+  },
+  _parseArrayValue: function(value, idx, prefix) {
+    return this._pairToQueryString(prefix, value);
+  },
+  _primitiveToQueryString: function(obj) {
+    var result;
+    switch (typeof obj) {
+     case "number":
+      result = obj.toString();
+      break;
+     case "boolean":
+      result = Number(obj).toString();
+      break;
+     default:
+      result = obj;
+    }
+    return result;
+  },
+  _invertedIncludes: function(item, obj) {
+    return this.includes(obj, item);
+  },
+  _keyValueArray: function(key, value) {
+    return [ key, value ];
+  },
+  _eachPairDeleteValue: function(i, j, obj, val) {
+    if (j === val) {
+      this._deleteKey(obj, i);
+    }
+  },
+  _eachKeyDeleteKey: function(i, idx, arr, obj) {
+    this._deleteKey(obj, i);
+  },
+  _deleteKey: function(obj, i) {
+    delete obj[i];
+  },
+  _invertedRemoveValue: function(val, arr, obj) {
+    this.removeValue(obj, val);
+  },
+  isNull: function(i) {
+    return i == null;
+  },
+  isPresent: function(i) {
+    return !this.isNull(i);
+  },
+  getDefault: function(i, defaultValue) {
+    return this.isNull(i) ? defaultValue : i;
+  }
+};
 
 artjs.Class = artjs.utils.Class = function(ctor, proto, stat, superclass) {
   var builder = new artjs.ClassBuilder(ctor, proto, stat, superclass);
@@ -685,11 +677,11 @@ artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
   if (superclass) {
     var _super_ = function() {
       var ctor = arguments.callee.ctor;
-      var _arguments_ = artjs.$A(arguments);
+      var _arguments_ = artjs.ArrayUtils.arrify(arguments);
       var __arguments__ = _arguments_.shift();
       var _callee_ = __arguments__.callee;
       var _super_ = _callee_.superclass || _callee_.super;
-      return _super_.apply(this, _arguments_.concat(artjs.$A(__arguments__)));
+      return _super_.apply(this, _arguments_.concat(artjs.ArrayUtils.arrify(__arguments__)));
     };
     _super_.ctor = this.ctor;
     artjs.ObjectUtils.extend(this.ctor, superclass);
@@ -746,17 +738,17 @@ artjs.ClassBuilder.prototype = {
 artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
   this.object = object;
   this.method = artjs.ObjectUtils.isString(method) ? this.object[method] : method;
-  this.args = artjs.$A(arguments, 2);
+  this.args = artjs.ArrayUtils.arrify(arguments, 2);
 }, {
   invoke: function() {
-    var args = artjs.$A(arguments).concat(this.args);
+    var args = artjs.ArrayUtils.arrify(arguments).concat(this.args);
     return this.method.apply(this.object, args);
   },
   callback: function(withSource) {
     var result = function() {
       var callee = arguments.callee;
       var delegate = callee.delegate;
-      var args = artjs.$A(arguments);
+      var args = artjs.ArrayUtils.arrify(arguments);
       if (callee.withSource) {
         args.unshift(this);
       }
@@ -770,18 +762,18 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
   callback: function(object, method, withSource) {
     var delegate = new this(object, method);
     var callback = delegate.callback(withSource);
-    delegate.args = artjs.$A(arguments, 3);
+    delegate.args = artjs.ArrayUtils.arrify(arguments, 3);
     return callback;
   },
   create: function(object, method) {
     var delegate = new this(object, method);
-    delegate.args = artjs.$A(arguments, 2);
+    delegate.args = artjs.ArrayUtils.arrify(arguments, 2);
     return delegate;
   },
   bindAll: function(context) {
     var container = context.ctor ? context.ctor.prototype : context;
     var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(container, this._isCallback, this));
-    var all = callbacks.concat(artjs.$A(arguments, 1));
+    var all = callbacks.concat(artjs.ArrayUtils.arrify(arguments, 1));
     this._bindSource = context;
     this._bindTarget = context;
     artjs.ArrayUtils.each(all, this._bindEach, this);
@@ -805,14 +797,6 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
     this._bindTarget[i] = this.callback(this._bindSource, i);
   }
 });
-
-artjs.$DC = artjs.Delegate.callback(artjs.Delegate, "callback");
-
-artjs.$D = artjs.Delegate.callback(artjs.Delegate, "create");
-
-artjs.$BA = artjs.Delegate.callback(artjs.Delegate, "bindAll");
-
-artjs.$DT = artjs.Delegate.callback(artjs.Delegate, "delegateTo");
 
 artjs.MathUtils = artjs.utils.Math = {
   _name: "MathUtils",
@@ -1081,10 +1065,6 @@ artjs.ElementUtils = artjs.utils.Element = {
   toString: function() {
     return this._name;
   },
-  init: function() {
-    this.detectHiddenElementDC = artjs.$DC(this, "detectHiddenElement");
-    artjs.$insert = artjs.$DC(this, "insert");
-  },
   show: function(e) {
     var hidden = this.getHidden(e);
     artjs.ArrayUtils.removeItem(this.HIDDEN_ELEMENTS, hidden);
@@ -1116,8 +1096,8 @@ artjs.ElementUtils = artjs.utils.Element = {
     return hidden || e.style.display == "none";
   },
   getHidden: function(e) {
-    this.detectHiddenElementDC.delegate.args = [ e ];
-    return artjs.ArrayUtils.detect(this.HIDDEN_ELEMENTS, this.detectHiddenElementDC);
+    var delegate = artjs.$D(this, "detectHiddenElement", e);
+    return artjs.ArrayUtils.detect(this.HIDDEN_ELEMENTS, delegate.callback(), this);
   },
   detectHiddenElement: function(i, e) {
     return i.element == e;
@@ -1639,87 +1619,6 @@ artjs.Rectangle.prototype = {
   }
 };
 
-artjs.Component = artjs.dom.Component = artjs.Class(function(element) {
-  this.element = element;
-}, null, {
-  _name: "Component",
-  idToComponent: {},
-  _onExtended: function() {
-    this.super(arguments);
-    this.instances = [];
-  },
-  find: function(id) {
-    return this.idToComponent[id];
-  },
-  onLoad: function(id, delegate) {
-    var component = this.find(id);
-    if (component) {
-      delegate.invoke(component);
-    } else {
-      artjs.ComponentScanner.addListener(id, delegate);
-    }
-  }
-});
-
-artjs.ComponentScanner = {
-  _events: {},
-  scan: function(element) {
-    artjs.ArrayUtils.each(artjs.$find(element, ".art"), this._onFound, this);
-  },
-  addListener: function(id, delegate) {
-    var event = this._events[id];
-    if (!event) {
-      event = this._events[id] = new artjs.CustomEvent("Component::Load::" + id);
-    }
-    event.add(delegate);
-  },
-  _onFound: function(i) {
-    this.initElement(i);
-  },
-  initElement: function(i) {
-    this._element = i;
-    var classnames = artjs.ElementUtils.getClasses(i);
-    artjs.ArrayUtils.removeItem(classnames, "art");
-    artjs.ArrayUtils.each(classnames, this._eachClassName, this);
-  },
-  _eachClassName: function(i) {
-    var path = i.split("-");
-    var _class = artjs.ArrayUtils.inject(path, window, this._injectPathChunk, this);
-    if (_class instanceof Function) {
-      var instance = new _class(this._element);
-      instance.ctor.instances.push(instance);
-      var id = artjs.ElementUtils.getAttributes(instance.element).id;
-      if (id) {
-        artjs.Component.idToComponent[id] = instance;
-      }
-      var event = this._events[id];
-      if (event) {
-        event.fire(instance);
-      }
-    }
-  },
-  _injectPathChunk: function(result, i) {
-    return result && result[i];
-  }
-};
-
-artjs.ComponentSweeper = {
-  init: function() {
-    var clock = new artjs.Clock(2e3);
-    clock.onChange.add(artjs.$D(this, "_onSweep"));
-    clock.start();
-  },
-  _onSweep: function(clock) {
-    artjs.ArrayUtils.each(artjs.Component.subclasses, this._sweepInstances, this);
-  },
-  _sweepInstances: function(i) {
-    artjs.ArrayUtils.$select(i.instances, this._isOnStage, this);
-  },
-  _isOnStage: function(i) {
-    return artjs.Selector.isDescendantOf(i.element);
-  }
-};
-
 artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, attributes, value, isEmpty) {
   this.name = name;
   this.attributes = attributes;
@@ -1754,12 +1653,6 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, att
   _KEY_TRANSLATOR: {
     className: "class",
     forField: "for"
-  },
-  init: function() {
-    artjs.$B = artjs.$DC(this, "build");
-    artjs.$C = artjs.$DC(this, "create");
-    artjs.$E = artjs.$DC(this, "getElement");
-    artjs.$P = artjs.$DC(this, "parse");
   },
   build: function(name, attributes, value, empty) {
     return new this(name, attributes, value, empty);
@@ -1796,12 +1689,6 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, att
 });
 
 artjs.Selector = artjs.dom.Selector = {
-  init: function() {
-    artjs.$ = artjs.$DC(this, "getElements");
-    artjs.$find = artjs.$DC(this, "find");
-    artjs.$first = artjs.$DC(this, "first");
-    artjs.$parent = artjs.$DC(this, "parent");
-  },
   find: function(element, selector) {
     return this.getElements(selector, element);
   },
@@ -2241,12 +2128,25 @@ artjs.Queue = artjs.data.Queue = artjs.Class(function(data) {
   }
 });
 
+artjs.Broadcaster = artjs.events.Broadcaster = {
+  _events: {},
+  register: function(id, event) {
+    this._events[id] = event;
+  },
+  addListener: function(id, delegate) {
+    this._events[id].add(delegate);
+  },
+  fire: function(id, data) {
+    this._events[id].fire(data);
+  }
+};
+
 artjs.Clock = artjs.events.Clock = artjs.Class(function(interval, repeat) {
   this._interval = interval;
   this._repeat = repeat;
   this._id = null;
   this._counter = 0;
-  this._tickDC = artjs.$DC(this, this._tick);
+  this._tickDC = artjs.Delegate.callback(this, "_tick");
   this.onChange = new artjs.CustomEvent("Clock:onChange");
   this.onComplete = new artjs.CustomEvent("Clock:onComplete");
 }, {
@@ -2280,19 +2180,6 @@ artjs.Clock = artjs.events.Clock = artjs.Class(function(interval, repeat) {
     }
   }
 });
-
-artjs.Broadcaster = artjs.events.Broadcaster = {
-  _events: {},
-  register: function(id, event) {
-    this._events[id] = event;
-  },
-  addListener: function(id, delegate) {
-    this._events[id].add(delegate);
-  },
-  fire: function(id, data) {
-    this._events[id].fire(data);
-  }
-};
 
 artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, delegate) {
   this.element = element;
@@ -2524,7 +2411,7 @@ artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(function(expecte
 }, {
   resolve: function(actual) {
     this.receiver = new artjs.SpecReceiver(this, actual);
-    artjs.SpecRunner.pushReceiver(this.receiver);
+    artjs.Spec.pushReceiver(this.receiver);
     return this.receiver;
   },
   _failureData: function(actual) {
@@ -2552,54 +2439,236 @@ artjs.TrueMatcher = artjs.spec.matcher.True = artjs.Class(function() {
   this.super(arguments, true);
 }, null, null, artjs.BaseMatcher);
 
-artjs.SpecNode = artjs.spec.node.Base = artjs.Class(function(facet, body) {
+artjs.BaseSpecNode = artjs.spec.node.Base = artjs.Class(function(facet, body, focus) {
   this.facet = facet;
   this.body = body;
+  this.focus = Boolean(focus);
 }, {
+  register: function() {
+    artjs.Spec.updateFocus(this.focus);
+  },
   execute: function() {
-    artjs.SpecRunner.pushNode(this);
-    this.body();
-    artjs.SpecRunner.popNode();
+    this.ctor.execute(this);
   },
   toString: function() {
     return this.facet.toString();
   }
+}, {
+  _path: [],
+  getPath: function() {
+    return this._path;
+  },
+  execute: function(node) {
+    this._path.push(node);
+    node.body();
+    this._path.pop();
+  }
 });
 
-artjs.Context = artjs.spec.node.Context = artjs.Class(null, null, null, artjs.SpecNode);
+artjs.AutoExecNode = artjs.spec.node.AutoExec = artjs.Class(null, {
+  register: function() {
+    this.super(arguments);
+    this.execute();
+  }
+}, null, artjs.BaseSpecNode);
 
-artjs.Describe = artjs.spec.node.Describe = artjs.Class(null, null, null, artjs.SpecNode);
+artjs.Before = artjs.spec.node.Before = artjs.Class(function(body) {
+  this.super(arguments, "before", body, false);
+}, {
+  execute: function() {
+    if (artjs.Spec.isRealRun()) {
+      this.body();
+    }
+  }
+}, null, artjs.AutoExecNode);
+
+artjs.Context = artjs.spec.node.Context = artjs.Class(null, null, null, artjs.AutoExecNode);
+
+artjs.Describe = artjs.spec.node.Describe = artjs.Class(null, null, null, artjs.AutoExecNode);
 
 artjs.It = artjs.spec.node.It = artjs.Class(function() {
   this.super(arguments);
   this._results = [];
 }, {
+  register: function() {
+    this.super(arguments);
+    this.ctor.instances.push(this);
+  },
   execute: function() {
-    artjs.SpecRunner.executeIt(this, arguments);
+    artjs.Spec.setCurrentTest(this);
+    this._path = this.ctor.getPath().concat();
+    if (artjs.Spec.isRealRun()) {
+      if (!artjs.Spec.hasFocus() || this.hasFocus()) {
+        this._receivers = [];
+        this.super(arguments);
+        artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
+        artjs.Spec.getRunner().testComplete();
+      }
+    }
   },
   pushResult: function(result) {
     this._results.push(result);
   },
-  getResults: function() {
-    return this._results;
+  isSuccess: function() {
+    return artjs.ArrayUtils.all(artjs.ArrayUtils.pluck(this._results, "value"));
   },
-  setPath: function(path) {
-    this._path = path;
+  pushReceiver: function(receiver) {
+    this._receivers.push(receiver);
   },
   getPath: function() {
     return this._path;
   },
-  isSuccess: function() {
-    return artjs.ArrayUtils.all(artjs.ArrayUtils.pluck(this.getResults(), "value"));
+  _testReceiver: function(receiver) {
+    var result = receiver.getResult();
+    this.pushResult(result);
+    receiver.rollback();
+  },
+  hasFocus: function() {
+    return artjs.ArrayUtils.any(artjs.ArrayUtils.pluck(this._path, "focus")) || this.focus;
   }
-}, null, artjs.SpecNode);
+}, {
+  instances: [],
+  resetInstances: function() {
+    this.instances = [];
+  },
+  instancesWithFocus: function() {
+    return artjs.ArrayUtils.select(this.instances, this._hasFocus, this);
+  },
+  _hasFocus: function(instance) {
+    return instance.hasFocus();
+  }
+}, artjs.AutoExecNode);
 
-artjs.Spec = artjs.spec.node.Spec = artjs.Class(null, {
+artjs.Specify = artjs.spec.node.Specify = artjs.Class(null, {
+  register: function() {
+    this.super(arguments);
+    this.ctor.instances.push(this);
+  },
   execute: function() {
-    artjs.SpecRunner.setSubject(this.facet);
+    artjs.Spec.setSubject(this.facet);
     this.super(arguments);
   }
-}, null, artjs.SpecNode);
+}, {
+  instances: []
+}, artjs.BaseSpecNode);
+
+artjs.BaseSpecRunner = artjs.spec.runner.Base = artjs.Class(function() {
+  this._it = undefined;
+}, {
+  run: function() {
+    artjs.ArrayUtils.invoke(artjs.Specify.instances, "execute");
+  },
+  setSubject: function(subject) {
+    this._subject = subject;
+  },
+  getSubject: function() {
+    return this._subject;
+  },
+  setCurrentTest: function(it) {
+    this._it = it;
+  },
+  getCurrentTest: function() {
+    return this._it;
+  }
+});
+
+artjs.RealSpecRunner = artjs.spec.runner.Real = artjs.Class(function() {
+  this._duration = undefined;
+  this._timeline = new artjs.Timeline;
+  this._subject = undefined;
+  this.onComplete = new artjs.CustomEvent("artjs.SpecRunner::onComplete");
+  this.onItComplete = new artjs.CustomEvent("artjs.SpecRunner::onItComplete");
+}, {
+  run: function() {
+    this._timeline.mark();
+    this.super(arguments);
+    this._duration = this._timeline.mark();
+    this.onComplete.fire(this);
+  },
+  getDuration: function() {
+    return this._duration;
+  },
+  pushResult: function(result) {
+    this._it.pushResult(result);
+  },
+  testComplete: function() {
+    this.onItComplete.fire(this);
+  }
+}, null, artjs.BaseSpecRunner);
+
+artjs.DrySpecRunner = artjs.spec.runner.Dry = artjs.Class(null, null, null, artjs.BaseSpecRunner);
+
+artjs.BaseSpecView = artjs.spec.view.Base = artjs.Class(null, {
+  beforeRun: function() {},
+  afterDryRun: function() {}
+});
+
+artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
+  this.super(arguments);
+  this._runnerTemplate = artjs.$C("div", {
+    className: "runner"
+  });
+  this._testTemplate = artjs.$C("span");
+  this._resultsTemplate = artjs.$C("div");
+}, {
+  beforeRun: function() {
+    this.super(arguments);
+    this._element = artjs.$I(document.body, this._runnerTemplate);
+  },
+  onItComplete: function(runner) {
+    var success = runner.getCurrentTest().isSuccess();
+    artjs.ElementUtils.setContent(this._testTemplate, success ? "." : "F");
+    this._testTemplate.className = success ? "success" : "failure";
+    artjs.ElementUtils.insert(this._element, this._testTemplate);
+  },
+  onComplete: function(runner) {
+    var its = artjs.It.instances;
+    var duration = runner.getDuration();
+    var failures = artjs.ArrayUtils.reject(artjs.ArrayUtils.invoke(its, "isSuccess"));
+    var success = artjs.ArrayUtils.isEmpty(failures);
+    var classNames = [ "results" ];
+    var n = its.length;
+    var k = failures.length;
+    classNames.push(success ? "success" : "failure");
+    this._resultsTemplate.className = classNames.join(" ");
+    var resultsElement = artjs.$I(document.body, this._resultsTemplate);
+    var resultText = success ? "Success!" : "Failure!";
+    var statsText = success ? n + " tests in total." : k + " tests failed of " + n + " total.";
+    var durationText = "Duration: " + artjs.DateUtils.miliToHMSM(duration);
+    var resultElement = artjs.$E("p", {
+      className: "result"
+    }, resultText);
+    var statElement = artjs.$E("p", {
+      className: "stat"
+    }, statsText + "<br/>" + durationText);
+    artjs.$I(resultsElement, resultElement);
+    artjs.$I(resultsElement, statElement);
+    if (!success) {
+      var list = artjs.$E("ul");
+      this._getFailureHtml.list = list;
+      artjs.ArrayUtils.each(failures, this._getFailureHtml, this);
+      artjs.$I(resultsElement, list);
+    }
+  },
+  _getFailureHtml: function(i) {
+    var path = artjs.ArrayUtils.map(i.path, this._nodeToString).join(" ");
+    var info = i.failureText();
+    var pathElement = artjs.$E("p", {
+      className: "path"
+    }, path);
+    var infoElement = artjs.$E("p", {
+      className: "info"
+    }, info);
+    var item = artjs.$E("li");
+    artjs.$I(item, pathElement);
+    artjs.$I(item, infoElement);
+    artjs.$I(arguments.callee.list, item);
+  },
+  _nodeToString: function(i) {
+    var facet = i.facet;
+    return typeof facet == "string" ? facet : facet._name;
+  }
+}, null, artjs.BaseSpecView);
 
 artjs.Actual = artjs.spec.Actual = artjs.Class(function(value) {
   this.value = value;
@@ -2607,59 +2676,91 @@ artjs.Actual = artjs.spec.Actual = artjs.Class(function(value) {
   to: function(matcher) {
     var value = matcher.resolve(this);
     if (typeof value == "boolean") {
-      artjs.SpecRunner.pushResult(new artjs.SpecResult(this, matcher, value));
+      artjs.Spec.pushResult(new artjs.SpecResult(this, matcher, value));
     }
     return value;
   }
 });
 
 artjs.SpecApi = artjs.spec.Api = {
-  spec: function(facet, body) {
-    var node = new artjs.Spec(facet, body);
-    artjs.SpecRunner.pushSpec(node);
-  },
-  _executeNode: function(type, facet, body) {
-    var node = new type(facet, body);
-    node.execute();
+  register: function(type, facet, body, focus) {
+    var node = new type(facet, body, focus);
+    node.register();
     return node;
-  },
-  describe: function(facet, body) {
-    this._executeNode(artjs.Describe, facet, body);
-  },
-  context: function(facet, body) {
-    this._executeNode(artjs.Context, facet, body);
-  },
-  it: function(facet, body) {
-    this._executeNode(artjs.It, facet, body);
-  },
-  eq: function(expected) {
-    return new artjs.EqMatcher(expected);
-  },
-  beA: function(expected) {
-    return new artjs.AMatcher(expected);
-  },
-  beFalse: function() {
-    return new artjs.FalseMatcher;
-  },
-  beNull: function() {
-    return new artjs.NullMatcher;
-  },
-  receive: function(expected) {
-    return new artjs.ReceiveMatcher(expected);
-  },
-  beTrue: function() {
-    return new artjs.TrueMatcher;
-  },
-  expect: function(value) {
-    return new artjs.Actual(value);
-  },
-  mock: function() {
-    return new artjs.Mock;
-  },
-  subject: function() {
-    return artjs.SpecRunner.getSubject();
   }
 };
+
+function spec(facet, body, focus) {
+  return artjs.SpecApi.register(artjs.Specify, facet, body, focus);
+}
+
+function describe(facet, body, focus) {
+  return artjs.SpecApi.register(artjs.Describe, facet, body, focus);
+}
+
+function context(facet, body, focus) {
+  return artjs.SpecApi.register(artjs.Context, facet, body, focus);
+}
+
+function it(facet, body, focus) {
+  return artjs.SpecApi.register(artjs.It, facet, body, focus);
+}
+
+function before(body) {
+  return artjs.SpecApi.register(artjs.Before, body);
+}
+
+function eq(expected) {
+  return new artjs.EqMatcher(expected);
+}
+
+function beA(expected) {
+  return new artjs.AMatcher(expected);
+}
+
+function beTrue() {
+  return new artjs.TrueMatcher;
+}
+
+function beFalse() {
+  return new artjs.FalseMatcher;
+}
+
+function beNull() {
+  return new artjs.NullMatcher;
+}
+
+function receive(expected) {
+  return new artjs.ReceiveMatcher(expected);
+}
+
+function expect(value) {
+  return new artjs.Actual(value);
+}
+
+function mock() {
+  return new artjs.Mock;
+}
+
+function subject() {
+  return artjs.Spec.getSubject();
+}
+
+function sspec(facet, body) {
+  return spec(facet, body, true);
+}
+
+function ddescribe(facet, body, focus) {
+  return describe(facet, body, true);
+}
+
+function ccontext(facet, body, focus) {
+  return context(facet, body, true);
+}
+
+function iit(facet, body, focus) {
+  return it(facet, body, true);
+}
 
 artjs.Mock = artjs.spec.Mock = artjs.Class(function() {}, {
   toString: function() {
@@ -2779,153 +2880,49 @@ artjs.SpecResult = artjs.spec.Result = artjs.Class(function(actual, matcher, val
   }
 });
 
-artjs.SpecRunner = artjs.spec.Runner = {
-  _specs: [],
-  _duration: undefined,
-  _it: null,
-  _subject: undefined,
-  _itsPreCount: undefined,
-  _countMode: undefined,
-  _path: [],
-  _its: [],
-  _receivers: [],
-  _timeline: new artjs.Timeline,
-  onComplete: new artjs.CustomEvent("artjs.SpecRunner::onComplete"),
-  onItComplete: new artjs.CustomEvent("artjs.SpecRunner::onItComplete"),
+artjs.Spec = artjs.spec.Spec = {
+  init: function(view) {
+    this._dryRunner = new artjs.DrySpecRunner;
+    this._realRunner = new artjs.RealSpecRunner;
+    this._realRunner.onComplete.add(artjs.$D(view, "onComplete"));
+    this._realRunner.onItComplete.add(artjs.$D(view, "onItComplete"));
+    this._view = view;
+  },
   run: function() {
-    this._timeline.mark();
-    artjs.ArrayUtils.invoke(this._specs, "execute");
-    this._duration = this._timeline.mark();
-    this.onComplete.fire(this);
+    this._view.beforeRun();
+    this._runner = this._dryRunner;
+    this._runner.run();
+    this._view.afterDryRun();
+    artjs.It.resetInstances();
+    this._runner = this._realRunner;
+    this._runner.run();
   },
-  count: function() {
-    this._itsPreCount = 0;
-    this._countMode = true;
-    artjs.ArrayUtils.invoke(this._specs, "execute");
-    this._countMode = false;
-    return this._itsPreCount;
+  getRunner: function() {
+    return this._runner;
   },
-  executeIt: function(it, itsArguments) {
-    if (this._countMode) {
-      this._itsPreCount++;
-    } else {
-      this._it = it;
-      this._receivers = [];
-      this._it.setPath(this._path.concat());
-      this._its.push(this._it);
-      it.super(itsArguments);
-      artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
-      this.onItComplete.fire(this);
-    }
+  isRealRun: function() {
+    return this.getRunner() == this._realRunner;
   },
-  pushSpec: function(spec) {
-    this._specs.push(spec);
+  updateFocus: function(focus) {
+    this._hasFocus = this._hasFocus || focus;
   },
-  pushNode: function(node) {
-    this._path.push(node);
-  },
-  popNode: function(node) {
-    this._path.pop();
-  },
-  setSubject: function(subject) {
-    this._subject = subject;
-  },
-  getDuration: function() {
-    return this._duration;
+  hasFocus: function() {
+    return this._hasFocus;
   },
   getSubject: function() {
-    return this._subject;
-  },
-  pushReceiver: function(receiver) {
-    this._receivers.push(receiver);
+    return this.getRunner().getSubject();
   },
   pushResult: function(result) {
-    this._it.pushResult(result);
+    this.getRunner().pushResult(result);
   },
-  getTotalSpecsNum: function() {
-    return this._specs.length;
+  pushReceiver: function(receiver) {
+    return this.getRunner().getCurrentTest().pushReceiver(receiver);
   },
-  getIts: function() {
-    return this._its;
+  setSubject: function(subject) {
+    this.getRunner().setSubject(subject);
   },
-  getCurrentTest: function() {
-    return this._it;
-  },
-  _testReceiver: function(receiver) {
-    var result = receiver.getResult();
-    this.pushResult(result);
-    receiver.rollback();
-  }
-};
-
-artjs.SpecView = artjs.spec.View = {
-  init: function() {
-    this._runnerTemplate = artjs.$C("div", {
-      className: "runner"
-    });
-    this._testTemplate = artjs.$C("span");
-    this._resultsTemplate = artjs.$C("div");
-    artjs.SpecRunner.onItComplete.add(artjs.$D(this, "_onItComplete"));
-    artjs.SpecRunner.onComplete.add(artjs.$D(this, "_onComplete"));
-    artjs.$DT(artjs.SpecApi, window);
-  },
-  run: function() {
-    this._element = artjs.$insert(document.body, this._runnerTemplate);
-    artjs.SpecRunner.count();
-    artjs.SpecRunner.run();
-  },
-  _onItComplete: function(runner) {
-    var success = runner.getCurrentTest().isSuccess();
-    artjs.ElementUtils.setContent(this._testTemplate, success ? "." : "F");
-    this._testTemplate.className = success ? "success" : "failure";
-    artjs.ElementUtils.insert(this._element, this._testTemplate);
-  },
-  _onComplete: function(runner) {
-    var its = runner.getIts();
-    var duration = runner.getDuration();
-    var failures = artjs.ArrayUtils.reject(artjs.ArrayUtils.pluck(its, "success"));
-    var success = artjs.ArrayUtils.isEmpty(failures);
-    var classNames = [ "results" ];
-    var n = its.length;
-    var k = failures.length;
-    classNames.push(success ? "success" : "failure");
-    this._resultsTemplate.className = classNames.join(" ");
-    var resultsElement = artjs.$insert(document.body, this._resultsTemplate);
-    var resultText = success ? "Success!" : "Failure!";
-    var statsText = success ? n + " tests in total." : k + " tests failed of " + n + " total.";
-    var durationText = "Duration: " + artjs.DateUtils.miliToHMSM(duration);
-    var resultElement = artjs.$E("p", {
-      className: "result"
-    }, resultText);
-    var statElement = artjs.$E("p", {
-      className: "stat"
-    }, statsText + "<br/>" + durationText);
-    artjs.$insert(resultsElement, resultElement);
-    artjs.$insert(resultsElement, statElement);
-    if (!success) {
-      var list = artjs.$E("ul");
-      this._getFailureHtml.list = list;
-      artjs.ArrayUtils.each(failures, this._getFailureHtml, this);
-      artjs.$insert(resultsElement, list);
-    }
-  },
-  _getFailureHtml: function(i) {
-    var path = artjs.ArrayUtils.map(i.path, this._nodeToString).join(" ");
-    var info = i.failureText();
-    var pathElement = artjs.$E("p", {
-      className: "path"
-    }, path);
-    var infoElement = artjs.$E("p", {
-      className: "info"
-    }, info);
-    var item = artjs.$E("li");
-    artjs.$insert(item, pathElement);
-    artjs.$insert(item, infoElement);
-    artjs.$insert(arguments.callee.list, item);
-  },
-  _nodeToString: function(i) {
-    var facet = i.facet;
-    return typeof facet == "string" ? facet : facet._name;
+  setCurrentTest: function(it) {
+    this.getRunner().setCurrentTest(it);
   }
 };
 
@@ -3077,17 +3074,14 @@ artjs.TemplateLibrary = artjs.template.Library = {
     TEMPLATES: []
   },
   _templates: {},
-  init: function() {
-    artjs.$BA(this);
-    artjs.onDocumentLoad.add(this._onLoadAll.delegate);
-  },
   getTemplate: function(id) {
     return this._templates[id];
   },
   loadTemplate: function(id) {
     artjs.TemplateBase.renderElement(artjs.ElementUtils.insert(this._templatesContainer, artjs.$E("div", null, artjs.TemplateLibrary.getTemplate(id))));
   },
-  _onLoadAll: function() {
+  init: function() {
+    artjs.$BA(this);
     this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
     artjs.ElementUtils.hide(document.body);
     artjs.ArrayUtils.each(this._templatesToLoad, this._load, this);
@@ -3116,6 +3110,89 @@ artjs.TemplateLibrary = artjs.template.Library = {
     artjs.onLibraryLoad.fire(this);
   }
 };
+
+artjs.Component = artjs.component.Base = artjs.Class(function(element) {
+  this.element = element;
+}, null, {
+  _name: "Component",
+  idToComponent: {},
+  _onExtended: function() {
+    this.super(arguments);
+    this.instances = [];
+  },
+  find: function(id) {
+    return this.idToComponent[id];
+  },
+  onLoad: function(id, delegate) {
+    var component = this.find(id);
+    if (component) {
+      delegate.invoke(component);
+    } else {
+      artjs.ComponentScanner.addListener(id, delegate);
+    }
+  }
+});
+
+artjs.ComponentScanner = {
+  _events: {},
+  scan: function(element) {
+    artjs.ArrayUtils.each(artjs.$find(element, ".art"), this._onFound, this);
+  },
+  addListener: function(id, delegate) {
+    var event = this._events[id];
+    if (!event) {
+      event = this._events[id] = new artjs.CustomEvent("Component::Load::" + id);
+    }
+    event.add(delegate);
+  },
+  _onFound: function(i) {
+    this.initElement(i);
+  },
+  initElement: function(i) {
+    this._element = i;
+    var classnames = artjs.ElementUtils.getClasses(i);
+    artjs.ArrayUtils.removeItem(classnames, "art");
+    artjs.ArrayUtils.each(classnames, this._eachClassName, this);
+  },
+  _eachClassName: function(i) {
+    var path = i.split("-");
+    var _class = artjs.ArrayUtils.inject(path, window, this._injectPathChunk, this);
+    if (_class instanceof Function) {
+      var instance = new _class(this._element);
+      instance.ctor.instances.push(instance);
+      var id = artjs.ElementUtils.getAttributes(instance.element).id;
+      if (id) {
+        artjs.Component.idToComponent[id] = instance;
+      }
+      var event = this._events[id];
+      if (event) {
+        event.fire(instance);
+      }
+    }
+  },
+  _injectPathChunk: function(result, i) {
+    return result && result[i];
+  }
+};
+
+artjs.ComponentSweeper = {
+  init: function() {
+    var clock = new artjs.Clock(2e3);
+    clock.onChange.add(artjs.Delegate(this, "_onSweep"));
+    clock.start();
+  },
+  _onSweep: function(clock) {
+    artjs.ArrayUtils.each(artjs.Component.subclasses, this._sweepInstances, this);
+  },
+  _sweepInstances: function(i) {
+    artjs.ArrayUtils.$select(i.instances, this._isOnStage, this);
+  },
+  _isOnStage: function(i) {
+    return artjs.Selector.isDescendantOf(i.element);
+  }
+};
+
+artjs.ComponentSweeper.init();
 
 artjs.DatePicker = artjs.component.DatePicker = artjs.Class(function() {
   this.super(arguments);
@@ -3481,6 +3558,34 @@ artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
   }
 });
 
+artjs.$A = artjs.Delegate.callback(artjs.ArrayUtils, "arrify");
+
+artjs.$DC = artjs.Delegate.callback(artjs.Delegate, "callback");
+
+artjs.$D = artjs.Delegate.callback(artjs.Delegate, "create");
+
+artjs.$BA = artjs.Delegate.callback(artjs.Delegate, "bindAll");
+
+artjs.$DT = artjs.Delegate.callback(artjs.Delegate, "delegateTo");
+
+artjs.$I = artjs.Delegate.callback(artjs.ElementUtils, "insert");
+
+artjs.$B = artjs.Delegate.callback(artjs.ElementBuilder, "build");
+
+artjs.$C = artjs.Delegate.callback(artjs.ElementBuilder, "create");
+
+artjs.$E = artjs.Delegate.callback(artjs.ElementBuilder, "getElement");
+
+artjs.$P = artjs.Delegate.callback(artjs.ElementBuilder, "parse");
+
+artjs.$ = artjs.Delegate.callback(artjs.ElementBuilder, "getElements");
+
+artjs.$find = artjs.Delegate.callback(artjs.ElementBuilder, "find");
+
+artjs.$first = artjs.Delegate.callback(artjs.ElementBuilder, "first");
+
+artjs.$parent = artjs.Delegate.callback(artjs.ElementBuilder, "parent");
+
 artjs.onDocumentLoad = new artjs.CustomEvent("document:load");
 
 artjs.onWindowLoad = new artjs.CustomEvent("window:load");
@@ -3489,24 +3594,10 @@ artjs.onLibraryLoad = new artjs.CustomEvent("library:load");
 
 document.addEventListener("DOMContentLoaded", function() {
   artjs.onDocumentLoad.fire();
+  artjs.TemplateLibrary.init();
+  artjs.Calendar.init();
 }, false);
 
 window.addEventListener("load", function() {
   artjs.onWindowLoad.fire();
 }, false);
-
-artjs.ComponentSweeper.init();
-
-artjs.ObjectUtils.init();
-
-artjs.ElementBuilder.init();
-
-artjs.ElementUtils.init();
-
-artjs.Selector.init();
-
-artjs.TemplateLibrary.init();
-
-artjs.Calendar.init();
-
-artjs.SpecView.init();
