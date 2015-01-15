@@ -1,6 +1,6 @@
 art.component.Sidebar = artjs.Class(
-  function() {
-    this.super(arguments);
+  function(element) {
+    this.super(element);
     
     this.setData(art.DB.tree);
 

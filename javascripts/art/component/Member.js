@@ -1,6 +1,6 @@
 art.component.Member = artjs.Class(
   function(element) {
-    this.super(arguments);
+    this.super(element);
     
     var s = artjs.Selector;
     var a = s.first(s.first(element, 'h4'), 'a');

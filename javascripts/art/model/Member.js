@@ -1,6 +1,6 @@
 art.model.Member = artjs.Class(
   function(header, description, example, params, more) {
-    this.super(arguments);
+    this.super(header, description, example, params, more);
     
     this.header = header;
     this.description = description;

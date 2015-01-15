@@ -23,16 +23,16 @@ spec(artjs.Class, function() {
       
       Parent = subject()(
         function(name) {
-          this.super(arguments, name);
+          this.super(name);
         }, 
         {
           instanceMethod: function(value) {
-            return this.super(arguments, value) * 2;
+            return this.super(value) * 2;
           }
         }, 
         {
           staticMethod: function(value) {
-            return this.super(arguments, value) * 3;
+            return this.super(value) * 3;
           },
           classname: 'Parent'
         }, 
@@ -41,16 +41,16 @@ spec(artjs.Class, function() {
       
       Child = subject()(
         function(name) {
-          this.super(arguments, name);
+          this.super(name);
         }, 
         {
           instanceMethod: function(value) {
-            return this.super(arguments, value) - 1;
+            return this.super(value) - 1;
           }
         }, 
         {
           staticMethod: function(value) {
-            return this.super(arguments, value) - 2;
+            return this.super(value) - 2;
           },
           classname: 'Child'
         },

@@ -2528,10 +2528,7 @@ art.DB = {
                 superclass: 'Class to extend from.'
               },
               'As you can see in example when extending the class you have access to super method from Constructor ' +
-              'function, instance methods and static methods. You always have to pass arguments object.' +
-              'If no additional params are passed then by default all arguments are passed to super method.' +
-              'However if you pass any additional arguments then they override actual arguments list and the actual ' +
-              'arguments list gets appended to the end of your custom list.'
+              'function, instance methods and static methods. You must explicitly pass any arguments to superclass.'
             )
           ]
         },
@@ -2567,7 +2564,7 @@ art.DB = {
               'You must always call super when implementing this hook.',
               [
                 '_onCreated: function() {',
-                '  this.super(arguments);',
+                '  this.super();',
                 '',
                 "  console.log(this.subclasses);",
                 '}'
@@ -2580,7 +2577,7 @@ art.DB = {
               'You must always call super when implementing this hook.',
               [
                 '_onExtended: function() {',
-                '  this.super(arguments);',
+                '  this.super();',
                 '',
                 "  console.log(this.superclass + ' has been extended by ' + this);",
                 '}'

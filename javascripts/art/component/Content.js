@@ -1,6 +1,6 @@
 art.component.Content = artjs.Class(
-  function() {
-    this.super(arguments);
+  function(element) {
+    this.super(element);
     
     artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, '_onLeaf'));
   },

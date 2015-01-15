@@ -13,7 +13,7 @@ artjs.TemplateLibrary.config.TEMPLATES = [ "doc", "member", "section", "ga", "di
 artjs.Broadcaster.register(art.events.ON_SIDEBAR, new artjs.CustomEvent(art.events.ON_SIDEBAR));
 
 art.model.Member = artjs.Class(function(header, description, example, params, more) {
-  this.super(arguments);
+  this.super(header, description, example, params, more);
   this.header = header;
   this.description = description;
   this.example = example;
@@ -1084,7 +1084,7 @@ art.DB = {
           proto: "Prototype object. Instance properties and methods of the class.",
           stat: "Class properties and methods.",
           superclass: "Class to extend from."
-        }, "As you can see in example when extending the class you have access to super method from Constructor " + "function, instance methods and static methods. You always have to pass arguments object." + "If no additional params are passed then by default all arguments are passed to super method." + "However if you pass any additional arguments then they override actual arguments list and the actual " + "arguments list gets appended to the end of your custom list.") ]
+        }, "As you can see in example when extending the class you have access to super method from Constructor " + "function, instance methods and static methods. You must explicitly pass any arguments to superclass.") ]
       }, {
         name: "Instance properties",
         members: [ new art.model.Member("ctor:Function", "Reference to constructor function.") ]
@@ -1093,7 +1093,7 @@ art.DB = {
         members: [ new art.model.Member("superclass:Function", "Reference to constructor function of the parent class."), new art.model.Member("subclasses:Array", "Stores all subclasses of given class.") ]
       }, {
         name: "Hooks",
-        members: [ new art.model.Member("_onCreated():Void", "Invoked as a static method when class construction has completed.<br/>" + "Useful for class initialization. Some of class properties are set at this point.<br/>" + "You must always call super when implementing this hook.", [ "_onCreated: function() {", "  this.super(arguments);", "", "  console.log(this.subclasses);", "}" ]), new art.model.Member("_onExtended():Void", "Invoked as a static method when subclass construction has completed.<br/>" + "Useful for class initialization. Some of class properties are set at this point.<br/>" + "You must always call super when implementing this hook.", [ "_onExtended: function() {", "  this.super(arguments);", "", "  console.log(this.superclass + ' has been extended by ' + this);", "}" ]) ]
+        members: [ new art.model.Member("_onCreated():Void", "Invoked as a static method when class construction has completed.<br/>" + "Useful for class initialization. Some of class properties are set at this point.<br/>" + "You must always call super when implementing this hook.", [ "_onCreated: function() {", "  this.super();", "", "  console.log(this.subclasses);", "}" ]), new art.model.Member("_onExtended():Void", "Invoked as a static method when subclass construction has completed.<br/>" + "Useful for class initialization. Some of class properties are set at this point.<br/>" + "You must always call super when implementing this hook.", [ "_onExtended: function() {", "  this.super();", "", "  console.log(this.superclass + ' has been extended by ' + this);", "}" ]) ]
       } ]
     },
     date: {
@@ -1239,8 +1239,8 @@ artjs.TemplateHelpers.registerAll({
   }
 });
 
-art.component.Sidebar = artjs.Class(function() {
-  this.super(arguments);
+art.component.Sidebar = artjs.Class(function(element) {
+  this.super(element);
   this.setData(art.DB.tree);
   this.onLeaf.add(this._onLeafHandler.delegate);
   artjs.Component.onLoad("content", artjs.$D(this, "_onContentLoad"));
@@ -1256,8 +1256,8 @@ art.component.Sidebar = artjs.Class(function() {
   _name: "art.component.Sidebar"
 }, artjs.Tree);
 
-art.component.Content = artjs.Class(function() {
-  this.super(arguments);
+art.component.Content = artjs.Class(function(element) {
+  this.super(element);
   artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, "_onLeaf"));
 }, {
   _onLeaf: function(data) {
@@ -1269,7 +1269,7 @@ art.component.Content = artjs.Class(function() {
 }, artjs.Component);
 
 art.component.Member = artjs.Class(function(element) {
-  this.super(arguments);
+  this.super(element);
   var s = artjs.Selector;
   var a = s.first(s.first(element, "h4"), "a");
   var eu = artjs.ElementUtils;

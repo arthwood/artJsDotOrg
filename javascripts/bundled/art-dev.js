@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.0.9",
+  VERSION: "0.0.12",
   component: {},
   data: {},
   dom: {},
@@ -676,14 +676,10 @@ artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor._onExtended = this._defaultOnExtended;
   if (superclass) {
     var _super_ = function() {
-      var ctor = arguments.callee.ctor;
-      var _arguments_ = artjs.ArrayUtils.arrify(arguments);
-      var __arguments__ = _arguments_.shift();
-      var _callee_ = __arguments__.callee;
-      var _super_ = _callee_.superclass || _callee_.super;
-      return _super_.apply(this, _arguments_.concat(artjs.ArrayUtils.arrify(__arguments__)));
+      var _caller_ = arguments.callee.caller;
+      var _super_ = _caller_.superclass || _caller_.super;
+      return _super_.apply(this, arguments);
     };
-    _super_.ctor = this.ctor;
     artjs.ObjectUtils.extend(this.ctor, superclass);
     artjs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
     this.ctor.superclass = superclass;
@@ -715,7 +711,7 @@ artjs.ClassBuilder.prototype = {
   _defaultConstructor: function() {
     return function() {
       if (arguments.callee.superclass) {
-        this.super(arguments);
+        this.super.apply(this, arguments);
       }
     };
   },
@@ -2214,14 +2210,14 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, 
 });
 
 artjs.MouseEvent = artjs.events.Mouse = artjs.Class(function(element, name, delegate, on) {
-  this.super(arguments, element, name, delegate);
+  this.super(element, name, delegate);
   this.over = false;
   this.on = on;
 }, {
   _onEvent: function(e) {
     if (this._edge(e) && !(this.on == this.over)) {
       this.over = this.on;
-      this.super(arguments, e);
+      this.super(e);
     }
   },
   _edge: function(e) {
@@ -2235,23 +2231,23 @@ artjs.MouseEvent = artjs.events.Mouse = artjs.Class(function(element, name, dele
 }, null, artjs.ElementEvent);
 
 artjs.ClickEvent = artjs.events.Click = artjs.Class(function(element, delegate) {
-  this.super(arguments, element, "click", delegate);
+  this.super(element, "click", delegate);
 }, null, null, artjs.ElementEvent);
 
 artjs.MouseMoveEvent = artjs.events.MouseMove = artjs.Class(function(element, delegate) {
-  this.super(arguments, element, "mousemove", delegate);
+  this.super(element, "mousemove", delegate);
 }, null, null, artjs.ElementEvent);
 
 artjs.MouseOverEvent = artjs.events.MouseOver = artjs.Class(function(element, delegate) {
-  this.super(arguments, element, "mouseover", delegate, true);
+  this.super(element, "mouseover", delegate, true);
 }, null, null, artjs.MouseEvent);
 
 artjs.MouseOutEvent = artjs.events.MouseOut = artjs.Class(function(element, delegate) {
-  this.super(arguments, element, "mouseout", delegate);
+  this.super(element, "mouseout", delegate);
 }, null, null, artjs.MouseEvent);
 
 artjs.ChangeEvent = artjs.events.Change = artjs.Class(function(element, delegate) {
-  this.super(arguments, element, "change", delegate);
+  this.super(element, "change", delegate);
 }, null, null, artjs.ElementEvent);
 
 artjs.EventMapping = {
@@ -2313,7 +2309,7 @@ artjs.TransitionBase = artjs.transition.Base = artjs.Class(function(property, el
   this.type = type || this.ctor.LINEAR;
   this.delay = delay || 0;
   this.from = from;
-  this._deferredD = artjs.$D(this, this._deferred);
+  this._deferredD = artjs.$D(this, "_deferred");
 }, {
   run: function() {
     if (artjs.ObjectUtils.isPresent(this.from)) {
@@ -2345,11 +2341,11 @@ artjs.TransitionBase = artjs.transition.Base = artjs.Class(function(property, el
   }
 });
 
-artjs.Blind = artjs.transition.Blind = artjs.Class(function() {
-  this.super(arguments, "height");
+artjs.Blind = artjs.transition.Blind = artjs.Class(function(element, value, duration, type, delay, from) {
+  this.super("height", element, value, duration, type, delay, from);
 }, {
   _setStyle: function(value) {
-    this.super(arguments, value + "px");
+    this.super(value + "px");
     artjs.ElementUtils.setStyle(this.element, "overflow", "hidden");
   }
 }, {
@@ -2359,8 +2355,8 @@ artjs.Blind = artjs.transition.Blind = artjs.Class(function() {
   }
 }, artjs.TransitionBase);
 
-artjs.Fade = artjs.transition.Fade = artjs.Class(function() {
-  this.super(arguments, "opacity");
+artjs.Fade = artjs.transition.Fade = artjs.Class(function(element, value, duration, type, delay, from) {
+  this.super("opacity", element, value, duration, type, delay, from);
 }, null, null, artjs.TransitionBase);
 
 artjs.BaseMatcher = artjs.spec.matcher.Base = artjs.Class(function(expected, toText) {
@@ -2379,7 +2375,7 @@ artjs.BaseMatcher = artjs.spec.matcher.Base = artjs.Class(function(expected, toT
 });
 
 artjs.AMatcher = artjs.spec.matcher.A = artjs.Class(function(expected) {
-  this.super(arguments, expected);
+  this.super(expected);
 }, {
   resolve: function(actual) {
     return typeof actual.value === this.expected;
@@ -2387,27 +2383,27 @@ artjs.AMatcher = artjs.spec.matcher.A = artjs.Class(function(expected) {
 }, null, artjs.BaseMatcher);
 
 artjs.EqMatcher = artjs.spec.matcher.Eq = artjs.Class(function(expected) {
-  this.super(arguments, expected, "equal");
+  this.super(expected, "equal");
 }, {
   resolve: function(actual) {
     if (artjs.ObjectUtils.isArray(actual.value)) {
       return artjs.ArrayUtils.equal([ actual.value, this.expected ]);
     } else {
-      return this.super(arguments, actual);
+      return this.super(actual);
     }
   }
 }, null, artjs.BaseMatcher);
 
 artjs.FalseMatcher = artjs.spec.matcher.False = artjs.Class(function() {
-  this.super(arguments, false);
+  this.super(false);
 }, null, null, artjs.BaseMatcher);
 
 artjs.NullMatcher = artjs.spec.matcher.Null = artjs.Class(function() {
-  this.super(arguments, null);
+  this.super(null);
 }, null, null, artjs.BaseMatcher);
 
 artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(function(expected) {
-  this.super(arguments, expected, "receive");
+  this.super(expected, "receive");
 }, {
   resolve: function(actual) {
     this.receiver = new artjs.SpecReceiver(this, actual);
@@ -2415,7 +2411,7 @@ artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(function(expecte
     return this.receiver;
   },
   _failureData: function(actual) {
-    var result = this.super(arguments, actual);
+    var result = this.super(actual);
     var expectedArgs = this.receiver.args();
     if (expectedArgs) {
       var actualArgs = this.receiver.actualArgs();
@@ -2436,7 +2432,7 @@ artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(function(expecte
 }, null, artjs.BaseMatcher);
 
 artjs.TrueMatcher = artjs.spec.matcher.True = artjs.Class(function() {
-  this.super(arguments, true);
+  this.super(true);
 }, null, null, artjs.BaseMatcher);
 
 artjs.BaseSpecNode = artjs.spec.node.Base = artjs.Class(function(facet, body, focus) {
@@ -2467,13 +2463,13 @@ artjs.BaseSpecNode = artjs.spec.node.Base = artjs.Class(function(facet, body, fo
 
 artjs.AutoExecNode = artjs.spec.node.AutoExec = artjs.Class(null, {
   register: function() {
-    this.super(arguments);
+    this.super();
     this.execute();
   }
 }, null, artjs.BaseSpecNode);
 
 artjs.Before = artjs.spec.node.Before = artjs.Class(function(body) {
-  this.super(arguments, "before", body, false);
+  this.super("before", body, false);
 }, {
   execute: function() {
     if (artjs.Spec.isRealRun()) {
@@ -2486,12 +2482,12 @@ artjs.Context = artjs.spec.node.Context = artjs.Class(null, null, null, artjs.Au
 
 artjs.Describe = artjs.spec.node.Describe = artjs.Class(null, null, null, artjs.AutoExecNode);
 
-artjs.It = artjs.spec.node.It = artjs.Class(function() {
-  this.super(arguments);
+artjs.It = artjs.spec.node.It = artjs.Class(function(facet, body, focus) {
+  this.super(facet, body, focus);
   this._results = [];
 }, {
   register: function() {
-    this.super(arguments);
+    this.super();
     this.ctor.instances.push(this);
   },
   execute: function() {
@@ -2500,7 +2496,7 @@ artjs.It = artjs.spec.node.It = artjs.Class(function() {
     if (artjs.Spec.isRealRun()) {
       if (!artjs.Spec.hasFocus() || this.hasFocus()) {
         this._receivers = [];
-        this.super(arguments);
+        this.super();
         artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
         artjs.Spec.getRunner().testComplete();
       }
@@ -2541,12 +2537,12 @@ artjs.It = artjs.spec.node.It = artjs.Class(function() {
 
 artjs.Specify = artjs.spec.node.Specify = artjs.Class(null, {
   register: function() {
-    this.super(arguments);
+    this.super();
     this.ctor.instances.push(this);
   },
   execute: function() {
     artjs.Spec.setSubject(this.facet);
-    this.super(arguments);
+    this.super();
   }
 }, {
   instances: []
@@ -2581,7 +2577,7 @@ artjs.RealSpecRunner = artjs.spec.runner.Real = artjs.Class(function() {
 }, {
   run: function() {
     this._timeline.mark();
-    this.super(arguments);
+    this.super();
     this._duration = this._timeline.mark();
     this.onComplete.fire(this);
   },
@@ -2604,7 +2600,7 @@ artjs.BaseSpecView = artjs.spec.view.Base = artjs.Class(null, {
 });
 
 artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
-  this.super(arguments);
+  this.super();
   this._runnerTemplate = artjs.$C("div", {
     className: "runner"
   });
@@ -2612,7 +2608,7 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
   this._resultsTemplate = artjs.$C("div");
 }, {
   beforeRun: function() {
-    this.super(arguments);
+    this.super();
     this._element = artjs.$I(document.body, this._runnerTemplate);
   },
   onItComplete: function(runner) {
@@ -3117,7 +3113,7 @@ artjs.Component = artjs.component.Base = artjs.Class(function(element) {
   _name: "Component",
   idToComponent: {},
   _onExtended: function() {
-    this.super(arguments);
+    this.super();
     this.instances = [];
   },
   find: function(id) {
@@ -3178,7 +3174,7 @@ artjs.ComponentScanner = {
 artjs.ComponentSweeper = {
   init: function() {
     var clock = new artjs.Clock(2e3);
-    clock.onChange.add(artjs.Delegate(this, "_onSweep"));
+    clock.onChange.add(new artjs.Delegate(this, "_onSweep"));
     clock.start();
   },
   _onSweep: function(clock) {
@@ -3194,8 +3190,8 @@ artjs.ComponentSweeper = {
 
 artjs.ComponentSweeper.init();
 
-artjs.DatePicker = artjs.component.DatePicker = artjs.Class(function() {
-  this.super(arguments);
+artjs.DatePicker = artjs.component.DatePicker = artjs.Class(function(element) {
+  this.super(element);
   artjs.$BA(this);
   var now = new Date;
   var year = now.getFullYear();
@@ -3232,8 +3228,8 @@ artjs.DatePicker = artjs.component.DatePicker = artjs.Class(function() {
   }
 }, null, artjs.Component);
 
-artjs.Calendar = artjs.ui.Calendar = artjs.Class(function() {
-  this.super(arguments);
+artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
+  this.super(element);
   artjs.$BA(this);
   this._hide();
   artjs.Component.onLoad("artjs-Calendar-years", this._onYearsSelectLoaded.delegate);
@@ -3392,8 +3388,8 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function() {
   }
 }, artjs.Component);
 
-artjs.Link = artjs.component.Link = artjs.Class(function() {
-  this.super(arguments);
+artjs.Link = artjs.component.Link = artjs.Class(function(element) {
+  this.super(element);
   this.onClick = new artjs.CustomEvent("artjs.Link::onClick");
   artjs.on("click", this.element, artjs.$D(this, "_onClick"));
 }, {
@@ -3402,8 +3398,8 @@ artjs.Link = artjs.component.Link = artjs.Class(function() {
   }
 }, null, artjs.Component);
 
-artjs.Select = artjs.component.Select = artjs.Class(function() {
-  this.super(arguments);
+artjs.Select = artjs.component.Select = artjs.Class(function(element) {
+  this.super(element);
   this.onChange = new artjs.CustomEvent("artjs.Select::onChange");
   artjs.on("change", this.element, artjs.$D(this, "_onChange"));
 }, {
@@ -3430,8 +3426,8 @@ artjs.Select = artjs.component.Select = artjs.Class(function() {
   }
 }, null, artjs.Component);
 
-artjs.Table = artjs.component.Table = artjs.Class(function() {
-  this.super(arguments);
+artjs.Table = artjs.component.Table = artjs.Class(function(element) {
+  this.super(element);
   artjs.$BA(this);
   this.onItem = new artjs.CustomEvent("artjs.Table::onItem");
 }, {
@@ -3468,8 +3464,8 @@ artjs.Table = artjs.component.Table = artjs.Class(function() {
   }
 }, null, artjs.Component);
 
-artjs.Tree = artjs.component.Tree = artjs.Class(function() {
-  this.super(arguments);
+artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
+  this.super(element);
   artjs.$BA(this);
   this._leafClassToggler = new artjs.ClassToggler("selected");
   this.onLeaf = new artjs.CustomEvent("artjs.Tree::onLeaf");
@@ -3578,13 +3574,13 @@ artjs.$E = artjs.Delegate.callback(artjs.ElementBuilder, "getElement");
 
 artjs.$P = artjs.Delegate.callback(artjs.ElementBuilder, "parse");
 
-artjs.$ = artjs.Delegate.callback(artjs.ElementBuilder, "getElements");
+artjs.$ = artjs.Delegate.callback(artjs.Selector, "getElements");
 
-artjs.$find = artjs.Delegate.callback(artjs.ElementBuilder, "find");
+artjs.$find = artjs.Delegate.callback(artjs.Selector, "find");
 
-artjs.$first = artjs.Delegate.callback(artjs.ElementBuilder, "first");
+artjs.$first = artjs.Delegate.callback(artjs.Selector, "first");
 
-artjs.$parent = artjs.Delegate.callback(artjs.ElementBuilder, "parent");
+artjs.$parent = artjs.Delegate.callback(artjs.Selector, "parent");
 
 artjs.onDocumentLoad = new artjs.CustomEvent("document:load");
 
