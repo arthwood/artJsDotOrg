@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.0.12",
+  VERSION: "0.0.13",
   component: {},
   data: {},
   dom: {},
@@ -1263,12 +1263,12 @@ artjs.ElementUtils = artjs.utils.Element = {
   serialize: function(e) {
     var s = artjs.Selector;
     var au = artjs.ArrayUtils;
-    var textfields = s.find(e, "input[type=text]");
-    var checkboxes = au.select(s.find(e, "input[type=checkbox]"), this.selectChecked, this);
-    var radios = au.select(s.down(e, "input[type=radio]"), this.selectChecked, this);
-    var selects = s.down(e, "select");
-    var textareas = s.down(e, "textarea");
-    var hiddenfields = s.down(e, "input[type=hidden]");
+    var textfields = s.findAll(e, "input[type=text]");
+    var checkboxes = au.select(s.findAll(e, "input[type=checkbox]"), this.selectChecked, this);
+    var radios = au.select(s.findAll(e, "input[type=radio]"), this.selectChecked, this);
+    var selects = s.findAll(e, "select");
+    var textareas = s.findAll(e, "textarea");
+    var hiddenfields = s.findAll(e, "input[type=hidden]");
     var inputs = au.flatten([ textfields, checkboxes, radios, selects, textareas, hiddenfields ]);
     return au.inject(inputs, {}, this.serializeInject, this);
   },
@@ -1414,8 +1414,8 @@ artjs.ElementUtils = artjs.utils.Element = {
 artjs.Toggler = artjs.utils.Toggler = artjs.Class(function(unique) {
   this.unique = unique;
   this.current = null;
-  this.onActivate = new artjs.CustomEvent("Toggler::onActivate");
-  this.onDeactivate = new artjs.CustomEvent("Toggler::onDeactivate");
+  this.onActivate = new artjs.Event("Toggler::onActivate");
+  this.onDeactivate = new artjs.Event("Toggler::onDeactivate");
 }, {
   toggle: function(item) {
     if (!(this.unique && this.current == item)) {
@@ -1436,8 +1436,8 @@ artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(function(className) 
   this._toggler = new artjs.Toggler;
   this._toggler.onActivate.add(artjs.$D(this, "_onActivate"));
   this._toggler.onDeactivate.add(artjs.$D(this, "_onDeactivate"));
-  this.onActivate = new artjs.CustomEvent("ClassToggler::onActivate");
-  this.onDeactivate = new artjs.CustomEvent("ClassToggler::onDeactivate");
+  this.onActivate = new artjs.Event("ClassToggler::onActivate");
+  this.onDeactivate = new artjs.Event("ClassToggler::onDeactivate");
 }, {
   toggle: function(item) {
     this._toggler.toggle(item);
@@ -1503,7 +1503,7 @@ artjs.DelegateCollection = artjs.events.DelegateCollection = artjs.Class(functio
   }
 });
 
-artjs.CustomEvent = artjs.events.CustomEvent = artjs.Class(function(name) {
+artjs.Event = artjs.events.Event = artjs.Class(function(name) {
   this.name = name;
   this.collection = new artjs.DelegateCollection;
 }, {
@@ -1685,25 +1685,20 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, att
 });
 
 artjs.Selector = artjs.dom.Selector = {
-  find: function(element, selector) {
+  findAll: function(element, selector) {
     return this.getElements(selector, element);
   },
-  first: function(element, selector) {
-    return artjs.ArrayUtils.first(this.find(element, selector));
+  find: function(element, selector) {
+    return this.getElement(selector, element);
   },
-  last: function(element, selector) {
-    return artjs.ArrayUtils.last(this.find(element, selector));
+  parent: function(element) {
+    return element.parentNode;
   },
-  parent: function(element, selector) {
-    this._signature = new artjs.Signature(selector || "");
-    return artjs.ArrayUtils.detect(this._getDescendants(element), this._signature.checkNode, this._signature);
+  getElement: function(selector, element) {
+    return element.querySelector(selector);
   },
   getElements: function(selector, element) {
-    this._root = element;
-    var elements = this._findBySignature(new artjs.Signature(selector));
-    var descendants = artjs.ArrayUtils.map(elements, this._elementToDescendants, this);
-    descendants = artjs.ArrayUtils.select(descendants, this._hasElementDescendants, this);
-    return artjs.ArrayUtils.pluck(descendants, "x");
+    return artjs.$A(element.querySelectorAll(selector));
   },
   isDescendantOf: function(element, root) {
     var descendants = this._getDescendants(element, root);
@@ -1718,143 +1713,23 @@ artjs.Selector = artjs.dom.Selector = {
   getElementsByTagName: function(v) {
     return artjs.$A(document.getElementsByTagName(v));
   },
-  getElementsByClassName: function(v) {
-    return document.getElementsByClassName ? artjs.$A(document.getElementsByClassName(v)) : this._findByClassName(v);
-  },
-  _elementToDescendants: function(element) {
-    return new artjs.Point(element, this._toDescendants(element));
-  },
-  _toDescendants: function(i) {
-    return this._getDescendants(i, this._root);
-  },
   _getDescendants: function(e, root) {
     var result = [];
-    while (e = e.parentNode) {
+    while (e = this.parent(e)) {
       result.push(e);
     }
     var index = result.indexOf(root || document.body);
     return root && index == -1 ? null : result.slice(0, index);
-  },
-  _hasElementDescendants: function(point) {
-    return !(point.y === null);
-  },
-  _findBySignature: function(signature) {
-    var elements = [];
-    if (signature.id) {
-      var elementById = this.getElementById(signature.id);
-      if (elementById) {
-        elements.push(elementById);
-      } else {
-        return [];
-      }
-    }
-    if (signature.tag) {
-      var elementsByTag = this.getElementsByTagName(signature.tag);
-      if (artjs.ArrayUtils.isEmpty(elementsByTag)) {
-        return [];
-      } else {
-        if (artjs.ArrayUtils.isEmpty(elements)) {
-          elements = elementsByTag;
-        } else {
-          elements = artjs.ArrayUtils.intersection([ elements, elementsByTag ]);
-          if (artjs.ArrayUtils.isEmpty(elements)) {
-            return [];
-          }
-        }
-      }
-    }
-    if (!artjs.ArrayUtils.isEmpty(signature.classes)) {
-      var elementsByClass = this._findByClassNames(signature.classes);
-      if (artjs.ArrayUtils.isEmpty(elementsByClass)) {
-        return [];
-      }
-      if (artjs.ArrayUtils.isEmpty(elements)) {
-        elements = elementsByClass;
-      } else {
-        elements = artjs.ArrayUtils.intersection([ elements, elementsByClass ]);
-        if (artjs.ArrayUtils.isEmpty(elements)) {
-          return [];
-        }
-      }
-    }
-    this._filterByAttributes.attributes = signature.attributes;
-    return artjs.ArrayUtils.compact(artjs.ArrayUtils.select(elements, this._filterByAttributes, this));
-  },
-  _findByClassNames: function(v) {
-    return artjs.ArrayUtils.intersection(artjs.ArrayUtils.map(v, this.getElementsByClassName, this));
-  },
-  _elementHasClassName: function(e) {
-    return artjs.ElementUtils.hasClass(e, arguments.callee.className);
-  },
-  _filterByAttributes: function(i) {
-    var attributes = arguments.callee.attributes;
-    return artjs.ObjectUtils.includesAll(artjs.ElementUtils.getAttributes(i), attributes);
-  },
-  _findByClassName: function(v) {
-    var elements = artjs.ElementUtils.filterElements(artjs.$A(document.all));
-    this._elementHasClassName.className = v;
-    return artjs.ArrayUtils.select(elements, this._elementHasClassName);
   }
 };
-
-artjs.Signature = artjs.dom.Signature = artjs.Class(function(selector) {
-  this._selector = selector;
-  this.tag = this._getTag();
-  this.id = this._getId();
-  this.classes = this._getClasses();
-  this.attributes = this._getAttributes();
-}, {
-  _tagRE: /^\w+/gi,
-  _classesRE: /\.[\w\-]+/gi,
-  _idRE: /#[\w\-]+/gi,
-  _attrsRE: /\[.*\]/gi,
-  checkNode: function(e) {
-    return (!this.tag || e.tagName.toLowerCase() == this.tag) && (!this.id || e.id == this.id) && this._checkInclusion(artjs.ArrayUtils, this.classes, e.className.split(" ")) && this._checkInclusion(artjs.ObjectUtils, this.attributes, e.attributes);
-  },
-  _checkInclusion: function(utils, object, subset) {
-    return utils.isEmpty(object) || artjs.ArrayUtils.includesAll(subset, object);
-  },
-  _getTag: function() {
-    var matches = this._selector.match(this._tagRE);
-    return matches && artjs.ArrayUtils.first(matches);
-  },
-  _getId: function() {
-    var match = artjs.ArrayUtils.first(this._match(this._selector, this._idRE));
-    return match && this._stripIdSelector(match);
-  },
-  _getClasses: function() {
-    return artjs.ArrayUtils.map(this._match(this._selector, this._classesRE), this._stripClassSelector, this);
-  },
-  _getAttributes: function() {
-    var matches = artjs.ArrayUtils.map(this._match(this._selector, this._attrsRE), this._stripAttributeSelector, this);
-    var arr = artjs.ArrayUtils.map(matches[0] && matches[0].split(",") || [], this._attrToArray, this);
-    return artjs.ObjectUtils.fromArray(arr);
-  },
-  _match: function(str, re) {
-    var matches = str.match(re);
-    return matches && artjs.$A(matches) || [];
-  },
-  _attrToArray: function(i) {
-    return i.split("=");
-  },
-  _stripIdSelector: function(v) {
-    return v.slice(1);
-  },
-  _stripClassSelector: function(v) {
-    return v.slice(1);
-  },
-  _stripAttributeSelector: function(v) {
-    return v.slice(1).slice(0, v.length - 2);
-  }
-});
 
 artjs.Ajax = artjs.net.Ajax = artjs.Class(function(url, data, method) {
   this._onReadyStateChangeDC = artjs.$DC(this, this._onReadyStateChange, true);
   this._onProgressDC = artjs.$DC(this, this._onProgress, true);
   this._onErrorDC = artjs.$DC(this, this._onError, true);
-  this.onSuccess = new artjs.CustomEvent("Ajax:onSuccess");
-  this.onFailure = new artjs.CustomEvent("Ajax:onFailure");
-  this.onProgress = new artjs.CustomEvent("Ajax:onProgress");
+  this.onSuccess = new artjs.Event("Ajax:onSuccess");
+  this.onFailure = new artjs.Event("Ajax:onFailure");
+  this.onProgress = new artjs.Event("Ajax:onProgress");
   var methods = artjs.Ajax.Methods;
   this.url = url;
   this.data = data;
@@ -1977,7 +1852,7 @@ artjs.$del = artjs.Ajax.del;
 artjs.List = artjs.data.List = artjs.Class(function(items) {
   this.items = items || {};
   this.i = 0;
-  this.onChange = new artjs.CustomEvent("List::onChange");
+  this.onChange = new artjs.Event("List::onChange");
   this.allowDuplicates = true;
   this.loop = false;
 }, {
@@ -2095,7 +1970,7 @@ artjs.List = artjs.data.List = artjs.Class(function(items) {
 artjs.Model = artjs.data.Model = artjs.Class();
 
 artjs.Queue = artjs.data.Queue = artjs.Class(function(data) {
-  this.onChange = new artjs.CustomEvent("Queue::onChange");
+  this.onChange = new artjs.Event("Queue::onChange");
   this.list = new artjs.List(data);
   this.list.onChange.add(artjs.$D(this, this._onChange));
 }, {
@@ -2143,8 +2018,8 @@ artjs.Clock = artjs.events.Clock = artjs.Class(function(interval, repeat) {
   this._id = null;
   this._counter = 0;
   this._tickDC = artjs.Delegate.callback(this, "_tick");
-  this.onChange = new artjs.CustomEvent("Clock:onChange");
-  this.onComplete = new artjs.CustomEvent("Clock:onComplete");
+  this.onChange = new artjs.Event("Clock:onChange");
+  this.onComplete = new artjs.Event("Clock:onComplete");
 }, {
   start: function(now) {
     this.stop();
@@ -2274,7 +2149,7 @@ artjs.Timeline = artjs.events.Timeline = artjs.Class(null, {
 artjs.Timeout = artjs.events.Timeout = artjs.Class(function(delay) {
   this._delay = delay;
   this._onTimeoutDC = artjs.$DC(this, this._onTimeout);
-  this.onComplete = new artjs.CustomEvent("Timeout:onComplete");
+  this.onComplete = new artjs.Event("Timeout:onComplete");
 }, {
   start: function() {
     this._id = setTimeout(this._onTimeoutDC, this._delay);
@@ -2572,8 +2447,8 @@ artjs.RealSpecRunner = artjs.spec.runner.Real = artjs.Class(function() {
   this._duration = undefined;
   this._timeline = new artjs.Timeline;
   this._subject = undefined;
-  this.onComplete = new artjs.CustomEvent("artjs.SpecRunner::onComplete");
-  this.onItComplete = new artjs.CustomEvent("artjs.SpecRunner::onItComplete");
+  this.onComplete = new artjs.Event("artjs.SpecRunner::onComplete");
+  this.onItComplete = new artjs.Event("artjs.SpecRunner::onItComplete");
 }, {
   run: function() {
     this._timeline.mark();
@@ -2983,7 +2858,7 @@ artjs.TemplateBase = artjs.template.Base = {
     this.renderInto(element, template, scope);
   },
   evalScripts: function(element) {
-    artjs.ArrayUtils.each(artjs.Selector.find(element, "script"), this.evalScript, this);
+    artjs.ArrayUtils.each(artjs.Selector.findAll(element, "script"), this.evalScript, this);
   },
   evalScript: function(script) {
     eval(artjs.ElementUtils.getContent(script));
@@ -3132,12 +3007,12 @@ artjs.Component = artjs.component.Base = artjs.Class(function(element) {
 artjs.ComponentScanner = {
   _events: {},
   scan: function(element) {
-    artjs.ArrayUtils.each(artjs.$find(element, ".art"), this._onFound, this);
+    artjs.ArrayUtils.each(artjs.$findAll(element, ".art"), this._onFound, this);
   },
   addListener: function(id, delegate) {
     var event = this._events[id];
     if (!event) {
-      event = this._events[id] = new artjs.CustomEvent("Component::Load::" + id);
+      event = this._events[id] = new artjs.Event("Component::Load::" + id);
     }
     event.add(delegate);
   },
@@ -3390,7 +3265,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
 
 artjs.Link = artjs.component.Link = artjs.Class(function(element) {
   this.super(element);
-  this.onClick = new artjs.CustomEvent("artjs.Link::onClick");
+  this.onClick = new artjs.Event("artjs.Link::onClick");
   artjs.on("click", this.element, artjs.$D(this, "_onClick"));
 }, {
   _onClick: function(e) {
@@ -3400,7 +3275,7 @@ artjs.Link = artjs.component.Link = artjs.Class(function(element) {
 
 artjs.Select = artjs.component.Select = artjs.Class(function(element) {
   this.super(element);
-  this.onChange = new artjs.CustomEvent("artjs.Select::onChange");
+  this.onChange = new artjs.Event("artjs.Select::onChange");
   artjs.on("change", this.element, artjs.$D(this, "_onChange"));
 }, {
   setOptions: function(options) {
@@ -3408,11 +3283,11 @@ artjs.Select = artjs.component.Select = artjs.Class(function(element) {
     this._update();
   },
   setSelected: function(selected) {
-    var oldOption = artjs.$first(this.element, "option[selected=selected]");
+    var oldOption = artjs.$find(this.element, "option[selected=selected]");
     if (oldOption) {
       oldOption.removeAttribute("selected");
     }
-    var newOption = artjs.$first(this.element, "option[value=" + selected + "]");
+    var newOption = artjs.$find(this.element, "option[value=" + selected + "]");
     newOption.setAttribute("selected", "selected");
   },
   getValue: function() {
@@ -3429,7 +3304,7 @@ artjs.Select = artjs.component.Select = artjs.Class(function(element) {
 artjs.Table = artjs.component.Table = artjs.Class(function(element) {
   this.super(element);
   artjs.$BA(this);
-  this.onItem = new artjs.CustomEvent("artjs.Table::onItem");
+  this.onItem = new artjs.Event("artjs.Table::onItem");
 }, {
   setData: function(data) {
     this._data = data;
@@ -3449,11 +3324,11 @@ artjs.Table = artjs.component.Table = artjs.Class(function(element) {
   },
   _update: function() {
     artjs.ElementUtils.setContent(this.element, artjs.TemplateHelpers.renderTable(this._data));
-    var head = artjs.$first(this.element, "thead");
-    var body = artjs.$first(this.element, "tbody");
-    this._headCells = artjs.$find(head, "th");
-    this._rows = artjs.$find(body, "tr");
-    this._items = artjs.$find(body, "td");
+    var head = artjs.$find(this.element, "thead");
+    var body = artjs.$find(this.element, "tbody");
+    this._headCells = artjs.$findAll(head, "th");
+    this._rows = artjs.$findAll(body, "tr");
+    this._items = artjs.$findAll(body, "td");
     artjs.ArrayUtils.each(this._items, this._initItem, this);
   },
   _initItem: function(item) {
@@ -3468,13 +3343,13 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
   this.super(element);
   artjs.$BA(this);
   this._leafClassToggler = new artjs.ClassToggler("selected");
-  this.onLeaf = new artjs.CustomEvent("artjs.Tree::onLeaf");
+  this.onLeaf = new artjs.Event("artjs.Tree::onLeaf");
 }, {
   setData: function(data) {
     var content = artjs.$P(this._renderNode(data));
     artjs.ElementUtils.insert(this.element, content);
-    var point = artjs.ArrayUtils.partition(artjs.Selector.find(this.element, "li"), function(item, idx) {
-      return artjs.ArrayUtils.isNotEmpty(artjs.Selector.find(item, "ul"));
+    var point = artjs.ArrayUtils.partition(artjs.Selector.findAll(this.element, "li"), function(item, idx) {
+      return artjs.ArrayUtils.isNotEmpty(artjs.Selector.findAll(item, "ul"));
     });
     this._nodes = point.x;
     this._leaves = point.y;
@@ -3498,7 +3373,7 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
   },
   _eachNode: function(i) {
     artjs.on("click", artjs.ElementUtils.firstElement(i), this._onNode.delegate);
-    artjs.ElementUtils.hide(artjs.$first(i, "ul"));
+    artjs.ElementUtils.hide(artjs.$find(i, "ul"));
   },
   _onNode: function(originalEvent, elementEvent) {
     originalEvent.preventDefault();
@@ -3578,15 +3453,15 @@ artjs.$ = artjs.Delegate.callback(artjs.Selector, "getElements");
 
 artjs.$find = artjs.Delegate.callback(artjs.Selector, "find");
 
-artjs.$first = artjs.Delegate.callback(artjs.Selector, "first");
+artjs.$findAll = artjs.Delegate.callback(artjs.Selector, "findAll");
 
 artjs.$parent = artjs.Delegate.callback(artjs.Selector, "parent");
 
-artjs.onDocumentLoad = new artjs.CustomEvent("document:load");
+artjs.onDocumentLoad = new artjs.Event("document:load");
 
-artjs.onWindowLoad = new artjs.CustomEvent("window:load");
+artjs.onWindowLoad = new artjs.Event("window:load");
 
-artjs.onLibraryLoad = new artjs.CustomEvent("library:load");
+artjs.onLibraryLoad = new artjs.Event("library:load");
 
 document.addEventListener("DOMContentLoaded", function() {
   artjs.onDocumentLoad.fire();

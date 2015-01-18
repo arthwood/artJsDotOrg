@@ -10,7 +10,7 @@ artjs.TemplateLibrary.config.PATH = "../templates";
 
 artjs.TemplateLibrary.config.TEMPLATES = [ "doc", "member", "section", "ga", "disqus" ];
 
-artjs.Broadcaster.register(art.events.ON_SIDEBAR, new artjs.CustomEvent(art.events.ON_SIDEBAR));
+artjs.Broadcaster.register(art.events.ON_SIDEBAR, new artjs.Event(art.events.ON_SIDEBAR));
 
 art.model.Member = artjs.Class(function(header, description, example, params, more) {
   this.super(header, description, example, params, more);
@@ -37,7 +37,7 @@ art.DB = {
     },
     "artjs.events": {
       Clock: "clock",
-      CustomEvent: "custom_event",
+      Event: "event",
       Delegate: "delegate",
       QueuedClock: "queued_clock",
       Timeline: "timeline",
@@ -82,7 +82,7 @@ art.DB = {
         members: [ new art.model.Member("VERSION:String", "Current version of framework") ]
       }, {
         name: "Methods",
-        members: [ new art.model.Member("$():Element", "Alias for ElementUtils.getElements()", [ "var nav = artjs.$('.main p.item span');" ]), new art.model.Member("$D():Delegate", "Alias for Delegate.create()", [ "var delegate = artjs.$D(this, this.onClick);" ]), new art.model.Member("$DC():Function", "Alias for Delegate.callback()", [ "var callback = artjs.$DC(this, this.onClick, true);" ]), new art.model.Member("$del():Ajax", "Alias for Ajax.del()", [ "var ajax = artjs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$find():Array", "Alias for ElementUtils.find()", [ "var nav = artjs.$('navigation');", "var items = artjs.$down(nav, '.item');" ]), new art.model.Member("$get():Ajax", "Alias for Ajax.get()", [ "var ajax = artjs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("p():Void", "Debug info. If debug console is accessible output to the console; uses alert() otherwise.", [ "p('myVariable: ' +  myVariable);" ]), new art.model.Member("$P():Element", "Alias for ElementBuilder.parse()", [ "var element = artjs.$P('<span class=\"desc\">Blue t-shirt</span>');" ]), new art.model.Member("$post():Ajax", "Alias for Ajax.post()", [ "var ajax = artjs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$put():Ajax", "Alias for Ajax.$put()", [ "var ajax = artjs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$up():Element", "Alias for ElementUtils.up()", [ "var nav = artjs.$('navigation');", "var parent = artjs.$up(nav);" ]) ]
+        members: [ new art.model.Member("$():Element", "Alias for ElementUtils.getElements()", [ "var nav = artjs.$('.main p.item span');" ]), new art.model.Member("$D():Delegate", "Alias for Delegate.create()", [ "var delegate = artjs.$D(this, this.onClick);" ]), new art.model.Member("$DC():Function", "Alias for Delegate.callback()", [ "var callback = artjs.$DC(this, this.onClick, true);" ]), new art.model.Member("$del():Ajax", "Alias for Ajax.del()", [ "var ajax = artjs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$find():Element", "Alias for ElementUtils.find()", [ "var nav = artjs.$('navigation');", "var item = artjs.$find(nav, '.item');" ]), new art.model.Member("$findAll():Array", "Alias for ElementUtils.findAll()", [ "var nav = artjs.$('navigation');", "var items = artjs.$findAll(nav, '.item');" ]), new art.model.Member("$get():Ajax", "Alias for Ajax.get()", [ "var ajax = artjs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("p():Void", "Debug info. If debug console is accessible output to the console; uses alert() otherwise.", [ "p('myVariable: ' +  myVariable);" ]), new art.model.Member("$P():Element", "Alias for ElementBuilder.parse()", [ "var element = artjs.$P('<span class=\"desc\">Blue t-shirt</span>');" ]), new art.model.Member("$post():Ajax", "Alias for Ajax.post()", [ "var ajax = artjs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$put():Ajax", "Alias for Ajax.$put()", [ "var ajax = artjs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$up():Element", "Alias for ElementUtils.up()", [ "var nav = artjs.$('navigation');", "var parent = artjs.$up(nav);" ]) ]
       }, {
         name: "Events",
         members: [ new art.model.Member("onDocumentLoad", "Triggered when DOM is loaded."), new art.model.Member("onWindowLoad", "Triggered when whole window is loaded (executes after onDocumentLoad)."), new art.model.Member("onLibraryLoad", "Triggered when all library templates are loaded (executes after onWindowLoad).") ]
@@ -450,17 +450,17 @@ art.DB = {
       } ]
     },
     custom_event: {
-      name: "CustomEvent",
+      name: "Event",
       "package": "artjs.events",
       description: "Defines object capable of dispatching events.",
       sections: [ {
         name: "Constructor",
         members: [ {
-          header: "CustomEvent(name:String = null)",
+          header: "Event(name:String = null)",
           params: {
             name: "name of the event"
           },
-          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');" ]
+          example: [ "var myEvent = new Event('MyClass::myEvent');" ]
         } ]
       }, {
         name: "Properties",
@@ -470,30 +470,30 @@ art.DB = {
         }, {
           header: "collection:DelegateCollection",
           description: "Collection of registered listeners",
-          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "", "myEvent.collection.length // 0", "myEvent.add(new Delegate(null, function() {", "console.log('event!')", "}));", "myEvent.collection.length // 1" ]
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "", "myEvent.collection.length // 0", "myEvent.add(new Delegate(null, function() {", "console.log('event!')", "}));", "myEvent.collection.length // 1" ]
         } ]
       }, {
         name: "Methods",
         members: [ {
           header: "add(delegate:Delegate):Void",
           description: "Registers listener",
-          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "", "myEvent.add(new Delegate(null, function() {", "  console.log('event!')", "}));" ]
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "", "myEvent.add(new Delegate(null, function() {", "  console.log('event!')", "}));" ]
         }, {
           header: "fire():Array",
           description: "Triggers the event and returns responses from handlers as an array",
-          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "", "myEvent.add(new Delegate(null, function() {", "  console.log('event!');", "  return 2;", "}));", "// ...then at some point you dispatch the event", "myEvent.fire(this, 'hello'); // [2]" ]
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "", "myEvent.add(new Delegate(null, function() {", "  console.log('event!');", "  return 2;", "}));", "// ...then at some point you dispatch the event", "myEvent.fire(this, 'hello'); // [2]" ]
         }, {
           header: "getLength():Number",
           description: "Amount of listeners currently registered",
-          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.getLength(); // 0", "myEvent.add(delegateOne);", "myEvent.getLength(); // 1", "myEvent.add(delegateTwo);", "myEvent.getLength(); // 2", "myEvent.removeAll();", "myEvent.getLength(); // 0" ]
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.getLength(); // 0", "myEvent.add(delegateOne);", "myEvent.getLength(); // 1", "myEvent.add(delegateTwo);", "myEvent.getLength(); // 2", "myEvent.removeAll();", "myEvent.getLength(); // 0" ]
         }, {
           header: "remove(delegate:Delegate):Void",
           description: "Removes listener",
-          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "var delegate = new Delegate(null, function(msg) {", "  console.log('event says: ' + msg)", "});", "", "myEvent.add(delegate);", "myEvent.fire('hello!'); // delegate handles event", "myEvent.remove(delegate);", "myEvent.fire('hello!'); // nothing happens" ]
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "var delegate = new Delegate(null, function(msg) {", "  console.log('event says: ' + msg)", "});", "", "myEvent.add(delegate);", "myEvent.fire('hello!'); // delegate handles event", "myEvent.remove(delegate);", "myEvent.fire('hello!'); // nothing happens" ]
         }, {
           header: "removeAll():Void",
           description: "Removes all listeners",
-          example: [ "var myEvent = new CustomEvent('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.add(delegateOne);", "myEvent.add(delegateTwo);", "myEvent.fire('hello!'); // delegates handle event", "myEvent.removeAll();", "myEvent.fire('hello!');// nothing happens" ]
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.add(delegateOne);", "myEvent.add(delegateTwo);", "myEvent.fire('hello!'); // delegates handle event", "myEvent.removeAll();", "myEvent.fire('hello!');// nothing happens" ]
         } ]
       } ]
     },
@@ -1271,10 +1271,10 @@ art.component.Content = artjs.Class(function(element) {
 art.component.Member = artjs.Class(function(element) {
   this.super(element);
   var s = artjs.Selector;
-  var a = s.first(s.first(element, "h4"), "a");
+  var a = s.find(s.find(element, "h4"), "a");
   var eu = artjs.ElementUtils;
   eu.onClick(a, artjs.$D(this, this._onAnchor));
-  this.more = s.first(element, ".more");
+  this.more = s.find(element, ".more");
   if (this.more) {
     eu.addClass(a, "active");
     this.height = eu.getSize(this.more).y;

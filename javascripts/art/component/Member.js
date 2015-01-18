@@ -3,12 +3,12 @@ art.component.Member = artjs.Class(
     this.super(element);
     
     var s = artjs.Selector;
-    var a = s.first(s.first(element, 'h4'), 'a');
+    var a = s.find(s.find(element, 'h4'), 'a');
     var eu = artjs.ElementUtils;
     
     eu.onClick(a, artjs.$D(this, this._onAnchor));
     
-    this.more = s.first(element, '.more');
+    this.more = s.find(element, '.more');
     
     if (this.more) {
       eu.addClass(a, 'active');

@@ -14,7 +14,7 @@ art.DB = {
     },
     'artjs.events': {
       'Clock': 'clock',
-      'CustomEvent': 'custom_event',
+      'Event': 'event',
       'Delegate': 'delegate',
       'QueuedClock': 'queued_clock',
       'Timeline': 'timeline',
@@ -119,11 +119,19 @@ art.DB = {
               ]
             ),
             new art.model.Member(
-              '$find():Array',
+              '$find():Element',
               'Alias for ElementUtils.find()',
               [
                 "var nav = artjs.$('navigation');",
-                "var items = artjs.$down(nav, '.item');"
+                "var item = artjs.$find(nav, '.item');"
+              ]
+            ),
+            new art.model.Member(
+              '$findAll():Array',
+              'Alias for ElementUtils.findAll()',
+              [
+                "var nav = artjs.$('navigation');",
+                "var items = artjs.$findAll(nav, '.item');"
               ]
             ),
             new art.model.Member(
@@ -956,7 +964,7 @@ art.DB = {
       ]
     },
     custom_event: {
-      name: 'CustomEvent',
+      name: 'Event',
       package: 'artjs.events',
       description: 'Defines object capable of dispatching events.',
       sections: [
@@ -964,12 +972,12 @@ art.DB = {
           name: 'Constructor',
           members: [
             {
-              header: 'CustomEvent(name:String = null)',
+              header: 'Event(name:String = null)',
               params: {
                 name: 'name of the event'
               },
               example: [
-                "var myEvent = new CustomEvent('MyClass::myEvent');"
+                "var myEvent = new Event('MyClass::myEvent');"
               ]
             }
           ]
@@ -985,7 +993,7 @@ art.DB = {
               header: 'collection:DelegateCollection',
               description: 'Collection of registered listeners',
               example: [
-                "var myEvent = new CustomEvent('MyClass::myEvent');",
+                "var myEvent = new Event('MyClass::myEvent');",
                 '',
                 'myEvent.collection.length // 0',
                 'myEvent.add(new Delegate(null, function() {',
@@ -1003,7 +1011,7 @@ art.DB = {
               header: 'add(delegate:Delegate):Void',
               description: 'Registers listener',
               example: [
-                "var myEvent = new CustomEvent('MyClass::myEvent');",
+                "var myEvent = new Event('MyClass::myEvent');",
                 '',
                 'myEvent.add(new Delegate(null, function() {',
                 "  console.log('event!')",
@@ -1014,7 +1022,7 @@ art.DB = {
               header: 'fire():Array',
               description: 'Triggers the event and returns responses from handlers as an array',
               example: [
-                "var myEvent = new CustomEvent('MyClass::myEvent');",
+                "var myEvent = new Event('MyClass::myEvent');",
                 '',
                 'myEvent.add(new Delegate(null, function() {',
                 "  console.log('event!');",
@@ -1028,7 +1036,7 @@ art.DB = {
               header: 'getLength():Number',
               description: 'Amount of listeners currently registered',
               example: [
-                "var myEvent = new CustomEvent('MyClass::myEvent');",
+                "var myEvent = new Event('MyClass::myEvent');",
                 'var delegateOne = new Delegate(null, function(msg) {',
                 "  console.log('event says to delegate 1: ' + msg);",
                 '});',
@@ -1049,7 +1057,7 @@ art.DB = {
               header: 'remove(delegate:Delegate):Void',
               description: 'Removes listener',
               example: [
-                "var myEvent = new CustomEvent('MyClass::myEvent');",
+                "var myEvent = new Event('MyClass::myEvent');",
                 'var delegate = new Delegate(null, function(msg) {',
                 "  console.log('event says: ' + msg)",
                 '});',
@@ -1064,7 +1072,7 @@ art.DB = {
               header: 'removeAll():Void',
               description: 'Removes all listeners',
               example: [
-                "var myEvent = new CustomEvent('MyClass::myEvent');",
+                "var myEvent = new Event('MyClass::myEvent');",
                 'var delegateOne = new Delegate(null, function(msg) {',
                 "  console.log('event says to delegate 1: ' + msg);",
                 '});',

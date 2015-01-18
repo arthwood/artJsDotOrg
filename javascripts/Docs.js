@@ -8,4 +8,4 @@ var art = {
 
 artjs.TemplateLibrary.config.PATH = '../templates';
 artjs.TemplateLibrary.config.TEMPLATES = ['doc', 'member', 'section', 'ga', 'disqus'];
-artjs.Broadcaster.register(art.events.ON_SIDEBAR, new artjs.CustomEvent(art.events.ON_SIDEBAR));
+artjs.Broadcaster.register(art.events.ON_SIDEBAR, new artjs.Event(art.events.ON_SIDEBAR));
