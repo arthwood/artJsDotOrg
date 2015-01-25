@@ -2332,7 +2332,14 @@ artjs.BaseSpecNode = artjs.spec.node.Base = artjs.Class(function(facet, body, fo
   execute: function(node) {
     this._path.push(node);
     node.body();
+    this._cleanTrailingBefores();
     this._path.pop();
+  },
+  _cleanTrailingBefores: function() {
+    var item;
+    while ((item = artjs.ArrayUtils.last(this._path)) && item.ctor == artjs.Before) {
+      this._path.pop();
+    }
   }
 });
 
@@ -2346,9 +2353,9 @@ artjs.AutoExecNode = artjs.spec.node.AutoExec = artjs.Class(null, {
 artjs.Before = artjs.spec.node.Before = artjs.Class(function(body) {
   this.super("before", body, false);
 }, {
-  execute: function() {
+  register: function() {
     if (artjs.Spec.isRealRun()) {
-      this.body();
+      this.ctor.getPath().push(this);
     }
   }
 }, null, artjs.AutoExecNode);
@@ -2371,6 +2378,7 @@ artjs.It = artjs.spec.node.It = artjs.Class(function(facet, body, focus) {
     if (artjs.Spec.isRealRun()) {
       if (!artjs.Spec.hasFocus() || this.hasFocus()) {
         this._receivers = [];
+        this._runBefores();
         this.super();
         artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
         artjs.Spec.getRunner().testComplete();
@@ -2396,6 +2404,10 @@ artjs.It = artjs.spec.node.It = artjs.Class(function(facet, body, focus) {
   },
   hasFocus: function() {
     return artjs.ArrayUtils.any(artjs.ArrayUtils.pluck(this._path, "focus")) || this.focus;
+  },
+  _runBefores: function() {
+    var instances = artjs.ArrayUtils.select(this._path, this.ctor._isBefore);
+    artjs.ArrayUtils.invoke(instances, "execute");
   }
 }, {
   instances: [],
@@ -2407,6 +2419,9 @@ artjs.It = artjs.spec.node.It = artjs.Class(function(facet, body, focus) {
   },
   _hasFocus: function(instance) {
     return instance.hasFocus();
+  },
+  _isBefore: function(i) {
+    return i.ctor == artjs.Before;
   }
 }, artjs.AutoExecNode);
 
