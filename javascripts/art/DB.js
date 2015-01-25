@@ -963,7 +963,7 @@ art.DB = {
         }
       ]
     },
-    custom_event: {
+    event: {
       name: 'Event',
       package: 'artjs.events',
       description: 'Defines object capable of dispatching events.',

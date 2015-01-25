@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.1.0",
+  VERSION: "0.1.1",
   component: {},
   data: {},
   dom: {},
@@ -1695,10 +1695,10 @@ artjs.Selector = artjs.dom.Selector = {
     return element.parentNode;
   },
   getElement: function(selector, element) {
-    return element.querySelector(selector);
+    return (element || document).querySelector(selector);
   },
   getElements: function(selector, element) {
-    return artjs.$A(element.querySelectorAll(selector));
+    return artjs.$A((element || document).querySelectorAll(selector));
   },
   isDescendantOf: function(element, root) {
     var descendants = this._getDescendants(element, root);
