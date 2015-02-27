@@ -17,15 +17,23 @@ artjs.TemplateHelpers.registerAll({
     }
   },
   
+  renderDescription: function(v) {
+    return this.renderIf(v, '_renderDescription');
+  },
+  
+  renderParams: function(v) {
+    return this.renderIf(v, '_renderParams');
+  },
+  
   _renderMore: function(v) {
     return this._renderElement('p', {className: 'container'}, v);
   },
   
-  renderDescription: function(v) {
+  _renderDescription: function(v) {
     return this._renderElement('p', null, v);
   },
   
-  renderParams: function(v) {
+  _renderParams: function(v) {
     var collection = artjs.ObjectUtils.map(v, this._paramToElement, this).join('');
       
     return this._renderElement('div', {className: 'params'}, collection);

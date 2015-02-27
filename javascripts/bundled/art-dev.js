@@ -48,21 +48,21 @@ artjs.ArrayUtils = artjs.utils.Array = {
     return result;
   },
   first: function(arr) {
-    return this.getItem(arr, 0);
+    return this.getItemAt(arr, 0);
   },
   second: function(arr) {
-    return this.getItem(arr, 1);
+    return this.getItemAt(arr, 1);
   },
   third: function(arr) {
-    return this.getItem(arr, 2);
+    return this.getItemAt(arr, 2);
   },
   last: function(arr) {
-    return this.getItem(arr, arr.length - 1);
+    return this.getItemAt(arr, arr.length - 1);
   },
   beforeLast: function(arr) {
-    return this.getItem(arr, arr.length - 2);
+    return this.getItemAt(arr, arr.length - 2);
   },
-  getItem: function(arr, i) {
+  getItemAt: function(arr, i) {
     return arr[i];
   },
   includesInv: function(item, arr) {
@@ -780,6 +780,9 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
     this._bindTarget = target;
     artjs.ArrayUtils.each(functions, this._bindEach, this);
   },
+  func: function(method, withSource) {
+    return this.create(null, method, withSource);
+  },
   _isCallback: function(v, k) {
     return artjs.StringUtils.startsWith(k, "_on") && this._isFunction(v, k);
   },
@@ -1153,6 +1156,9 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   elements: function(e) {
     return this.filterElements(this.children(e));
+  },
+  elementAt: function(e, i) {
+    return artjs.ArrayUtils.getItemAt(this.elements(e), i);
   },
   filterElements: function(items) {
     return artjs.ArrayUtils.select(items, this.isElement, this);
@@ -2001,8 +2007,8 @@ artjs.Queue = artjs.data.Queue = artjs.Class(function(data) {
 
 artjs.Broadcaster = artjs.events.Broadcaster = {
   _events: {},
-  register: function(id, event) {
-    this._events[id] = event;
+  register: function(id) {
+    this._events[id] = new artjs.Event(id);
   },
   addListener: function(id, delegate) {
     this._events[id].add(delegate);
@@ -2554,7 +2560,13 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
     var facet = i.facet;
     return typeof facet == "string" ? facet : facet._name;
   }
-}, null, artjs.BaseSpecView);
+}, {
+  run: function() {
+    var view = new this;
+    artjs.Spec.init(view);
+    artjs.Spec.run();
+  }
+}, artjs.BaseSpecView);
 
 artjs.Actual = artjs.spec.Actual = artjs.Class(function(value) {
   this.value = value;
@@ -2858,7 +2870,7 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
 artjs.TemplateBase = artjs.template.Base = {
   render: function(content, scope) {
     var compiler = new artjs.TemplateCompiler(content, scope);
-    return compiler.compile(content, scope);
+    return compiler.compile();
   },
   renderInto: function(element, content, scope) {
     artjs.ElementUtils.setContent(element, this.render(content, scope));
@@ -3363,17 +3375,21 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
   setData: function(data) {
     var content = artjs.$P(this._renderNode(data));
     artjs.ElementUtils.insert(this.element, content);
-    var point = artjs.ArrayUtils.partition(artjs.Selector.findAll(this.element, "li"), function(item, idx) {
-      return artjs.ArrayUtils.isNotEmpty(artjs.Selector.findAll(item, "ul"));
-    });
-    this._nodes = point.x;
-    this._leaves = point.y;
-    artjs.ArrayUtils.each(this._nodes, this._eachNode, this);
-    artjs.ArrayUtils.each(this._leaves, this._eachLeaf, this);
+    artjs.ArrayUtils.each(artjs.Selector.findAll(this.element, "li"), this._eachElement, this);
   },
-  open: function() {
-    this._toggleNode(artjs.ElementUtils.firstElement(artjs.ArrayUtils.first(this._nodes)));
-    this._leafAction(artjs.ElementUtils.firstElement(artjs.ArrayUtils.first(this._leaves)));
+  clickAt: function() {
+    this._openingNode = this.element;
+    artjs.ArrayUtils.each(artjs.$A(arguments), this._openAt, this);
+  },
+  getClicked: function() {
+    return this._clicked;
+  },
+  getCurrent: function() {
+    return this._leafClassToggler.getCurrent();
+  },
+  _openAt: function(i) {
+    this._openingNode = artjs.ElementUtils.elementAt(artjs.Selector.find(this._openingNode, "ul"), i);
+    this._handleClick(artjs.ElementUtils.firstElement(this._openingNode));
   },
   _renderNode: function(node) {
     return artjs.$B("ul", null, artjs.ObjectUtils.map(node, this._mapNode, this).join("")).toString();
@@ -3386,33 +3402,39 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
     }, k).toString() + (leaf ? "" : this._renderNode(v));
     return artjs.$B("li", null, value).toString();
   },
-  _eachNode: function(i) {
-    artjs.on("click", artjs.ElementUtils.firstElement(i), this._onNode.delegate);
-    artjs.ElementUtils.hide(artjs.$find(i, "ul"));
+  _eachElement: function(i) {
+    var a = artjs.ElementUtils.firstElement(i);
+    artjs.on("click", a, this._onElement.delegate);
+    if (this._isNode(a)) {
+      artjs.ElementUtils.hide(artjs.$find(i, "ul"));
+    } else {
+      artjs.ElementUtils.addClass(i, "leaf");
+    }
   },
-  _onNode: function(originalEvent, elementEvent) {
+  _onElement: function(originalEvent, elementEvent) {
     originalEvent.preventDefault();
-    this._toggleNode(elementEvent.element);
+    this._handleClick(elementEvent.element);
   },
-  _toggleNode: function(a) {
-    var ul = artjs.ElementUtils.next(a);
+  _handleClick: function(a) {
+    this._clicked = a;
+    if (this._isNode(this._clicked)) {
+      this._toggleNode();
+    } else {
+      this._leafAction();
+    }
+  },
+  _isNode: function(a) {
+    var li = artjs.ElementUtils.parent(a);
+    return artjs.ArrayUtils.isNotEmpty(artjs.Selector.findAll(li, "ul"));
+  },
+  _toggleNode: function() {
+    var ul = artjs.ElementUtils.next(this._clicked);
     artjs.ElementUtils.toggle(ul);
-    artjs.ElementUtils.setClass(artjs.$parent(a), "expanded", !artjs.ElementUtils.isHidden(ul));
+    artjs.ElementUtils.setClass(artjs.$parent(this._clicked), "expanded", !artjs.ElementUtils.isHidden(ul));
   },
-  _eachLeaf: function(i) {
-    artjs.on("click", artjs.ElementUtils.firstElement(i), this._onLeaf.delegate);
-    artjs.ElementUtils.addClass(i, "leaf");
-  },
-  _onLeaf: function(originalEvent, elementEvent) {
-    originalEvent.preventDefault();
-    this._leafAction(elementEvent.element);
-  },
-  _leafAction: function(element) {
-    this._leafClassToggler.toggle(element);
+  _leafAction: function() {
+    this._leafClassToggler.toggle(this._clicked);
     this.onLeaf.fire(this);
-  },
-  getCurrent: function() {
-    return this._leafClassToggler.getCurrent();
   }
 }, null, artjs.Component);
 
@@ -3447,6 +3469,8 @@ artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
 artjs.$A = artjs.Delegate.callback(artjs.ArrayUtils, "arrify");
 
 artjs.$DC = artjs.Delegate.callback(artjs.Delegate, "callback");
+
+artjs.$F = artjs.Delegate.callback(artjs.Delegate, "func");
 
 artjs.$D = artjs.Delegate.callback(artjs.Delegate, "create");
 

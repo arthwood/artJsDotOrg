@@ -24,6 +24,12 @@
         margin-bottom: 4px; }
         .art-component-Content ul li p:last-child {
           margin-bottom: 0; }
+    .art-component-Content ul.simple {
+      padding: 2px 6px;
+      margin-bottom: 10px; }
+      .art-component-Content ul.simple li {
+        padding: 2px 0;
+        border-bottom: none; }
 
 .art-component-Member h4 a {
   cursor: default; }
@@ -56,9 +62,10 @@
           background: #ff0077;
           color: white; }
 
-pre {
+pre, span.code {
   font-family: Menlo, Monaco, Consolas, Courier New;
-  font-size: 12px; }
+  font-size: 12px;
+  line-height: 18px; }
 
 .more .container {
   padding: 10px; }
@@ -79,3 +86,7 @@ pre {
 
 h4.package span {
   font-weight: normal; }
+
+.section {
+  margin-left: 20px;
+  margin-bottom: 20px; }

@@ -37,9 +37,9 @@ spec(artjs.ArrayUtils, function() {
     });
   });
 
-  describe('#getItem', function() {
+  describe('#getItemAt', function() {
     it('should return requested element', function() {
-      expect(subject().getItem([6, 3, 2, 8], 2)).to(eq(2));
+      expect(subject().getItemAt([6, 3, 2, 8], 2)).to(eq(2));
     });
   });
 

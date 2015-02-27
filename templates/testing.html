@@ -1,0 +1,244 @@
+<h1>Testing</h1>
+<h2>
+  Introduction.
+</h2>
+<div class="section">
+  <p>
+    In order to write unit tests for your application create test file - lets say at:<br/>
+    <span class="code">/javascripts/spec/my_test.js</span>
+  </p>
+</div>
+<h2>
+  Spec nodes.
+</h2>
+<div class="section">
+  <p>
+    There are four main function that can be used to write any test:
+  </p>
+  <ul class="simple">
+    <li><span class="code">spec()</span></li>
+    <li><span class="code">describe()</span></li>
+    <li><span class="code">context()</span></li>
+    <li><span class="code">it()</span></li>
+  </ul>
+  <p>
+    I call them "spec nodes" since they conform a tree-like structure of every test.<br/>
+    Every node accepts function as second argument which constitutes body of a test that's being executed 
+    when test is running.<br/>
+    There is also third optional argument "focus" of Boolean type which I'll describe later in this section.
+  </p>
+  <h3>spec()</h3>
+  <p>
+    Every test file needs to specify what are you going to test.<br/>
+    You do this by calling <span class="code">spec</span> function:
+  </p>
+  <pre class="block">
+spec(TestObject, function() {
+);</pre>
+  <p>
+    The only requirement for <span class="code">TestObject</span> is that it has to respond to 
+    <span class="code">toString</span> method so in basically can be anything (String in the first place). 
+    However, if you specyify your object, then it's recommended to implement <span class="code">toString</span> 
+    to have descriptive output during test run.
+  </p>
+  <h3>describe()</h3>
+  <p>
+    Next useful function in spec is <span class="code">describe</span>.<br/>
+    It's used to indicate what feature of your testing object are you going to test.<br/> 
+    This can look like this:
+  </p>
+  <pre class="block">
+spec(TestObject, function() {
+  describe('validation', function() {
+  });
+);</pre>
+  <h3>context()</h3>
+  <p>
+    Another aspect of unit tests are contexts which allow you to tell the circumstances under which the test is running.<br/>
+    Here's an example of <span class="code">context</span>:
+  </p>
+  <pre class="block">
+spec(TestObject, function() {
+  describe('validation', function() {
+    context('when required property is set', function() {
+    });
+  });
+);</pre>
+  <h3>it()</h3>
+  <p>
+    Finally there is 4th node <span class="code">it</span> that contains actual test which performs action and assertions.
+    This is how it might look like:
+  </p>
+  <pre class="block">
+spec(TestObject, function() {
+  describe('#validate', function() {
+    context('when required property is not set', function() {
+      it('should return false', function() {
+        var result = TestObject.validate();
+
+        expect(result).to(beFalse());
+      });
+    });
+  });
+);</pre>
+  <p>
+    Assertions are discussed further down in this section.
+  </p>
+</div>
+<h2>
+  Assertions.
+</h2>
+<div class="section">
+  <p>
+    Every test must contain at least one assertion. In ArtJs assertions have following format:
+  </p>
+  <pre class="block">
+expect(&lt;actual&gt;).to(&lt;matcher&gt;(&lt;expected&gt;));</pre>
+  <p>
+    Where <span class="code">actual</span> can be any object, while <span class="code">matcher</span> is one of the following:
+  </p>
+  <ul class="simple">
+    <li>eq</li>
+    <li>beA</li>
+    <li>beFalse</li>
+    <li>beTrue</li>
+    <li>beNull</li>
+    <li>receive</li>
+  </ul>
+  <h3>eq</h3>
+  <p>
+    Matches if <span class="code">actual</span> is equal <span class="code">expected</span> using === operator.
+    Accepts also Arrays which will use ArrayUtils.equal to resolve.
+  </p>
+  <h3>beA</h3>
+  <p>
+    Matches if <span class="code">typeof</span> <span class="code">actual</span> is equal <span class="code">expected</span>
+  </p>
+  <h3>
+    beFalse
+  </h3>
+  <p>
+    Matches if <span class="code">actual</span> is equal <span class="code">false</span>
+  </p>
+  <h3>
+    beTrue
+  </h3>
+  <p>
+    Matches if <span class="code">actual</span> is equal <span class="code">true</span>
+  </p>
+  <h3>
+    beNull
+  </h3>
+  <p>
+    Matches if <span class="code">actual</span> is equal <span class="code">null</span>
+  </p>
+  <h3>
+    receive
+  </h3>
+  <p>
+    Matches if <span class="code">actual</span> will receive function call. 
+    By default mocks <span class="code">actual</span>.
+    Examples of usage:
+  </p>
+  <pre class="block">
+expect(actual).to(receive('method')).withArgs([1], [2]).inSeries()
+expect(actual).to(receive('method')).withArgs(1, 2).once().andReturn(true);
+expect(actual).to(receive('method')).twice().andCallOriginal();</pre>
+  <ul>
+    <li>
+      inSeries - matches against multiple calls, should be used only with <span class="code">withArgs</span> (see below). 
+    </li>
+    <li>
+      withArgs - allows to pass arguments to match - for single call expects list of arguments.<br/> 
+      For multiple calls using <span class="code">inSeries</span> expects list of arguments as arrays.
+    </li>
+    <li>
+      once, twice, times(n) - matches agains exact number of calls with the same set of arguments
+    </li>
+    <li>
+      andCallOriginal - passes call through to <span class="code">actual</span>
+    </li>
+    <li>
+      andReturn - mocks returned value. Will be the same for multiple calls.
+    </li>
+  </ul>
+</div>
+<h2>
+  Subject.
+</h2>
+<div class="section">
+  <p>
+    By using <span class="code">subject()</span> within your testsuite you have access to whatever is set 
+    as a first argument of <span class="code">spec()</span>
+  </p>
+</div>
+<h2>
+  Focus.
+</h2>
+<div class="section">
+  <p>You can specify which tests should be run by the runner. You can pass <span class="code">true</span> as a third
+    argument to any of spec nodes. This is however not very comfortable way of setting the focus. 
+    You may prefer to use a shortcut methods for that:
+  </p>
+  <ul class="simple">
+    <li>sspec</li>
+    <li>ddescribe</li>
+    <li>ccontext</li>
+    <li>iit</li>
+  </ul>
+</div>
+<h2>
+  Before hook.
+</h2>
+<div class="section">
+  <p>
+    By using <span class="code">before()</span> you can make any arbitrary code to be executed before every test.
+    It accepts Function object to be executed.
+    All <span class="code">before</span>s are executed from top to bottom of the spec nodes tree.
+  </p>
+</div>
+<h2>
+  Running tests.
+</h2>
+<div class="section">
+  <p>
+    There are two ways of running the tests:
+  </p>
+  <ul class="simple">
+    <li>In Browser</li>
+    <li>Using karma-artjs plugin</li>
+  </ul>
+  <h3>
+    Running in browser.
+  </h3>
+  <p>
+    Create html document and include:
+  </p>
+  <ul class="simple">
+    <li>artjs library</li>
+    <li>all your test files</li>
+    <li>runner js file</li>
+  </ul>
+  <p>
+    Runner js file should inlude snippet like this:
+  </p>
+  <pre class="block">
+artjs.onWindowLoad.add(artjs.$F(function() {
+  artjs.BrowserSpecView.run();
+}));</pre>
+  <h3>
+    Running with karma.
+  </h3>
+  <p>
+    In order to run your specs using karma, you need to run:
+  </p>
+  <ul class="simple">
+    <li>install node</li>
+    <li>install karma</li>
+    <li>install karma-artjs</li>
+    <li>install artjs</li>
+  </ul>
+  <p>
+    In <span class="code">karma.conf.js</span> specify <span class="code">artjs</span> as frameworks.
+  </p>
+</div>

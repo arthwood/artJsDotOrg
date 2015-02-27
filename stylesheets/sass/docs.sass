@@ -13,7 +13,7 @@
     margin-bottom: 20px
     border: 1px solid #ccc
     background: white
-
+        
     li
       padding: 12px 4px
       border-bottom: 1px solid #ccc
@@ -31,6 +31,14 @@
         &:last-child
           margin-bottom: 0
 
+    &.simple
+      padding: 2px 6px
+      margin-bottom: 10px
+      
+      li
+        padding: 2px 0
+        border-bottom: none
+    
 .art-component-Member
   h4
     a
@@ -76,9 +84,10 @@
           color: white
 
 
-pre
+pre, span.code
   font-family: Menlo, Monaco, Consolas, Courier New
   font-size: 12px
+  line-height: 18px
 
 .more 
   .container
@@ -101,3 +110,7 @@ pre
 h4.package
   span
     font-weight: normal
+
+.section
+  margin-left: 20px
+  margin-bottom: 20px

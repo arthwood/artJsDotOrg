@@ -10,7 +10,7 @@ art.component.Sidebar = artjs.Class(
   },
   {
     _onContentLoad: function() {
-      this.open();
+      this.clickAt(0);
     },
     
     _onLeafHandler: function(tree) {

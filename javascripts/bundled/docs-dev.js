@@ -6,11 +6,11 @@ var art = {
   }
 };
 
-artjs.TemplateLibrary.config.PATH = "../templates";
+artjs.TemplateLibrary.config.PATH = "templates";
 
-artjs.TemplateLibrary.config.TEMPLATES = [ "doc", "member", "section", "ga", "disqus" ];
+artjs.TemplateLibrary.config.TEMPLATES = [ "introduction", "testing", "doc", "member", "section", "ga", "disqus" ];
 
-artjs.Broadcaster.register(art.events.ON_SIDEBAR, new artjs.Event(art.events.ON_SIDEBAR));
+artjs.Broadcaster.register(art.events.ON_SIDEBAR);
 
 art.model.Member = artjs.Class(function(header, description, example, params, more) {
   this.super(header, description, example, params, more);
@@ -23,771 +23,60 @@ art.model.Member = artjs.Class(function(header, description, example, params, mo
 
 art.DB = {
   tree: {
-    Global: {
-      artjs: "main"
-    },
-    "artjs.data": {
-      List: "list",
-      Queue: "queue"
-    },
-    "artjs.dom": {
-      Component: "component",
-      ElementBuilder: "element_builder",
-      Selector: "selector"
-    },
-    "artjs.events": {
-      Clock: "clock",
-      Event: "event",
-      Delegate: "delegate",
-      QueuedClock: "queued_clock",
-      Timeline: "timeline",
-      Timeout: "timeout"
-    },
-    "artjs.math": {
-      Point: "point",
-      Rectangle: "rectangle"
-    },
-    "artjs.net": {
-      Ajax: "ajax"
-    },
-    "artjs.template": {
-      Helpers: "template/helpers",
-      Library: "template/library"
-    },
-    "artjs.transition": {
-      Blind: "transition/blind"
-    },
-    "artjs.ui": {
-      DatePicker: "date_picker"
-    },
-    "artjs.utils": {
-      Array: "array",
-      Class: "class",
-      Date: "date",
-      Element: "element",
-      Log: "log",
-      Math: "math",
-      Object: "object",
-      String: "string",
-      Toggler: "toggler"
+    Introduction: "introduction",
+    Testing: "testing",
+    Reference: {
+      Global: {
+        artjs: "main"
+      },
+      "artjs.data": {
+        List: "list",
+        Queue: "queue"
+      },
+      "artjs.dom": {
+        Component: "component",
+        ElementBuilder: "element_builder",
+        Selector: "selector"
+      },
+      "artjs.events": {
+        Clock: "clock",
+        Event: "event",
+        Delegate: "delegate",
+        QueuedClock: "queued_clock",
+        Timeline: "timeline",
+        Timeout: "timeout"
+      },
+      "artjs.math": {
+        Point: "point",
+        Rectangle: "rectangle"
+      },
+      "artjs.net": {
+        Ajax: "ajax"
+      },
+      "artjs.template": {
+        Helpers: "template/helpers",
+        Library: "template/library"
+      },
+      "artjs.transition": {
+        Blind: "transition/blind"
+      },
+      "artjs.ui": {
+        DatePicker: "date_picker"
+      },
+      "artjs.utils": {
+        Array: "array",
+        Class: "class",
+        Date: "date",
+        Element: "element",
+        Log: "log",
+        Math: "math",
+        Object: "object",
+        String: "string",
+        Toggler: "toggler"
+      }
     }
   },
   content: {
-    main: {
-      name: "artjs",
-      "package": "artjs",
-      description: "This is top level object that stores information about framework and few methods that allows you to select the framework mode.",
-      sections: [ {
-        name: "Constants",
-        members: [ new art.model.Member("VERSION:String", "Current version of framework") ]
-      }, {
-        name: "Methods",
-        members: [ new art.model.Member("$():Element", "Alias for ElementUtils.getElements()", [ "var nav = artjs.$('.main p.item span');" ]), new art.model.Member("$D():Delegate", "Alias for Delegate.create()", [ "var delegate = artjs.$D(this, this.onClick);" ]), new art.model.Member("$DC():Function", "Alias for Delegate.callback()", [ "var callback = artjs.$DC(this, this.onClick, true);" ]), new art.model.Member("$del():Ajax", "Alias for Ajax.del()", [ "var ajax = artjs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$find():Element", "Alias for ElementUtils.find()", [ "var nav = artjs.$('navigation');", "var item = artjs.$find(nav, '.item');" ]), new art.model.Member("$findAll():Array", "Alias for ElementUtils.findAll()", [ "var nav = artjs.$('navigation');", "var items = artjs.$findAll(nav, '.item');" ]), new art.model.Member("$get():Ajax", "Alias for Ajax.get()", [ "var ajax = artjs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("p():Void", "Debug info. If debug console is accessible output to the console; uses alert() otherwise.", [ "p('myVariable: ' +  myVariable);" ]), new art.model.Member("$P():Element", "Alias for ElementBuilder.parse()", [ "var element = artjs.$P('<span class=\"desc\">Blue t-shirt</span>');" ]), new art.model.Member("$post():Ajax", "Alias for Ajax.post()", [ "var ajax = artjs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$put():Ajax", "Alias for Ajax.$put()", [ "var ajax = artjs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$up():Element", "Alias for ElementUtils.up()", [ "var nav = artjs.$('navigation');", "var parent = artjs.$up(nav);" ]) ]
-      }, {
-        name: "Events",
-        members: [ new art.model.Member("onDocumentLoad", "Triggered when DOM is loaded."), new art.model.Member("onWindowLoad", "Triggered when whole window is loaded (executes after onDocumentLoad)."), new art.model.Member("onLibraryLoad", "Triggered when all library templates are loaded (executes after onWindowLoad).") ]
-      } ]
-    },
-    list: {
-      name: "List",
-      "package": "artjs.data",
-      description: "List data model implementation.",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "List(data:Array = [])",
-          description: '<span class="param">data</span> - collection data',
-          example: [ "var list = new List([1, 2, 3, 4, 5]);" ]
-        } ]
-      }, {
-        name: "Events",
-        members: [ {
-          header: "onChange(list:List)",
-          description: "Dispatched every time the collection changes",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.onChange.add(new artjs.Delegate(this, this.onChange));", "function onChange(list) {", "'  alert('list has changed!');'", "}" ]
-        } ]
-      }, {
-        name: "Properties",
-        members: [ {
-          header: "allowDuplicates:Boolean = true",
-          description: "Flag that allows having duplicates in collection",
-          more: "'If this flag is set to true, adding existing item won't do anything.'"
-        }, {
-          header: "loop:Boolean = false",
-          description: "Flag that allows periodically return the item, even if index is out of collection bounds",
-          more: "If this flag is set to true and you try to fetch an item by index out of collection bounds, " + "you will receive item as if you were fetching it from infinite collection consisting of periodically " + "repeated items of initial collection.",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.loop = true;", "list.getItemAt(-1); //5", "list.getItemAt(6); //2" ]
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "addItem(item:Object, noEvent:Boolean):Number",
-          description: 'Adds <span class="code">item</span> to the end of collection and returns new length.' + "" + 'If <span class="code">noEvent</span> is set to true, this action wont dispatch the <span class="code">change</span> event.',
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.addItem(6); // 6", "list.toString() // 1, 2, 3, 4, 5, 6" ]
-        }, {
-          header: "addItemAt(item:Object, idx:Number, noEvent:Boolean):Number",
-          description: 'Adds <span class="code">item</span> to collection at specific position and returns new length',
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.addItemAt(6, 2); // 6", "list.toString() // 1, 2, 6, 3, 4, 5" ]
-        }, {
-          header: "decrease():Void",
-          description: "Decreases pointer",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.decrease();", "list.getPointer(); // 1" ]
-        }, {
-          header: "isEmpty():Boolean",
-          description: "Returns true if collection is empty; false otherwise",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.isEmpty(); // false", "list.removeAll();", "list.isEmpty(); // true" ]
-        }, {
-          header: "getCurrent():Object",
-          description: "Returns current item",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.getCurrent(); // 3" ]
-        }, {
-          header: "getFirst():Object",
-          description: "Returns first item of collection",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getFirst(); // 1" ]
-        }, {
-          header: "getItemAt(idx:Number):Object",
-          description: 'Retrieves <span class="code">item</span> at specific position',
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getItemAt(3); // 4" ]
-        }, {
-          header: "getItemIndex(item:Object):Number",
-          description: 'Retrieves <span class="code">item</span>\'s index',
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getItemIndex(3); // 2" ]
-        }, {
-          header: "getItems():Array",
-          description: "Returns copy of collection",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getItems().toString(); // 1, 2, 3, 4, 5" ]
-        }, {
-          header: "getLast():Object",
-          description: "Returns last item of collection",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getLast(); // 5" ]
-        }, {
-          header: "getLength():Number",
-          description: "Returns length of collection",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getLength(); // 5" ]
-        }, {
-          header: "getNext():Object",
-          description: "Returns item after current",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.getNext(); // 4" ]
-        }, {
-          header: "getPointer():Number",
-          description: "Returns pointer",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getPointer(); // 0", "list.increase();", "list.getPointer(); // 1" ]
-        }, {
-          header: "getPrevious():Object",
-          description: "Returns item before current",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.getPrevious(); // 2" ]
-        }, {
-          header: "hasItem(item:Object):Boolean",
-          description: 'Returns true if <span class="code">item</span> is in collection; false otherwise',
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.hasItem(4); // true", "list.hasItem(7); // false" ]
-        }, {
-          header: "increase():Void",
-          description: "Increases pointer",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.increase();", "list.getPointer(); // 3" ]
-        }, {
-          header: "isLast():Boolean",
-          description: "Returns true if pointer is set to last item in collection; false otherwise",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(4);", "list.isLast(); // true" ]
-        }, {
-          header: "moveItem(fromIndex:Number, toIndex:Number):Void",
-          description: 'Moves <span class="code">item</span> from, to specific position',
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.moveItem(3, 0);", "list.toString(); // 4, 1, 2, 3, 5;" ]
-        }, {
-          header: "removeAll(noEvent:Boolean):Void",
-          description: "Removes all items from collection",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.removeAll();", "list.toString() //" ]
-        }, {
-          header: "removeItem(item:Object, onlyFirst:Boolean, noEvent:Boolean):Void",
-          description: 'Removes <span class="code">item</span> from collection',
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.removeItem(2); // 4", "list.toString() // 1, 3, 4, 5" ]
-        }, {
-          header: "removeItemAt(idx:Number, noEvent:Boolean):Void",
-          description: 'Removes <span class="code">item</span> at specific position from collection',
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.removeItemAt(2); // 4", "list.toString() // 1, 2, 4, 5" ]
-        }, {
-          header: "reset():Void",
-          description: "Sets pointer to zero",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.getPointer(); // 2", "list.reset();", "list.getPointer(); // 0" ]
-        }, {
-          header: "setItems(items:Array):Void",
-          description: "Set the collection",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.toString(); // 1, 2, 3, 4, 5", "list.setItems([4, 5, 6]);", "list.toString(); // 4, 5, 6" ]
-        }, {
-          header: "setPointerAtItem(item:Object):Void",
-          description: 'Set the pointer at position of <span class="code">item</span>',
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointerAtItem(2);", "list.getPointer(); // 1" ]
-        }, {
-          header: "setPointer(i:Number):Void",
-          description: "Sets pointer",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.getPointer(); // 2" ]
-        } ]
-      } ]
-    },
-    queue: {
-      name: "Queue",
-      "package": "artjs.data",
-      description: "Queue data model implementation",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "Queue(data:Array = [])",
-          description: '<span class="param">data</span> - collection data',
-          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);" ]
-        } ]
-      }, {
-        name: "Events",
-        members: [ {
-          header: "onChange(list:List)",
-          description: "Dispatched every time the collection changes",
-          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "", "queue.onChange.add(new artjs.Delegate(this, this.onChange));", "", "function onChange(queue) {", "'  alert('queue has changed!');'", "}" ]
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "addItem(item:Object):Void",
-          description: 'Adds <span class="code">item</span> to the end of collection',
-          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "", "queue.addItem(6); // 6", "", "queue.toString() // 1, 2, 3, 4, 5, 6" ]
-        }, {
-          header: "empty():Boolean",
-          description: "Returns true if collection is empty; false otherwise",
-          example: [ "var queue = new Queue([3]);", "", "queue.isEmpty(); // false", "", "var item = queue.getItem();", "", "queue.isEmpty(); // true" ]
-        }, {
-          header: "getItem():Object",
-          description: "Pops and returns current item",
-          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "var item = queue.getItem(); // 1", "", "queue.toString(); // 2, 3, 4, 5" ]
-        }, {
-          header: "getLength():Number",
-          description: "Returns length of collection",
-          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "", "queue.getLength(); // 5" ]
-        }, {
-          header: "setData(data:Array):Void",
-          description: "Sets the collection",
-          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "", "", "queue.toString(); // 1, 2, 3, 4, 5", "", "queue.setData([4, 5, 6]);", "", "queue.toString(); // 4, 5, 6" ]
-        } ]
-      } ]
-    },
-    component: {
-      name: "Component",
-      "package": "artjs.dom",
-      description: "Components allow you to attach your own view class to element node. " + 'In order to do this simply assign "art" class to your element along with class name of your custom class ' + "e.g. com-domain-Navigation and define com.domain.Navigation class.",
-      sections: [ {
-        name: "Static methods",
-        members: [ {
-          header: "dependsOn(*dependencies:Class)",
-          description: "Registers dependency. Whenever any of dependency classes is instantiated it is passed " + "to onDependency() method which you may want to implement.",
-          example: [ "/* ", " * This will cause two invocations on Content instance:", " * onDependency(sidebar) and onDependency(footer)", " * but not necessarily in this order.", " */", "Content.dependsOn(Sidebar, Footer);" ]
-        } ]
-      } ]
-    },
-    element_builder: {
-      name: "ElementBuilder",
-      "package": "artjs.dom",
-      description: "Allows to create DOM elements",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "ElementBuilder(name:String, attributes:Object, value:String, empty:Boolean)",
-          params: {
-            name: "element name",
-            attributes: "element attributes",
-            value: "element inner text",
-            empty: "if true, empty element will be created"
-          },
-          example: [ "var builder = new ElementBuilder('span', {class: 'price'}, '$199');", "", 'builder.toString(); // &lt;span class="price"&gt;$199&lt;/span&gt;' ]
-        } ]
-      }, {
-        name: "Properties",
-        members: [ {
-          header: "attributes:Object",
-          description: "The same property as in constructor"
-        }, {
-          header: "empty:Boolean",
-          description: "The same property as in constructor"
-        }, {
-          header: "name:String",
-          description: "The same property as in constructor"
-        }, {
-          header: "value:Object",
-          description: "The same property as in constructor"
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "getElement():Element",
-          description: "Builds and returns new Element",
-          example: [ "var builder = new ElementBuilder('span', {class: 'price'}, '$199');", "", "var element = builder.getElement();", "", "element.toString(); // [object HTMLSpanElement]" ]
-        }, {
-          header: "toString():String",
-          description: "String representation of element",
-          example: [ "var builder = new ElementBuilder('span', {class: 'price'}, '$199');", "", 'builder.toString(); // &lt;span class="price"&gt;$199&lt;/span&gt;' ]
-        } ]
-      }, {
-        name: "Static Methods",
-        members: [ {
-          header: "build(name:String, attributes:Object, value:String, empty:Boolean):ElementBuilder",
-          description: "Returns new instance while passing all arguments",
-          example: [ "var builder = ElementBuilder.build('span', {class: 'price'}, '$199');", "", 'builder.toString(); // &lt;span class="price"&gt;$199&lt;/span&gt;' ]
-        }, {
-          header: "parse(string:String):Element",
-          description: 'Returns <span class="code">string</span> as an Element',
-          example: [ "var element = ElementBuilder.parse('&lt;span class=\"price\"&gt;$199&lt;/span&gt;');", "", "element.toString(); // [object HTMLSpanElement]" ]
-        }, {
-          header: "create(name:String, attributes:Object, value:String, empty:Boolean):Element",
-          description: "Performs build and parse methods in one step",
-          example: [ "var element = ElementBuilder.create('span', {class: 'price'}, '$199');", "", "element.toString(); // [object HTMLSpanElement]" ]
-        }, {
-          header: "getElement(name:String, attributes:Object, value:String, empty:Boolean):Element",
-          description: "Works the same as corresponding instance method",
-          example: [ "var element = ElementBuilder.getElement('span', {class: 'price'}, '$199');", "", "element.toString(); // [object HTMLSpanElement]" ]
-        }, {
-          header: "getCollection(n:Integer, element:ElementBuilder):String",
-          description: "Returns html string with element repeated n times",
-          example: [ "var element = ElementBuilder.getElement('span', {class: 'price'});", "var html = ElementBuilder.getCollection(3, element);", "", 'element.toString(); // &lt;span class="price"&gt;&lt;/span&gt;&lt;span class="price"&gt;&lt;/span&gt;&lt;span class="price"&gt;&lt;/span&gt;' ]
-        } ]
-      } ]
-    },
-    selector: {
-      name: "Selector",
-      "package": "artjs.dom",
-      description: "Allows to easily traverse DOM.",
-      sections: [ {
-        name: "Methods",
-        members: [ {
-          header: "find(element:Element, selector:String):Array",
-          description: "Same as #getElements but with reversed arguments."
-        }, {
-          header: "first(element:Element, selector:String):Element",
-          description: "Returns first result of #find."
-        }, {
-          header: "last(element:Element, selector:String):Element",
-          description: "Returns last result of #find."
-        }, {
-          header: "parent(element:Element, selector:String):Element",
-          description: "Returns first ancestor that matches the selector."
-        }, {
-          header: "getElements(selector:String, element:Element):Array",
-          description: "Returns all descendants that match the selector.",
-          more: "Selector parameter must be a single selector without spaces",
-          example: [ "var main = getElements('#main');", "var titles = getElements('p.title', main);" ]
-        }, {
-          header: "isDescendantOf(element:Element, root:Element):Boolean",
-          description: "Returns true if element is descendant of root."
-        }, {
-          header: "isSelfOrDescendantOf(element:Element, root:Element):Boolean",
-          description: "Same as #isDescendantOf but returns true also if element is the root itself."
-        }, {
-          header: "getElementById(id:String):Element",
-          description: "Returns Element by id."
-        }, {
-          header: "getElementsByTagName(name:String):Array",
-          description: "Returns array of Elements by tag name."
-        }, {
-          header: "getElementsByClassName(name:String):Array",
-          description: "Returns array of Elements by class name."
-        } ]
-      } ]
-    },
-    clock: {
-      name: "Clock",
-      "package": "artjs.events",
-      description: "Allows trigger events periodically",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "Clock(interval:Number, repeat:Number)",
-          params: {
-            interval: "interval between ticks in miliseconds",
-            repeat: "number of ticks"
-          },
-          example: [ "var clock = new Clock(1000, 5);" ]
-        } ]
-      }, {
-        name: "Events",
-        members: [ {
-          header: "onChange(clock:Clock)",
-          description: "Triggered on each tick",
-          example: [ "var clock = new Clock(1000, 5);", "", "clock.onChange.add(new Delegate(this, this.onClockChange));", "", "function onClockChange(clock) {", "  console.log('clock change!');", "}" ]
-        }, {
-          header: "onFinish(clock:Clock)",
-          description: "Triggered after last tick",
-          example: [ "var clock = new Clock(1000, 5);", "", "clock.onComplete.add(new Delegate(this, this.onClockComplete);", "", "function onClockComplete(clock) {", "  console.log('clock complete!');", "}" ]
-        } ]
-      }, {
-        name: "Properties",
-        members: [ {
-          header: "counter:Number",
-          description: "Number of released ticks"
-        }, {
-          header: "interval:Number",
-          description: "The same property as in constructor"
-        }, {
-          header: "repeat:Number",
-          description: "The same property as in constructor"
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "isRunning():Void",
-          description: "Returns true if clock is running; false otherwise",
-          example: [ "var clock = new Clock(1000, 5);", "", "clock.isRunning(); // false", "clock.start(true);", "clock.isRunning(); // true", "clock.stop();", "clock.isRunning(); // false" ]
-        }, {
-          header: "pause():Void",
-          description: "'Same as stop() but doesn't reset the counter'",
-          example: [ "var clock = new Clock(1000, 5);", "", "clock.start(true);", "// ... and some time later", "clock.counter; // 3", "clock.pause();", "clock.counter; // 3" ]
-        }, {
-          header: "resume():Void",
-          description: "Resumes ticking after it has been paused",
-          example: [ "var clock = new Clock(1000, 5);", "", "clock.start();", "// ... and some time later", "clock.counter; // 3", "clock.pause();", "// ... and some time later", "clock.resume();", "clock.counter; // 3" ]
-        }, {
-          header: "start(now:Boolean):Void",
-          description: "Starts the clock. First tick after interval or immediately if 'now' param is true",
-          example: [ "var clock = new Clock(1000, 5);", "", "clock.start();" ]
-        }, {
-          header: "stop():Void",
-          description: "Stops the clock and sets counter to zero",
-          example: [ "var clock = new Clock(1000, 5);", "", "clock.start();", "// ... and some time later", "clock.counter; // 3", "clock.stop();", "clock.counter; // 0" ]
-        } ]
-      } ]
-    },
-    event: {
-      name: "Event",
-      "package": "artjs.events",
-      description: "Defines object capable of dispatching events.",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "Event(name:String = null)",
-          params: {
-            name: "name of the event"
-          },
-          example: [ "var myEvent = new Event('MyClass::myEvent');" ]
-        } ]
-      }, {
-        name: "Properties",
-        members: [ {
-          header: "name:Name",
-          description: "The same property as in constructor"
-        }, {
-          header: "collection:DelegateCollection",
-          description: "Collection of registered listeners",
-          example: [ "var myEvent = new Event('MyClass::myEvent');", "", "myEvent.collection.length // 0", "myEvent.add(new Delegate(null, function() {", "console.log('event!')", "}));", "myEvent.collection.length // 1" ]
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "add(delegate:Delegate):Void",
-          description: "Registers listener",
-          example: [ "var myEvent = new Event('MyClass::myEvent');", "", "myEvent.add(new Delegate(null, function() {", "  console.log('event!')", "}));" ]
-        }, {
-          header: "fire():Array",
-          description: "Triggers the event and returns responses from handlers as an array",
-          example: [ "var myEvent = new Event('MyClass::myEvent');", "", "myEvent.add(new Delegate(null, function() {", "  console.log('event!');", "  return 2;", "}));", "// ...then at some point you dispatch the event", "myEvent.fire(this, 'hello'); // [2]" ]
-        }, {
-          header: "getLength():Number",
-          description: "Amount of listeners currently registered",
-          example: [ "var myEvent = new Event('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.getLength(); // 0", "myEvent.add(delegateOne);", "myEvent.getLength(); // 1", "myEvent.add(delegateTwo);", "myEvent.getLength(); // 2", "myEvent.removeAll();", "myEvent.getLength(); // 0" ]
-        }, {
-          header: "remove(delegate:Delegate):Void",
-          description: "Removes listener",
-          example: [ "var myEvent = new Event('MyClass::myEvent');", "var delegate = new Delegate(null, function(msg) {", "  console.log('event says: ' + msg)", "});", "", "myEvent.add(delegate);", "myEvent.fire('hello!'); // delegate handles event", "myEvent.remove(delegate);", "myEvent.fire('hello!'); // nothing happens" ]
-        }, {
-          header: "removeAll():Void",
-          description: "Removes all listeners",
-          example: [ "var myEvent = new Event('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.add(delegateOne);", "myEvent.add(delegateTwo);", "myEvent.fire('hello!'); // delegates handle event", "myEvent.removeAll();", "myEvent.fire('hello!');// nothing happens" ]
-        } ]
-      } ]
-    },
-    delegate: {
-      name: "Delegate",
-      "package": "artjs.events",
-      description: "Allows to keep context object along with function.",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "Delegate(object:Object, method:Function, ...rest)",
-          params: {
-            object: "context object",
-            method: "any function"
-          },
-          description: "Delegate wraps context object, any function and optional arguments into single Delegate object." + "When you ask for callback function:" + '<span class="block code">' + "var delegate = new Delegate(this, this.onChange, 'hello');" + "var callback = delegate.callback();" + "</span>" + 'you will get a Function object that when called will have set <span class="code" >this</span> to context object.' + 'Optionally when you pass <span class="code">true</span> to <span class="code">delegate.callback()</span>' + 'the <span class="code">callback</span> handler will receive "source" as first argument' + '("source" points to object who actually called the callback).' + "Arguments list that are passed to callback function are:" + "- source object (if specified)" + "- arguments that are passed directly when it is being called" + "- optional arguments (...rest) passed to delegate when creating the instance",
-          example: [ "function onClick(link, e, msg) {", "  alert('Link clicked! ' + msg);", "  return false;", "}", "", "var delegate = new Delegate(this, onClick, 'hello');", "", "link.onclick = delegate.callback(true);" ]
-        } ]
-      }, {
-        name: "Properties",
-        members: [ {
-          header: "args:Array",
-          description: "Optional set of arguments"
-        }, {
-          header: "method:Function",
-          description: "The same property as in constructor"
-        }, {
-          header: "object:Object",
-          description: "The same property as in constructor"
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "callback(withSource:Boolean):Function",
-          description: "Returns Function object, than when called will receive source object as first argument if" + '<span class="code">withSource</span> is true, and <span class="code">this</span> in that function' + "will always point to context object",
-          example: [ "var obj = {id: 4};", "", "function meth(source, name, greeting) {", "  console.log('source: ' + source + ', id: ' + this.id + ': ' + greeting + \", it's \" + name);", "}", "", "var delegate = new Delegate(obj, meth, 'hello');", "var callback = delegate.callback(true);", "", "callback('Steve');" ]
-        }, {
-          header: "invoke():Object",
-          description: "Calls the delegate method with object as a context",
-          example: [ "function method(value, message) {", "  alert('method called! value:' + value + ', message: ' + message);", "  return true;", "}", "", "var delegate = new Delegate(this, method, 'hello');", "var result = delegate.invoke(5); // true" ]
-        } ]
-      }, {
-        name: "Static Methods",
-        members: [ {
-          header: "callback(object:Object, method:Function, withSource:Boolean, ...rest):Function",
-          description: "A shorthand function that allows to create delegate and returns it's callback at one step",
-          example: [ "var obj = {id: 4};", "", "function meth(source, name, greeting) {", "  console.log('source: ' + source + ', id: ' + this.id + ': ' + greeting + \", it's \" + name);", "}", "", "var callback = Delegate.callback(obj, meth, true, 'hello');", "", "callback('Steve');" ]
-        }, {
-          header: "create(object:Object, method:Function, ...rest):Delegate",
-          description: "A shorthand function that allows to create and return new delegate object",
-          example: [ "var obj = {id: 4};", "", "function meth(source, name, greeting) {", "  console.log('source: ' + source + ', id: ' + this.id + ': ' + greeting + \", it's \" + name);", "}", "", "var delegate = Delegate.create(obj, meth, 'hello');", "var callback = delegate.callback(true);", "", "callback('Steve');" ]
-        } ]
-      } ]
-    },
-    queued_clock: {
-      name: "QueuedClock",
-      "package": "artjs.events",
-      description: "Allows to trigger events periodically.",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "QueuedClock(interval:Number)",
-          params: {
-            interval: "interval between clock ticks in miliseconds"
-          },
-          description: "The class works like queue. You add Delegate items and then clock periodically removes current item and calls invoke() on it.",
-          example: [ "var qc = new QueuedClock(1000);", "", "// add one delegate item", "qc.addItem(new Delegate(this, this.onTick)) // 1;", "qc.getLength(); // 1", "qc.start();", "// after first tick the collection is empty", "qc.getLength(); // 0" ]
-        } ]
-      }, {
-        name: "Properties",
-        members: [ {
-          header: "interval:Number",
-          description: "The same property as in constructor"
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "addItem(item:Delegate):Number",
-          description: "Adds delegate to collection and returns its new length",
-          example: [ "var qc = new QueuedClock(1000);", "", "qc.addItem(new Delegate(this, this.onTick)) // 1;" ]
-        }, {
-          header: "getLength():Number",
-          description: "Returns current length of collection",
-          example: [ "var qc = new QueuedClock(1000);", "", "qc.getLength(); // 0", "qc.addItem(new Delegate(this, this.onTick));", "qc.getLength(); // 1" ]
-        }, {
-          header: "start():Void",
-          description: "Starts execution",
-          example: [ "var qc = new QueuedClock(1000);", "", "qc.addItem(new Delegate(this, this.onTick));", "", "qc.start();" ]
-        } ]
-      } ]
-    },
-    timeline: {
-      name: "Timeline",
-      "package": "artjs.events",
-      description: "Useful for measuring time intervals between events.",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "Timeline()"
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "mark():Integer",
-          description: "Marks the point on the timeline. Returns miliseconds since recent mark."
-        } ]
-      } ]
-    },
-    timeout: {
-      name: "Timeout",
-      "package": "artjs.events",
-      description: "Allows you to perform action with delay.",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "Timeout(delay:Number)",
-          params: {
-            delay: "Delay in miliseconds before onComplete event is triggered."
-          }
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "start():Void",
-          description: "Initializes the timeout. After amount of time specified in constructor the onComplete will be triggered."
-        }, {
-          header: "getDelay():Number",
-          description: "Returns delay specified in constructor."
-        }, {
-          header: "isRunning():Boolean",
-          description: "Returns true if timeout has been started but not yet finished."
-        } ]
-      }, {
-        name: "Events",
-        members: [ {
-          header: "onComplete(delegate:Delegate):Void",
-          description: "Triggered when timeout finishes."
-        } ]
-      }, {
-        name: "Static methods",
-        members: [ {
-          header: "fire(delegate:Delegate, delay:Number):Timeout",
-          description: "Instantiates Timeout and registers handler at once."
-        } ]
-      } ]
-    },
-    point: {
-      name: "Point",
-      "package": "artjs.math",
-      description: "Math 2-dimentional vector implementation",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "Point(x:Number, y:Number)",
-          params: {
-            x: "x coordinate",
-            y: "y coordinate"
-          },
-          example: [ "var point = new Point(20, 40);" ]
-        } ]
-      }, {
-        name: "Properties",
-        members: [ {
-          header: "x:Number",
-          description: "The same property as in constructor"
-        }, {
-          header: "y:Number",
-          description: "The same property as in constructor"
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "add():Point",
-          description: "Adds other vector",
-          example: [ "var p1 = new Point(2, 3);", "var p2 = new Point(4, -1);", "", "p1.add(p2); // (6, 2)" ]
-        }, {
-          header: "dot():Number",
-          description: "Dot product of this vector and other vector",
-          example: [ "var p1 = new Point(2, 3);", "var p2 = new Point(4, -1);", "", "p1.dot(p2); // 5" ]
-        }, {
-          header: "getLength():Number",
-          description: "Length of a vector",
-          example: [ "var point = new Point(3, 4);", "", "point.getLength(); // 5" ]
-        }, {
-          header: "getReversed():Point",
-          description: "Returns reversed vector",
-          example: [ "var p = new Point(2, 3);", "", "p.getReversed(); // (-2, -3)", "p; // (2, 3)" ]
-        }, {
-          header: "getTransposed():Point",
-          description: "Returns new transposed vector",
-          example: [ "var p = new Point(2, 3);", "", "p.getTransposed(); // (3, 2)", "p; // (2, 3)" ]
-        }, {
-          header: "reverse():Point",
-          description: "Reverses vector and returns this vector",
-          example: [ "var p = new Point(2, 3);", "", "p.reverse(); // (-2, -3)", "p; // (-2, -3)" ]
-        }, {
-          header: "reverseX():Point",
-          description: "Reverses x coordinate and returns this vector",
-          example: [ "var p = new Point(2, 3);", "", "p.reverse(); // (-2, 3)", "p; // (-2, 3)" ]
-        }, {
-          header: "reverseY():Point",
-          description: "Reverses y coordinate and returns this vector",
-          example: [ "var p = new Point(2, 3);", "", "p.reverse(); // (2, -3)", "p; // (2, -3)" ]
-        }, {
-          header: "sub():Void",
-          description: "Subtracts other vector",
-          example: [ "var p1 = new Point(2, 3);", "var p2 = new Point(4, -1);", "", "p1.sub(p2); // (-2, 4)" ]
-        }, {
-          header: "times(k:Number):Point",
-          description: 'Returns new vector multiplied by <span class="code">k</span>',
-          example: [ "var p = new Point(2, 3);", "", "p.times(-3); // (-9, -6)", "p; // (2, 3)" ]
-        }, {
-          header: "toString():String",
-          description: "Returns string representation od vector",
-          example: [ "var p = new Point(2, 3);", "", "p.toString(); // [2, 3]" ]
-        }, {
-          header: "transpose():Point",
-          description: "Transposes coordinates and returns this vector",
-          example: [ "var p = new Point(2, 3);", "", "p.transpose(); // (3, 2)", "p; // (3, 2)" ]
-        } ]
-      } ]
-    },
-    rectangle: {
-      name: "Rectangle",
-      "package": "artjs.math",
-      description: "Math rectangle implementation",
-      sections: [ {
-        name: "Constructor",
-        members: [ {
-          header: "Rectangle(left:Number, top:Number, right:Number, bottom:Number)",
-          params: {
-            left: "left edge",
-            top: "top edge",
-            right: "right edge",
-            bottom: "bottom edge"
-          },
-          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);" ]
-        } ]
-      }, {
-        name: "Properties",
-        members: [ {
-          header: "bottom:Number",
-          description: "The same property as in constructor"
-        }, {
-          header: "left:Number",
-          description: "The same property as in constructor"
-        }, {
-          header: "right:Number",
-          description: "The same property as in constructor"
-        }, {
-          header: "top:Number",
-          description: "The same property as in constructor"
-        } ]
-      }, {
-        name: "Methods",
-        members: [ {
-          header: "getArea():Number",
-          description: "Area of rectangle",
-          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getArea(); // 200" ]
-        }, {
-          header: "getHeight():Number",
-          description: "Height of rectangle",
-          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getHeight(); // 10" ]
-        }, {
-          header: "getLeftBottom():Point",
-          description: "Left-bottom corner vector",
-          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getRightBottom(); // [10, 20]" ]
-        }, {
-          header: "getLeftTop():Point",
-          description: "Left-top corner vector",
-          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getLeftTop(); // [10, 10]" ]
-        }, {
-          header: "getRightBottom():Point",
-          description: "Right-bottom corner vector",
-          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getRightBottom(); // [30, 20]" ]
-        }, {
-          header: "getRightTop():Point",
-          description: "Right-top corner vector",
-          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getRightTop(); // [30, 10]" ]
-        }, {
-          header: "getSize():Point",
-          description: "Width and height as a vector",
-          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getSize(); // [20, 10]" ]
-        }, {
-          header: "getWidth():Number",
-          description: "Width of rectangle",
-          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getWidth(); // 20" ]
-        }, {
-          header: "moveBy(point:Point):Void",
-          description: "Moves rectangle by a vector",
-          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.moveBy(new Point(-10, -10);", "rectangle.toString(); // [0, 0, 20, 10]" ]
-        } ]
-      } ]
-    },
     ajax: {
       name: "Ajax",
       "package": "artjs.net",
@@ -951,7 +240,7 @@ art.DB = {
           header: "beforeLast():Object",
           description: "Returns last but one element of the array."
         }, {
-          header: "getItem(i:Integer):Object",
+          header: "getItemAt(i:Integer):Object",
           description: "Returns element on i-th position in the array."
         }, {
           header: "includes(i:*):Boolean",
@@ -1064,15 +353,6 @@ art.DB = {
         } ]
       } ]
     },
-    object: {
-      name: "ObjectUtils",
-      "package": "artjs.utils",
-      description: "Provides set of methods that operates on any Object instance.<br/>" + 'Most of examples show optional use of a method when <span class="code">artjs.doInjection()</span> has been performed.',
-      sections: [ {
-        name: "Static methods",
-        members: [ new art.model.Member("all(object:Object, callback:Function):Boolean", 'Returns true if for all values <span class="code">callback</span> returns true; false otherwise', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.all(object, function(i) {", "  return i !== false;", "}); // true ", "// or ", "// object.all(function(i) {", "  return i !== false;", "});", "", "ObjectUtils.all(object, function(i) {", "  return !isNaN(parseInt(i));", "}); // false", "// or", "// object.all(function(i) {", "  return !isNaN(parseInt(i));", "});" ]), new art.model.Member("copy(object:Object):Object", 'Creates a copy of an <span class="param">object</span>.', [ "var object = {id: 4};", "var copy = ObjectUtils.copy(object);", "", "// or", "// var copy = object.copy();", "", "object.id = 5;", "object.id; // 5", "copy.id; // 4" ]), new art.model.Member("copyProps(source:Object, target:Object):Void", 'Copies properties from <span class="param">source</span> object to <span class="param">target</span> object.', [ "var source = {id: 4};", "var target = {active: true};", "", "ObjectUtils.copyProps(source, target);", "", "// or", "// source.copyProps(target);", "", "source; // {id: 4}", "target; // {active: true, id: 4}" ]), new art.model.Member("each(object:Object, callback:Function):Void", 'Iterates over properties and passes value to <span class="param">callback</span>', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "ObjectUtils.each(object, function(i) {", "  alert(i);", "});", "", "// or", "// object.each(function(i) {", "//   alert(i);", "// });" ]), new art.model.Member("eachKey(object:Object, callback:Function):Void", 'Iterates over properties and passes key to <span class="param">callback</span>', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "ObjectUtils.eachKey(object, function(i) {", "  alert(i);", "});", "", "// or", "// object.eachKey(function(i) {", "//   alert(i);", "// });" ]), new art.model.Member("eachPair(object:Object, callback:Function):Void", 'Iterates over properties and passes key and value to <span class="code">callback</span>', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "ObjectUtils.eachPair(object, function(k, v) {", "  alert(k + ' -> ' + v);", "});", "", "// or", "// object.eachPair(function(k, v) {", "//   alert(k + ' -> ' + v);", "// });" ]), new art.model.Member("isEmpty(object:Object):Boolean", 'Returns true if <span class="code">object</span> has no properties; false otherwise', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var empty = {};", "", "ObjectUtils.isEmpty(object); // false", "// or", "// object.isEmpty();", "", "ObjectUtils.isEmpty(empty); // true", "// or", "// empty.isEmpty();" ]), new art.model.Member("extend(target:Object, base:Object):Void", 'Copies properties from <span class="param">base</span> object to <span class="param">target</span> object.' + 'In fact it works the same as <span class="code">copyProps()</span>, the only difference is arguments order.', [ "var base = {id: 4};", "var target = {active: true};", "", "ObjectUtils.extend(target, base);", "", "// or", "// target.extend(base);", "", "base; // {id: 4}", "target; // {active: true, id: 4}" ]), new art.model.Member("fromArray(array:Array):Object", 'Transforms 2-dim <span class="code">array</span> into object', [ "var array = [['color', 'white'], ['id', 5]];", "", "ObjectUtils.fromArray(array); // {color: 'white', id: 5}" ]), new art.model.Member("include(object:Object, item:Object):Boolean", 'Returns true if any <span class="code">object</span> value is equal to <span class="code">item</span>; false otherwise', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.include(object, 5); // true", "// or", "// object.include(5);", "", "ObjectUtils.include(object, true); // false", "// or", "// object.include(true);" ]), new art.model.Member("includeAll(object:Object, subset:Object):Boolean", 'Returns true if all <span class="code">subset</span> values can be found among <span class="code">object</span>\'s values; false otherwise', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.includeAll(object, {color: 'white', id: 5}); // true", "// or", "// object.includeAll({color: 'white', id: 5});", "", "ObjectUtils.includeAll(object, {id: 5, name: 'Mike'}); // false", "// or", "// object.includeAll({id: 5, name: 'Mike'});" ]), new art.model.Member("map(object:Object, callback:Function):Array", 'Maps key and value to Array item using <span class="param">callback</span> function', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var mapped = ObjectUtils.map(object, function(k, v) {return k + ':' + v});", "", "// or", "// var mapped = object.map(function(k, v) {return k + ':' + v});", "", "mapped; // ['id:4', 'active:true', 'project_id:4', 'status:4']" ]), new art.model.Member("mapKey(object:Object, callback:Function):Object", 'Transforms key using <span class="param">callback</span> function', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var mapped = ObjectUtils.mapKey(object, function(k) {", "  return StringUtils.capitalizeUnderscored(k);", "});", "", "// or", "// var mapped = object.mapKey(function(k) {", "//   return StringUtils.capitalizeUnderscored(k);", "// });", "", "mapped; // {Id: 8, Active: 2, ProjectId: 8, Status: 8}" ]), new art.model.Member("mapValue(object:Object, callback:Function):Object", 'Transforms value using <span class="param">callback</span> function', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var mapped = ObjectUtils.mapValue(object, function(v) {return v * 2});", "", "// or", "// var mapped = object.mapValue(function(v) {return v * 2});", "", "mapped; // {id: 8, active: 2, project_id: 8, status: 8}" ]), new art.model.Member("merge(target:Object, base:Object):Object", 'Works the same as extend() but returns modified <span class="param">target</span> object.', [ "var base = {id: 4};", "var target = {active: true};", "", "ObjectUtils.merge(target, base); // {active: true, id: 4}", "", "// or", "// target.merge(base);", "", "base; // {id: 4}", "target; // {active: true, id: 4}" ]), new art.model.Member("reject(object:Object, callback:Function):Object", 'Returns copy of <span class="code">object</span> without properties for which <span class="code">callback</span> returns true', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var filtered = ObjectUtils.reject(object, function(i) {", "  return i === true;", "});", "", "// or", "// object.reject(function(i) {", "//   return i === true;", "// });", "", "filtered; // {id: 4, project_id: 4, status: '4'}" ]), new art.model.Member("removeValue(object:Object, value:Object):Void", 'Removes all <span class="param">object</span>\'s properties with value equal to <span class="param">value</span> param', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "", "ObjectUtils.removeValue(object, 4);", "", "// or", "// object.removeValue(4);", "", "object; // {active: true, status: '4'}" ]), new art.model.Member("removeValues(object:Object, values:Array):Void", 'Works the same as removeValue but you can remove many <span class="param">values</span> by passing them in array', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "", "ObjectUtils.removeValues(object, [4, '4']);", "", "// or", "// object.removeValues([4, '4']);", "", "object; // {active: true}" ]), new art.model.Member("select(object:Object, callback:Function):Object", 'Returns copy of <span class="code">object</span> containing only properties for which <span class="code">callback</span> returns true', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var filtered = ObjectUtils.select(object, function(v, k) { ", "  return !isNaN(parseFloat(v));", "});", "", "// or", "// object.select(function(v, k) {", "//   return !isNaN(parseFloat(v));", "// });", "", "filtered; // {id: 4, project_id: 4, status: '4'}" ]), new art.model.Member("toArray(object:Object):Array", 'Transforms <span class="code">object</span> into array', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.toArray(object); // [['color', 'white'], ['id', 5]]", "// or", "// object.toArray();" ]), new art.model.Member("toQueryString(object:Object):String", 'Returns query string representation of <span class="code">object</span>', [ "var object = {color: 'white', id: 5, user: {name: 'Andy', id: 3}};", "", "ObjectUtils.toQueryString(object);// color=white&id=5&user[name]=Andy&user[id]=3", "// or", "// object.toQueryString()" ]) ]
-      } ]
-    },
     "class": {
       name: "Class",
       "package": "artjs.utils",
@@ -1096,6 +376,81 @@ art.DB = {
         members: [ new art.model.Member("_onCreated():Void", "Invoked as a static method when class construction has completed.<br/>" + "Useful for class initialization. Some of class properties are set at this point.<br/>" + "You must always call super when implementing this hook.", [ "_onCreated: function() {", "  this.super();", "", "  console.log(this.subclasses);", "}" ]), new art.model.Member("_onExtended():Void", "Invoked as a static method when subclass construction has completed.<br/>" + "Useful for class initialization. Some of class properties are set at this point.<br/>" + "You must always call super when implementing this hook.", [ "_onExtended: function() {", "  this.super();", "", "  console.log(this.superclass + ' has been extended by ' + this);", "}" ]) ]
       } ]
     },
+    clock: {
+      name: "Clock",
+      "package": "artjs.events",
+      description: "Allows trigger events periodically",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "Clock(interval:Number, repeat:Number)",
+          params: {
+            interval: "interval between ticks in miliseconds",
+            repeat: "number of ticks"
+          },
+          example: [ "var clock = new Clock(1000, 5);" ]
+        } ]
+      }, {
+        name: "Events",
+        members: [ {
+          header: "onChange(clock:Clock)",
+          description: "Triggered on each tick",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.onChange.add(new Delegate(this, this.onClockChange));", "", "function onClockChange(clock) {", "  console.log('clock change!');", "}" ]
+        }, {
+          header: "onFinish(clock:Clock)",
+          description: "Triggered after last tick",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.onComplete.add(new Delegate(this, this.onClockComplete);", "", "function onClockComplete(clock) {", "  console.log('clock complete!');", "}" ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "counter:Number",
+          description: "Number of released ticks"
+        }, {
+          header: "interval:Number",
+          description: "The same property as in constructor"
+        }, {
+          header: "repeat:Number",
+          description: "The same property as in constructor"
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "isRunning():Void",
+          description: "Returns true if clock is running; false otherwise",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.isRunning(); // false", "clock.start(true);", "clock.isRunning(); // true", "clock.stop();", "clock.isRunning(); // false" ]
+        }, {
+          header: "pause():Void",
+          description: "'Same as stop() but doesn't reset the counter'",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.start(true);", "// ... and some time later", "clock.counter; // 3", "clock.pause();", "clock.counter; // 3" ]
+        }, {
+          header: "resume():Void",
+          description: "Resumes ticking after it has been paused",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.start();", "// ... and some time later", "clock.counter; // 3", "clock.pause();", "// ... and some time later", "clock.resume();", "clock.counter; // 3" ]
+        }, {
+          header: "start(now:Boolean):Void",
+          description: "Starts the clock. First tick after interval or immediately if 'now' param is true",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.start();" ]
+        }, {
+          header: "stop():Void",
+          description: "Stops the clock and sets counter to zero",
+          example: [ "var clock = new Clock(1000, 5);", "", "clock.start();", "// ... and some time later", "clock.counter; // 3", "clock.stop();", "clock.counter; // 0" ]
+        } ]
+      } ]
+    },
+    component: {
+      name: "Component",
+      "package": "artjs.dom",
+      description: "Components allow you to attach your own view class to element node. " + 'In order to do this simply assign "art" class to your element along with class name of your custom class ' + "e.g. com-domain-Navigation and define com.domain.Navigation class.",
+      sections: [ {
+        name: "Static methods",
+        members: [ {
+          header: "dependsOn(*dependencies:Class)",
+          description: "Registers dependency. Whenever any of dependency classes is instantiated it is passed " + "to onDependency() method which you may want to implement.",
+          example: [ "/* ", " * This will cause two invocations on Content instance:", " * onDependency(sidebar) and onDependency(footer)", " * but not necessarily in this order.", " */", "Content.dependsOn(Sidebar, Footer);" ]
+        } ]
+      } ]
+    },
     date: {
       name: "DateUtils",
       "package": "artjs.utils",
@@ -1103,6 +458,62 @@ art.DB = {
       sections: [ {
         name: "Static methods",
         members: [ new art.model.Member("copy(date:Date):Date", 'Returns <span class="param">date</span> copy', [ "var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}", "var copy = DateUtils.copy(date);", "", "// or", "// var copy = date.copy();", "", "date.setDate(6);", "date; // Tue Jun 06 2010 15:41:32 GMT+0200 {}", "copy; // Tue Jun 04 2010 15:41:32 GMT+0200 {}" ]), new art.model.Member("firstDay(date:Date):Number", 'Returns week day of first day in <span class="param">date</span>\'s month (1 means Monday)', [ "var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}", "", "DateUtils.firstDay(date); // 2", "// or", "// date.firstDay();" ]), new art.model.Member("fromDMY(dmy:String, separator:String = '/'):Date", 'Parses <span class="param">dmy</span> (&lt;day&gt;/&lt;month&gt;/&lt;year&gt;) expression and returns Date object', [ "var date = DateUtils.fromDMY('7/10/2003'); // Tue Oct 07 2003 00:00:00 GMT+0200 {}" ]), new art.model.Member("getDateShifted(date:Date, days:Number):Date", 'Returns date <span class="param">days</span> after (before if negative) <span class="param">date</span>', [ "var date = new Date(); // Tue Jun 07 2010 15:41:32 GMT+0200 {}", "var shifted = DateUtils.getDateShifted(date, -3); // Tue Jun 04 2010 15:41:32 GMT+0200 {}", "", "// or", "// var shifted = date.getDateShifted(-3);" ]), new art.model.Member("hmToMinutes(hm:String, separator:String = ':'):Number", 'Parses <span class="param">hm</span> (&lt;hours&gt;:&lt;minutes&gt;) expression and returns Number of minutes', [ "var date = DateUtils.hmToMinutes('2:15'); // 135" ]), new art.model.Member("minutesToHM(minutes:Number, separator:String = ':'):String", 'Returns &lt;hours&gt;:&lt;minutes&gt; format for given amount of <span class="param">minutes</span>', [ "var date = DateUtils.minutesToHM(135); // '2:15'" ]), new art.model.Member("monthDaysNum(date:Date):Number", 'Returns number of days in <span class="param">date</span>\'s month', [ "var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}", "", "DateUtils.monthDaysNum(date); // 30", "// or", "// date.monthDaysNum();" ]), new art.model.Member("msToSeconds(ms:String, separator:String = ':'):Number", 'Parses <span class="param">ms</span> (&lt;minutes&gt;:&lt;seconds&gt;) expression and returns Number of seconds', [ "var date = DateUtils.msToSeconds('02:15'); // 135" ]), new art.model.Member("secondsToHMS(seconds:Number, separator:String = ':'):String", 'Returns &lt;hours&gt;:&lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="param">seconds</span>', [ "var date = DateUtils.secondsToMS(4350); // '1:12:30'" ]), new art.model.Member("secondsToMS(seconds:Number, separator:String = ':'):String", 'Returns &lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="param">seconds</span>', [ "var date = DateUtils.secondsToMS(135); // '02:15'" ]), new art.model.Member("stripDayTime(date:Date):Date", "Returns date without time part", [ "var date = new Date(); // Tue Jun 07 2010 15:41:32 GMT+0200 {}", "var stripped = DateUtils.stripDayTime(date); // Tue Jun 07 2010 00:00:00 GMT+0200 {}", "", "// or", "// var stripped = date.stripDayTime();" ]), new art.model.Member("toDMY(date:Date, separator:String = '/'):String", 'Returns <span class="param">date</span>\'s string representation of day, month, year', [ "var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}", "", "DateUtils.toDMY(date); // '04/06/2010'", "// or", "// date.toDMY();" ]), new art.model.Member("toHMS(date:Date, separator:String = ':'):String", 'Returns <span class="param">date</span>\'s string representation of hour, minute, second', [ "var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}", "", "DateUtils.toHMS(date); // '15:41:32'", "// or", "// date.toHMS();" ]), new art.model.Member("toYMD(date:Date, separator:String = '/'):String", 'Returns <span class="param">date</span>\'s string representation of year, month, day', [ "var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}", "", "DateUtils.toYMD(date); // '2010/06/04'", "// or", "// date.toYMD();" ]) ]
+      } ]
+    },
+    date_picker: {
+      name: "DatePicker",
+      "package": "artjs.ui",
+      description: "Allows any text input element to act as a date picker component. " + "Just set it's class to 'art artjs-DatePicker'."
+    },
+    delegate: {
+      name: "Delegate",
+      "package": "artjs.events",
+      description: "Allows to keep context object along with function.",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "Delegate(object:Object, method:Function, ...rest)",
+          params: {
+            object: "context object",
+            method: "any function"
+          },
+          description: "Delegate wraps context object, any function and optional arguments into single Delegate object." + "When you ask for callback function:" + '<span class="block code">' + "var delegate = new Delegate(this, this.onChange, 'hello');" + "var callback = delegate.callback();" + "</span>" + 'you will get a Function object that when called will have set <span class="code" >this</span> to context object.' + 'Optionally when you pass <span class="code">true</span> to <span class="code">delegate.callback()</span>' + 'the <span class="code">callback</span> handler will receive "source" as first argument' + '("source" points to object who actually called the callback).' + "Arguments list that are passed to callback function are:" + "- source object (if specified)" + "- arguments that are passed directly when it is being called" + "- optional arguments (...rest) passed to delegate when creating the instance",
+          example: [ "function onClick(link, e, msg) {", "  alert('Link clicked! ' + msg);", "  return false;", "}", "", "var delegate = new Delegate(this, onClick, 'hello');", "", "link.onclick = delegate.callback(true);" ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "args:Array",
+          description: "Optional set of arguments"
+        }, {
+          header: "method:Function",
+          description: "The same property as in constructor"
+        }, {
+          header: "object:Object",
+          description: "The same property as in constructor"
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "callback(withSource:Boolean):Function",
+          description: "Returns Function object, than when called will receive source object as first argument if" + '<span class="code">withSource</span> is true, and <span class="code">this</span> in that function' + "will always point to context object",
+          example: [ "var obj = {id: 4};", "", "function meth(source, name, greeting) {", "  console.log('source: ' + source + ', id: ' + this.id + ': ' + greeting + \", it's \" + name);", "}", "", "var delegate = new Delegate(obj, meth, 'hello');", "var callback = delegate.callback(true);", "", "callback('Steve');" ]
+        }, {
+          header: "invoke():Object",
+          description: "Calls the delegate method with object as a context",
+          example: [ "function method(value, message) {", "  alert('method called! value:' + value + ', message: ' + message);", "  return true;", "}", "", "var delegate = new Delegate(this, method, 'hello');", "var result = delegate.invoke(5); // true" ]
+        } ]
+      }, {
+        name: "Static Methods",
+        members: [ {
+          header: "callback(object:Object, method:Function, withSource:Boolean, ...rest):Function",
+          description: "A shorthand function that allows to create delegate and returns it's callback at one step",
+          example: [ "var obj = {id: 4};", "", "function meth(source, name, greeting) {", "  console.log('source: ' + source + ', id: ' + this.id + ': ' + greeting + \", it's \" + name);", "}", "", "var callback = Delegate.callback(obj, meth, true, 'hello');", "", "callback('Steve');" ]
+        }, {
+          header: "create(object:Object, method:Function, ...rest):Delegate",
+          description: "A shorthand function that allows to create and return new delegate object",
+          example: [ "var obj = {id: 4};", "", "function meth(source, name, greeting) {", "  console.log('source: ' + source + ', id: ' + this.id + ': ' + greeting + \", it's \" + name);", "}", "", "var delegate = Delegate.create(obj, meth, 'hello');", "var callback = delegate.callback(true);", "", "callback('Steve');" ]
+        } ]
       } ]
     },
     element: {
@@ -1114,6 +525,283 @@ art.DB = {
         members: [ new art.model.Member("addClass(element:Element, name:String):Void", 'Adds class identified by <span class="param">name</span> to <span class="param">element</span>' + "(only if it doesn't already have this class)", [ "ElementUtils.addClass(element, 'nav');", "", "// or", "// element.addClass('nav');" ]), new art.model.Member("center(element:Element):Void", 'Centers <span class="param">element</span> on the screen.' + "This action takes effect only for elements with absolute position.", [ "ElementUtils.center(element);", "", "// or", "// element.center();" ]), new art.model.Member("centerH(element:Element):Void", 'Centers <span class="param">element</span> horizontally on the screen.' + "This action takes effect only for elements with absolute position.", [ "ElementUtils.centerH(element);", "", "// or", "// element.centerH();" ]), new art.model.Member("centerV(element:Element):Void", 'Centers <span class="param">element</span> vertically on the screen.' + "This action takes effect only for elements with absolute position", [ "ElementUtils.centerV(element);", "", "// or", "// element.centerV();" ]), new art.model.Member("clone(element:Element, deep:Boolean):Node", "Alias for Node.cloneNode(deep).", [ "ElementUtils.clone(element, true);", "", "// or", "// element.clone(true);" ]), new art.model.Member("disable(element:Element):Void", 'Disables the <span class="param">element</span>.', [ "ElementUtils.disable(element);", "", "// or", "// element.disable();" ]), new art.model.Member("elements(element:Element):Array", 'Returns array of immediate descendants (Elements) of <span class="param">element</span>', [ "ElementUtils.elements(element);", "", "// or", "// element.elements();" ]), new art.model.Member("enable(element:Element):Void", 'Enables the <span class="param">element</span>', [ "ElementUtils.enable(element);", "", "// or", "// element.enable();" ]), new art.model.Member("firstElement(element:Element):Element", 'Returns <span class="param">element</span>\'s first child (Element)', [ "ElementUtils.firstElement(element);", "", "// or", "// element.firstElement();" ]), new art.model.Member("getAttributes(element:Element):Object", "Returns attributes as an Object", [ "ElementUtils.getAttributes(element);", "", "// or", "// element.getAttributes();" ]), new art.model.Member("getBounds(element:Element, real:Boolean, withoutScroll:Boolean):Rectangle", 'Returns position and size of <span class="param">element</span> as a (x, y, width, height) Rectangle.', [ "ElementUtils.getBounds(element);", "", "// or", "// element.getBounds();" ], null, 'If <span class="param">real</span> is set to true size is calculated even if element is hidden' + "(otherwise size would return value of (0, 0))." + 'If <span class="param">withoutScroll</span> is set to true posision is calculated relative to' + "current view's origin; otherwise to document's origin."), new art.model.Member("getCenteredPosition(element:Element):Point", 'Returns position of <span class="param">element</span> as if it was centered on the screen', [ "ElementUtils.getCenteredPosition(element);", "", "// or", "// element.getCenteredPosition();" ]), new art.model.Member("getClasses(element:Element):Array", 'Returns array of <span class="param">element</span>\'s classes', [ "ElementUtils.getClasses(element);", "", "// or", "// element.getClasses();" ]), new art.model.Member("getContent(element:Element):String", 'Returns content (like innerHTML) of <span class="param">element</span>', [ "ElementUtils.getContent(element);", "", "// or", "// element.getContent();" ]), new art.model.Member("getDocumentSize():Point", "Returns document size", [ "ElementUtils.getDocumentSize();" ]), new art.model.Member("getPosition(element:Element, withoutScroll:Boolean):Point", 'Returns position of the <span class="param">element</span> on the screen.', [ "ElementUtils.getPosition(element);", "", "// or", "// element.getPosition();" ], null, 'If <span class="param">withoutScroll</span> is set to true posision is calculated relative to' + "current view's origin; otherwise to document's origin"), new art.model.Member("getScrollPosition():Point", "Returns scroll (x, y) values as a Point", [ "ElementUtils.getScrollPosition();" ]), new art.model.Member("getSize(element:Element):Point", 'Returns size of the <span class="param">element</span> as a artjs.math.Point object' + "which x property is width and y property is height", [ "ElementUtils.getSize(element);", "", "// or", "// element.getSize();" ]), new art.model.Member("getWindowSize():Point", "Returns window size", [ "ElementUtils.getWindowSize();" ]), new art.model.Member("hasClass(element:Element, name:String):Boolean", 'Returns true if <span class="param">element</span> has class <span class="param">name</span>;' + "false otherwise", [ "ElementUtils.hasClass(element, 'nav');", "", "// or", "// element.hasClass('nav');" ]), new art.model.Member("hide(element:Element):Void", 'Hides the <span class="param">element</span>', [ "ElementUtils.hide(element);", "", "// or", "// element.hide();" ]), new art.model.Member("isElement(element:Element):Boolean", 'Returns true if <span class="param">element</span> is Element; false otherwise', [ "ElementUtils.isElement(element);", "", "// or", "// element.isElement();" ]), new art.model.Member("isHidden(element:Element):Boolean", 'Returns true if the <span class="param">element</span> is hidden; true otherwise', [ "ElementUtils.isHidden(element);", "", "// or", "// element.isHidden();" ]), new art.model.Member("next(element:Element):Node", 'Returns <span class="param">element</span>\'s next sibling (Element)', [ "ElementUtils.next(element);", "", "// or", "// element.next();" ]), new art.model.Member("parent(element:Element):Element", 'Returns <span class="param">element</span>\'s parent element', [ "ElementUtils.parent(element);", "", "// or", "// element.parent();" ]), new art.model.Member("prev(element:Element):Node", 'Returns <span class="param">element</span>\'s previous sibling (Element)', [ "ElementUtils.prev(element);", "", "// or", "// element.prev();" ]), new art.model.Member("putAfter(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as next sibling of <span class="param">ref</span> node', [ "ElementUtils.putAfter(element, child);", "", "// or", "// element.putAfter(child);" ]), new art.model.Member("putAtBottom(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as the last child of <span class="param">ref</span> node', [ "ElementUtils.putAtBottom(element, container);", "", "// or", "// element.putAtBottom(container);" ]), new art.model.Member("putAtTop(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as the first child of <span class="param">ref</span> node', [ "ElementUtils.putAtTop(element, container);", "", "// or", "// element.putAtTop(container);" ]), new art.model.Member("putBefore(element:Element, ref:Node):Node", 'Inserts clone of the <span class="param">element</span> as previous sibling of <span class="param">ref</span> node', [ "ElementUtils.putBefore(element, child);", "", "// or", "// element.putBefore(child);" ]), new art.model.Member("remove(element:Element):Node", 'Removes the <span class="param">element</span>', [ "ElementUtils.remove(element);", "", "// or", "// element.remove();" ]), new art.model.Member("removeClass(element:Element, name:String):Void", 'Removes class identified by <span class="param">name</span> from <span class="param">element</span> (only if it have this class)', [ "ElementUtils.removeClass(element, 'nav');", "", "// or", "// element.removeClass('nav');" ]), new art.model.Member("replace(element:Element, ref:Node, clone:Boolean):Node", 'Replaces <span class="param">ref</span> with an <span class="param">element</span> ' + '(or its clone if <span class="param">clone</span> is set to true)', [ "ElementUtils.replace(element, oldElement, true);", "", "// or", "// element.replace(oldElement, true);" ]), new art.model.Member("serialize(element:Element):Object", 'Serializes content of <span class="param">element</span> (usually form) and returns its data as Object', [ "ElementUtils.serialize(element);", "", "// or", "// element.serialize();" ]), new art.model.Member("setAlpha(element:Element, value:Number):Void", 'Sets <span class="param">element</span>\'s transparency; <span class="param">value</span> 0 means transparent, 1 means opaque', [ "ElementUtils.setAlpha(element, 0.4);", "", "// or", "// element.setAlpha(0.4);" ]), new art.model.Member("setClass(element:Element, name:String, add:Boolean):Void", 'If <span class="param">add</span> is true it adds, otherwise removes class identified by' + '<span class="param">name</span> to <span class="param">element</span>', [ "ElementUtils.setClass(element, 'nav', true);", "", "// or", "// element.setClass('nav', true);" ]), new art.model.Member("setContent(element:Element, content:String):Void", 'Sets the content (like innerHTML) of <span class="param">element</span>', [ "ElementUtils.setContent(element, 'hello &lt;span&gt;world&lt;/span&gt;!');", "", "// or", "// element.setContent('hello &lt;span&gt;world&lt;/span&gt;!');" ]), new art.model.Member("setEnabled(element:Element, enabled:Boolean):Void", 'Enables <span class="param">element</span> if <span class="param">enabled</span> is true; disables otherwise', [ "ElementUtils.setEnabled(element, true);", "", "// or", "// element.setEnabled(true);" ]), new art.model.Member("setPosition(element:Element, position:Point):Void", 'Sets the position of <span class="param">element</span> on the screen. ' + "This action has effect for elements with absolute position", [ "ElementUtils.setPosition(element, point);", "", "// or", "// element.setPosition(point);" ]), new art.model.Member("setVisible(element:Element, visible:Boolean):Void", 'Shows the <span class="param">element</span> if <span class="param">visible</span> argument is set to true; hides otherwise', [ "ElementUtils.setVisible(element, true);", "", "// or", "// element.setVisible(true);" ]), new art.model.Member("setX(element:Element, value:Number):Void", 'Sets x position of <span class="param">element</span> on the screen. ' + "This action has effect for elements with absolute position", [ "ElementUtils.setX(130);", "", "// or", "// element.setX(130);" ]), new art.model.Member("setY(element:Element, value:Number):Void", 'Sets y position of <span class="param">element</span> on the screen. ' + "This action has effect for elements with absolute position", [ "ElementUtils.setY(130);", "", "// or", "// element.setY(130);" ]), new art.model.Member("show(element:Element):Void", 'Shows the <span class="param">element</span>', [ "ElementUtils.show(element);", "", "// or", "// element.show();" ]), new art.model.Member("toggle(element:Element):Void", 'Shows the <span class="param">element</span> if it\'s hidden; hides otherwise', [ "ElementUtils.toggle(element);", "", "// or", "// element.toggle();" ]), new art.model.Member("toggleClass(element:Element, name:String):Void", 'Toggles class identified by <span class="param">name</span> of <span class="param">element</span>', [ "ElementUtils.toggleClass(element, 'nav');", "", "// or", "// element.toggleClass('nav');" ]) ]
       } ]
     },
+    element_builder: {
+      name: "ElementBuilder",
+      "package": "artjs.dom",
+      description: "Allows to create DOM elements",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "ElementBuilder(name:String, attributes:Object, value:String, empty:Boolean)",
+          params: {
+            name: "element name",
+            attributes: "element attributes",
+            value: "element inner text",
+            empty: "if true, empty element will be created"
+          },
+          example: [ "var builder = new ElementBuilder('span', {class: 'price'}, '$199');", "", 'builder.toString(); // &lt;span class="price"&gt;$199&lt;/span&gt;' ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "attributes:Object",
+          description: "The same property as in constructor"
+        }, {
+          header: "empty:Boolean",
+          description: "The same property as in constructor"
+        }, {
+          header: "name:String",
+          description: "The same property as in constructor"
+        }, {
+          header: "value:Object",
+          description: "The same property as in constructor"
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "getElement():Element",
+          description: "Builds and returns new Element",
+          example: [ "var builder = new ElementBuilder('span', {class: 'price'}, '$199');", "", "var element = builder.getElement();", "", "element.toString(); // [object HTMLSpanElement]" ]
+        }, {
+          header: "toString():String",
+          description: "String representation of element",
+          example: [ "var builder = new ElementBuilder('span', {class: 'price'}, '$199');", "", 'builder.toString(); // &lt;span class="price"&gt;$199&lt;/span&gt;' ]
+        } ]
+      }, {
+        name: "Static Methods",
+        members: [ {
+          header: "build(name:String, attributes:Object, value:String, empty:Boolean):ElementBuilder",
+          description: "Returns new instance while passing all arguments",
+          example: [ "var builder = ElementBuilder.build('span', {class: 'price'}, '$199');", "", 'builder.toString(); // &lt;span class="price"&gt;$199&lt;/span&gt;' ]
+        }, {
+          header: "parse(string:String):Element",
+          description: 'Returns <span class="code">string</span> as an Element',
+          example: [ "var element = ElementBuilder.parse('&lt;span class=\"price\"&gt;$199&lt;/span&gt;');", "", "element.toString(); // [object HTMLSpanElement]" ]
+        }, {
+          header: "create(name:String, attributes:Object, value:String, empty:Boolean):Element",
+          description: "Performs build and parse methods in one step",
+          example: [ "var element = ElementBuilder.create('span', {class: 'price'}, '$199');", "", "element.toString(); // [object HTMLSpanElement]" ]
+        }, {
+          header: "getElement(name:String, attributes:Object, value:String, empty:Boolean):Element",
+          description: "Works the same as corresponding instance method",
+          example: [ "var element = ElementBuilder.getElement('span', {class: 'price'}, '$199');", "", "element.toString(); // [object HTMLSpanElement]" ]
+        }, {
+          header: "getCollection(n:Integer, element:ElementBuilder):String",
+          description: "Returns html string with element repeated n times",
+          example: [ "var element = ElementBuilder.getElement('span', {class: 'price'});", "var html = ElementBuilder.getCollection(3, element);", "", 'element.toString(); // &lt;span class="price"&gt;&lt;/span&gt;&lt;span class="price"&gt;&lt;/span&gt;&lt;span class="price"&gt;&lt;/span&gt;' ]
+        } ]
+      } ]
+    },
+    event: {
+      name: "Event",
+      "package": "artjs.events",
+      description: "Defines object capable of dispatching events.",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "Event(name:String = null)",
+          params: {
+            name: "name of the event"
+          },
+          example: [ "var myEvent = new Event('MyClass::myEvent');" ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "name:Name",
+          description: "The same property as in constructor"
+        }, {
+          header: "collection:DelegateCollection",
+          description: "Collection of registered listeners",
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "", "myEvent.collection.length // 0", "myEvent.add(new Delegate(null, function() {", "console.log('event!')", "}));", "myEvent.collection.length // 1" ]
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "add(delegate:Delegate):Void",
+          description: "Registers listener",
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "", "myEvent.add(new Delegate(null, function() {", "  console.log('event!')", "}));" ]
+        }, {
+          header: "fire():Array",
+          description: "Triggers the event and returns responses from handlers as an array",
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "", "myEvent.add(new Delegate(null, function() {", "  console.log('event!');", "  return 2;", "}));", "// ...then at some point you dispatch the event", "myEvent.fire(this, 'hello'); // [2]" ]
+        }, {
+          header: "getLength():Number",
+          description: "Amount of listeners currently registered",
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.getLength(); // 0", "myEvent.add(delegateOne);", "myEvent.getLength(); // 1", "myEvent.add(delegateTwo);", "myEvent.getLength(); // 2", "myEvent.removeAll();", "myEvent.getLength(); // 0" ]
+        }, {
+          header: "remove(delegate:Delegate):Void",
+          description: "Removes listener",
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "var delegate = new Delegate(null, function(msg) {", "  console.log('event says: ' + msg)", "});", "", "myEvent.add(delegate);", "myEvent.fire('hello!'); // delegate handles event", "myEvent.remove(delegate);", "myEvent.fire('hello!'); // nothing happens" ]
+        }, {
+          header: "removeAll():Void",
+          description: "Removes all listeners",
+          example: [ "var myEvent = new Event('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.add(delegateOne);", "myEvent.add(delegateTwo);", "myEvent.fire('hello!'); // delegates handle event", "myEvent.removeAll();", "myEvent.fire('hello!');// nothing happens" ]
+        } ]
+      } ]
+    },
+    introduction: {
+      template: "introduction"
+    },
+    list: {
+      name: "List",
+      "package": "artjs.data",
+      description: "List data model implementation.",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "List(data:Array = [])",
+          description: '<span class="param">data</span> - collection data',
+          example: [ "var list = new List([1, 2, 3, 4, 5]);" ]
+        } ]
+      }, {
+        name: "Events",
+        members: [ {
+          header: "onChange(list:List)",
+          description: "Dispatched every time the collection changes",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.onChange.add(new artjs.Delegate(this, this.onChange));", "function onChange(list) {", "'  alert('list has changed!');'", "}" ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "allowDuplicates:Boolean = true",
+          description: "Flag that allows having duplicates in collection",
+          more: "'If this flag is set to true, adding existing item won't do anything.'"
+        }, {
+          header: "loop:Boolean = false",
+          description: "Flag that allows periodically return the item, even if index is out of collection bounds",
+          more: "If this flag is set to true and you try to fetch an item by index out of collection bounds, " + "you will receive item as if you were fetching it from infinite collection consisting of periodically " + "repeated items of initial collection.",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.loop = true;", "list.getItemAt(-1); //5", "list.getItemAt(6); //2" ]
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "addItem(item:Object, noEvent:Boolean):Number",
+          description: 'Adds <span class="code">item</span> to the end of collection and returns new length.' + "" + 'If <span class="code">noEvent</span> is set to true, this action wont dispatch the <span class="code">change</span> event.',
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.addItem(6); // 6", "list.toString() // 1, 2, 3, 4, 5, 6" ]
+        }, {
+          header: "addItemAt(item:Object, idx:Number, noEvent:Boolean):Number",
+          description: 'Adds <span class="code">item</span> to collection at specific position and returns new length',
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.addItemAt(6, 2); // 6", "list.toString() // 1, 2, 6, 3, 4, 5" ]
+        }, {
+          header: "decrease():Void",
+          description: "Decreases pointer",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.decrease();", "list.getPointer(); // 1" ]
+        }, {
+          header: "isEmpty():Boolean",
+          description: "Returns true if collection is empty; false otherwise",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.isEmpty(); // false", "list.removeAll();", "list.isEmpty(); // true" ]
+        }, {
+          header: "getCurrent():Object",
+          description: "Returns current item",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.getCurrent(); // 3" ]
+        }, {
+          header: "getFirst():Object",
+          description: "Returns first item of collection",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getFirst(); // 1" ]
+        }, {
+          header: "getItemAt(idx:Number):Object",
+          description: 'Retrieves <span class="code">item</span> at specific position',
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getItemAt(3); // 4" ]
+        }, {
+          header: "getItemIndex(item:Object):Number",
+          description: 'Retrieves <span class="code">item</span>\'s index',
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getItemIndex(3); // 2" ]
+        }, {
+          header: "getItems():Array",
+          description: "Returns copy of collection",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getItems().toString(); // 1, 2, 3, 4, 5" ]
+        }, {
+          header: "getLast():Object",
+          description: "Returns last item of collection",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getLast(); // 5" ]
+        }, {
+          header: "getLength():Number",
+          description: "Returns length of collection",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getLength(); // 5" ]
+        }, {
+          header: "getNext():Object",
+          description: "Returns item after current",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.getNext(); // 4" ]
+        }, {
+          header: "getPointer():Number",
+          description: "Returns pointer",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.getPointer(); // 0", "list.increase();", "list.getPointer(); // 1" ]
+        }, {
+          header: "getPrevious():Object",
+          description: "Returns item before current",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.getPrevious(); // 2" ]
+        }, {
+          header: "hasItem(item:Object):Boolean",
+          description: 'Returns true if <span class="code">item</span> is in collection; false otherwise',
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.hasItem(4); // true", "list.hasItem(7); // false" ]
+        }, {
+          header: "increase():Void",
+          description: "Increases pointer",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.increase();", "list.getPointer(); // 3" ]
+        }, {
+          header: "isLast():Boolean",
+          description: "Returns true if pointer is set to last item in collection; false otherwise",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(4);", "list.isLast(); // true" ]
+        }, {
+          header: "moveItem(fromIndex:Number, toIndex:Number):Void",
+          description: 'Moves <span class="code">item</span> from, to specific position',
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.moveItem(3, 0);", "list.toString(); // 4, 1, 2, 3, 5;" ]
+        }, {
+          header: "removeAll(noEvent:Boolean):Void",
+          description: "Removes all items from collection",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.removeAll();", "list.toString() //" ]
+        }, {
+          header: "removeItem(item:Object, onlyFirst:Boolean, noEvent:Boolean):Void",
+          description: 'Removes <span class="code">item</span> from collection',
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.removeItem(2); // 4", "list.toString() // 1, 3, 4, 5" ]
+        }, {
+          header: "removeItemAt(idx:Number, noEvent:Boolean):Void",
+          description: 'Removes <span class="code">item</span> at specific position from collection',
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.removeItemAt(2); // 4", "list.toString() // 1, 2, 4, 5" ]
+        }, {
+          header: "reset():Void",
+          description: "Sets pointer to zero",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.getPointer(); // 2", "list.reset();", "list.getPointer(); // 0" ]
+        }, {
+          header: "setItems(items:Array):Void",
+          description: "Set the collection",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.toString(); // 1, 2, 3, 4, 5", "list.setItems([4, 5, 6]);", "list.toString(); // 4, 5, 6" ]
+        }, {
+          header: "setPointerAtItem(item:Object):Void",
+          description: 'Set the pointer at position of <span class="code">item</span>',
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointerAtItem(2);", "list.getPointer(); // 1" ]
+        }, {
+          header: "setPointer(i:Number):Void",
+          description: "Sets pointer",
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.setPointer(2);", "list.getPointer(); // 2" ]
+        } ]
+      } ]
+    },
+    log: {
+      name: "Log",
+      "package": "artjs.utils",
+      description: "Allows you to output debug messages.",
+      sections: [ {
+        name: "Static methods",
+        members: [ new art.model.Member("log(args...:*):Void", "Uses internally console.log to display messages."), new art.model.Member("p(args...:*):Void", "Alias method for log().") ]
+      } ]
+    },
+    main: {
+      name: "artjs",
+      "package": "artjs",
+      description: "This is top level object that stores information about framework and few methods that allows you to select the framework mode.",
+      sections: [ {
+        name: "Constants",
+        members: [ new art.model.Member("VERSION:String", "Current version of framework") ]
+      }, {
+        name: "Methods",
+        members: [ new art.model.Member("$():Element", "Alias for ElementUtils.getElements()", [ "var nav = artjs.$('.main p.item span');" ]), new art.model.Member("$D():Delegate", "Alias for Delegate.create()", [ "var delegate = artjs.$D(this, this.onClick);" ]), new art.model.Member("$DC():Function", "Alias for Delegate.callback()", [ "var callback = artjs.$DC(this, this.onClick, true);" ]), new art.model.Member("$del():Ajax", "Alias for Ajax.del()", [ "var ajax = artjs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$find():Element", "Alias for ElementUtils.find()", [ "var nav = artjs.$('navigation');", "var item = artjs.$find(nav, '.item');" ]), new art.model.Member("$findAll():Array", "Alias for ElementUtils.findAll()", [ "var nav = artjs.$('navigation');", "var items = artjs.$findAll(nav, '.item');" ]), new art.model.Member("$get():Ajax", "Alias for Ajax.get()", [ "var ajax = artjs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("p():Void", "Debug info. If debug console is accessible output to the console; uses alert() otherwise.", [ "p('myVariable: ' +  myVariable);" ]), new art.model.Member("$P():Element", "Alias for ElementBuilder.parse()", [ "var element = artjs.$P('<span class=\"desc\">Blue t-shirt</span>');" ]), new art.model.Member("$post():Ajax", "Alias for Ajax.post()", [ "var ajax = artjs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$put():Ajax", "Alias for Ajax.$put()", [ "var ajax = artjs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));" ]), new art.model.Member("$up():Element", "Alias for ElementUtils.up()", [ "var nav = artjs.$('navigation');", "var parent = artjs.$up(nav);" ]) ]
+      }, {
+        name: "Events",
+        members: [ new art.model.Member("onDocumentLoad", "Triggered when DOM is loaded."), new art.model.Member("onWindowLoad", "Triggered when whole window is loaded (executes after onDocumentLoad)."), new art.model.Member("onLibraryLoad", "Triggered when all library templates are loaded (executes after onWindowLoad).") ]
+      } ]
+    },
     math: {
       name: "MathUtils",
       "package": "artjs.utils",
@@ -1123,6 +811,284 @@ art.DB = {
         members: [ new art.model.Member("limit(x:Number, a:Number, b:Number):Number", 'Returns <span class="param">x</span> value limited to [<span class="param">a</span>, <span class="param">b</span>] range', [ "MathUtils.limit(6, 2, 13); // 6", "MathUtils.limit(6, 8, 13); // 8", "MathUtils.limit(6, -2, 3); // 3" ]), new art.model.Member("sawtooth(x:Number, a:Number, b:Number):Number", 'Returns <span class="param">x</span> value periodically limited to ' + '[<span class="param">a</span>, <span class="param">b</span>] range', [ "MathUtils.sawtooth(6, 2, 13); // 6", "MathUtils.sawtooth(6, 8, 13); // 11", "MathUtils.sawtooth(6, -2, 3); // 1" ]), new art.model.Member("sgn(x:Number):Number", 'Signum function of <span class="param">x</span>', [ "MathUtils.sgn(-2); // -1", "MathUtils.sgn(0); // 0", "MathUtils.sgn(15); // 1" ]), new art.model.Member("stairs(x:Number, a:Number, b:Number):Number", '"stairs" function of <span class="param">x</span>', [ "MathUtils.stairs(6, 2, 4); // 2", "MathUtils.stairs(6, 1, 2); // 5", "MathUtils.stairs(6, -1, 1); // 3" ]) ]
       } ]
     },
+    object: {
+      name: "ObjectUtils",
+      "package": "artjs.utils",
+      description: "Provides set of methods that operates on any Object instance.<br/>" + 'Most of examples show optional use of a method when <span class="code">artjs.doInjection()</span> has been performed.',
+      sections: [ {
+        name: "Static methods",
+        members: [ new art.model.Member("all(object:Object, callback:Function):Boolean", 'Returns true if for all values <span class="code">callback</span> returns true; false otherwise', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.all(object, function(i) {", "  return i !== false;", "}); // true ", "// or ", "// object.all(function(i) {", "  return i !== false;", "});", "", "ObjectUtils.all(object, function(i) {", "  return !isNaN(parseInt(i));", "}); // false", "// or", "// object.all(function(i) {", "  return !isNaN(parseInt(i));", "});" ]), new art.model.Member("copy(object:Object):Object", 'Creates a copy of an <span class="param">object</span>.', [ "var object = {id: 4};", "var copy = ObjectUtils.copy(object);", "", "// or", "// var copy = object.copy();", "", "object.id = 5;", "object.id; // 5", "copy.id; // 4" ]), new art.model.Member("copyProps(source:Object, target:Object):Void", 'Copies properties from <span class="param">source</span> object to <span class="param">target</span> object.', [ "var source = {id: 4};", "var target = {active: true};", "", "ObjectUtils.copyProps(source, target);", "", "// or", "// source.copyProps(target);", "", "source; // {id: 4}", "target; // {active: true, id: 4}" ]), new art.model.Member("each(object:Object, callback:Function):Void", 'Iterates over properties and passes value to <span class="param">callback</span>', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "ObjectUtils.each(object, function(i) {", "  alert(i);", "});", "", "// or", "// object.each(function(i) {", "//   alert(i);", "// });" ]), new art.model.Member("eachKey(object:Object, callback:Function):Void", 'Iterates over properties and passes key to <span class="param">callback</span>', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "ObjectUtils.eachKey(object, function(i) {", "  alert(i);", "});", "", "// or", "// object.eachKey(function(i) {", "//   alert(i);", "// });" ]), new art.model.Member("eachPair(object:Object, callback:Function):Void", 'Iterates over properties and passes key and value to <span class="code">callback</span>', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "ObjectUtils.eachPair(object, function(k, v) {", "  alert(k + ' -> ' + v);", "});", "", "// or", "// object.eachPair(function(k, v) {", "//   alert(k + ' -> ' + v);", "// });" ]), new art.model.Member("isEmpty(object:Object):Boolean", 'Returns true if <span class="code">object</span> has no properties; false otherwise', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var empty = {};", "", "ObjectUtils.isEmpty(object); // false", "// or", "// object.isEmpty();", "", "ObjectUtils.isEmpty(empty); // true", "// or", "// empty.isEmpty();" ]), new art.model.Member("extend(target:Object, base:Object):Void", 'Copies properties from <span class="param">base</span> object to <span class="param">target</span> object.' + 'In fact it works the same as <span class="code">copyProps()</span>, the only difference is arguments order.', [ "var base = {id: 4};", "var target = {active: true};", "", "ObjectUtils.extend(target, base);", "", "// or", "// target.extend(base);", "", "base; // {id: 4}", "target; // {active: true, id: 4}" ]), new art.model.Member("fromArray(array:Array):Object", 'Transforms 2-dim <span class="code">array</span> into object', [ "var array = [['color', 'white'], ['id', 5]];", "", "ObjectUtils.fromArray(array); // {color: 'white', id: 5}" ]), new art.model.Member("include(object:Object, item:Object):Boolean", 'Returns true if any <span class="code">object</span> value is equal to <span class="code">item</span>; false otherwise', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.include(object, 5); // true", "// or", "// object.include(5);", "", "ObjectUtils.include(object, true); // false", "// or", "// object.include(true);" ]), new art.model.Member("includeAll(object:Object, subset:Object):Boolean", 'Returns true if all <span class="code">subset</span> values can be found among <span class="code">object</span>\'s values; false otherwise', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.includeAll(object, {color: 'white', id: 5}); // true", "// or", "// object.includeAll({color: 'white', id: 5});", "", "ObjectUtils.includeAll(object, {id: 5, name: 'Mike'}); // false", "// or", "// object.includeAll({id: 5, name: 'Mike'});" ]), new art.model.Member("map(object:Object, callback:Function):Array", 'Maps key and value to Array item using <span class="param">callback</span> function', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var mapped = ObjectUtils.map(object, function(k, v) {return k + ':' + v});", "", "// or", "// var mapped = object.map(function(k, v) {return k + ':' + v});", "", "mapped; // ['id:4', 'active:true', 'project_id:4', 'status:4']" ]), new art.model.Member("mapKey(object:Object, callback:Function):Object", 'Transforms key using <span class="param">callback</span> function', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var mapped = ObjectUtils.mapKey(object, function(k) {", "  return StringUtils.capitalizeUnderscored(k);", "});", "", "// or", "// var mapped = object.mapKey(function(k) {", "//   return StringUtils.capitalizeUnderscored(k);", "// });", "", "mapped; // {Id: 8, Active: 2, ProjectId: 8, Status: 8}" ]), new art.model.Member("mapValue(object:Object, callback:Function):Object", 'Transforms value using <span class="param">callback</span> function', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var mapped = ObjectUtils.mapValue(object, function(v) {return v * 2});", "", "// or", "// var mapped = object.mapValue(function(v) {return v * 2});", "", "mapped; // {id: 8, active: 2, project_id: 8, status: 8}" ]), new art.model.Member("merge(target:Object, base:Object):Object", 'Works the same as extend() but returns modified <span class="param">target</span> object.', [ "var base = {id: 4};", "var target = {active: true};", "", "ObjectUtils.merge(target, base); // {active: true, id: 4}", "", "// or", "// target.merge(base);", "", "base; // {id: 4}", "target; // {active: true, id: 4}" ]), new art.model.Member("reject(object:Object, callback:Function):Object", 'Returns copy of <span class="code">object</span> without properties for which <span class="code">callback</span> returns true', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var filtered = ObjectUtils.reject(object, function(i) {", "  return i === true;", "});", "", "// or", "// object.reject(function(i) {", "//   return i === true;", "// });", "", "filtered; // {id: 4, project_id: 4, status: '4'}" ]), new art.model.Member("removeValue(object:Object, value:Object):Void", 'Removes all <span class="param">object</span>\'s properties with value equal to <span class="param">value</span> param', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "", "ObjectUtils.removeValue(object, 4);", "", "// or", "// object.removeValue(4);", "", "object; // {active: true, status: '4'}" ]), new art.model.Member("removeValues(object:Object, values:Array):Void", 'Works the same as removeValue but you can remove many <span class="param">values</span> by passing them in array', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "", "ObjectUtils.removeValues(object, [4, '4']);", "", "// or", "// object.removeValues([4, '4']);", "", "object; // {active: true}" ]), new art.model.Member("select(object:Object, callback:Function):Object", 'Returns copy of <span class="code">object</span> containing only properties for which <span class="code">callback</span> returns true', [ "var object = {id: 4, active: true, project_id: 4, status: '4'};", "var filtered = ObjectUtils.select(object, function(v, k) { ", "  return !isNaN(parseFloat(v));", "});", "", "// or", "// object.select(function(v, k) {", "//   return !isNaN(parseFloat(v));", "// });", "", "filtered; // {id: 4, project_id: 4, status: '4'}" ]), new art.model.Member("toArray(object:Object):Array", 'Transforms <span class="code">object</span> into array', [ "var object = {color: 'white', id: 5};", "", "ObjectUtils.toArray(object); // [['color', 'white'], ['id', 5]]", "// or", "// object.toArray();" ]), new art.model.Member("toQueryString(object:Object):String", 'Returns query string representation of <span class="code">object</span>', [ "var object = {color: 'white', id: 5, user: {name: 'Andy', id: 3}};", "", "ObjectUtils.toQueryString(object);// color=white&id=5&user[name]=Andy&user[id]=3", "// or", "// object.toQueryString()" ]) ]
+      } ]
+    },
+    point: {
+      name: "Point",
+      "package": "artjs.math",
+      description: "Math 2-dimentional vector implementation",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "Point(x:Number, y:Number)",
+          params: {
+            x: "x coordinate",
+            y: "y coordinate"
+          },
+          example: [ "var point = new Point(20, 40);" ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "x:Number",
+          description: "The same property as in constructor"
+        }, {
+          header: "y:Number",
+          description: "The same property as in constructor"
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "add():Point",
+          description: "Adds other vector",
+          example: [ "var p1 = new Point(2, 3);", "var p2 = new Point(4, -1);", "", "p1.add(p2); // (6, 2)" ]
+        }, {
+          header: "dot():Number",
+          description: "Dot product of this vector and other vector",
+          example: [ "var p1 = new Point(2, 3);", "var p2 = new Point(4, -1);", "", "p1.dot(p2); // 5" ]
+        }, {
+          header: "getLength():Number",
+          description: "Length of a vector",
+          example: [ "var point = new Point(3, 4);", "", "point.getLength(); // 5" ]
+        }, {
+          header: "getReversed():Point",
+          description: "Returns reversed vector",
+          example: [ "var p = new Point(2, 3);", "", "p.getReversed(); // (-2, -3)", "p; // (2, 3)" ]
+        }, {
+          header: "getTransposed():Point",
+          description: "Returns new transposed vector",
+          example: [ "var p = new Point(2, 3);", "", "p.getTransposed(); // (3, 2)", "p; // (2, 3)" ]
+        }, {
+          header: "reverse():Point",
+          description: "Reverses vector and returns this vector",
+          example: [ "var p = new Point(2, 3);", "", "p.reverse(); // (-2, -3)", "p; // (-2, -3)" ]
+        }, {
+          header: "reverseX():Point",
+          description: "Reverses x coordinate and returns this vector",
+          example: [ "var p = new Point(2, 3);", "", "p.reverse(); // (-2, 3)", "p; // (-2, 3)" ]
+        }, {
+          header: "reverseY():Point",
+          description: "Reverses y coordinate and returns this vector",
+          example: [ "var p = new Point(2, 3);", "", "p.reverse(); // (2, -3)", "p; // (2, -3)" ]
+        }, {
+          header: "sub():Void",
+          description: "Subtracts other vector",
+          example: [ "var p1 = new Point(2, 3);", "var p2 = new Point(4, -1);", "", "p1.sub(p2); // (-2, 4)" ]
+        }, {
+          header: "times(k:Number):Point",
+          description: 'Returns new vector multiplied by <span class="code">k</span>',
+          example: [ "var p = new Point(2, 3);", "", "p.times(-3); // (-9, -6)", "p; // (2, 3)" ]
+        }, {
+          header: "toString():String",
+          description: "Returns string representation od vector",
+          example: [ "var p = new Point(2, 3);", "", "p.toString(); // [2, 3]" ]
+        }, {
+          header: "transpose():Point",
+          description: "Transposes coordinates and returns this vector",
+          example: [ "var p = new Point(2, 3);", "", "p.transpose(); // (3, 2)", "p; // (3, 2)" ]
+        } ]
+      } ]
+    },
+    queue: {
+      name: "Queue",
+      "package": "artjs.data",
+      description: "Queue data model implementation",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "Queue(data:Array = [])",
+          description: '<span class="param">data</span> - collection data',
+          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);" ]
+        } ]
+      }, {
+        name: "Events",
+        members: [ {
+          header: "onChange(list:List)",
+          description: "Dispatched every time the collection changes",
+          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "", "queue.onChange.add(new artjs.Delegate(this, this.onChange));", "", "function onChange(queue) {", "'  alert('queue has changed!');'", "}" ]
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "addItem(item:Object):Void",
+          description: 'Adds <span class="code">item</span> to the end of collection',
+          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "", "queue.addItem(6); // 6", "", "queue.toString() // 1, 2, 3, 4, 5, 6" ]
+        }, {
+          header: "empty():Boolean",
+          description: "Returns true if collection is empty; false otherwise",
+          example: [ "var queue = new Queue([3]);", "", "queue.isEmpty(); // false", "", "var item = queue.getItem();", "", "queue.isEmpty(); // true" ]
+        }, {
+          header: "getItem():Object",
+          description: "Pops and returns current item",
+          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "var item = queue.getItem(); // 1", "", "queue.toString(); // 2, 3, 4, 5" ]
+        }, {
+          header: "getLength():Number",
+          description: "Returns length of collection",
+          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "", "queue.getLength(); // 5" ]
+        }, {
+          header: "setData(data:Array):Void",
+          description: "Sets the collection",
+          example: [ "var queue = new Queue([1, 2, 3, 4, 5]);", "", "", "queue.toString(); // 1, 2, 3, 4, 5", "", "queue.setData([4, 5, 6]);", "", "queue.toString(); // 4, 5, 6" ]
+        } ]
+      } ]
+    },
+    queued_clock: {
+      name: "QueuedClock",
+      "package": "artjs.events",
+      description: "Allows to trigger events periodically.",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "QueuedClock(interval:Number)",
+          params: {
+            interval: "interval between clock ticks in miliseconds"
+          },
+          description: "The class works like queue. You add Delegate items and then clock periodically removes current item and calls invoke() on it.",
+          example: [ "var qc = new QueuedClock(1000);", "", "// add one delegate item", "qc.addItem(new Delegate(this, this.onTick)) // 1;", "qc.getLength(); // 1", "qc.start();", "// after first tick the collection is empty", "qc.getLength(); // 0" ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "interval:Number",
+          description: "The same property as in constructor"
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "addItem(item:Delegate):Number",
+          description: "Adds delegate to collection and returns its new length",
+          example: [ "var qc = new QueuedClock(1000);", "", "qc.addItem(new Delegate(this, this.onTick)) // 1;" ]
+        }, {
+          header: "getLength():Number",
+          description: "Returns current length of collection",
+          example: [ "var qc = new QueuedClock(1000);", "", "qc.getLength(); // 0", "qc.addItem(new Delegate(this, this.onTick));", "qc.getLength(); // 1" ]
+        }, {
+          header: "start():Void",
+          description: "Starts execution",
+          example: [ "var qc = new QueuedClock(1000);", "", "qc.addItem(new Delegate(this, this.onTick));", "", "qc.start();" ]
+        } ]
+      } ]
+    },
+    rectangle: {
+      name: "Rectangle",
+      "package": "artjs.math",
+      description: "Math rectangle implementation",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "Rectangle(left:Number, top:Number, right:Number, bottom:Number)",
+          params: {
+            left: "left edge",
+            top: "top edge",
+            right: "right edge",
+            bottom: "bottom edge"
+          },
+          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);" ]
+        } ]
+      }, {
+        name: "Properties",
+        members: [ {
+          header: "bottom:Number",
+          description: "The same property as in constructor"
+        }, {
+          header: "left:Number",
+          description: "The same property as in constructor"
+        }, {
+          header: "right:Number",
+          description: "The same property as in constructor"
+        }, {
+          header: "top:Number",
+          description: "The same property as in constructor"
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "getArea():Number",
+          description: "Area of rectangle",
+          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getArea(); // 200" ]
+        }, {
+          header: "getHeight():Number",
+          description: "Height of rectangle",
+          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getHeight(); // 10" ]
+        }, {
+          header: "getLeftBottom():Point",
+          description: "Left-bottom corner vector",
+          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getRightBottom(); // [10, 20]" ]
+        }, {
+          header: "getLeftTop():Point",
+          description: "Left-top corner vector",
+          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getLeftTop(); // [10, 10]" ]
+        }, {
+          header: "getRightBottom():Point",
+          description: "Right-bottom corner vector",
+          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getRightBottom(); // [30, 20]" ]
+        }, {
+          header: "getRightTop():Point",
+          description: "Right-top corner vector",
+          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getRightTop(); // [30, 10]" ]
+        }, {
+          header: "getSize():Point",
+          description: "Width and height as a vector",
+          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getSize(); // [20, 10]" ]
+        }, {
+          header: "getWidth():Number",
+          description: "Width of rectangle",
+          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.getWidth(); // 20" ]
+        }, {
+          header: "moveBy(point:Point):Void",
+          description: "Moves rectangle by a vector",
+          example: [ "var rectangle = new Rectangle(10, 10, 30, 20);", "", "rectangle.moveBy(new Point(-10, -10);", "rectangle.toString(); // [0, 0, 20, 10]" ]
+        } ]
+      } ]
+    },
+    selector: {
+      name: "Selector",
+      "package": "artjs.dom",
+      description: "Allows to easily traverse DOM.",
+      sections: [ {
+        name: "Methods",
+        members: [ {
+          header: "find(element:Element, selector:String):Array",
+          description: "Same as #getElements but with reversed arguments."
+        }, {
+          header: "first(element:Element, selector:String):Element",
+          description: "Returns first result of #find."
+        }, {
+          header: "last(element:Element, selector:String):Element",
+          description: "Returns last result of #find."
+        }, {
+          header: "parent(element:Element, selector:String):Element",
+          description: "Returns first ancestor that matches the selector."
+        }, {
+          header: "getElements(selector:String, element:Element):Array",
+          description: "Returns all descendants that match the selector.",
+          more: "Selector parameter must be a single selector without spaces",
+          example: [ "var main = getElements('#main');", "var titles = getElements('p.title', main);" ]
+        }, {
+          header: "isDescendantOf(element:Element, root:Element):Boolean",
+          description: "Returns true if element is descendant of root."
+        }, {
+          header: "isSelfOrDescendantOf(element:Element, root:Element):Boolean",
+          description: "Same as #isDescendantOf but returns true also if element is the root itself."
+        }, {
+          header: "getElementById(id:String):Element",
+          description: "Returns Element by id."
+        }, {
+          header: "getElementsByTagName(name:String):Array",
+          description: "Returns array of Elements by tag name."
+        }, {
+          header: "getElementsByClassName(name:String):Array",
+          description: "Returns array of Elements by class name."
+        } ]
+      } ]
+    },
     string: {
       name: "StringUtils",
       "package": "artjs.utils",
@@ -1130,6 +1096,64 @@ art.DB = {
       sections: [ {
         name: "Static methods",
         members: [ new art.model.Member("align(string:String, length:Number, char:String, left:Boolean):String", 'Extends length of the <span class="code">string</span> to <span class="code">length</span> value by filling' + 'the gap with <span class="code">char</span> characters on the side determined by ' + '<span class="code">left</span> argument', [ "var string = 'color';", "", "StringUtils.align(string, 10, '-', true); // color-----", "// or", "// string.align(10, '-', true);" ]), new art.model.Member("isBlank(string:String):Boolean", 'Returns true if <span class="code">string</span> is null or empty; false otherwise', [ "var string = 'quantum mechanics';", "var emptyString = '      ';", "var nullValue = null;", "", "StringUtils.isBlank(string); // false", "// or", "// string.isBlank();", "", "StringUtils.isBlank(emptyString); // true", "// or", "// emptyString.isBlank();", "", "StringUtils.isBlank(nullValue); // true" ]), new art.model.Member("capitalize(string:String):String", 'Upcase each word in <span class="code">string</span>', [ "var string = 'advanced quantum mechanics';", "", "StringUtils.capitalize(string); // Advanced Quantum Mechanics", "// or", "// string.capitalize();" ]), new art.model.Member("countPattern(string:String, pattern:String):Number", 'Returns number of <span class="code">pattern</span> occurences in <span class="code">string</span>', [ "var string = 'advanced quantum mechanics';", "", "StringUtils.countPattern(string, 'an'); // 3", "// or", "// string.countPattern('an');" ]), new art.model.Member("isEmpty(string:String):Boolean", 'Returns true if <span class="code">string</span> is empty; false otherwise', [ "var string = 'quantum mechanics';", "var emptyString = '      ';", "", "StringUtils.isEmpty(string); // false", "// or", "// string.isEmpty();", "", "StringUtils.isEmpty(emptyString); // true", "// or", "// emptyString.isEmpty();" ]), new art.model.Member("first(string:String):String", 'Returns first letter of a <span class="code">string</span>', [ "var string = 'quantum mechanics';", "", "StringUtils.first(string); // q", "// or", "// string.first();" ]), new art.model.Member("formatPrice(value:Number):String", "Returns price formatted string", [ "var price = 3.7;", "", "StringUtils.formatPrice(price); // 3.70" ]), new art.model.Member("getMultiPattern(pattern:String, n:Number):String", 'Returns string containing of <span class="code">pattern</span> concatenated <span class="code">n</span> times', [ "var string = 'yes, ';", "", "StringUtils.getMultiPattern(string, 3); // yes, yes, yes,", "// or", "// string.getMultiPattern(3);" ]), new art.model.Member("last(string:String):String", 'Returns last letter of a <span class="code">string</span>', [ "var string = 'quantum mechanics';", "", "StringUtils.last(string); // s", "// or", "// string.last();" ]), new art.model.Member("nullifyEmpty(string:String):Object", 'Returns null if <span class="code">string</span> is empty; <span class="code">string</span> otherwise', [ "var string = 'quantum mechanics';", "var emptyString = '      ';", "", "StringUtils.nullifyEmpty(string); // quantum mechanics", "// or", "// string.nullifyEmpty();", "", "StringUtils.nullifyEmpty(emptyString); // null", "// or", "// emptyString.nullifyEmpty();" ]), new art.model.Member("singularOrPlural(string:String, n:Number):String", 'Returns plural version of <span class="code">string</span> if <span class="code">n</span> is other than 1', [ "var string = 'chicken';", "", "StringUtils.singularOrPlural(string, 1); // chicken", "// or", "// string.singularOrPlural(1);", "", "StringUtils.singularOrPlural(string, 5); // chickens", "// or", "// string.singularOrPlural(5);" ]), new art.model.Member("strip(string:String):String", 'Removes whitespaces from <span class="code">string</span> and returns the result', [ "var string = 'quantum mechanics';", "", "StringUtils.strip(string); // quantummechanics", "// or", "// string.strip();" ]), new art.model.Member("sub(string:String, start:Number, end:Number):String", "Periodic version of String.substring()", [ "var string = 'quantum mechanics';", "", "StringUtils.sub(string, -2, 4); // csquan", "// or", "// string.sub(-2, 4);" ]), new art.model.Member("toJson(string:String):Object", 'Converts <span class="code">string</span> JSON format to Object', [ "var string = \"{id: 5, name: 'Mike'}\";", "", "StringUtils.toJson(string); // {id: 5, name: 'Mike'}", "// or", "// string.toJson();" ]), new art.model.Member("toS(string:String):String", 'Returns empty string if <span class="code">string</span> is null; <span class="code">string</span> otherwise', [ "var string = 'quantum mechanics';", "var nullValue = null;", "", "StringUtils.toS(string); // quantum mechanics", "StringUtils.toS(nullValue); // (empty string)" ]), new art.model.Member("trim(string:String):String", 'Remove all the whitespaces from the begining and the end of the <span class="code">string</span>', [ "var string = '    quantum mechanics  ';", "", "StringUtils.trim(string); // quantum mechanics", "// or", "// string.trim();" ]), new art.model.Member("truncate(string:String, n:Number, end:String = '...'):String", 'Truncates <span class="code">string</span> to length <span class="code">n</span> and appends <span class="code">end</span>', [ "var string = 'quantum field theory';", "", "StringUtils.truncate(string, 8); // quantum...", "// or", "// string.truncate(8);" ]) ]
+      } ]
+    },
+    testing: {
+      template: "testing"
+    },
+    timeline: {
+      name: "Timeline",
+      "package": "artjs.events",
+      description: "Useful for measuring time intervals between events.",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "Timeline()"
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "mark():Integer",
+          description: "Marks the point on the timeline. Returns miliseconds since recent mark."
+        } ]
+      } ]
+    },
+    timeout: {
+      name: "Timeout",
+      "package": "artjs.events",
+      description: "Allows you to perform action with delay.",
+      sections: [ {
+        name: "Constructor",
+        members: [ {
+          header: "Timeout(delay:Number)",
+          params: {
+            delay: "Delay in miliseconds before onComplete event is triggered."
+          }
+        } ]
+      }, {
+        name: "Methods",
+        members: [ {
+          header: "start():Void",
+          description: "Initializes the timeout. After amount of time specified in constructor the onComplete will be triggered."
+        }, {
+          header: "getDelay():Number",
+          description: "Returns delay specified in constructor."
+        }, {
+          header: "isRunning():Boolean",
+          description: "Returns true if timeout has been started but not yet finished."
+        } ]
+      }, {
+        name: "Events",
+        members: [ {
+          header: "onComplete(delegate:Delegate):Void",
+          description: "Triggered when timeout finishes."
+        } ]
+      }, {
+        name: "Static methods",
+        members: [ {
+          header: "fire(delegate:Delegate, delay:Number):Timeout",
+          description: "Instantiates Timeout and registers handler at once."
+        } ]
       } ]
     },
     toggler: {
@@ -1152,27 +1176,6 @@ art.DB = {
         members: [ new art.model.Member("onActivate()", "Triggered when new element has been put into the container."), new art.model.Member("onDeactivate()", "Triggered when element pops out from the container.") ]
       } ]
     },
-    log: {
-      name: "Log",
-      "package": "artjs.utils",
-      description: "Allows you to output debug messages.",
-      sections: [ {
-        name: "Static methods",
-        members: [ new art.model.Member("log(args...:*):Void", "Uses internally console.log to display messages."), new art.model.Member("p(args...:*):Void", "Alias method for log().") ]
-      } ]
-    },
-    "transition/blind": {
-      name: "Blind",
-      "package": "artjs.transition",
-      description: 'Allows to apply "Blind" visual effect.',
-      sections: [ {
-        name: "Static methods",
-        members: [ new art.model.Member("blindTo(e:Element, value:Integer, duration:Number = 0.4, type:String = EASE_IN_OUT, delay:Number = 0):Void", 'Smoothly changes the height of element to that given by <span class="param">value</span>.'), new art.model.Member("blindToggle(e:Element, value:Integer, duration:Number = 0.4, type:String = EASE_IN_OUT, delay:Number = 0):Void", "Does the same as blindTo but only if current element height is zero. " + "Otherwise it makes transition to zero height.") ]
-      }, {
-        name: "Static properties",
-        members: [ new art.model.Member("EASE_IN_OUT:String", "Used for defining blind effect type.") ]
-      } ]
-    },
     "template/helpers": {
       name: "Helpers, artjs.TemplateHelpers",
       "package": "artjs.template",
@@ -1191,10 +1194,17 @@ art.DB = {
         members: [ new art.model.Member("config:Object", "Consists of two configuration parameters:<br/>" + "PATH - remote path to template directory<br/>" + "TEMPLATES - list of template files to be loaded", [ "artjs.TemplateLibrary.config = {", "  PATH: 'templates',", "  TEMPLATES: ['doc', 'member', 'section', 'ga']", "};" ]) ]
       } ]
     },
-    date_picker: {
-      name: "DatePicker",
-      "package": "artjs.ui",
-      description: "Allows any text input element to act as a date picker component. " + "Just set it's class to 'art artjs-DatePicker'."
+    "transition/blind": {
+      name: "Blind",
+      "package": "artjs.transition",
+      description: 'Allows to apply "Blind" visual effect.',
+      sections: [ {
+        name: "Static methods",
+        members: [ new art.model.Member("blindTo(e:Element, value:Integer, duration:Number = 0.4, type:String = EASE_IN_OUT, delay:Number = 0):Void", 'Smoothly changes the height of element to that given by <span class="param">value</span>.'), new art.model.Member("blindToggle(e:Element, value:Integer, duration:Number = 0.4, type:String = EASE_IN_OUT, delay:Number = 0):Void", "Does the same as blindTo but only if current element height is zero. " + "Otherwise it makes transition to zero height.") ]
+      }, {
+        name: "Static properties",
+        members: [ new art.model.Member("EASE_IN_OUT:String", "Used for defining blind effect type.") ]
+      } ]
     }
   }
 };
@@ -1219,15 +1229,21 @@ artjs.TemplateHelpers.registerAll({
       return "";
     }
   },
+  renderDescription: function(v) {
+    return this.renderIf(v, "_renderDescription");
+  },
+  renderParams: function(v) {
+    return this.renderIf(v, "_renderParams");
+  },
   _renderMore: function(v) {
     return this._renderElement("p", {
       className: "container"
     }, v);
   },
-  renderDescription: function(v) {
+  _renderDescription: function(v) {
     return this._renderElement("p", null, v);
   },
-  renderParams: function(v) {
+  _renderParams: function(v) {
     var collection = artjs.ObjectUtils.map(v, this._paramToElement, this).join("");
     return this._renderElement("div", {
       className: "params"
@@ -1246,7 +1262,7 @@ art.component.Sidebar = artjs.Class(function(element) {
   artjs.Component.onLoad("content", artjs.$D(this, "_onContentLoad"));
 }, {
   _onContentLoad: function() {
-    this.open();
+    this.clickAt(0);
   },
   _onLeafHandler: function(tree) {
     var data = art.DB.content[artjs.ElementUtils.getAttributes(tree.getCurrent()).href];
@@ -1261,7 +1277,7 @@ art.component.Content = artjs.Class(function(element) {
   artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, "_onLeaf"));
 }, {
   _onLeaf: function(data) {
-    artjs.TemplateHelpers.renderInto(this.element, "doc", data);
+    artjs.TemplateHelpers.renderInto(this.element, data.template || "doc", data);
     artjs.Fade.run(this.element, 1, .2, null, null, 0);
   }
 }, {
