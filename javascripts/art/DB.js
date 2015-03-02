@@ -2,6 +2,7 @@ art.DB = {
   tree: {
     'Introduction': 'introduction',
     'Testing': 'testing',
+    'Components': 'components',
     'Reference': {
       'Global': {
         'artjs': 'main'
@@ -842,6 +843,7 @@ art.DB = {
         }
       ]
     },
+    components: {template: 'components'},
     date: {
       name: 'DateUtils',
       package: 'artjs.utils',

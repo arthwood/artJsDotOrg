@@ -1,0 +1,49 @@
+<h1>Components</h1>
+<p>
+  Components allow you to create visual element with encapsulated functionality.
+</p>
+<h2>
+  Definition
+</h2>
+<div class="section">
+  <p>
+    In order to define a component, assign to any HTML element css class <span class="code">art</span>.<br/>
+    However this wont do much. It will only allow the framework to recognize that this element is an component.
+    In order to define a behaviour just assign another css class that corresponds to js class defined in your code.<br/>
+    For example: <span class="code">app-components-MyComponent</span>. Framework will search for a class
+    <span class="code">app.components.MyComponent</span> and instantiate it whenever that element appears in UI.<br/>
+    That class must extend artjs.Component (see class definition) and you must call <span class="code">super()</span> 
+    in the constructor. Doing that will give you access to <span class="code">element</span> property which keeps
+    a reference to the main element (the one with assigned css class).
+  </p>
+</div>
+<h2>
+  Lifecycle
+</h2>
+<div class="section">
+  <p>
+    Keep in mind that framework will remove any components that are not on stage every 2 seconds. You may change it
+    through <span class="code">artjs.ComponentSweeper.INTERVAL</span> setting. This is obviously for performance reasons.
+  </p>
+</div>
+<h2>
+  Lookup
+</h2>
+<div class="section">
+  <p>
+    If you know that your component is going to be unique you may want to assign its element an 
+    <span class="code">id</span> attribute.<br/>
+    Each element with <span class="code">id</span> can be referenced using <span class="code">onLoad()</span> hook.
+    If component is already instantiated and you call:
+  </p>
+  <pre>
+artjs.Component.onLoad('myId', delegate);</pre>
+  <p>
+    delegate will be called immediately and will receive reference to component instance.<br/>
+    Otherwise it will be called as soon as HTML element is found and component is instantiated.<br/>
+    You can always try to reference you component by <span class="code">id</span> using:
+  </p>
+  <pre>
+artjs.Component.find('myId');</pre>
+  <p>This will return reference to component if it has been already instantiated and false otherwise.</p>
+</div>

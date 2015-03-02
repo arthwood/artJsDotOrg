@@ -8,7 +8,7 @@ var art = {
 
 artjs.TemplateLibrary.config.PATH = "templates";
 
-artjs.TemplateLibrary.config.TEMPLATES = [ "introduction", "testing", "doc", "member", "section", "ga", "disqus" ];
+artjs.TemplateLibrary.config.TEMPLATES = [ "content/components", "content/introduction", "content/testing", "disqus", "doc", "ga", "member", "section" ];
 
 artjs.Broadcaster.register(art.events.ON_SIDEBAR);
 
@@ -25,6 +25,7 @@ art.DB = {
   tree: {
     Introduction: "introduction",
     Testing: "testing",
+    Components: "components",
     Reference: {
       Global: {
         artjs: "main"
@@ -450,6 +451,9 @@ art.DB = {
           example: [ "/* ", " * This will cause two invocations on Content instance:", " * onDependency(sidebar) and onDependency(footer)", " * but not necessarily in this order.", " */", "Content.dependsOn(Sidebar, Footer);" ]
         } ]
       } ]
+    },
+    components: {
+      template: "components"
     },
     date: {
       name: "DateUtils",
@@ -1277,7 +1281,8 @@ art.component.Content = artjs.Class(function(element) {
   artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, "_onLeaf"));
 }, {
   _onLeaf: function(data) {
-    artjs.TemplateHelpers.renderInto(this.element, data.template || "doc", data);
+    var template = data.template;
+    artjs.TemplateHelpers.renderInto(this.element, template && "content/" + template || "doc", data);
     artjs.Fade.run(this.element, 1, .2, null, null, 0);
   }
 }, {

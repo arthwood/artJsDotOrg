@@ -242,3 +242,14 @@ artjs.onWindowLoad.add(artjs.$F(function() {
     In <span class="code">karma.conf.js</span> specify <span class="code">artjs</span> as frameworks.
   </p>
 </div>
+<h2>
+  NOTE.
+</h2>
+<div class="section">
+  <p>
+    It's worth mentioning that artjs runs tests in two steps.<br/>
+    First run is a dry run to get the test statistics. It doesn't run any code within before() hooks and it() body.<br/> 
+    Therefore it's not recommended to put any code outside of this blocks (except variable declaration) 
+    since it may slow down the tests.
+  </p>
+</div>

@@ -6,7 +6,9 @@ art.component.Content = artjs.Class(
   },
   {
     _onLeaf: function(data) {
-      artjs.TemplateHelpers.renderInto(this.element, data.template || 'doc', data);
+      var template = data.template;
+      
+      artjs.TemplateHelpers.renderInto(this.element, template && ('content/' + template) || 'doc', data);
       
       artjs.Fade.run(this.element, 1, 0.2, null, null, 0);
     }
