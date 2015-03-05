@@ -57,6 +57,7 @@ javascripts:
     - 'artJs/spec/Result'
     - 'artJs/spec/Spec'
     - 'artJs/template/Base'
+    - 'artJs/template/Compiler'
     - 'artJs/template/Helpers'
     - 'artJs/template/Library'
     - 'artJs/component/Base'

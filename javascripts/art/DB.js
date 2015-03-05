@@ -3,6 +3,7 @@ art.DB = {
     'Introduction': 'introduction',
     'Testing': 'testing',
     'Components': 'components',
+    'Templates': 'templates',
     'Reference': {
       'Global': {
         'artjs': 'main'
@@ -3440,6 +3441,7 @@ art.DB = {
         }
       ]
     },
+    templates: {template: 'templates'},
     testing: {template: 'testing'},
     timeline: {
       name: 'Timeline',

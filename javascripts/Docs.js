@@ -10,6 +10,7 @@ artjs.TemplateLibrary.config.PATH = 'templates';
 artjs.TemplateLibrary.config.TEMPLATES = [
   'content/components',
   'content/introduction', 
+  'content/templates', 
   'content/testing', 
   'disqus',
   'doc', 

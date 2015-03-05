@@ -11,11 +11,11 @@
     padding: 6px 14px;
     margin-bottom: 20px;
     border: 1px solid #cccccc;
-    background: white; }
+    background: white;
+    list-style: none; }
     .art-component-Content ul li {
       padding: 12px 4px;
-      border-bottom: 1px solid #cccccc;
-      list-style: none; }
+      border-bottom: 1px solid #cccccc; }
       .art-component-Content ul li:last-child {
         border-bottom: none; }
       .art-component-Content ul li a {
@@ -25,8 +25,9 @@
         .art-component-Content ul li p:last-child {
           margin-bottom: 0; }
     .art-component-Content ul.simple {
-      padding: 2px 6px;
-      margin-bottom: 10px; }
+      padding: 2px 30px;
+      margin-bottom: 10px;
+      list-style: inherit; }
       .art-component-Content ul.simple li {
         padding: 2px 0;
         border-bottom: none; }
@@ -43,29 +44,32 @@
   .art-component-Sidebar > ul {
     margin-top: 20px; }
   .art-component-Sidebar ul {
-    padding-left: 0px;
+    padding-left: 0;
     list-style-type: none; }
-    .art-component-Sidebar ul li {
-      line-height: 28px; }
-      .art-component-Sidebar ul li ul {
-        margin-left: 16px; }
-      .art-component-Sidebar ul li.expanded a {
-        background: url(../../images/expanded.png) no-repeat left center; }
-      .art-component-Sidebar ul li.leaf a {
-        padding: 2px 8px;
-        background: none; }
-      .art-component-Sidebar ul li a {
-        font-size: 14px;
-        padding: 2px 4px 2px 16px;
-        background: url(../../images/collapsed.png) no-repeat left center; }
-        .art-component-Sidebar ul li a.selected {
-          background: #ff0077;
-          color: white; }
+    .art-component-Sidebar ul li.expanded a {
+      background: url(../../images/expanded.png) no-repeat left center; }
+    .art-component-Sidebar ul li.leaf a {
+      padding: 2px 8px;
+      background: none; }
+    .art-component-Sidebar ul li.selected {
+      background: #ff0077; }
+      .art-component-Sidebar ul li.selected a {
+        color: white; }
+    .art-component-Sidebar ul li ul {
+      margin-left: 16px; }
+    .art-component-Sidebar ul li a {
+      font-size: 14px;
+      padding: 2px 4px 2px 16px;
+      background: url(../../images/collapsed.png) no-repeat left center;
+      line-height: 28px;
+      display: block; }
 
 pre, span.code {
   font-family: Menlo, Monaco, Consolas, Courier New;
   font-size: 12px;
-  line-height: 18px; }
+  line-height: 18px;
+  padding: 1px 4px;
+  color: #559955; }
 
 .more .container {
   padding: 10px; }
@@ -74,8 +78,8 @@ pre, span.code {
   display: block;
   padding: 10px;
   margin: 10px 0;
-  border: 1px solid #cccccc;
-  background: #dff1ff;
+  border: 1px solid #dddddd;
+  background: white;
   overflow-x: auto; }
 
 .example {

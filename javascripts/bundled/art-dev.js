@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.1.2",
+  VERSION: "0.1.3",
   component: {},
   data: {},
   dom: {},
@@ -2824,6 +2824,31 @@ artjs.Spec = artjs.spec.Spec = {
   }
 };
 
+artjs.TemplateBase = artjs.template.Base = {
+  render: function(content, scope) {
+    var compiler = new artjs.TemplateCompiler(content, scope);
+    return compiler.compile();
+  },
+  renderInto: function(element, content, scope) {
+    artjs.ElementUtils.setContent(element, this.render(content, scope));
+    this.evalScripts(element);
+    artjs.ComponentScanner.scan(element);
+  },
+  renderElement: function(element, scope) {
+    this.renderInto(element, element.innerHTML, scope);
+  },
+  renderTemplateInto: function(element, templateId, scope) {
+    var template = artjs.TemplateLibrary.getTemplate(templateId);
+    this.renderInto(element, template, scope);
+  },
+  evalScripts: function(element) {
+    artjs.ArrayUtils.each(artjs.Selector.findAll(element, "script"), this.evalScript, this);
+  },
+  evalScript: function(script) {
+    eval(artjs.ElementUtils.getContent(script));
+  }
+};
+
 artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content, scope) {
   this._tagRegEx = /\{\{.+\}\}/g;
   this._methodRegEx = /^(\w+)\((.*)\)$/;
@@ -2866,31 +2891,6 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
     return artjs.StringUtils.strip(i);
   }
 });
-
-artjs.TemplateBase = artjs.template.Base = {
-  render: function(content, scope) {
-    var compiler = new artjs.TemplateCompiler(content, scope);
-    return compiler.compile();
-  },
-  renderInto: function(element, content, scope) {
-    artjs.ElementUtils.setContent(element, this.render(content, scope));
-    this.evalScripts(element);
-    artjs.ComponentScanner.scan(element);
-  },
-  renderElement: function(element, scope) {
-    this.renderInto(element, element.innerHTML, scope);
-  },
-  renderTemplateInto: function(element, templateId, scope) {
-    var template = artjs.TemplateLibrary.getTemplate(templateId);
-    this.renderInto(element, template, scope);
-  },
-  evalScripts: function(element) {
-    artjs.ArrayUtils.each(artjs.Selector.findAll(element, "script"), this.evalScript, this);
-  },
-  evalScript: function(script) {
-    eval(artjs.ElementUtils.getContent(script));
-  }
-};
 
 artjs.TemplateHelpers = artjs.template.Helpers = {
   render: function(templateId, scope) {
@@ -2976,7 +2976,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
     return this._templates[id];
   },
   loadTemplate: function(id) {
-    artjs.TemplateBase.renderElement(artjs.ElementUtils.insert(this._templatesContainer, artjs.$E("div", null, artjs.TemplateLibrary.getTemplate(id))));
+    artjs.TemplateBase.renderElement(artjs.ElementUtils.insert(this._templatesContainer, artjs.$E("div", null, this.getTemplate(id))));
   },
   init: function() {
     artjs.$BA(this);
@@ -3382,11 +3382,8 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
     this._openingNode = this.element;
     artjs.ArrayUtils.each(artjs.$A(arguments), this._openAt, this);
   },
-  getClicked: function() {
-    return this._clicked;
-  },
   getCurrent: function() {
-    return this._leafClassToggler.getCurrent();
+    return this._current;
   },
   _openAt: function(i) {
     this._openingNode = artjs.ElementUtils.elementAt(artjs.Selector.find(this._openingNode, "ul"), i);
@@ -3417,8 +3414,8 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
     this._handleClick(elementEvent.element);
   },
   _handleClick: function(a) {
-    this._clicked = a;
-    if (this._isNode(this._clicked)) {
+    this._current = a;
+    if (this._isNode(this._current)) {
       this._toggleNode();
     } else {
       this._leafAction();
@@ -3429,12 +3426,12 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
     return artjs.ArrayUtils.isNotEmpty(artjs.Selector.findAll(li, "ul"));
   },
   _toggleNode: function() {
-    var ul = artjs.ElementUtils.next(this._clicked);
+    var ul = artjs.ElementUtils.next(this._current);
     artjs.ElementUtils.toggle(ul);
-    artjs.ElementUtils.setClass(artjs.$parent(this._clicked), "expanded", !artjs.ElementUtils.isHidden(ul));
+    artjs.ElementUtils.setClass(artjs.$parent(this._current), "expanded", !artjs.ElementUtils.isHidden(ul));
   },
   _leafAction: function() {
-    this._leafClassToggler.toggle(this._clicked);
+    this._leafClassToggler.toggle(artjs.ElementUtils.parent(this._current));
     this.onLeaf.fire(this);
   }
 }, null, artjs.Component);
