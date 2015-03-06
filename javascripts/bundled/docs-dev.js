@@ -664,7 +664,7 @@ art.DB = {
         members: [ {
           header: "onChange(list:List)",
           description: "Dispatched every time the collection changes",
-          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.onChange.add(new artjs.Delegate(this, this.onChange));", "function onChange(list) {", "'  alert('list has changed!');'", "}" ]
+          example: [ "var list = new List([1, 2, 3, 4, 5]);", "", "list.onChange.add(new artjs.Delegate(this, this.onChange));", "", "function onChange(list) {", "  'alert('list has changed!');'", "}" ]
         } ]
       }, {
         name: "Properties",
@@ -1219,10 +1219,10 @@ art.DB = {
 
 artjs.TemplateHelpers.registerAll({
   _renderExample: function(v) {
-    var exampleElement = this._renderElement("p", {
+    var exampleElement = this.renderElement("p", {
       className: "example"
     }, "Example:");
-    var codeElement = this._renderElement("pre", {
+    var codeElement = this.renderElement("pre", {
       className: "block"
     }, v.join("<br />"));
     return exampleElement + codeElement;
@@ -1230,7 +1230,7 @@ artjs.TemplateHelpers.registerAll({
   renderMore: function(example, more) {
     if (example || more) {
       var v = this.renderIf(example, "_renderExample") + this.renderIf(more, "_renderMore");
-      return this._renderElement("div", {
+      return this.renderElement("div", {
         className: "more"
       }, v);
     } else {
@@ -1244,22 +1244,22 @@ artjs.TemplateHelpers.registerAll({
     return this.renderIf(v, "_renderParams");
   },
   _renderMore: function(v) {
-    return this._renderElement("p", {
+    return this.renderElement("p", {
       className: "container"
     }, v);
   },
   _renderDescription: function(v) {
-    return this._renderElement("p", null, v);
+    return this.renderElement("p", null, v);
   },
   _renderParams: function(v) {
     var collection = artjs.ObjectUtils.map(v, this._paramToElement, this).join("");
-    return this._renderElement("div", {
+    return this.renderElement("div", {
       className: "params"
     }, collection);
   },
   _paramToElement: function(k, v) {
-    var content = this._renderElement("span", null, k) + " - " + v;
-    return this._renderElement("p", null, content);
+    var content = this.renderElement("span", null, k) + " - " + v;
+    return this.renderElement("p", null, content);
   }
 });
 

@@ -2,15 +2,15 @@
 <p>
   Templates allow you to reuse same html file many times and feeding it with different content.
 </p>
+<h2>Templates library</h2>
 <div class="section">
-  <h2>Templates library</h2>
   <p>
     Templates are can be stored anywhere in your project but default location is "templates" folder at the root.
     You can specify the location by setting <span class="code">artjs.TemplateLibrary.config.PATH</span>.
   </p>
 </div>
+<h2>Loading templates</h2>
 <div class="section">
-  <h2>Loading templates</h2>
   <p>
     Templates are loaded automatically by the framework.
     You can specify the list of templates to load by setting <span class="code">artjs.TemplateLibrary.config.TEMPLATES</span>.
@@ -20,8 +20,8 @@
     After that is fires <span class="code">artjs.onLibraryLoad</span> event.
   </p>
 </div>
+<h2>Creating templates</h2>
 <div class="section">
-  <h2>Creating templates</h2>
   <p>
     Template files have format of html with additional placeholders. Placeholders have format of:
   </p>
@@ -32,15 +32,15 @@
     <li>template method (you can find available methods in reference)</li>
   </ul>
 </div>
+<h2>Accessing templates</h2>
 <div class="section">
-  <h2>Accessing templates</h2>
   <p>
     In order to get loaded template use <span class="code">artjs.TemplateLibrary.getTemplate(id)</span> 
     where <span class="code">id</span> is path to your template (e.g. 'list/item')
   </p>
 </div>
+<h2>Rendering templates</h2>
 <div class="section">
-  <h2>Rendering templates</h2>
   <h3>render</h3>
   <p>
     Once you have a template you can populate it with the content. The process is called rendering and

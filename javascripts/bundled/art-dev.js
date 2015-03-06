@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.1.3",
+  VERSION: "0.1.4",
   component: {},
   data: {},
   dom: {},
@@ -1847,14 +1847,6 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(function(url, data, method) {
 
 artjs.Ajax.SupportedMethods = [ artjs.Ajax.Methods.GET, artjs.Ajax.Methods.POST ];
 
-artjs.$get = artjs.Ajax.get;
-
-artjs.$post = artjs.Ajax.post;
-
-artjs.$put = artjs.Ajax.put;
-
-artjs.$del = artjs.Ajax.del;
-
 artjs.List = artjs.data.List = artjs.Class(function(items) {
   this.items = items || {};
   this.i = 0;
@@ -2876,7 +2868,8 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
     var argsStr = artjs.ArrayUtils.first(exec);
     var args = artjs.ArrayUtils.map(argsStr.split(","), this._stripArg, this);
     var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
-    return artjs.TemplateHelpers.perform(action, argsValues, this._scope);
+    var helpers = artjs.TemplateHelpers;
+    return helpers[action].apply(helpers, argsValues.concat(this._scope));
   },
   _parseArg: function(i) {
     var str = i;
@@ -2909,16 +2902,25 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   },
   renderSelect: function(options, selected) {
     this._selectedOption = selected;
-    return this._renderElement("select", options, this.renderOptions(options));
+    return this.renderElement("select", options, this.renderOptions(options));
   },
   renderOptions: function(options) {
     return this._map(options, this._renderOption);
   },
   renderTable: function(data) {
-    var head = data.head ? this._renderElement("thead", null, this._map(data.head || [], this._renderTableHead)) : "";
-    var foot = data.foot ? this._renderElement("tfoot", null, this._map(data.foot, this._renderTableFoot)) : "";
-    var body = data.body ? this._renderElement("tbody", null, this._map(data.body || [], this._renderTableRow)) : "";
-    return this._renderElement("table", null, head + foot + body);
+    var head = data.head ? this.renderElement("thead", null, this._map(data.head || [], this._renderTableHead)) : "";
+    var foot = data.foot ? this.renderElement("tfoot", null, this._map(data.foot, this._renderTableFoot)) : "";
+    var body = data.body ? this.renderElement("tbody", null, this._map(data.body || [], this._renderTableRow)) : "";
+    return this.renderElement("table", null, head + foot + body);
+  },
+  renderElement: function(name, attrs, value) {
+    return artjs.$B(name, attrs, value).toString();
+  },
+  registerAll: function(helpers) {
+    artjs.ObjectUtils.eachPair(helpers, this.register, this);
+  },
+  register: function(name, method) {
+    this[name] = method;
   },
   _map: function(coll, func) {
     return artjs.ArrayUtils.map(coll, func, this).join("");
@@ -2930,7 +2932,7 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     if (i.value == this._selectedOption) {
       attrs.selected = "selected";
     }
-    return this._renderElement("option", attrs, i.text);
+    return this.renderElement("option", attrs, i.text);
   },
   _renderTableHead: function(i) {
     return this._renderTableCell("th", i);
@@ -2939,25 +2941,13 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     return this._renderTableElement(i);
   },
   _renderTableRow: function(i) {
-    return this._renderElement("tr", null, this._map(i, this._renderTableElement));
+    return this.renderElement("tr", null, this._map(i, this._renderTableElement));
   },
   _renderTableElement: function(i) {
     return this._renderTableCell("td", i);
   },
   _renderTableCell: function(type, content) {
-    return this._renderElement(type, null, content);
-  },
-  _renderElement: function(name, attrs, value) {
-    return artjs.$B(name, attrs, value).toString();
-  },
-  registerAll: function(helpers) {
-    artjs.ObjectUtils.eachPair(helpers, this.register, this);
-  },
-  register: function(name, method) {
-    this[name] = method;
-  },
-  perform: function(action, args, scope) {
-    return this[action].apply(this, args.concat(scope));
+    return this.renderElement(type, null, content);
   },
   _renderCollectionItem: function(scope, idx, arr, templateId) {
     scope._index = idx;
@@ -3463,6 +3453,14 @@ artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
     }
   }
 });
+
+artjs.$get = artjs.Delegate.callback(artjs.Ajax, "get");
+
+artjs.$post = artjs.Delegate.callback(artjs.Ajax, "post");
+
+artjs.$put = artjs.Delegate.callback(artjs.Ajax, "put");
+
+artjs.$del = artjs.Delegate.callback(artjs.Ajax, "del");
 
 artjs.$A = artjs.Delegate.callback(artjs.ArrayUtils, "arrify");
 

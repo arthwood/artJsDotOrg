@@ -1882,8 +1882,9 @@ art.DB = {
                 'var list = new List([1, 2, 3, 4, 5]);',
                 '',
                 'list.onChange.add(new artjs.Delegate(this, this.onChange));',
+                '',
                 'function onChange(list) {',
-                "'  alert('list has changed!');'",
+                "  'alert('list has changed!');'",
                 '}'
               ]
             }
