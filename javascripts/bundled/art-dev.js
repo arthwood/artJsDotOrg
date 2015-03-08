@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.1.4",
+  VERSION: "0.1.5",
   component: {},
   data: {},
   dom: {},
@@ -1417,6 +1417,36 @@ artjs.ElementUtils = artjs.utils.Element = {
   }
 };
 
+artjs.Lang = artjs.utils.Lang = {
+  set: function(lang) {
+    this._lang = lang;
+  },
+  t: function() {
+    var path = artjs.$A(arguments);
+    this._node = this._translations[this._lang];
+    artjs.ArrayUtils.each(path, this._updateNode, this);
+    return this._node;
+  },
+  _updateNode: function(i) {
+    this._node = this._node[i];
+  },
+  _lang: "en",
+  _translations: {
+    en: {
+      datepicker: {
+        months: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
+        days: [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ]
+      }
+    },
+    pl: {
+      datepicker: {
+        months: [ "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień" ],
+        days: [ "Nd", "Po", "Wt", "Śr", "Cz", "Pt", "So" ]
+      }
+    }
+  }
+};
+
 artjs.Toggler = artjs.utils.Toggler = artjs.Class(function(unique) {
   this.unique = unique;
   this.current = null;
@@ -2051,7 +2081,7 @@ artjs.Clock = artjs.events.Clock = artjs.Class(function(interval, repeat) {
 });
 
 artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, delegate) {
-  this.element = element;
+  this._element = element;
   this.delegate = delegate;
   artjs.$BA(this);
   if (element.addEventListener) {
@@ -2060,6 +2090,9 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, 
     element.attachEvent("on" + name, this._onEvent);
   }
 }, {
+  getElement: function() {
+    return this._element;
+  },
   getTargets: function(e, over) {
     if (e.target) {
       return {
@@ -2072,7 +2105,7 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, 
       if (over) originRelated.reverse();
       return {
         origin: originRelated[0],
-        current: this.element,
+        current: this._element,
         related: originRelated[1]
       };
     }
@@ -2103,9 +2136,21 @@ artjs.MouseEvent = artjs.events.Mouse = artjs.Class(function(element, name, dele
   }
 }, null, artjs.ElementEvent);
 
-artjs.ClickEvent = artjs.events.Click = artjs.Class(function(element, delegate) {
+artjs.ClickEvent = artjs.events.Click = artjs.Class(function(element, delegate, selector) {
   this.super(element, "click", delegate);
-}, null, null, artjs.ElementEvent);
+  this._selector = selector;
+}, {
+  _onEvent: function(e) {
+    if (this._selector) {
+      var elements = artjs.$findAll(this._element, this._selector);
+      if (artjs.ArrayUtils.contains(elements, e.target)) {
+        this.super(e);
+      }
+    } else {
+      this.super(e);
+    }
+  }
+}, null, artjs.ElementEvent);
 
 artjs.MouseMoveEvent = artjs.events.MouseMove = artjs.Class(function(element, delegate) {
   this.super(element, "mousemove", delegate);
@@ -2131,8 +2176,8 @@ artjs.EventMapping = {
   change: "ChangeEvent"
 };
 
-artjs.on = function(eventName, target, delegate) {
-  return new artjs[artjs.EventMapping[eventName]](target, delegate);
+artjs.on = function(eventName, target, delegate, selector) {
+  return new artjs[artjs.EventMapping[eventName]](target, delegate, selector);
 };
 
 artjs.Timeline = artjs.events.Timeline = artjs.Class(null, {
@@ -3000,8 +3045,12 @@ artjs.TemplateLibrary = artjs.template.Library = {
 };
 
 artjs.Component = artjs.component.Base = artjs.Class(function(element) {
-  this.element = element;
-}, null, {
+  this._element = element;
+}, {
+  getElement: function() {
+    return this._element;
+  }
+}, {
   _name: "Component",
   idToComponent: {},
   _onExtended: function() {
@@ -3048,7 +3097,7 @@ artjs.ComponentScanner = {
     if (_class instanceof Function) {
       var instance = new _class(this._element);
       instance.ctor.instances.push(instance);
-      var id = artjs.ElementUtils.getAttributes(instance.element).id;
+      var id = artjs.ElementUtils.getAttributes(instance.getElement()).id;
       if (id) {
         artjs.Component.idToComponent[id] = instance;
       }
@@ -3077,7 +3126,7 @@ artjs.ComponentSweeper = {
     artjs.ArrayUtils.$select(i.instances, this._isOnStage, this);
   },
   _isOnStage: function(i) {
-    return artjs.Selector.isDescendantOf(i.element);
+    return artjs.Selector.isDescendantOf(i.getElement());
   }
 };
 
@@ -3089,35 +3138,22 @@ artjs.DatePicker = artjs.component.DatePicker = artjs.Class(function(element) {
   var now = new Date;
   var year = now.getFullYear();
   var month = now.getMonth();
-  var data = artjs.ElementUtils.getData(this.element);
+  var data = artjs.ElementUtils.getData(this._element);
   var firstDay = parseInt(data["first-day"]);
   this.year = year;
   this.month = month;
   this.yearsRange = new artjs.Point(parseInt(data["year-from"]) || year - 100, parseInt(data["year-to"]) || year + 20);
   this.firstDay = isNaN(firstDay) ? 1 : firstDay;
-  var img = artjs.ElementUtils.putAfter(artjs.$C("img", {
-    src: "../images/cal.png",
-    alt: "calendar_icon",
-    className: "artjs-DatepickerImg"
-  }), this.element);
-  this.element.editable = false;
-  artjs.ElementUtils.onClick(img, this._onImg.delegate);
-  this.calendar = artjs.$("#artjs-Calendar");
-  if (artjs.ArrayUtils.isEmpty(this.calendar)) {
-    artjs.ComponentScanner.addListener("artjs-Calendar", artjs.$D(this, "_onCalendarLoad"));
-  }
+  this.getElement().setAttribute("readonly", "readonly");
+  artjs.on("click", this._element, this._onClick.delegate);
+  this.calendar = artjs.Component.onLoad("artjs-Calendar", this._onCalendarLoad.delegate);
 }, {
   _onCalendarLoad: function(component) {
     this.calendar = component;
   },
-  _onImg: function(e) {
+  _onClick: function(e) {
     e.preventDefault();
-    var img = e.currentTarget;
-    var imgRT = artjs.ElementUtils.getBounds(img).getRightTop();
-    var position = imgRT.add(new artjs.Point(2, 2));
-    this.calendar.source = this;
-    this.calendar.setPosition(position);
-    this.calendar.toggle();
+    this.calendar.setSource(this);
   }
 }, null, artjs.Component);
 
@@ -3131,6 +3167,13 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
   artjs.Component.onLoad("artjs-Calendar-prev", this._onPrevLoaded.delegate);
   artjs.Component.onLoad("artjs-Calendar-next", this._onNextLoaded.delegate);
 }, {
+  setSource: function(source) {
+    var rt = artjs.ElementUtils.getBounds(source.getElement()).getRightTop();
+    var position = rt.add(new artjs.Point(2, 0));
+    this._source = source;
+    this._setPosition(position);
+    this._toggle();
+  },
   _onYearsSelectLoaded: function(select) {
     this._years = select;
     this._years.onChange.add(this._onYearSelect.delegate);
@@ -3138,7 +3181,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
   _onMonthsSelectLoaded: function(select) {
     this._months = select;
     this._months.onChange.add(this._onMonthSelect.delegate);
-    this._months.setOptions(artjs.ArrayUtils.map(this.ctor.MONTHS, this.ctor._toMonthOption));
+    this._months.setOptions(artjs.ArrayUtils.map(artjs.Lang.t("datepicker", "months"), this.ctor._toMonthOption));
   },
   _onDaysTableLoaded: function(table) {
     this._days = table;
@@ -3157,28 +3200,28 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
   _getDaysRow: function() {
     return artjs.ArrayUtils.build(7, artjs.StringUtils.blank);
   },
-  toggle: function() {
+  _toggle: function() {
     this._isHidden() ? this._show() : this._hide();
   },
   _show: function() {
-    this._years.setOptions(artjs.ArrayUtils.map(artjs.ArrayUtils.fromRange(this.source.yearsRange), this.ctor._toYearOption));
-    this._years.setSelected(this.source.year);
-    this._months.setSelected(this.source.month);
-    this.firstDay = this.source.firstDay;
-    var value = this.source.element.value;
+    this._years.setOptions(artjs.ArrayUtils.map(artjs.ArrayUtils.fromRange(this._source.yearsRange), this.ctor._toYearOption));
+    this._years.setSelected(this._source.year);
+    this._months.setSelected(this._source.month);
+    this.firstDay = this._source.firstDay;
+    var value = this._source.getElement().value;
     this.selectedDate = artjs.StringUtils.isEmpty(value) ? new Date : artjs.DateUtils.fromYMD(value, this.ctor.SEPARATOR);
     this.currentDate = new Date(this.selectedDate);
     this._update();
-    artjs.ElementUtils.show(this.element);
+    artjs.ElementUtils.show(this._element);
   },
-  setPosition: function(position) {
-    artjs.ElementUtils.setPosition(this.element, position);
+  _setPosition: function(position) {
+    artjs.ElementUtils.setPosition(this._element, position);
   },
   _hide: function() {
-    artjs.ElementUtils.hide(this.element);
+    artjs.ElementUtils.hide(this._element);
   },
   _isHidden: function() {
-    return artjs.ElementUtils.isHidden(this.element);
+    return artjs.ElementUtils.isHidden(this._element);
   },
   _update: function() {
     var monthFirstDate = artjs.DateUtils.firstDate(this.currentDate);
@@ -3196,7 +3239,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
   },
   _eachHeadData: function(idx) {
     var index = artjs.MathUtils.sawtooth(this.firstDay + idx, 0, 7);
-    return this.ctor.DAYS[index];
+    return artjs.Lang.t("datepicker", "days")[index];
   },
   _onEachDay: function(item, idx) {
     var date = new Date(this.currentDate);
@@ -3218,7 +3261,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
       this.selectedDate.setMonth(this.currentDate.getMonth());
       this.selectedDate.setDate(parseInt(value, 10));
       this._update();
-      this.source.element.value = artjs.DateUtils.toYMD(this.selectedDate, this.ctor.SEPARATOR);
+      this._source.getElement().value = artjs.DateUtils.toYMD(this.selectedDate, this.ctor.SEPARATOR);
       this._hide();
     }
     return false;
@@ -3251,8 +3294,6 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
     return this.yearSpan.x + i;
   }
 }, {
-  MONTHS: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
-  DAYS: [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ],
   WEEKEND_DAYS: [ 6, 0 ],
   ROWS_NUM: 7,
   SEPARATOR: "-",
@@ -3284,7 +3325,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
 artjs.Link = artjs.component.Link = artjs.Class(function(element) {
   this.super(element);
   this.onClick = new artjs.Event("artjs.Link::onClick");
-  artjs.on("click", this.element, artjs.$D(this, "_onClick"));
+  artjs.on("click", this._element, artjs.$D(this, "_onClick"));
 }, {
   _onClick: function(e) {
     this.onClick.fire(e);
@@ -3294,25 +3335,25 @@ artjs.Link = artjs.component.Link = artjs.Class(function(element) {
 artjs.Select = artjs.component.Select = artjs.Class(function(element) {
   this.super(element);
   this.onChange = new artjs.Event("artjs.Select::onChange");
-  artjs.on("change", this.element, artjs.$D(this, "_onChange"));
+  artjs.on("change", this._element, artjs.$D(this, "_onChange"));
 }, {
   setOptions: function(options) {
     this._options = options;
     this._update();
   },
   setSelected: function(selected) {
-    var oldOption = artjs.$find(this.element, "option[selected=selected]");
+    var oldOption = artjs.$find(this._element, "option[selected=selected]");
     if (oldOption) {
       oldOption.removeAttribute("selected");
     }
-    var newOption = artjs.$find(this.element, "option[value=" + selected + "]");
+    var newOption = artjs.$find(this._element, 'option[value="' + selected + '"]');
     newOption.setAttribute("selected", "selected");
   },
   getValue: function() {
-    return this.element.value;
+    return this._element.value;
   },
   _update: function() {
-    artjs.ElementUtils.setContent(this.element, artjs.TemplateHelpers.renderOptions(this._options));
+    artjs.ElementUtils.setContent(this._element, artjs.TemplateHelpers.renderOptions(this._options));
   },
   _onChange: function(e) {
     this.onChange.fire(this);
@@ -3323,6 +3364,7 @@ artjs.Table = artjs.component.Table = artjs.Class(function(element) {
   this.super(element);
   artjs.$BA(this);
   this.onItem = new artjs.Event("artjs.Table::onItem");
+  artjs.on("click", this._element, this._onItem.delegate, "td");
 }, {
   setData: function(data) {
     this._data = data;
@@ -3341,19 +3383,15 @@ artjs.Table = artjs.component.Table = artjs.Class(function(element) {
     artjs.ElementUtils.setContent(this._headCells[idx], i);
   },
   _update: function() {
-    artjs.ElementUtils.setContent(this.element, artjs.TemplateHelpers.renderTable(this._data));
-    var head = artjs.$find(this.element, "thead");
-    var body = artjs.$find(this.element, "tbody");
+    artjs.ElementUtils.setContent(this._element, artjs.TemplateHelpers.renderTable(this._data));
+    var head = artjs.$find(this._element, "thead");
+    var body = artjs.$find(this._element, "tbody");
     this._headCells = artjs.$findAll(head, "th");
     this._rows = artjs.$findAll(body, "tr");
     this._items = artjs.$findAll(body, "td");
-    artjs.ArrayUtils.each(this._items, this._initItem, this);
-  },
-  _initItem: function(item) {
-    artjs.ElementUtils.onClick(item, this._onItem.delegate);
   },
   _onItem: function(e) {
-    this.onItem.fire(e.currentTarget);
+    this.onItem.fire(e.target);
   }
 }, null, artjs.Component);
 
@@ -3362,14 +3400,15 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
   artjs.$BA(this);
   this._leafClassToggler = new artjs.ClassToggler("selected");
   this.onLeaf = new artjs.Event("artjs.Tree::onLeaf");
+  artjs.on("click", this.getElement(), this._onElement.delegate, "li a");
 }, {
   setData: function(data) {
     var content = artjs.$P(this._renderNode(data));
-    artjs.ElementUtils.insert(this.element, content);
-    artjs.ArrayUtils.each(artjs.Selector.findAll(this.element, "li"), this._eachElement, this);
+    artjs.ElementUtils.insert(this.getElement(), content);
+    artjs.ArrayUtils.each(artjs.Selector.findAll(this.getElement(), "li"), this._eachElement, this);
   },
   clickAt: function() {
-    this._openingNode = this.element;
+    this._openingNode = this.getElement();
     artjs.ArrayUtils.each(artjs.$A(arguments), this._openAt, this);
   },
   getCurrent: function() {
@@ -3392,16 +3431,15 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
   },
   _eachElement: function(i) {
     var a = artjs.ElementUtils.firstElement(i);
-    artjs.on("click", a, this._onElement.delegate);
     if (this._isNode(a)) {
       artjs.ElementUtils.hide(artjs.$find(i, "ul"));
     } else {
       artjs.ElementUtils.addClass(i, "leaf");
     }
   },
-  _onElement: function(originalEvent, elementEvent) {
-    originalEvent.preventDefault();
-    this._handleClick(elementEvent.element);
+  _onElement: function(e) {
+    e.preventDefault();
+    this._handleClick(e.target);
   },
   _handleClick: function(a) {
     this._current = a;
@@ -3491,6 +3529,10 @@ artjs.$find = artjs.Delegate.callback(artjs.Selector, "find");
 artjs.$findAll = artjs.Delegate.callback(artjs.Selector, "findAll");
 
 artjs.$parent = artjs.Delegate.callback(artjs.Selector, "parent");
+
+artjs.ArrayUtils.contains = artjs.ArrayUtils.includes;
+
+artjs.ArrayUtils.containsAll = artjs.ArrayUtils.includesAll;
 
 artjs.onDocumentLoad = new artjs.Event("document:load");
 

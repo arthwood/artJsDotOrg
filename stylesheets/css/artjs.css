@@ -1,18 +1,14 @@
-.artjs-DatepickerImg {
-  cursor: pointer; }
-
 .artjs-Calendar {
   position: absolute;
   padding: 6px;
   background: white; }
   .artjs-Calendar .nav a, .artjs-Calendar .nav select {
     vertical-align: middle; }
-  .artjs-Calendar table {
-    width: 100%; }
-    .artjs-Calendar table td {
-      text-align: center;
-      cursor: pointer; }
-      .artjs-Calendar table td.selected {
-        font-weight: bold; }
-      .artjs-Calendar table td.invalid {
-        cursor: default; }
+  .artjs-Calendar table td {
+    text-align: center;
+    cursor: pointer;
+    padding: 0 6px; }
+    .artjs-Calendar table td.selected {
+      font-weight: bold; }
+    .artjs-Calendar table td.invalid {
+      cursor: default; }

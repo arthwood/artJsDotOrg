@@ -6,6 +6,8 @@ var art = {
   }
 };
 
+artjs.Lang.set("pl");
+
 artjs.TemplateLibrary.config.PATH = "templates";
 
 artjs.TemplateLibrary.config.TEMPLATES = [ "content/components", "content/introduction", "content/templates", "content/testing", "disqus", "doc", "ga", "member", "section" ];
@@ -1286,8 +1288,8 @@ art.component.Content = artjs.Class(function(element) {
 }, {
   _onLeaf: function(data) {
     var template = data.template;
-    artjs.TemplateHelpers.renderInto(this.element, template && "content/" + template || "doc", data);
-    artjs.Fade.run(this.element, 1, .2, null, null, 0);
+    artjs.TemplateHelpers.renderInto(this._element, template && "content/" + template || "doc", data);
+    artjs.Fade.run(this._element, 1, .2, null, null, 0);
   }
 }, {
   _name: "art.component.Content"

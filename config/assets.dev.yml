@@ -10,6 +10,7 @@ javascripts:
     - 'artJs/utils/String'
     - 'artJs/utils/Date'
     - 'artJs/utils/Element'
+    - 'artJs/utils/Lang'
     - 'artJs/utils/Toggler'
     - 'artJs/utils/ClassToggler'
     - 'artJs/module/Locator'
