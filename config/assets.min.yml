@@ -78,6 +78,7 @@ javascripts:
     - 'art/component/Sidebar'
     - 'art/component/Content'
     - 'art/component/Member'
+    - 'art/component/Version'
   main-min: 'Main'
 stylesheets:
   shared-min: 'css/shared'

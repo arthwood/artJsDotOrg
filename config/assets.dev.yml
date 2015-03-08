@@ -78,6 +78,7 @@ javascripts:
     - 'art/component/Sidebar'
     - 'art/component/Content'
     - 'art/component/Member'
+    - 'art/component/Version'
   main-dev: 'Main'
 stylesheets:
   shared-dev: 'css/shared'

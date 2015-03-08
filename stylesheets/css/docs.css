@@ -1,5 +1,7 @@
 .header a span {
   font-size: 24px; }
+.header .art-component-Version {
+  padding: 0 6px; }
 
 .params p span, .param {
   font-weight: bold; }

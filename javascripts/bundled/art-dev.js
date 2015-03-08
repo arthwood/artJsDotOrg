@@ -1574,7 +1574,7 @@ artjs.Point.prototype = {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   },
   dot: function(p) {
-    return this.x * p.x + this.y * p.y;
+    return null;
   },
   add: function(p) {
     return new artjs.Point(this.x + p.x, this.y + p.y);
@@ -2536,17 +2536,23 @@ artjs.BaseSpecView = artjs.spec.view.Base = artjs.Class(null, {
   afterDryRun: function() {}
 });
 
-artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
+artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function(container) {
   this.super();
+  this._container = container || document.body;
   this._runnerTemplate = artjs.$C("div", {
     className: "runner"
   });
-  this._testTemplate = artjs.$C("span");
-  this._resultsTemplate = artjs.$C("div");
+  this._testTemplate = artjs.$C("span", {
+    className: "test"
+  });
+  this._resultsTemplate = artjs.$C("div", {
+    className: "results"
+  });
 }, {
   beforeRun: function() {
     this.super();
-    this._element = artjs.$I(document.body, this._runnerTemplate);
+    this._element = artjs.$I(this._container, this._runnerTemplate);
+    this._resultsElement = artjs.$I(this._container, this._resultsTemplate);
   },
   onItComplete: function(runner) {
     var success = runner.getCurrentTest().isSuccess();
@@ -2564,7 +2570,6 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
     var k = failures.length;
     classNames.push(success ? "success" : "failure");
     this._resultsTemplate.className = classNames.join(" ");
-    var resultsElement = artjs.$I(document.body, this._resultsTemplate);
     var resultText = success ? "Success!" : "Failure!";
     var statsText = success ? n + " tests in total." : k + " tests failed of " + n + " total.";
     var durationText = "Duration: " + artjs.Date.miliToHMSM(duration);
@@ -2574,13 +2579,13 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
     var statElement = artjs.$E("p", {
       className: "stat"
     }, statsText + "<br/>" + durationText);
-    artjs.$I(resultsElement, resultElement);
-    artjs.$I(resultsElement, statElement);
+    artjs.$I(this._resultsElement, resultElement);
+    artjs.$I(this._resultsElement, statElement);
     if (!success) {
       var list = artjs.$E("ul");
       this._getFailureHtml.list = list;
       artjs.Array.each(failures, this._getFailureHtml, this);
-      artjs.$I(resultsElement, list);
+      artjs.$I(this._resultsElement, list);
     }
   },
   _getFailureHtml: function(i) {
@@ -2602,8 +2607,8 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
     return typeof facet == "string" ? facet : facet._name;
   }
 }, {
-  run: function() {
-    var view = new this;
+  run: function(container) {
+    var view = new this(container);
     artjs.Spec.init(view);
     artjs.Spec.run();
   }
