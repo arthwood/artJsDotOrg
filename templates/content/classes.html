@@ -1,0 +1,137 @@
+<h1>Classes</h1>
+<p>
+  ArtJs has a full support for building OOP code. 
+  In this section you'll learn how to create the class using ArtJs.
+</p>
+<h2>Packages</h2>
+<div class="section">
+  <p>
+    It highly recommended to keep your code well organized. 
+    One of the way to achieve this is group your classes into packages/modules.
+    ArtJs doesn't enforce you to use specific way to achieve this.<br/>
+    In JS the simplest way is to create tree structure by defining one global generic object:
+  </p>
+  <pre>
+window.project = {
+  models: {
+  }
+};</pre>
+  <p>
+    Withing the package you can define the classes that belong to the same domain. Lets create few models.
+  </p>
+</div>
+<h2>Classes</h2>
+<div class="section">
+  <p>
+    In ArtJs class can be defined using <span class="code">artjs.Class</span>; it has following signature:
+  </p>
+  <pre>
+artjs.Class(&lt;Function constructor&gt;, &lt;Object prototype&gt;, &lt;Object static&gt;, &lt;Function superclass&gt;);
+  </pre>
+  <p>Here's the example of how we can create <span class="code">Shape</span> class:</p>
+  <pre>
+project.models.Phone = artjs.Class(
+  function(name) {
+    this._name = name;
+    
+    this.ctor.instances.push(this);
+  },
+  {
+    enterNumber: function(value) {
+      this._number = value;
+    },
+    
+    call: function() {
+      if (this._number) {
+        this._doCall();
+      }
+      else {
+        console.log('Unable to call, number is missing', this);
+      }
+    },
+    
+    getName: function() {
+      return this._name;
+    },
+    
+    toString: function() {
+      return this.getName();
+    },
+    
+    _doCall: function() {
+      // performs the call
+    }
+  },
+  {
+    instances: [],
+    
+    getName: function() {
+      return 'Phone';
+    }
+  }
+);</pre>
+  <p>
+    We created <span class="code">Phone</span> class within <span class="code">project.models</span> package.
+    It has:
+  </p>
+  <ul class="simple">
+    <li>one private property <span class="code">_name</span></li>
+    <li>three public methods: <span class="code">enterNumber</span>, <span class="code">call</span>, <span class="code">getName</span> and <span class="code">toString</span></li>
+    <li>one private method <span class="code">_doCall</span></li>
+    <li>one static property <span class="code">instances</span></li>
+    <li>one static method <span class="code">getName</span></li>
+  </ul>
+  
+  <p>
+    To instantiate this class use classic way:
+  </p>
+  <pre>
+var phone = new project.models.Phone('Bell Labs');
+
+phone.enterNumber('2196 21983 26763');
+phone.call();
+    
+project.models.Phone.instances.length; // 1
+  </pre>
+</div>
+<h2>Inheritance</h2>
+<div class="section">
+  <p>
+    Let's extend <span class="code">Phone</span> class and create new one: <span class="code">MobilePhone</span>
+  </p>
+  <pre>
+project.models.MobilePhone = artjs.Class(
+  null,
+  {
+    enterNumber: function(value) {
+      this.super(value);
+      
+      // specific procedure for entering number on mobile phones
+    },
+    
+    _doCall: function() {
+      // performs the call on mobile
+    }
+  },
+  null,
+  project.models.Phone
+);</pre>
+  <p>
+    Now we have a mobile phone class that contains implementation specific to that type of phone.
+    Notice the third arguments points to <span class="code">Phone</span> super class.
+    Another thing to notice is <span class="code">this.super</span> which calls a super method. 
+    Can also be used in constructor and even in static methods which can also be overriden.
+    Pass <span class="code">null</span> to any argument of <span class="code">artjs.Class</span> that you don't need.
+  </p>
+  <p>
+    To instantiate MobilePhone class:
+  </p>
+  <pre>
+var mobilePhone = new project.models.MobilePhone('iPhone 4s');
+
+phone.enterNumber('2196 21983 26763');
+phone.call();
+
+project.models.Phone.instances.length; // 2
+  </pre>
+</div>

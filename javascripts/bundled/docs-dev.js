@@ -6,11 +6,9 @@ var art = {
   }
 };
 
-artjs.Lang.setLang("pl");
-
 artjs.TemplateLibrary.config.PATH = "templates";
 
-artjs.TemplateLibrary.config.TEMPLATES = [ "content/components", "content/introduction", "content/templates", "content/testing", "disqus", "doc", "ga", "member", "section" ];
+artjs.TemplateLibrary.config.TEMPLATES = [ "content/classes", "content/components", "content/introduction", "content/templates", "content/testing", "disqus", "doc", "ga", "member", "section" ];
 
 artjs.Broadcaster.register(art.events.ON_SIDEBAR);
 
@@ -27,6 +25,7 @@ art.DB = {
   tree: {
     Introduction: "introduction",
     Testing: "testing",
+    Classes: "classes",
     Components: "components",
     Templates: "templates",
     Reference: {
@@ -379,6 +378,9 @@ art.DB = {
         name: "Hooks",
         members: [ new art.model.Member("_onCreated():Void", "Invoked as a static method when class construction has completed.<br/>" + "Useful for class initialization. Some of class properties are set at this point.<br/>" + "You must always call super when implementing this hook.", [ "_onCreated: function() {", "  this.super();", "", "  console.log(this.subclasses);", "}" ]), new art.model.Member("_onExtended():Void", "Invoked as a static method when subclass construction has completed.<br/>" + "Useful for class initialization. Some of class properties are set at this point.<br/>" + "You must always call super when implementing this hook.", [ "_onExtended: function() {", "  this.super();", "", "  console.log(this.superclass + ' has been extended by ' + this);", "}" ]) ]
       } ]
+    },
+    classes: {
+      template: "classes"
     },
     clock: {
       name: "Clock",

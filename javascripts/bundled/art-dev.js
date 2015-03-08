@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.1.5",
+  VERSION: "0.1.6",
   component: {},
   data: {},
   dom: {},
@@ -1418,6 +1418,7 @@ artjs.Element = artjs.utils.Element = {
 };
 
 artjs.Lang = artjs.utils.Lang = {
+  _name: "Lang",
   setLang: function(lang) {
     this._lang = lang;
   },

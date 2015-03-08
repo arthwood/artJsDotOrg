@@ -2,6 +2,7 @@ art.DB = {
   tree: {
     'Introduction': 'introduction',
     'Testing': 'testing',
+    'Classes': 'classes',
     'Components': 'components',
     'Templates': 'templates',
     'Reference': {
@@ -678,6 +679,7 @@ art.DB = {
         }
       ]
     },
+    classes: {template: 'classes'},
     clock: {
       name: 'Clock',
       package: 'artjs.events',
