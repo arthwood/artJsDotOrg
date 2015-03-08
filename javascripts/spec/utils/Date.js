@@ -1,4 +1,4 @@
-spec(artjs.DateUtils, function() {
+spec(artjs.Date, function() {
   describe('#getTime', function() {
     it('should return getTime() of Date instance', function() {
       var result = subject().getTime();

@@ -351,7 +351,7 @@ art.DB = {
       ]
     },
     array: {
-      name: 'ArrayUtils',
+      name: 'artjs.Array',
       package: 'artjs.utils',
       description: 
         'Provides set of methods that operates on any Array instance.<br/>' +
@@ -364,7 +364,7 @@ art.DB = {
               header: 'build(n:Integer, func:Function):Array',
               description: 'Creates a new array with n items using func as factory. func receives index as the only parameter.',
               example: [
-                'var array = ArrayUtils.build(4, function(i) { return i * i; });'
+                'var array = artjs.Array.build(4, function(i) { return i * i; });'
               ]
             },
             {
@@ -846,7 +846,7 @@ art.DB = {
     },
     components: {template: 'components'},
     date: {
-      name: 'DateUtils',
+      name: 'artjs.Date',
       package: 'artjs.utils',
       description: 'Provides set of methods that operates on any Date instance.',
       sections: [
@@ -858,7 +858,7 @@ art.DB = {
               'Returns <span class="param">date</span> copy',
               [
                 'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
-                'var copy = DateUtils.copy(date);',
+                'var copy = artjs.Date.copy(date);',
                 '',
                 '// or',
                 '// var copy = date.copy();',
@@ -874,7 +874,7 @@ art.DB = {
               [
                 'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
                 '',
-                'DateUtils.firstDay(date); // 2',
+                'artjs.Date.firstDay(date); // 2',
                 '// or',
                 '// date.firstDay();'
               ]
@@ -883,7 +883,7 @@ art.DB = {
               "fromDMY(dmy:String, separator:String = '/'):Date",
               "Parses <span class=\"param\">dmy</span> (&lt;day&gt;/&lt;month&gt;/&lt;year&gt;) expression and returns Date object",
               [
-                "var date = DateUtils.fromDMY('7/10/2003'); // Tue Oct 07 2003 00:00:00 GMT+0200 {}"
+                "var date = artjs.Date.fromDMY('7/10/2003'); // Tue Oct 07 2003 00:00:00 GMT+0200 {}"
               ]
             ),
             new art.model.Member(
@@ -891,7 +891,7 @@ art.DB = {
               "Returns date <span class=\"param\">days</span> after (before if negative) <span class=\"param\">date</span>",
               [
                 'var date = new Date(); // Tue Jun 07 2010 15:41:32 GMT+0200 {}',
-                'var shifted = DateUtils.getDateShifted(date, -3); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
+                'var shifted = artjs.Date.getDateShifted(date, -3); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
                 '',
                 '// or',
                 '// var shifted = date.getDateShifted(-3);'
@@ -901,14 +901,14 @@ art.DB = {
               "hmToMinutes(hm:String, separator:String = ':'):Number",
               'Parses <span class="param">hm</span> (&lt;hours&gt;:&lt;minutes&gt;) expression and returns Number of minutes',
               [
-                "var date = DateUtils.hmToMinutes('2:15'); // 135"
+                "var date = artjs.Date.hmToMinutes('2:15'); // 135"
               ]
             ),
             new art.model.Member(
               "minutesToHM(minutes:Number, separator:String = ':'):String",
               'Returns &lt;hours&gt;:&lt;minutes&gt; format for given amount of <span class="param">minutes</span>',
               [
-                "var date = DateUtils.minutesToHM(135); // '2:15'"
+                "var date = artjs.Date.minutesToHM(135); // '2:15'"
               ]
             ),
             new art.model.Member(
@@ -917,7 +917,7 @@ art.DB = {
               [
                 'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
                 '',
-                'DateUtils.monthDaysNum(date); // 30',
+                'artjs.Date.monthDaysNum(date); // 30',
                 '// or',
                 '// date.monthDaysNum();'
               ]
@@ -926,21 +926,21 @@ art.DB = {
               "msToSeconds(ms:String, separator:String = ':'):Number",
               'Parses <span class="param">ms</span> (&lt;minutes&gt;:&lt;seconds&gt;) expression and returns Number of seconds',
               [
-                "var date = DateUtils.msToSeconds('02:15'); // 135"
+                "var date = artjs.Date.msToSeconds('02:15'); // 135"
               ]
             ),
             new art.model.Member(
               "secondsToHMS(seconds:Number, separator:String = ':'):String",
               'Returns &lt;hours&gt;:&lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="param">seconds</span>',
               [
-                "var date = DateUtils.secondsToMS(4350); // '1:12:30'"
+                "var date = artjs.Date.secondsToMS(4350); // '1:12:30'"
               ]
             ),
             new art.model.Member(
               "secondsToMS(seconds:Number, separator:String = ':'):String",
               'Returns &lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="param">seconds</span>',
               [
-                "var date = DateUtils.secondsToMS(135); // '02:15'"
+                "var date = artjs.Date.secondsToMS(135); // '02:15'"
               ]
             ),
             new art.model.Member(
@@ -948,7 +948,7 @@ art.DB = {
               'Returns date without time part',
               [
                 'var date = new Date(); // Tue Jun 07 2010 15:41:32 GMT+0200 {}',
-                'var stripped = DateUtils.stripDayTime(date); // Tue Jun 07 2010 00:00:00 GMT+0200 {}',
+                'var stripped = artjs.Date.stripDayTime(date); // Tue Jun 07 2010 00:00:00 GMT+0200 {}',
                 '',
                 '// or',
                 '// var stripped = date.stripDayTime();'
@@ -960,7 +960,7 @@ art.DB = {
               [
                 'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
                 '',
-                "DateUtils.toDMY(date); // '04/06/2010'",
+                "artjs.Date.toDMY(date); // '04/06/2010'",
                 '// or',
                 '// date.toDMY();'
               ]
@@ -971,7 +971,7 @@ art.DB = {
               [
                 'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
                 '',
-                "DateUtils.toHMS(date); // '15:41:32'",
+                "artjs.Date.toHMS(date); // '15:41:32'",
                 '// or',
                 '// date.toHMS();'
               ]
@@ -982,7 +982,7 @@ art.DB = {
               [
                 'var date = new Date(); // Tue Jun 04 2010 15:41:32 GMT+0200 {}',
                 '',
-                "DateUtils.toYMD(date); // '2010/06/04'",
+                "artjs.Date.toYMD(date); // '2010/06/04'",
                 '// or',
                 '// date.toYMD();'
               ]
@@ -1132,7 +1132,7 @@ art.DB = {
       ]
     },
     element: {
-      name: 'ElementUtils',
+      name: 'artjs.Element',
       package: 'artjs.utils',
       description: 'Provides set of methods that operate on HTML Element instance.',
       sections: [
@@ -1144,7 +1144,7 @@ art.DB = {
               "Adds class identified by <span class=\"param\">name</span> to <span class=\"param\">element</span>" +
                 "(only if it doesn't already have this class)",
               [
-                "ElementUtils.addClass(element, 'nav');",
+                "artjs.Element.addClass(element, 'nav');",
                 '',
                 '// or',
                 "// element.addClass('nav');"
@@ -1155,7 +1155,7 @@ art.DB = {
               'Centers <span class="param">element</span> on the screen.' +
                 'This action takes effect only for elements with absolute position.',
               [
-                'ElementUtils.center(element);',
+                'artjs.Element.center(element);',
                 '',
                 '// or',
                 '// element.center();'
@@ -1166,7 +1166,7 @@ art.DB = {
               'Centers <span class="param">element</span> horizontally on the screen.' +
                 'This action takes effect only for elements with absolute position.',
               [
-                'ElementUtils.centerH(element);',
+                'artjs.Element.centerH(element);',
                 '',
                 '// or',
                 '// element.centerH();'
@@ -1177,7 +1177,7 @@ art.DB = {
               'Centers <span class="param">element</span> vertically on the screen.' +
                 'This action takes effect only for elements with absolute position',
               [
-                'ElementUtils.centerV(element);',
+                'artjs.Element.centerV(element);',
                 '',
                 '// or',
                 '// element.centerV();'
@@ -1187,7 +1187,7 @@ art.DB = {
               'clone(element:Element, deep:Boolean):Node',
               'Alias for Node.cloneNode(deep).',
               [
-                'ElementUtils.clone(element, true);',
+                'artjs.Element.clone(element, true);',
                 '',
                 '// or',
                 '// element.clone(true);'
@@ -1197,7 +1197,7 @@ art.DB = {
               'disable(element:Element):Void',
               'Disables the <span class="param">element</span>.',
               [
-                'ElementUtils.disable(element);',
+                'artjs.Element.disable(element);',
                 '',
                 '// or',
                 '// element.disable();'
@@ -1207,7 +1207,7 @@ art.DB = {
               'elements(element:Element):Array',
               'Returns array of immediate descendants (Elements) of <span class="param">element</span>',
               [
-                'ElementUtils.elements(element);',
+                'artjs.Element.elements(element);',
                 '',
                 '// or',
                 '// element.elements();'
@@ -1217,7 +1217,7 @@ art.DB = {
               'enable(element:Element):Void',
               'Enables the <span class="param">element</span>',
               [
-                'ElementUtils.enable(element);',
+                'artjs.Element.enable(element);',
                 '',
                 '// or',
                 '// element.enable();'
@@ -1227,7 +1227,7 @@ art.DB = {
               'firstElement(element:Element):Element',
               "Returns <span class=\"param\">element</span>'s first child (Element)",
               [
-                'ElementUtils.firstElement(element);',
+                'artjs.Element.firstElement(element);',
                 '',
                 '// or',
                 '// element.firstElement();'
@@ -1237,7 +1237,7 @@ art.DB = {
               'getAttributes(element:Element):Object',
               'Returns attributes as an Object',
               [
-                'ElementUtils.getAttributes(element);',
+                'artjs.Element.getAttributes(element);',
                 '',
                 '// or',
                 '// element.getAttributes();'
@@ -1247,7 +1247,7 @@ art.DB = {
               'getBounds(element:Element, real:Boolean, withoutScroll:Boolean):Rectangle',
               'Returns position and size of <span class="param">element</span> as a (x, y, width, height) Rectangle.',
               [
-                'ElementUtils.getBounds(element);',
+                'artjs.Element.getBounds(element);',
                 '',
                 '// or',
                 '// element.getBounds();'
@@ -1262,7 +1262,7 @@ art.DB = {
               'getCenteredPosition(element:Element):Point',
               'Returns position of <span class="param">element</span> as if it was centered on the screen',
               [
-                'ElementUtils.getCenteredPosition(element);',
+                'artjs.Element.getCenteredPosition(element);',
                 '',
                 '// or',
                 '// element.getCenteredPosition();'
@@ -1272,7 +1272,7 @@ art.DB = {
               'getClasses(element:Element):Array',
               "Returns array of <span class=\"param\">element</span>'s classes",
               [
-                'ElementUtils.getClasses(element);',
+                'artjs.Element.getClasses(element);',
                 '',
                 '// or',
                 '// element.getClasses();'
@@ -1282,7 +1282,7 @@ art.DB = {
               'getContent(element:Element):String',
               'Returns content (like innerHTML) of <span class="param">element</span>',
               [
-                'ElementUtils.getContent(element);',
+                'artjs.Element.getContent(element);',
                 '',
                 '// or',
                 '// element.getContent();'
@@ -1292,14 +1292,14 @@ art.DB = {
               'getDocumentSize():Point',
               'Returns document size',
               [
-                'ElementUtils.getDocumentSize();'
+                'artjs.Element.getDocumentSize();'
               ]
             ),
             new art.model.Member(
               'getPosition(element:Element, withoutScroll:Boolean):Point',
               'Returns position of the <span class="param">element</span> on the screen.',
               [
-                'ElementUtils.getPosition(element);',
+                'artjs.Element.getPosition(element);',
                 '',
                 '// or',
                 '// element.getPosition();'
@@ -1312,7 +1312,7 @@ art.DB = {
               'getScrollPosition():Point',
               'Returns scroll (x, y) values as a Point',
               [
-                'ElementUtils.getScrollPosition();'
+                'artjs.Element.getScrollPosition();'
               ]
             ),
             new art.model.Member(
@@ -1320,7 +1320,7 @@ art.DB = {
               'Returns size of the <span class="param">element</span> as a artjs.math.Point object' +
                 'which x property is width and y property is height',
               [
-                'ElementUtils.getSize(element);',
+                'artjs.Element.getSize(element);',
                 '',
                 '// or',
                 '// element.getSize();'
@@ -1330,7 +1330,7 @@ art.DB = {
               'getWindowSize():Point',
               'Returns window size',
               [
-                'ElementUtils.getWindowSize();'
+                'artjs.Element.getWindowSize();'
               ]
             ),
             new art.model.Member(
@@ -1338,7 +1338,7 @@ art.DB = {
               'Returns true if <span class="param">element</span> has class <span class="param">name</span>;' +
                 'false otherwise',
               [
-                "ElementUtils.hasClass(element, 'nav');",
+                "artjs.Element.hasClass(element, 'nav');",
                 '',
                 '// or',
                 "// element.hasClass('nav');"
@@ -1348,7 +1348,7 @@ art.DB = {
               'hide(element:Element):Void',
               'Hides the <span class="param">element</span>',
               [
-                'ElementUtils.hide(element);',
+                'artjs.Element.hide(element);',
                 '',
                 '// or',
                 '// element.hide();'
@@ -1358,7 +1358,7 @@ art.DB = {
               'isElement(element:Element):Boolean',
               'Returns true if <span class="param">element</span> is Element; false otherwise',
               [
-                'ElementUtils.isElement(element);',
+                'artjs.Element.isElement(element);',
                 '',
                 '// or',
                 '// element.isElement();'
@@ -1368,7 +1368,7 @@ art.DB = {
               'isHidden(element:Element):Boolean',
               'Returns true if the <span class="param">element</span> is hidden; true otherwise',
               [
-                'ElementUtils.isHidden(element);',
+                'artjs.Element.isHidden(element);',
                 '',
                 '// or',
                 '// element.isHidden();'
@@ -1378,7 +1378,7 @@ art.DB = {
               'next(element:Element):Node',
               "Returns <span class=\"param\">element</span>'s next sibling (Element)",
               [
-                'ElementUtils.next(element);',
+                'artjs.Element.next(element);',
                 '',
                 '// or',
                 '// element.next();'
@@ -1388,7 +1388,7 @@ art.DB = {
               'parent(element:Element):Element',
               "Returns <span class=\"param\">element</span>'s parent element",
               [
-                'ElementUtils.parent(element);',
+                'artjs.Element.parent(element);',
                 '',
                 '// or',
                 '// element.parent();'
@@ -1398,7 +1398,7 @@ art.DB = {
               'prev(element:Element):Node',
               "Returns <span class=\"param\">element</span>'s previous sibling (Element)",
               [
-                'ElementUtils.prev(element);',
+                'artjs.Element.prev(element);',
                 '',
                 '// or',
                 '// element.prev();'
@@ -1408,7 +1408,7 @@ art.DB = {
               'putAfter(element:Element, ref:Node):Node',
               'Inserts clone of the <span class="param">element</span> as next sibling of <span class="param">ref</span> node',
               [
-                'ElementUtils.putAfter(element, child);',
+                'artjs.Element.putAfter(element, child);',
                 '',
                 '// or',
                 '// element.putAfter(child);'
@@ -1418,7 +1418,7 @@ art.DB = {
               'putAtBottom(element:Element, ref:Node):Node',
               'Inserts clone of the <span class="param">element</span> as the last child of <span class="param">ref</span> node',
               [
-                'ElementUtils.putAtBottom(element, container);',
+                'artjs.Element.putAtBottom(element, container);',
                 '',
                 '// or',
                 '// element.putAtBottom(container);'
@@ -1428,7 +1428,7 @@ art.DB = {
               'putAtTop(element:Element, ref:Node):Node',
               'Inserts clone of the <span class="param">element</span> as the first child of <span class="param">ref</span> node',
               [
-                'ElementUtils.putAtTop(element, container);',
+                'artjs.Element.putAtTop(element, container);',
                 '',
                 '// or',
                 '// element.putAtTop(container);'
@@ -1438,7 +1438,7 @@ art.DB = {
               'putBefore(element:Element, ref:Node):Node',
               'Inserts clone of the <span class="param">element</span> as previous sibling of <span class="param">ref</span> node',
               [
-                'ElementUtils.putBefore(element, child);',
+                'artjs.Element.putBefore(element, child);',
                 '',
                 '// or',
                 '// element.putBefore(child);'
@@ -1448,7 +1448,7 @@ art.DB = {
               'remove(element:Element):Node',
               'Removes the <span class="param">element</span>',
               [
-                'ElementUtils.remove(element);',
+                'artjs.Element.remove(element);',
                 '',
                 '// or',
                 '// element.remove();'
@@ -1458,7 +1458,7 @@ art.DB = {
               'removeClass(element:Element, name:String):Void',
               'Removes class identified by <span class="param">name</span> from <span class="param">element</span> (only if it have this class)',
               [
-                "ElementUtils.removeClass(element, 'nav');",
+                "artjs.Element.removeClass(element, 'nav');",
                 '',
                 '// or',
                 "// element.removeClass('nav');"
@@ -1469,7 +1469,7 @@ art.DB = {
               'Replaces <span class="param">ref</span> with an <span class="param">element</span> ' +
                 '(or its clone if <span class="param">clone</span> is set to true)',
               [
-                'ElementUtils.replace(element, oldElement, true);',
+                'artjs.Element.replace(element, oldElement, true);',
                 '',
                 '// or',
                 '// element.replace(oldElement, true);'
@@ -1479,7 +1479,7 @@ art.DB = {
               'serialize(element:Element):Object',
               'Serializes content of <span class="param">element</span> (usually form) and returns its data as Object',
               [
-                'ElementUtils.serialize(element);',
+                'artjs.Element.serialize(element);',
                 '',
                 '// or',
                 '// element.serialize();'
@@ -1489,7 +1489,7 @@ art.DB = {
               'setAlpha(element:Element, value:Number):Void',
               "Sets <span class=\"param\">element</span>'s transparency; <span class=\"param\">value</span> 0 means transparent, 1 means opaque",
               [
-                'ElementUtils.setAlpha(element, 0.4);',
+                'artjs.Element.setAlpha(element, 0.4);',
                 '',
                 '// or',
                 '// element.setAlpha(0.4);'
@@ -1500,7 +1500,7 @@ art.DB = {
               'If <span class="param">add</span> is true it adds, otherwise removes class identified by' +
                 '<span class="param">name</span> to <span class="param">element</span>',
               [
-                "ElementUtils.setClass(element, 'nav', true);",
+                "artjs.Element.setClass(element, 'nav', true);",
                 '',
                 '// or',
                 "// element.setClass('nav', true);"
@@ -1510,7 +1510,7 @@ art.DB = {
               'setContent(element:Element, content:String):Void',
               'Sets the content (like innerHTML) of <span class="param">element</span>',
               [
-                "ElementUtils.setContent(element, 'hello &lt;span&gt;world&lt;/span&gt;!');",
+                "artjs.Element.setContent(element, 'hello &lt;span&gt;world&lt;/span&gt;!');",
                 '',
                 '// or',
                 "// element.setContent('hello &lt;span&gt;world&lt;/span&gt;!');"
@@ -1520,7 +1520,7 @@ art.DB = {
               'setEnabled(element:Element, enabled:Boolean):Void',
               'Enables <span class="param">element</span> if <span class="param">enabled</span> is true; disables otherwise',
               [
-                'ElementUtils.setEnabled(element, true);',
+                'artjs.Element.setEnabled(element, true);',
                 '',
                 '// or',
                 '// element.setEnabled(true);'
@@ -1531,7 +1531,7 @@ art.DB = {
               'Sets the position of <span class="param">element</span> on the screen. ' +
                 'This action has effect for elements with absolute position',
               [
-                'ElementUtils.setPosition(element, point);',
+                'artjs.Element.setPosition(element, point);',
                 '',
                 '// or',
                 '// element.setPosition(point);'
@@ -1541,7 +1541,7 @@ art.DB = {
               'setVisible(element:Element, visible:Boolean):Void',
               'Shows the <span class="param">element</span> if <span class="param">visible</span> argument is set to true; hides otherwise',
               [
-                'ElementUtils.setVisible(element, true);',
+                'artjs.Element.setVisible(element, true);',
                 '',
                 '// or',
                 '// element.setVisible(true);'
@@ -1552,7 +1552,7 @@ art.DB = {
               'Sets x position of <span class="param">element</span> on the screen. ' +
                 'This action has effect for elements with absolute position',
               [
-                'ElementUtils.setX(130);',
+                'artjs.Element.setX(130);',
                 '',
                 '// or',
                 '// element.setX(130);'
@@ -1563,7 +1563,7 @@ art.DB = {
               'Sets y position of <span class="param">element</span> on the screen. ' +
                 'This action has effect for elements with absolute position',
               [
-                'ElementUtils.setY(130);',
+                'artjs.Element.setY(130);',
                 '',
                 '// or',
                 '// element.setY(130);'
@@ -1573,7 +1573,7 @@ art.DB = {
               'show(element:Element):Void',
               'Shows the <span class="param">element</span>',
               [
-                'ElementUtils.show(element);',
+                'artjs.Element.show(element);',
                 '',
                 '// or',
                 '// element.show();'
@@ -1583,7 +1583,7 @@ art.DB = {
               'toggle(element:Element):Void',
               "Shows the <span class=\"param\">element</span> if it's hidden; hides otherwise",
               [
-                'ElementUtils.toggle(element);',
+                'artjs.Element.toggle(element);',
                 '',
                 '// or',
                 '// element.toggle();'
@@ -1593,7 +1593,7 @@ art.DB = {
               'toggleClass(element:Element, name:String):Void',
               'Toggles class identified by <span class="param">name</span> of <span class="param">element</span>',
               [
-                "ElementUtils.toggleClass(element, 'nav');",
+                "artjs.Element.toggleClass(element, 'nav');",
                 '',
                 '// or',
                 "// element.toggleClass('nav');"
@@ -2215,7 +2215,7 @@ art.DB = {
           members: [
             new art.model.Member(
               '$():Element',
-              'Alias for ElementUtils.getElements()',
+              'Alias for artjs.Element.getElements()',
               [
                 "var nav = artjs.$('.main p.item span');"
               ]
@@ -2243,7 +2243,7 @@ art.DB = {
             ),
             new art.model.Member(
               '$find():Element',
-              'Alias for ElementUtils.find()',
+              'Alias for artjs.Element.find()',
               [
                 "var nav = artjs.$('navigation');",
                 "var item = artjs.$find(nav, '.item');"
@@ -2251,7 +2251,7 @@ art.DB = {
             ),
             new art.model.Member(
               '$findAll():Array',
-              'Alias for ElementUtils.findAll()',
+              'Alias for artjs.Element.findAll()',
               [
                 "var nav = artjs.$('navigation');",
                 "var items = artjs.$findAll(nav, '.item');"
@@ -2294,7 +2294,7 @@ art.DB = {
             ),
             new art.model.Member(
               '$up():Element',
-              'Alias for ElementUtils.up()',
+              'Alias for artjs.Element.up()',
               [
                 "var nav = artjs.$('navigation');",
                 'var parent = artjs.$up(nav);'
@@ -2322,7 +2322,7 @@ art.DB = {
       ]
     },
     math: {
-      name: 'MathUtils',
+      name: 'artjs.Math',
       package: 'artjs.utils',
       description: 'Provides set of math functions.',
       sections: [
@@ -2333,9 +2333,9 @@ art.DB = {
               'limit(x:Number, a:Number, b:Number):Number',
               'Returns <span class="param">x</span> value limited to [<span class="param">a</span>, <span class="param">b</span>] range',
               [
-                'MathUtils.limit(6, 2, 13); // 6',
-                'MathUtils.limit(6, 8, 13); // 8',
-                'MathUtils.limit(6, -2, 3); // 3'
+                'artjs.Math.limit(6, 2, 13); // 6',
+                'artjs.Math.limit(6, 8, 13); // 8',
+                'artjs.Math.limit(6, -2, 3); // 3'
               ]
             ),
             new art.model.Member(
@@ -2343,27 +2343,27 @@ art.DB = {
               'Returns <span class="param">x</span> value periodically limited to ' +
                 '[<span class="param">a</span>, <span class="param">b</span>] range',
               [
-                'MathUtils.sawtooth(6, 2, 13); // 6',
-                'MathUtils.sawtooth(6, 8, 13); // 11',
-                'MathUtils.sawtooth(6, -2, 3); // 1'
+                'artjs.Math.sawtooth(6, 2, 13); // 6',
+                'artjs.Math.sawtooth(6, 8, 13); // 11',
+                'artjs.Math.sawtooth(6, -2, 3); // 1'
               ]
             ),
             new art.model.Member(
               'sgn(x:Number):Number',
               'Signum function of <span class="param">x</span>',
               [
-                'MathUtils.sgn(-2); // -1',
-                'MathUtils.sgn(0); // 0',
-                'MathUtils.sgn(15); // 1'
+                'artjs.Math.sgn(-2); // -1',
+                'artjs.Math.sgn(0); // 0',
+                'artjs.Math.sgn(15); // 1'
               ]
             ),
             new art.model.Member(
               'stairs(x:Number, a:Number, b:Number):Number',
               '"stairs" function of <span class="param">x</span>',
               [
-                'MathUtils.stairs(6, 2, 4); // 2',
-                'MathUtils.stairs(6, 1, 2); // 5',
-                'MathUtils.stairs(6, -1, 1); // 3'
+                'artjs.Math.stairs(6, 2, 4); // 2',
+                'artjs.Math.stairs(6, 1, 2); // 5',
+                'artjs.Math.stairs(6, -1, 1); // 3'
               ]
             )
           ]
@@ -2371,7 +2371,7 @@ art.DB = {
       ]
     },
     object: {
-      name: 'ObjectUtils',
+      name: 'artjs.Object',
       package: 'artjs.utils',
       description: 
         'Provides set of methods that operates on any Object instance.<br/>' +
@@ -2386,7 +2386,7 @@ art.DB = {
               [
                 "var object = {color: 'white', id: 5};",  
                 '',
-                'ObjectUtils.all(object, function(i) {', 
+                'artjs.Object.all(object, function(i) {', 
                 '  return i !== false;',  
                 '}); // true ',
                 '// or ',
@@ -2394,7 +2394,7 @@ art.DB = {
                 '  return i !== false;',
                 '});',
                 '',
-                'ObjectUtils.all(object, function(i) {', 
+                'artjs.Object.all(object, function(i) {', 
                 '  return !isNaN(parseInt(i));',
                 '}); // false',
                 '// or',
@@ -2408,7 +2408,7 @@ art.DB = {
               'Creates a copy of an <span class="param">object</span>.',
               [
                 'var object = {id: 4};', 
-                'var copy = ObjectUtils.copy(object);',  
+                'var copy = artjs.Object.copy(object);',  
                 '',
                 '// or', 
                 '// var copy = object.copy();',  
@@ -2425,7 +2425,7 @@ art.DB = {
                 'var source = {id: 4};',
                 'var target = {active: true};',  
                 '',
-                'ObjectUtils.copyProps(source, target);',  
+                'artjs.Object.copyProps(source, target);',  
                 '',
                 '// or' ,
                 '// source.copyProps(target);',  
@@ -2439,7 +2439,7 @@ art.DB = {
               'Iterates over properties and passes value to <span class="param">callback</span>',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
-                'ObjectUtils.each(object, function(i) {', 
+                'artjs.Object.each(object, function(i) {', 
                 '  alert(i);',
                 '});',  
                 '',
@@ -2454,7 +2454,7 @@ art.DB = {
               'Iterates over properties and passes key to <span class="param">callback</span>',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",
-                'ObjectUtils.eachKey(object, function(i) {',
+                'artjs.Object.eachKey(object, function(i) {',
                 '  alert(i);',
                 '});',
                 '',
@@ -2469,7 +2469,7 @@ art.DB = {
               'Iterates over properties and passes key and value to <span class="code">callback</span>',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
-                'ObjectUtils.eachPair(object, function(k, v) {', 
+                'artjs.Object.eachPair(object, function(k, v) {', 
                 "  alert(k + ' -> ' + v);", 
                 '});',
                 '',
@@ -2486,11 +2486,11 @@ art.DB = {
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
                 'var empty = {};',
                 '',
-                'ObjectUtils.isEmpty(object); // false', 
+                'artjs.Object.isEmpty(object); // false', 
                 '// or',
                 '// object.isEmpty();',  
                 '',
-                'ObjectUtils.isEmpty(empty); // true', 
+                'artjs.Object.isEmpty(empty); // true', 
                 '// or',
                 '// empty.isEmpty();'  
               ]
@@ -2503,7 +2503,7 @@ art.DB = {
                 'var base = {id: 4};',
                 'var target = {active: true};',  
                 '',
-                'ObjectUtils.extend(target, base);',  
+                'artjs.Object.extend(target, base);',  
                 '',
                 '// or', 
                 '// target.extend(base);',  
@@ -2518,7 +2518,7 @@ art.DB = {
               [
                 "var array = [['color', 'white'], ['id', 5]];",
                 '',
-                "ObjectUtils.fromArray(array); // {color: 'white', id: 5}"
+                "artjs.Object.fromArray(array); // {color: 'white', id: 5}"
               ]
             ),
             new art.model.Member(
@@ -2527,11 +2527,11 @@ art.DB = {
               [
                 "var object = {color: 'white', id: 5};",  
                 '',
-                'ObjectUtils.include(object, 5); // true', 
+                'artjs.Object.include(object, 5); // true', 
                 '// or',
                 '// object.include(5);',  
                 '',
-                'ObjectUtils.include(object, true); // false', 
+                'artjs.Object.include(object, true); // false', 
                 '// or',
                 '// object.include(true);'
               ]
@@ -2542,11 +2542,11 @@ art.DB = {
               [
                 "var object = {color: 'white', id: 5};",  
                 '',
-                "ObjectUtils.includeAll(object, {color: 'white', id: 5}); // true", 
+                "artjs.Object.includeAll(object, {color: 'white', id: 5}); // true", 
                 '// or',
                 "// object.includeAll({color: 'white', id: 5});",  
                 '',
-                "ObjectUtils.includeAll(object, {id: 5, name: 'Mike'}); // false", 
+                "artjs.Object.includeAll(object, {id: 5, name: 'Mike'}); // false", 
                 '// or',
                 "// object.includeAll({id: 5, name: 'Mike'});"
               ]
@@ -2556,7 +2556,7 @@ art.DB = {
               'Maps key and value to Array item using <span class="param">callback</span> function',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
-                "var mapped = ObjectUtils.map(object, function(k, v) {return k + ':' + v});",  
+                "var mapped = artjs.Object.map(object, function(k, v) {return k + ':' + v});",  
                 '',
                 '// or',
                 "// var mapped = object.map(function(k, v) {return k + ':' + v});",  
@@ -2569,13 +2569,13 @@ art.DB = {
               'Transforms key using <span class="param">callback</span> function',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
-                'var mapped = ObjectUtils.mapKey(object, function(k) {',
-                '  return StringUtils.capitalizeUnderscored(k);',
+                'var mapped = artjs.Object.mapKey(object, function(k) {',
+                '  return artjs.String.capitalizeUnderscored(k);',
                 '});',
                 '',
                 '// or',
                 '// var mapped = object.mapKey(function(k) {',
-                '//   return StringUtils.capitalizeUnderscored(k);', 
+                '//   return artjs.String.capitalizeUnderscored(k);', 
                 '// });',
                 '',
                 'mapped; // {Id: 8, Active: 2, ProjectId: 8, Status: 8}'
@@ -2586,7 +2586,7 @@ art.DB = {
               'Transforms value using <span class="param">callback</span> function',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",
-                'var mapped = ObjectUtils.mapValue(object, function(v) {return v * 2});',  
+                'var mapped = artjs.Object.mapValue(object, function(v) {return v * 2});',  
                 '',
                 '// or',
                 '// var mapped = object.mapValue(function(v) {return v * 2});',  
@@ -2601,7 +2601,7 @@ art.DB = {
                 'var base = {id: 4};',
                 'var target = {active: true};',
                 '',
-                'ObjectUtils.merge(target, base); // {active: true, id: 4}',  
+                'artjs.Object.merge(target, base); // {active: true, id: 4}',  
                 '',
                 '// or', 
                 '// target.merge(base);',  
@@ -2615,7 +2615,7 @@ art.DB = {
               'Returns copy of <span class="code">object</span> without properties for which <span class="code">callback</span> returns true',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
-                'var filtered = ObjectUtils.reject(object, function(i) {', 
+                'var filtered = artjs.Object.reject(object, function(i) {', 
                 '  return i === true;',
                 '});',  
                 '',
@@ -2633,7 +2633,7 @@ art.DB = {
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
                 '',
-                'ObjectUtils.removeValue(object, 4);',  
+                'artjs.Object.removeValue(object, 4);',  
                 '',
                 '// or',
                 '// object.removeValue(4);',  
@@ -2647,7 +2647,7 @@ art.DB = {
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
                 '',
-                "ObjectUtils.removeValues(object, [4, '4']);",  
+                "artjs.Object.removeValues(object, [4, '4']);",  
                 '',
                 '// or' ,
                 "// object.removeValues([4, '4']);",  
@@ -2660,7 +2660,7 @@ art.DB = {
               'Returns copy of <span class="code">object</span> containing only properties for which <span class="code">callback</span> returns true',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
-                'var filtered = ObjectUtils.select(object, function(v, k) { ',
+                'var filtered = artjs.Object.select(object, function(v, k) { ',
                 '  return !isNaN(parseFloat(v));', 
                 '});',
                 '',
@@ -2678,7 +2678,7 @@ art.DB = {
               [
                 "var object = {color: 'white', id: 5};",  
                 '',
-                "ObjectUtils.toArray(object); // [['color', 'white'], ['id', 5]]", 
+                "artjs.Object.toArray(object); // [['color', 'white'], ['id', 5]]", 
                 '// or',
                 '// object.toArray();'
               ]
@@ -2689,7 +2689,7 @@ art.DB = {
               [
                 "var object = {color: 'white', id: 5, user: {name: 'Andy', id: 3}};",  
                 '',
-                'ObjectUtils.toQueryString(object);// color=white&id=5&user[name]=Andy&user[id]=3', 
+                'artjs.Object.toQueryString(object);// color=white&id=5&user[name]=Andy&user[id]=3', 
                 '// or',
                 '// object.toQueryString()'
               ]
@@ -3221,7 +3221,7 @@ art.DB = {
       ]
   },
     string: {
-      name: 'StringUtils',
+      name: 'artjs.String',
       package: 'artjs.utils',
       description: 'Provides set of methods that operates on any String instance.',
       sections: [
@@ -3236,7 +3236,7 @@ art.DB = {
               [
                 "var string = 'color';",
                 '',
-                "StringUtils.align(string, 10, '-', true); // color-----",
+                "artjs.String.align(string, 10, '-', true); // color-----",
                 '// or',
                 "// string.align(10, '-', true);"
               ]
@@ -3249,15 +3249,15 @@ art.DB = {
                 "var emptyString = '      ';",
                 'var nullValue = null;',
                 '',
-                'StringUtils.isBlank(string); // false',
+                'artjs.String.isBlank(string); // false',
                 '// or',
                 '// string.isBlank();',
                 '',
-                'StringUtils.isBlank(emptyString); // true',
+                'artjs.String.isBlank(emptyString); // true',
                 '// or',
                 '// emptyString.isBlank();',
                 '',
-                'StringUtils.isBlank(nullValue); // true'
+                'artjs.String.isBlank(nullValue); // true'
               ]
             ),
             new art.model.Member(
@@ -3266,7 +3266,7 @@ art.DB = {
               [
                 "var string = 'advanced quantum mechanics';",
                 '',
-                'StringUtils.capitalize(string); // Advanced Quantum Mechanics',
+                'artjs.String.capitalize(string); // Advanced Quantum Mechanics',
                 '// or',
                 '// string.capitalize();'
               ]
@@ -3277,7 +3277,7 @@ art.DB = {
               [
                 "var string = 'advanced quantum mechanics';",
                 '',
-                "StringUtils.countPattern(string, 'an'); // 3",
+                "artjs.String.countPattern(string, 'an'); // 3",
                 '// or',
                 "// string.countPattern('an');"
               ]
@@ -3289,11 +3289,11 @@ art.DB = {
                 "var string = 'quantum mechanics';",
                 "var emptyString = '      ';",
                 '',
-                'StringUtils.isEmpty(string); // false',
+                'artjs.String.isEmpty(string); // false',
                 '// or',
                 '// string.isEmpty();',
                 '',
-                'StringUtils.isEmpty(emptyString); // true',
+                'artjs.String.isEmpty(emptyString); // true',
                 '// or',
                 '// emptyString.isEmpty();'
 
@@ -3305,7 +3305,7 @@ art.DB = {
               [
                 "var string = 'quantum mechanics';",
                 '',
-                'StringUtils.first(string); // q',
+                'artjs.String.first(string); // q',
                 '// or',
                 '// string.first();'
               ]
@@ -3316,7 +3316,7 @@ art.DB = {
               [
                 'var price = 3.7;',
                 '',
-                'StringUtils.formatPrice(price); // 3.70'
+                'artjs.String.formatPrice(price); // 3.70'
               ]
             ),
             new art.model.Member(
@@ -3325,7 +3325,7 @@ art.DB = {
               [
                 "var string = 'yes, ';",
                 '',
-                'StringUtils.getMultiPattern(string, 3); // yes, yes, yes,', 
+                'artjs.String.getMultiPattern(string, 3); // yes, yes, yes,', 
                 '// or',
                 '// string.getMultiPattern(3);'
               ]
@@ -3336,7 +3336,7 @@ art.DB = {
               [
                 "var string = 'quantum mechanics';",
                 '',
-                'StringUtils.last(string); // s',
+                'artjs.String.last(string); // s',
                 '// or',
                 '// string.last();'
               ]
@@ -3348,11 +3348,11 @@ art.DB = {
                 "var string = 'quantum mechanics';",
                 "var emptyString = '      ';",
                 '',
-                'StringUtils.nullifyEmpty(string); // quantum mechanics',
+                'artjs.String.nullifyEmpty(string); // quantum mechanics',
                 '// or',
                 '// string.nullifyEmpty();',
                 '',
-                'StringUtils.nullifyEmpty(emptyString); // null',
+                'artjs.String.nullifyEmpty(emptyString); // null',
                 '// or',
                 '// emptyString.nullifyEmpty();'
               ]
@@ -3363,11 +3363,11 @@ art.DB = {
               [
                 "var string = 'chicken';",
                 '',
-                'StringUtils.singularOrPlural(string, 1); // chicken',
+                'artjs.String.singularOrPlural(string, 1); // chicken',
                 '// or',
                 '// string.singularOrPlural(1);',
                 '',
-                'StringUtils.singularOrPlural(string, 5); // chickens',
+                'artjs.String.singularOrPlural(string, 5); // chickens',
                 '// or',
                 '// string.singularOrPlural(5);'
               ]
@@ -3378,7 +3378,7 @@ art.DB = {
               [
                 "var string = 'quantum mechanics';",
                 '',
-                'StringUtils.strip(string); // quantummechanics',
+                'artjs.String.strip(string); // quantummechanics',
                 '// or',
                 '// string.strip();'
               ]
@@ -3389,7 +3389,7 @@ art.DB = {
               [
                 "var string = 'quantum mechanics';",
                 '',
-                'StringUtils.sub(string, -2, 4); // csquan',
+                'artjs.String.sub(string, -2, 4); // csquan',
                 '// or',
                 '// string.sub(-2, 4);'
               ]
@@ -3400,7 +3400,7 @@ art.DB = {
               [
                 "var string = \"{id: 5, name: 'Mike'}\";",
                 '',
-                "StringUtils.toJson(string); // {id: 5, name: 'Mike'}",
+                "artjs.String.toJson(string); // {id: 5, name: 'Mike'}",
                 '// or',
                 '// string.toJson();'
               ]
@@ -3412,8 +3412,8 @@ art.DB = {
                 "var string = 'quantum mechanics';",
                 'var nullValue = null;',
                 '',
-                'StringUtils.toS(string); // quantum mechanics',
-                'StringUtils.toS(nullValue); // (empty string)'
+                'artjs.String.toS(string); // quantum mechanics',
+                'artjs.String.toS(nullValue); // (empty string)'
               ]
             ),
             new art.model.Member(
@@ -3422,7 +3422,7 @@ art.DB = {
               [
                 "var string = '    quantum mechanics  ';",
                 '',
-                'StringUtils.trim(string); // quantum mechanics',
+                'artjs.String.trim(string); // quantum mechanics',
                 '// or',
                 '// string.trim();'
               ]
@@ -3433,7 +3433,7 @@ art.DB = {
               [
                 "var string = 'quantum field theory';",
                 '',
-                'StringUtils.truncate(string, 8); // quantum...',
+                'artjs.String.truncate(string, 8); // quantum...',
                 '// or',
                 '// string.truncate(8);'
               ]

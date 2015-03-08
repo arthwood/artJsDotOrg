@@ -16,7 +16,7 @@ spec(artjs.ClassToggler, function() {
       
       toggler.toggle(element);
       
-      expect(artjs.ElementUtils.hasClass(element, className)).to(beTrue());
+      expect(artjs.Element.hasClass(element, className)).to(beTrue());
     });
   });
 });

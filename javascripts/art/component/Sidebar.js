@@ -14,7 +14,7 @@ art.component.Sidebar = artjs.Class(
     },
     
     _onLeafHandler: function(tree) {
-      var data = art.DB.content[artjs.ElementUtils.getAttributes(tree.getCurrent()).href];
+      var data = art.DB.content[artjs.Element.getAttributes(tree.getCurrent()).href];
       
       artjs.Broadcaster.fire(art.events.ON_SIDEBAR, data);
     }

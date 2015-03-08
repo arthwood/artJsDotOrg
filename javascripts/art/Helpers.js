@@ -34,7 +34,7 @@ artjs.TemplateHelpers.registerAll({
   },
   
   _renderParams: function(v) {
-    var collection = artjs.ObjectUtils.map(v, this._paramToElement, this).join('');
+    var collection = artjs.Object.map(v, this._paramToElement, this).join('');
       
     return this.renderElement('div', {className: 'params'}, collection);
   },

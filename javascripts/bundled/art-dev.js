@@ -27,8 +27,8 @@ artjs.log = function() {
 
 artjs.p = artjs.log;
 
-artjs.ArrayUtils = artjs.utils.Array = {
-  _name: "ArrayUtils",
+artjs.Array = artjs.utils.Array = {
+  _name: "Array",
   toString: function() {
     return this._name;
   },
@@ -317,7 +317,7 @@ artjs.ArrayUtils = artjs.utils.Array = {
       }
     }
     if (!keepOrder) {
-      result = artjs.ObjectUtils.fromPoints(result);
+      result = artjs.Object.fromPoints(result);
     }
     return result;
   },
@@ -339,7 +339,7 @@ artjs.ArrayUtils = artjs.utils.Array = {
     return this.select(arr, this.isNotEmpty, this);
   },
   compact: function(arr) {
-    return this.reject(arr, artjs.ObjectUtils.isNull, this);
+    return this.reject(arr, artjs.Object.isNull, this);
   },
   isEmpty: function(arr) {
     return arr.length == 0;
@@ -369,7 +369,7 @@ artjs.ArrayUtils = artjs.utils.Array = {
     return this.map(arr, this._stringifyCallback, this);
   },
   _stringifyCallback: function(i) {
-    return artjs.ObjectUtils.isNull(i) ? "" : i.toString();
+    return artjs.Object.isNull(i) ? "" : i.toString();
   },
   _indexOf: function(arr, item) {
     for (var i in arr) {
@@ -381,8 +381,8 @@ artjs.ArrayUtils = artjs.utils.Array = {
   }
 };
 
-artjs.ObjectUtils = artjs.utils.Object = {
-  _name: "ObjectUtils",
+artjs.Object = artjs.utils.Object = {
+  _name: "Object",
   QUERY_DELIMITER: "&",
   toString: function() {
     return this._name;
@@ -415,11 +415,11 @@ artjs.ObjectUtils = artjs.utils.Object = {
   },
   removeKeys: function(obj, keys) {
     var delegate = artjs.$D(this, "_eachKeyDeleteKey", obj);
-    artjs.ArrayUtils.each(keys, delegate.callback());
+    artjs.Array.each(keys, delegate.callback());
   },
   removeValues: function(obj, values) {
     var delegate = artjs.$D(this, "_invertedRemoveValue", obj);
-    artjs.ArrayUtils.eachItem(values, delegate.callback());
+    artjs.Array.eachItem(values, delegate.callback());
   },
   keys: function(obj) {
     var result = [];
@@ -598,13 +598,13 @@ artjs.ObjectUtils = artjs.utils.Object = {
   },
   _pairToQueryString: function(key, value, prefix) {
     var result;
-    prefix = artjs.StringUtils.isBlank(prefix) ? key : prefix + "[" + key + "]";
+    prefix = artjs.String.isBlank(prefix) ? key : prefix + "[" + key + "]";
     if (typeof value == "object") {
       if (isNaN(value.length)) {
         result = this._toQueryStringWithPrefix(value, prefix);
       } else {
         var delegate = artjs.$D(this, "_parseArrayValue", prefix + "[]");
-        result = artjs.ArrayUtils.map(value, delegate.callback()).join(this.QUERY_DELIMITER);
+        result = artjs.Array.map(value, delegate.callback()).join(this.QUERY_DELIMITER);
       }
     } else {
       result = prefix + "=" + encodeURIComponent(this._primitiveToQueryString(value));
@@ -680,8 +680,8 @@ artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
       var _super_ = _caller_.superclass || _caller_.super;
       return _super_.apply(this, arguments);
     };
-    artjs.ObjectUtils.extend(this.ctor, superclass);
-    artjs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
+    artjs.Object.extend(this.ctor, superclass);
+    artjs.Object.extend(this.ctor.prototype, superclass.prototype);
     this.ctor.superclass = superclass;
     this.ctor.super = _super_;
     this.ctor.prototype.super = _super_;
@@ -690,10 +690,10 @@ artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
   }
   this.ctor.prototype.ctor = this.ctor;
   if (proto) {
-    artjs.ObjectUtils.eachPair(proto, this._eachProto, this);
+    artjs.Object.eachPair(proto, this._eachProto, this);
   }
   if (stat) {
-    artjs.ObjectUtils.eachPair(stat, this._eachStat, this);
+    artjs.Object.eachPair(stat, this._eachStat, this);
   }
   this.ctor._onCreated();
   if (superclass) {
@@ -733,18 +733,18 @@ artjs.ClassBuilder.prototype = {
 
 artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
   this.object = object;
-  this.method = artjs.ObjectUtils.isString(method) ? this.object[method] : method;
-  this.args = artjs.ArrayUtils.arrify(arguments, 2);
+  this.method = artjs.Object.isString(method) ? this.object[method] : method;
+  this.args = artjs.Array.arrify(arguments, 2);
 }, {
   invoke: function() {
-    var args = artjs.ArrayUtils.arrify(arguments).concat(this.args);
+    var args = artjs.Array.arrify(arguments).concat(this.args);
     return this.method.apply(this.object, args);
   },
   callback: function(withSource) {
     var result = function() {
       var callee = arguments.callee;
       var delegate = callee.delegate;
-      var args = artjs.ArrayUtils.arrify(arguments);
+      var args = artjs.Array.arrify(arguments);
       if (callee.withSource) {
         args.unshift(this);
       }
@@ -758,36 +758,36 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
   callback: function(object, method, withSource) {
     var delegate = new this(object, method);
     var callback = delegate.callback(withSource);
-    delegate.args = artjs.ArrayUtils.arrify(arguments, 3);
+    delegate.args = artjs.Array.arrify(arguments, 3);
     return callback;
   },
   create: function(object, method) {
     var delegate = new this(object, method);
-    delegate.args = artjs.ArrayUtils.arrify(arguments, 2);
+    delegate.args = artjs.Array.arrify(arguments, 2);
     return delegate;
   },
   bindAll: function(context) {
     var container = context.ctor ? context.ctor.prototype : context;
-    var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(container, this._isCallback, this));
-    var all = callbacks.concat(artjs.ArrayUtils.arrify(arguments, 1));
+    var callbacks = artjs.Object.keys(artjs.Object.select(container, this._isCallback, this));
+    var all = callbacks.concat(artjs.Array.arrify(arguments, 1));
     this._bindSource = context;
     this._bindTarget = context;
-    artjs.ArrayUtils.each(all, this._bindEach, this);
+    artjs.Array.each(all, this._bindEach, this);
   },
   delegateTo: function(source, target) {
-    var functions = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(source, this._isPublicMethod, this));
+    var functions = artjs.Object.keys(artjs.Object.select(source, this._isPublicMethod, this));
     this._bindSource = source;
     this._bindTarget = target;
-    artjs.ArrayUtils.each(functions, this._bindEach, this);
+    artjs.Array.each(functions, this._bindEach, this);
   },
   func: function(method, withSource) {
     return this.create(null, method, withSource);
   },
   _isCallback: function(v, k) {
-    return artjs.StringUtils.startsWith(k, "_on") && this._isFunction(v, k);
+    return artjs.String.startsWith(k, "_on") && this._isFunction(v, k);
   },
   _isPublicMethod: function(v, k) {
-    return !artjs.StringUtils.startsWith(k, "_") && this._isFunction(v, k);
+    return !artjs.String.startsWith(k, "_") && this._isFunction(v, k);
   },
   _isFunction: function(v, k) {
     return v instanceof Function;
@@ -797,8 +797,8 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
   }
 });
 
-artjs.MathUtils = artjs.utils.Math = {
-  _name: "MathUtils",
+artjs.Math = artjs.utils.Math = {
+  _name: "Math",
   toString: function() {
     return this._name;
   },
@@ -819,8 +819,8 @@ artjs.MathUtils = artjs.utils.Math = {
   }
 };
 
-artjs.StringUtils = artjs.utils.String = {
-  _name: "StringUtils",
+artjs.String = artjs.utils.String = {
+  _name: "String",
   toString: function() {
     return this._name;
   },
@@ -902,7 +902,7 @@ artjs.StringUtils = artjs.utils.String = {
     return text + (n == 1 ? this.blank() : "s");
   },
   capitalize: function(str) {
-    return artjs.ArrayUtils.map(str.split(" "), this.capitalizeWord).join(" ");
+    return artjs.Array.map(str.split(" "), this.capitalizeWord).join(" ");
   },
   capitalizeWord: function(str) {
     return str.charAt(0).toUpperCase() + str.substr(1);
@@ -944,8 +944,8 @@ artjs.StringUtils = artjs.utils.String = {
   }
 };
 
-artjs.DateUtils = artjs.utils.Date = {
-  _name: "DateUtils",
+artjs.Date = artjs.utils.Date = {
+  _name: "Date",
   toString: function() {
     return this._name;
   },
@@ -967,12 +967,12 @@ artjs.DateUtils = artjs.utils.Date = {
     return this.firstDate(date).getDay();
   },
   toHMS: function(date, separator) {
-    var su = artjs.StringUtils;
+    var su = artjs.String;
     separator = separator || ":";
     return su.addZeros(date.getHours().toString(), 2, false) + separator + su.addZeros(date.getMinutes().toString(), 2, false) + separator + su.addZeros(date.getSeconds().toString(), 2, false);
   },
   toYMD: function(date, separator) {
-    var su = artjs.StringUtils;
+    var su = artjs.String;
     separator = separator || "-";
     return date.getFullYear() + separator + su.addZeros((date.getMonth() + 1).toString(), 2, false) + separator + su.addZeros(date.getDate().toString(), 2, false);
   },
@@ -986,18 +986,18 @@ artjs.DateUtils = artjs.utils.Date = {
   fromYMD: function(str, separator) {
     separator = separator || "-";
     var arr = str.split(separator);
-    var au = artjs.ArrayUtils;
+    var au = artjs.Array;
     return new Date(parseInt(au.first(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.third(arr), 10));
   },
   fromDMY: function(str, separator) {
     separator = separator || "-";
     var arr = str.split(separator);
-    var au = artjs.ArrayUtils;
+    var au = artjs.Array;
     return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
   },
   minutesToHM: function(minutes, separator) {
     separator = separator || ":";
-    return Math.floor(minutes / 60) + separator + artjs.StringUtils.addZeros((minutes % 60).toString(), 2);
+    return Math.floor(minutes / 60) + separator + artjs.String.addZeros((minutes % 60).toString(), 2);
   },
   hmToMinutes: function(hm, separator) {
     separator = separator || ":";
@@ -1007,7 +1007,7 @@ artjs.DateUtils = artjs.utils.Date = {
   secondsToMS: function(s, separator) {
     var seconds = s % 60;
     var minutes = (s - seconds) / 60;
-    var su = artjs.StringUtils;
+    var su = artjs.String;
     separator = separator || ":";
     return su.addZeros(minutes.toString(), 2) + separator + su.addZeros(seconds.toString(), 2);
   },
@@ -1020,7 +1020,7 @@ artjs.DateUtils = artjs.utils.Date = {
     var seconds = s % 60;
     var minutes = (s - seconds) / 60;
     separator = separator || ":";
-    return this.minutesToHM(minutes, separator) + separator + artjs.StringUtils.addZeros(seconds.toString(), 2);
+    return this.minutesToHM(minutes, separator) + separator + artjs.String.addZeros(seconds.toString(), 2);
   },
   miliToHMSM: function(v) {
     var mili = v % 1e3;
@@ -1030,7 +1030,7 @@ artjs.DateUtils = artjs.utils.Date = {
     var minutes = totalMinutes % 60;
     var totalHours = (totalMinutes - minutes) / 60;
     var hours = totalHours;
-    return hours.toString() + ":" + artjs.StringUtils.addZeros(minutes.toString(), 2) + ":" + artjs.StringUtils.addZeros(seconds.toString(), 2) + "." + artjs.StringUtils.addZeros(mili.toString(), 3);
+    return hours.toString() + ":" + artjs.String.addZeros(minutes.toString(), 2) + ":" + artjs.String.addZeros(seconds.toString(), 2) + "." + artjs.String.addZeros(mili.toString(), 3);
   },
   miliToMSM: function(v) {
     var mili = v % 1e3;
@@ -1038,7 +1038,7 @@ artjs.DateUtils = artjs.utils.Date = {
     var seconds = totalSeconds % 60;
     var totalMinutes = (totalSeconds - seconds) / 60;
     var minutes = totalMinutes;
-    return minutes.toString() + ":" + artjs.StringUtils.addZeros(seconds.toString(), 2) + "." + artjs.StringUtils.addZeros(mili.toString(), 3);
+    return minutes.toString() + ":" + artjs.String.addZeros(seconds.toString(), 2) + "." + artjs.String.addZeros(mili.toString(), 3);
   },
   copy: function(date) {
     return new Date(date);
@@ -1053,20 +1053,20 @@ artjs.DateUtils = artjs.utils.Date = {
   }
 };
 
-artjs.ElementUtils = artjs.utils.Element = {
+artjs.Element = artjs.utils.Element = {
   HIDDEN_ELEMENTS: [],
   DEFAULT_DISPLAY: "",
   MAIN_OBJ_RE: /^\w+/,
   SUB_OBJ_RE: /\[\w+\]/g,
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: [ "", "-o-", "-ms-", "-moz-", "-khtml-", "-webkit-" ],
-  _name: "ElementUtils",
+  _name: "Element",
   toString: function() {
     return this._name;
   },
   show: function(e) {
     var hidden = this.getHidden(e);
-    artjs.ArrayUtils.removeItem(this.HIDDEN_ELEMENTS, hidden);
+    artjs.Array.removeItem(this.HIDDEN_ELEMENTS, hidden);
     var display = hidden && hidden.display || e.style.display;
     e.style.display = display == "none" ? this.DEFAULT_DISPLAY : display;
   },
@@ -1096,7 +1096,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   getHidden: function(e) {
     var delegate = artjs.$D(this, "detectHiddenElement", e);
-    return artjs.ArrayUtils.detect(this.HIDDEN_ELEMENTS, delegate.callback(), this);
+    return artjs.Array.detect(this.HIDDEN_ELEMENTS, delegate.callback(), this);
   },
   detectHiddenElement: function(i, e) {
     return i.element == e;
@@ -1129,7 +1129,7 @@ artjs.ElementUtils = artjs.utils.Element = {
     e.style[prop] = v;
   },
   extendStyle: function(e, style) {
-    artjs.ObjectUtils.extend(e.style, style);
+    artjs.Object.extend(e.style, style);
   },
   transitionStyle: function(prop, duration, type, delay) {
     return this._effectStyle(this._getTransitionStyleValue(prop, duration, type, delay));
@@ -1139,7 +1139,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   _effectStyle: function(value) {
     this._browserMap.value = value;
-    return artjs.ObjectUtils.fromArray(artjs.ArrayUtils.map(this.BROWSERS_STYLES, this._browserMap, this));
+    return artjs.Object.fromArray(artjs.Array.map(this.BROWSERS_STYLES, this._browserMap, this));
   },
   _browserMap: function(browser) {
     return [ browser + "transition", arguments.callee.value ];
@@ -1158,10 +1158,10 @@ artjs.ElementUtils = artjs.utils.Element = {
     return this.filterElements(this.children(e));
   },
   elementAt: function(e, i) {
-    return artjs.ArrayUtils.getItemAt(this.elements(e), i);
+    return artjs.Array.getItemAt(this.elements(e), i);
   },
   filterElements: function(items) {
-    return artjs.ArrayUtils.select(items, this.isElement, this);
+    return artjs.Array.select(items, this.isElement, this);
   },
   isElement: function(e) {
     return e.nodeType == Node.ELEMENT_NODE;
@@ -1176,10 +1176,10 @@ artjs.ElementUtils = artjs.utils.Element = {
     return e.parentNode;
   },
   firstElement: function(e) {
-    return artjs.ArrayUtils.first(this.elements(e));
+    return artjs.Array.first(this.elements(e));
   },
   lastElement: function(e) {
-    return artjs.ArrayUtils.last(this.elements(e));
+    return artjs.Array.last(this.elements(e));
   },
   prev: function(e) {
     var result = e;
@@ -1207,7 +1207,7 @@ artjs.ElementUtils = artjs.utils.Element = {
     return result;
   },
   putAtTop: function(e, ref) {
-    var first = artjs.ArrayUtils.first(this.children(ref));
+    var first = artjs.Array.first(this.children(ref));
     return first ? this.putBefore(e, first) : this.putAtBottom(e, ref);
   },
   putAfter: function(e, ref) {
@@ -1268,7 +1268,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   serialize: function(e) {
     var s = artjs.Selector;
-    var au = artjs.ArrayUtils;
+    var au = artjs.Array;
     var textfields = s.findAll(e, "input[type=text]");
     var checkboxes = au.select(s.findAll(e, "input[type=checkbox]"), this.selectChecked, this);
     var radios = au.select(s.findAll(e, "input[type=radio]"), this.selectChecked, this);
@@ -1284,9 +1284,9 @@ artjs.ElementUtils = artjs.utils.Element = {
   serializeInject: function(mem, i, idx) {
     var name = i.name;
     var value = i.value;
-    var main = artjs.ArrayUtils.first(name.match(this.MAIN_OBJ_RE));
+    var main = artjs.Array.first(name.match(this.MAIN_OBJ_RE));
     var subobjectMatches = name.match(this.SUB_OBJ_RE);
-    var props = subobjectMatches && artjs.ArrayUtils.map(artjs.$A(subobjectMatches), this.mapSub, this) || [];
+    var props = subobjectMatches && artjs.Array.map(artjs.$A(subobjectMatches), this.mapSub, this) || [];
     props.unshift(main);
     var obj = mem;
     var n = props.length - 1;
@@ -1302,7 +1302,7 @@ artjs.ElementUtils = artjs.utils.Element = {
     return mem;
   },
   mapSub: function(i, idx) {
-    return artjs.StringUtils.sub(i, 1, -1);
+    return artjs.String.sub(i, 1, -1);
   },
   getContent: function(e) {
     return e.innerHTML;
@@ -1311,11 +1311,11 @@ artjs.ElementUtils = artjs.utils.Element = {
     e.innerHTML = v;
   },
   hasClass: function(e, className) {
-    return artjs.ArrayUtils.includes(this.getClasses(e), className);
+    return artjs.Array.includes(this.getClasses(e), className);
   },
   getClasses: function(e) {
-    var className = artjs.StringUtils.trim(e.className);
-    return artjs.StringUtils.isBlank(className) ? [] : className.split(" ");
+    var className = artjs.String.trim(e.className);
+    return artjs.String.isBlank(className) ? [] : className.split(" ");
   },
   setClass: function(e, className, add) {
     if (add) {
@@ -1334,7 +1334,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   removeClass: function(e, className) {
     var classes = this.getClasses(e);
     if (this.hasClass(e, className)) {
-      artjs.ArrayUtils.removeItem(classes, className);
+      artjs.Array.removeItem(classes, className);
       e.className = classes.join(" ");
     }
   },
@@ -1342,15 +1342,15 @@ artjs.ElementUtils = artjs.utils.Element = {
     this.setClass(e, className, !this.hasClass(e, className));
   },
   getAttributes: function(e) {
-    return artjs.ObjectUtils.fromArray(artjs.ArrayUtils.map(artjs.$A(e.attributes), this._mapAttribute, this));
+    return artjs.Object.fromArray(artjs.Array.map(artjs.$A(e.attributes), this._mapAttribute, this));
   },
   getData: function(e) {
     var attrs = this.getAttributes(e);
-    var data = artjs.ObjectUtils.select(attrs, this._isDataAttribute, this);
-    return artjs.ObjectUtils.mapKey(data, this._removeDataPrefix, this);
+    var data = artjs.Object.select(attrs, this._isDataAttribute, this);
+    return artjs.Object.mapKey(data, this._removeDataPrefix, this);
   },
   _isDataAttribute: function(v, k) {
-    return artjs.StringUtils.startsWith(k, "data-");
+    return artjs.String.startsWith(k, "data-");
   },
   _removeDataPrefix: function(k) {
     return k.replace(/^data\-/, "");
@@ -1365,7 +1365,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   getAlpha: function(e) {
     if (e.style.filter) {
       var re = /alpha\(opacity=(\d+(\.\d+)?)\)/;
-      return Number(artjs.ArrayUtils.second(e.style.filter.match(re)));
+      return Number(artjs.Array.second(e.style.filter.match(re)));
     } else {
       return e.style.opacity;
     }
@@ -1401,7 +1401,7 @@ artjs.ElementUtils = artjs.utils.Element = {
     var attr = this.getAttributes(e);
     delete attr["id"];
     delete attr["class"];
-    return this.toTagString(e) + this.toIdString(e) + artjs.ArrayUtils.map(classes, this.toClassString).join("") + artjs.ObjectUtils.map(attr, this.toAttrString).join("");
+    return this.toTagString(e) + this.toIdString(e) + artjs.Array.map(classes, this.toClassString).join("") + artjs.Object.map(attr, this.toAttrString).join("");
   },
   toTagString: function(e) {
     return e.tagName.toLowerCase();
@@ -1418,13 +1418,16 @@ artjs.ElementUtils = artjs.utils.Element = {
 };
 
 artjs.Lang = artjs.utils.Lang = {
-  set: function(lang) {
+  setLang: function(lang) {
     this._lang = lang;
+  },
+  getLang: function(lang) {
+    return this._lang;
   },
   t: function() {
     var path = artjs.$A(arguments);
     this._node = this._translations[this._lang];
-    artjs.ArrayUtils.each(path, this._updateNode, this);
+    artjs.Array.each(path, this._updateNode, this);
     return this._node;
   },
   _updateNode: function(i) {
@@ -1482,11 +1485,11 @@ artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(function(className) 
     return this._toggler.current;
   },
   _onActivate: function(t) {
-    if (t.current) artjs.ElementUtils.addClass(t.current, this._className);
+    if (t.current) artjs.Element.addClass(t.current, this._className);
     this.onActivate.fire(this);
   },
   _onDeactivate: function(t) {
-    if (t.current) artjs.ElementUtils.removeClass(t.current, this._className);
+    if (t.current) artjs.Element.removeClass(t.current, this._className);
     this.onDeactivate.fire(this);
   }
 }, {
@@ -1499,12 +1502,12 @@ artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(function(className) 
 artjs.Locator = artjs.module.Locator = {
   register: function(object) {
     object.instances = [];
-    artjs.ObjectUtils.extend(object, this.extensions);
+    artjs.Object.extend(object, this.extensions);
   },
   extensions: {
     find: function(i) {
       this.identifier = i;
-      return artjs.ArrayUtils.detect(this.instances, this.found, this);
+      return artjs.Array.detect(this.instances, this.found, this);
     },
     found: function(i) {
       return i.getIdentifier() == this.identifier;
@@ -1517,16 +1520,16 @@ artjs.DelegateCollection = artjs.events.DelegateCollection = artjs.Class(functio
 }, {
   invoke: function() {
     this._args = artjs.$A(arguments);
-    return artjs.ArrayUtils.map(this._items, this._delegateToResult, this);
+    return artjs.Array.map(this._items, this._delegateToResult, this);
   },
   add: function(delegate) {
     this._items.push(delegate);
   },
   removeAt: function(i) {
-    artjs.ArrayUtils.removeAt(this._items, i);
+    artjs.Array.removeAt(this._items, i);
   },
   remove: function(delegate) {
-    artjs.ArrayUtils.removeItem(this._items, delegate);
+    artjs.Array.removeItem(this._items, delegate);
   },
   clear: function() {
     this._items.splice(0);
@@ -1658,7 +1661,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, att
   this.isEmpty = Boolean(isEmpty);
 }, {
   toString: function() {
-    var attributes = this.attributes && artjs.ObjectUtils.isNotEmpty(this.attributes) ? " " + this.ctor._attributesString(this.attributes) + " " : "";
+    var attributes = this.attributes && artjs.Object.isNotEmpty(this.attributes) ? " " + this.ctor._attributesString(this.attributes) + " " : "";
     var part;
     if (this.value) {
       part = ">" + this.value + "</" + this.name + ">";
@@ -1675,7 +1678,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, att
     var e = document.createElement(this.name);
     var sa = this.ctor._setAttribute;
     sa.e = e;
-    artjs.ObjectUtils.eachPair(this.attributes, sa);
+    artjs.Object.eachPair(this.attributes, sa);
     if (this.value && !this.isEmpty) {
       e.innerHTML = this.value;
     }
@@ -1702,13 +1705,13 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, att
   },
   getCollection: function(n, element) {
     this._getElement.element = element;
-    return artjs.ArrayUtils.build(n, this._getElement).join("");
+    return artjs.Array.build(n, this._getElement).join("");
   },
   _getElement: function(i) {
     return arguments.callee.element;
   },
   _attributesString: function(attrs) {
-    return artjs.ArrayUtils.map(artjs.ObjectUtils.toArray(attrs), this._attributePairToString, this).join(" ");
+    return artjs.Array.map(artjs.Object.toArray(attrs), this._attributePairToString, this).join(" ");
   },
   _setAttribute: function(k, v) {
     arguments.callee.e.setAttribute(k, v);
@@ -1738,7 +1741,7 @@ artjs.Selector = artjs.dom.Selector = {
   },
   isDescendantOf: function(element, root) {
     var descendants = this._getDescendants(element, root);
-    return !artjs.ArrayUtils.isEmpty(descendants);
+    return !artjs.Array.isEmpty(descendants);
   },
   isSelfOrDescendantOf: function(element, root) {
     return element == root || this.isDescendantOf(element, root);
@@ -1772,7 +1775,7 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(function(url, data, method) {
   this.method = method;
   this.requestData = data;
   this.requestMethod = method || methods.GET;
-  if (!artjs.ArrayUtils.includes(artjs.Ajax.SupportedMethods, this.requestMethod)) {
+  if (!artjs.Array.includes(artjs.Ajax.SupportedMethods, this.requestMethod)) {
     this.requestData = this.requestData || {};
     this.requestData._method = this.requestMethod;
     this.requestMethod = methods.POST;
@@ -1780,7 +1783,7 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(function(url, data, method) {
   this._request = new XMLHttpRequest;
   this.requestUrl = this.url;
   if (this.requestData) {
-    this.requestQueryData = artjs.ObjectUtils.toQueryString(this.requestData);
+    this.requestQueryData = artjs.Object.toQueryString(this.requestData);
     if (this.requestMethod == methods.GET) {
       this.requestUrl += "?" + this.requestQueryData;
       this.requestQueryData = null;
@@ -1895,7 +1898,7 @@ artjs.List = artjs.data.List = artjs.Class(function(items) {
   },
   addItemAt: function(item, position, noEvent) {
     if (this.allowDuplicates || !this.hasItem(item)) {
-      this.items = artjs.ArrayUtils.insertAt(this.items, position, item);
+      this.items = artjs.Array.insertAt(this.items, position, item);
       if (!noEvent) {
         this.onChange.fire(this);
       }
@@ -1903,14 +1906,14 @@ artjs.List = artjs.data.List = artjs.Class(function(items) {
     return this.getLength();
   },
   removeItem: function(item, onlyFirst, noEvent) {
-    artjs.ArrayUtils.removeItem(this.items, item, onlyFirst);
+    artjs.Array.removeItem(this.items, item, onlyFirst);
     if (!noEvent) {
       this.onChange.fire(this);
     }
     return this.getLength();
   },
   removeItemAt: function(position, noEvent) {
-    artjs.ArrayUtils.removeAt(this.items, position);
+    artjs.Array.removeAt(this.items, position);
     if (!noEvent) {
       this.onChange.fire(this);
     }
@@ -1923,7 +1926,7 @@ artjs.List = artjs.data.List = artjs.Class(function(items) {
     }
   },
   getItemAt: function(position) {
-    position = this.loop ? artjs.MathUtils.sawtooth(position, 0, this.getLength()) : position;
+    position = this.loop ? artjs.Math.sawtooth(position, 0, this.getLength()) : position;
     return this.items[position];
   },
   getItemIndex: function(item) {
@@ -1945,7 +1948,7 @@ artjs.List = artjs.data.List = artjs.Class(function(items) {
     this.onChange.fire(this);
   },
   hasItem: function(item) {
-    return artjs.ArrayUtils.includes(this.items, item);
+    return artjs.Array.includes(this.items, item);
   },
   setPointerAtItem: function(item) {
     if (!this.hasItem(item)) {
@@ -1979,13 +1982,13 @@ artjs.List = artjs.data.List = artjs.Class(function(items) {
     return this.getItemAt(this.i + 1);
   },
   getFirst: function() {
-    return artjs.ArrayUtils.first(this.items);
+    return artjs.Array.first(this.items);
   },
   getLast: function() {
-    return artjs.ArrayUtils.last(this.items);
+    return artjs.Array.last(this.items);
   },
   isEmpty: function() {
-    return artjs.ArrayUtils.isEmpty(this.items);
+    return artjs.Array.isEmpty(this.items);
   },
   isLast: function() {
     return this.i == this.getLength() - 1;
@@ -2143,7 +2146,7 @@ artjs.ClickEvent = artjs.events.Click = artjs.Class(function(element, delegate, 
   _onEvent: function(e) {
     if (this._selector) {
       var elements = artjs.$findAll(this._element, this._selector);
-      if (artjs.ArrayUtils.contains(elements, e.target)) {
+      if (artjs.Array.contains(elements, e.target)) {
         this.super(e);
       }
     } else {
@@ -2182,7 +2185,7 @@ artjs.on = function(eventName, target, delegate, selector) {
 
 artjs.Timeline = artjs.events.Timeline = artjs.Class(null, {
   mark: function() {
-    this._t2 = artjs.DateUtils.getTime();
+    this._t2 = artjs.Date.getTime();
     var interval = this._t2 - (this._t1 || this._t2);
     this._t1 = this._t2;
     return interval;
@@ -2222,7 +2225,7 @@ artjs.Timeout = artjs.events.Timeout = artjs.Class(function(delay) {
 artjs.TransitionBase = artjs.transition.Base = artjs.Class(function(property, element, value, duration, type, delay, from) {
   this.property = property;
   this.element = element;
-  this.duration = artjs.ObjectUtils.getDefault(duration, 1);
+  this.duration = artjs.Object.getDefault(duration, 1);
   this.value = value;
   this.type = type || this.ctor.LINEAR;
   this.delay = delay || 0;
@@ -2230,7 +2233,7 @@ artjs.TransitionBase = artjs.transition.Base = artjs.Class(function(property, el
   this._deferredD = artjs.$D(this, "_deferred");
 }, {
   run: function() {
-    if (artjs.ObjectUtils.isPresent(this.from)) {
+    if (artjs.Object.isPresent(this.from)) {
       this._setStyle(this.from);
       this._setEffectStyle("none");
     }
@@ -2241,11 +2244,11 @@ artjs.TransitionBase = artjs.transition.Base = artjs.Class(function(property, el
     this._setStyle(this.value);
   },
   _setStyle: function(value) {
-    artjs.ElementUtils.setStyle(this.element, this.property, value);
+    artjs.Element.setStyle(this.element, this.property, value);
   },
   _setEffectStyle: function(prop) {
-    var effectStyle = artjs.ElementUtils.transitionStyle(prop, this.duration, this.type, this.delay);
-    artjs.ElementUtils.extendStyle(this.element, effectStyle);
+    var effectStyle = artjs.Element.transitionStyle(prop, this.duration, this.type, this.delay);
+    artjs.Element.extendStyle(this.element, effectStyle);
   }
 }, {
   LINEAR: "linear",
@@ -2264,7 +2267,7 @@ artjs.Blind = artjs.transition.Blind = artjs.Class(function(element, value, dura
 }, {
   _setStyle: function(value) {
     this.super(value + "px");
-    artjs.ElementUtils.setStyle(this.element, "overflow", "hidden");
+    artjs.Element.setStyle(this.element, "overflow", "hidden");
   }
 }, {
   toggle: function(e, value, duration, type, delay) {
@@ -2304,8 +2307,8 @@ artjs.EqMatcher = artjs.spec.matcher.Eq = artjs.Class(function(expected) {
   this.super(expected, "equal");
 }, {
   resolve: function(actual) {
-    if (artjs.ObjectUtils.isArray(actual.value)) {
-      return artjs.ArrayUtils.equal([ actual.value, this.expected ]);
+    if (artjs.Object.isArray(actual.value)) {
+      return artjs.Array.equal([ actual.value, this.expected ]);
     } else {
       return this.super(actual);
     }
@@ -2345,7 +2348,7 @@ artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(function(expecte
     return "[" + i.join(", ") + "]";
   },
   _argsString: function(args) {
-    return "(" + (this.receiver.isInSeries() ? artjs.ArrayUtils.map(args, this._mapArgs, this) : args).join(", ") + ")";
+    return "(" + (this.receiver.isInSeries() ? artjs.Array.map(args, this._mapArgs, this) : args).join(", ") + ")";
   }
 }, null, artjs.BaseMatcher);
 
@@ -2380,7 +2383,7 @@ artjs.BaseSpecNode = artjs.spec.node.Base = artjs.Class(function(facet, body, fo
   },
   _cleanTrailingBefores: function() {
     var item;
-    while ((item = artjs.ArrayUtils.last(this._path)) && item.ctor == artjs.Before) {
+    while ((item = artjs.Array.last(this._path)) && item.ctor == artjs.Before) {
       this._path.pop();
     }
   }
@@ -2423,7 +2426,7 @@ artjs.It = artjs.spec.node.It = artjs.Class(function(facet, body, focus) {
         this._receivers = [];
         this._runBefores();
         this.super();
-        artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
+        artjs.Array.each(this._receivers, this._testReceiver, this);
         artjs.Spec.getRunner().testComplete();
       }
     }
@@ -2432,7 +2435,7 @@ artjs.It = artjs.spec.node.It = artjs.Class(function(facet, body, focus) {
     this._results.push(result);
   },
   isSuccess: function() {
-    return artjs.ArrayUtils.all(artjs.ArrayUtils.pluck(this._results, "value"));
+    return artjs.Array.all(artjs.Array.pluck(this._results, "value"));
   },
   pushReceiver: function(receiver) {
     this._receivers.push(receiver);
@@ -2446,11 +2449,11 @@ artjs.It = artjs.spec.node.It = artjs.Class(function(facet, body, focus) {
     receiver.rollback();
   },
   hasFocus: function() {
-    return artjs.ArrayUtils.any(artjs.ArrayUtils.pluck(this._path, "focus")) || this.focus;
+    return artjs.Array.any(artjs.Array.pluck(this._path, "focus")) || this.focus;
   },
   _runBefores: function() {
-    var instances = artjs.ArrayUtils.select(this._path, this.ctor._isBefore);
-    artjs.ArrayUtils.invoke(instances, "execute");
+    var instances = artjs.Array.select(this._path, this.ctor._isBefore);
+    artjs.Array.invoke(instances, "execute");
   }
 }, {
   instances: [],
@@ -2458,7 +2461,7 @@ artjs.It = artjs.spec.node.It = artjs.Class(function(facet, body, focus) {
     this.instances = [];
   },
   instancesWithFocus: function() {
-    return artjs.ArrayUtils.select(this.instances, this._hasFocus, this);
+    return artjs.Array.select(this.instances, this._hasFocus, this);
   },
   _hasFocus: function(instance) {
     return instance.hasFocus();
@@ -2485,7 +2488,7 @@ artjs.BaseSpecRunner = artjs.spec.runner.Base = artjs.Class(function() {
   this._it = undefined;
 }, {
   run: function() {
-    artjs.ArrayUtils.invoke(artjs.Specify.instances, "execute");
+    artjs.Array.invoke(artjs.Specify.instances, "execute");
   },
   setSubject: function(subject) {
     this._subject = subject;
@@ -2546,15 +2549,15 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
   },
   onItComplete: function(runner) {
     var success = runner.getCurrentTest().isSuccess();
-    artjs.ElementUtils.setContent(this._testTemplate, success ? "." : "F");
+    artjs.Element.setContent(this._testTemplate, success ? "." : "F");
     this._testTemplate.className = success ? "success" : "failure";
-    artjs.ElementUtils.insert(this._element, this._testTemplate);
+    artjs.Element.insert(this._element, this._testTemplate);
   },
   onComplete: function(runner) {
     var its = artjs.It.instances;
     var duration = runner.getDuration();
-    var failures = artjs.ArrayUtils.reject(artjs.ArrayUtils.invoke(its, "isSuccess"));
-    var success = artjs.ArrayUtils.isEmpty(failures);
+    var failures = artjs.Array.reject(artjs.Array.invoke(its, "isSuccess"));
+    var success = artjs.Array.isEmpty(failures);
     var classNames = [ "results" ];
     var n = its.length;
     var k = failures.length;
@@ -2563,7 +2566,7 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
     var resultsElement = artjs.$I(document.body, this._resultsTemplate);
     var resultText = success ? "Success!" : "Failure!";
     var statsText = success ? n + " tests in total." : k + " tests failed of " + n + " total.";
-    var durationText = "Duration: " + artjs.DateUtils.miliToHMSM(duration);
+    var durationText = "Duration: " + artjs.Date.miliToHMSM(duration);
     var resultElement = artjs.$E("p", {
       className: "result"
     }, resultText);
@@ -2575,12 +2578,12 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function() {
     if (!success) {
       var list = artjs.$E("ul");
       this._getFailureHtml.list = list;
-      artjs.ArrayUtils.each(failures, this._getFailureHtml, this);
+      artjs.Array.each(failures, this._getFailureHtml, this);
       artjs.$I(resultsElement, list);
     }
   },
   _getFailureHtml: function(i) {
-    var path = artjs.ArrayUtils.map(i.path, this._nodeToString).join(" ");
+    var path = artjs.Array.map(i.path, this._nodeToString).join(" ");
     var info = i.failureText();
     var pathElement = artjs.$E("p", {
       className: "path"
@@ -2733,7 +2736,7 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(function(matcher, actual)
       this._successCounter++;
     } else {
       var expectedArgs = this._inSeries ? this._args[this._callCounter] : this._args;
-      if (artjs.ArrayUtils.equal([ args, expectedArgs ])) {
+      if (artjs.Array.equal([ args, expectedArgs ])) {
         this._successCounter++;
       }
     }
@@ -2867,7 +2870,7 @@ artjs.TemplateBase = artjs.template.Base = {
     return compiler.compile();
   },
   renderInto: function(element, content, scope) {
-    artjs.ElementUtils.setContent(element, this.render(content, scope));
+    artjs.Element.setContent(element, this.render(content, scope));
     this.evalScripts(element);
     artjs.ComponentScanner.scan(element);
   },
@@ -2879,10 +2882,10 @@ artjs.TemplateBase = artjs.template.Base = {
     this.renderInto(element, template, scope);
   },
   evalScripts: function(element) {
-    artjs.ArrayUtils.each(artjs.Selector.findAll(element, "script"), this.evalScript, this);
+    artjs.Array.each(artjs.Selector.findAll(element, "script"), this.evalScript, this);
   },
   evalScript: function(script) {
-    eval(artjs.ElementUtils.getContent(script));
+    eval(artjs.Element.getContent(script));
   }
 };
 
@@ -2894,11 +2897,11 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
 }, {
   compile: function() {
     var tags = this._content.match(this._tagRegEx);
-    artjs.ArrayUtils.each(tags, this._eachTag, this);
+    artjs.Array.each(tags, this._eachTag, this);
     return this._content;
   },
   _eachTag: function(i) {
-    var expression = artjs.StringUtils.sub(i, 2, -2);
+    var expression = artjs.String.sub(i, 2, -2);
     var result = this._parseExpression(expression);
     this._content = this._content.replace(i, result);
   },
@@ -2910,23 +2913,23 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
   _parseMethod: function(exec) {
     exec.shift();
     var action = exec.shift();
-    var argsStr = artjs.ArrayUtils.first(exec);
-    var args = artjs.ArrayUtils.map(argsStr.split(","), this._stripArg, this);
-    var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
+    var argsStr = artjs.Array.first(exec);
+    var args = artjs.Array.map(argsStr.split(","), this._stripArg, this);
+    var argsValues = artjs.Array.map(args, this._parseArg, this);
     var helpers = artjs.TemplateHelpers;
     return helpers[action].apply(helpers, argsValues.concat(this._scope));
   },
   _parseArg: function(i) {
     var str = i;
-    str = artjs.StringUtils.trim(str, "'");
-    str = artjs.StringUtils.trim(str, '"');
+    str = artjs.String.trim(str, "'");
+    str = artjs.String.trim(str, '"');
     return str == i ? this._parseExpression(i) : str;
   },
   _fromScope: function(i) {
     return this._scope[i] || "";
   },
   _stripArg: function(i) {
-    return artjs.StringUtils.strip(i);
+    return artjs.String.strip(i);
   }
 });
 
@@ -2962,13 +2965,13 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     return artjs.$B(name, attrs, value).toString();
   },
   registerAll: function(helpers) {
-    artjs.ObjectUtils.eachPair(helpers, this.register, this);
+    artjs.Object.eachPair(helpers, this.register, this);
   },
   register: function(name, method) {
     this[name] = method;
   },
   _map: function(coll, func) {
-    return artjs.ArrayUtils.map(coll, func, this).join("");
+    return artjs.Array.map(coll, func, this).join("");
   },
   _renderOption: function(i) {
     var attrs = {
@@ -3011,13 +3014,13 @@ artjs.TemplateLibrary = artjs.template.Library = {
     return this._templates[id];
   },
   loadTemplate: function(id) {
-    artjs.TemplateBase.renderElement(artjs.ElementUtils.insert(this._templatesContainer, artjs.$E("div", null, this.getTemplate(id))));
+    artjs.TemplateBase.renderElement(artjs.Element.insert(this._templatesContainer, artjs.$E("div", null, this.getTemplate(id))));
   },
   init: function() {
     artjs.$BA(this);
     this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
-    artjs.ElementUtils.hide(document.body);
-    artjs.ArrayUtils.each(this._templatesToLoad, this._load, this);
+    artjs.Element.hide(document.body);
+    artjs.Array.each(this._templatesToLoad, this._load, this);
     this._loadCheck();
   },
   _load: function(i) {
@@ -3029,15 +3032,15 @@ artjs.TemplateLibrary = artjs.template.Library = {
     this._loadCheck();
   },
   _loadCheck: function() {
-    if (artjs.ObjectUtils.keys(this._templates).length == this._templatesToLoad.length) {
+    if (artjs.Object.keys(this._templates).length == this._templatesToLoad.length) {
       this._onAllLoaded();
     }
   },
   _onAllLoaded: function() {
     var body = document.body;
-    artjs.ElementUtils.show(body);
+    artjs.Element.show(body);
     artjs.TemplateBase.renderElement(body, window);
-    this._templatesContainer = artjs.ElementUtils.insert(document.body, artjs.$E("div", {
+    this._templatesContainer = artjs.Element.insert(document.body, artjs.$E("div", {
       id: "artjs-Templates"
     }));
     artjs.onLibraryLoad.fire(this);
@@ -3073,7 +3076,7 @@ artjs.Component = artjs.component.Base = artjs.Class(function(element) {
 artjs.ComponentScanner = {
   _events: {},
   scan: function(element) {
-    artjs.ArrayUtils.each(artjs.$findAll(element, ".art"), this._onFound, this);
+    artjs.Array.each(artjs.$findAll(element, ".art"), this._onFound, this);
   },
   addListener: function(id, delegate) {
     var event = this._events[id];
@@ -3087,17 +3090,17 @@ artjs.ComponentScanner = {
   },
   initElement: function(i) {
     this._element = i;
-    var classnames = artjs.ElementUtils.getClasses(i);
-    artjs.ArrayUtils.removeItem(classnames, "art");
-    artjs.ArrayUtils.each(classnames, this._eachClassName, this);
+    var classnames = artjs.Element.getClasses(i);
+    artjs.Array.removeItem(classnames, "art");
+    artjs.Array.each(classnames, this._eachClassName, this);
   },
   _eachClassName: function(i) {
     var path = i.split("-");
-    var _class = artjs.ArrayUtils.inject(path, window, this._injectPathChunk, this);
+    var _class = artjs.Array.inject(path, window, this._injectPathChunk, this);
     if (_class instanceof Function) {
       var instance = new _class(this._element);
       instance.ctor.instances.push(instance);
-      var id = artjs.ElementUtils.getAttributes(instance.getElement()).id;
+      var id = artjs.Element.getAttributes(instance.getElement()).id;
       if (id) {
         artjs.Component.idToComponent[id] = instance;
       }
@@ -3120,10 +3123,10 @@ artjs.ComponentSweeper = {
     clock.start();
   },
   _onSweep: function(clock) {
-    artjs.ArrayUtils.each(artjs.Component.subclasses, this._sweepInstances, this);
+    artjs.Array.each(artjs.Component.subclasses, this._sweepInstances, this);
   },
   _sweepInstances: function(i) {
-    artjs.ArrayUtils.$select(i.instances, this._isOnStage, this);
+    artjs.Array.$select(i.instances, this._isOnStage, this);
   },
   _isOnStage: function(i) {
     return artjs.Selector.isDescendantOf(i.getElement());
@@ -3138,7 +3141,7 @@ artjs.DatePicker = artjs.component.DatePicker = artjs.Class(function(element) {
   var now = new Date;
   var year = now.getFullYear();
   var month = now.getMonth();
-  var data = artjs.ElementUtils.getData(this._element);
+  var data = artjs.Element.getData(this._element);
   var firstDay = parseInt(data["first-day"]);
   this.year = year;
   this.month = month;
@@ -3168,7 +3171,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
   artjs.Component.onLoad("artjs-Calendar-next", this._onNextLoaded.delegate);
 }, {
   setSource: function(source) {
-    var rt = artjs.ElementUtils.getBounds(source.getElement()).getRightTop();
+    var rt = artjs.Element.getBounds(source.getElement()).getRightTop();
     var position = rt.add(new artjs.Point(2, 0));
     this._source = source;
     this._setPosition(position);
@@ -3181,13 +3184,13 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
   _onMonthsSelectLoaded: function(select) {
     this._months = select;
     this._months.onChange.add(this._onMonthSelect.delegate);
-    this._months.setOptions(artjs.ArrayUtils.map(artjs.Lang.t("datepicker", "months"), this.ctor._toMonthOption));
+    this._months.setOptions(artjs.Array.map(artjs.Lang.t("datepicker", "months"), this.ctor._toMonthOption));
   },
   _onDaysTableLoaded: function(table) {
     this._days = table;
     this._days.setData({
       head: this._getDaysRow(),
-      body: artjs.ArrayUtils.build(this.ctor.ROWS_NUM, this._getDaysRow)
+      body: artjs.Array.build(this.ctor.ROWS_NUM, this._getDaysRow)
     });
     this._days.onItem.add(this._onItem.delegate);
   },
@@ -3198,47 +3201,47 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
     next.onClick.add(this._onNextMonth.delegate);
   },
   _getDaysRow: function() {
-    return artjs.ArrayUtils.build(7, artjs.StringUtils.blank);
+    return artjs.Array.build(7, artjs.String.blank);
   },
   _toggle: function() {
     this._isHidden() ? this._show() : this._hide();
   },
   _show: function() {
-    this._years.setOptions(artjs.ArrayUtils.map(artjs.ArrayUtils.fromRange(this._source.yearsRange), this.ctor._toYearOption));
+    this._years.setOptions(artjs.Array.map(artjs.Array.fromRange(this._source.yearsRange), this.ctor._toYearOption));
     this._years.setSelected(this._source.year);
     this._months.setSelected(this._source.month);
     this.firstDay = this._source.firstDay;
     var value = this._source.getElement().value;
-    this.selectedDate = artjs.StringUtils.isEmpty(value) ? new Date : artjs.DateUtils.fromYMD(value, this.ctor.SEPARATOR);
+    this.selectedDate = artjs.String.isEmpty(value) ? new Date : artjs.Date.fromYMD(value, this.ctor.SEPARATOR);
     this.currentDate = new Date(this.selectedDate);
     this._update();
-    artjs.ElementUtils.show(this._element);
+    artjs.Element.show(this._element);
   },
   _setPosition: function(position) {
-    artjs.ElementUtils.setPosition(this._element, position);
+    artjs.Element.setPosition(this._element, position);
   },
   _hide: function() {
-    artjs.ElementUtils.hide(this._element);
+    artjs.Element.hide(this._element);
   },
   _isHidden: function() {
-    return artjs.ElementUtils.isHidden(this._element);
+    return artjs.Element.isHidden(this._element);
   },
   _update: function() {
-    var monthFirstDate = artjs.DateUtils.firstDate(this.currentDate);
+    var monthFirstDate = artjs.Date.firstDate(this.currentDate);
     var monthFirstDay = monthFirstDate.getDay();
-    var monthDaysNum = artjs.DateUtils.monthDaysNum(this.currentDate);
+    var monthDaysNum = artjs.Date.monthDaysNum(this.currentDate);
     this._months.setSelected(this.currentDate.getMonth() + 1);
     this._years.setSelected(this.currentDate.getFullYear());
-    this.startIndex = artjs.MathUtils.sawtooth(monthFirstDay - this.firstDay, 0, 7);
-    var rowsNum = artjs.MathUtils.stairs(this.startIndex + monthDaysNum - 1, 0, 7) + 1;
+    this.startIndex = artjs.Math.sawtooth(monthFirstDay - this.firstDay, 0, 7);
+    var rowsNum = artjs.Math.stairs(this.startIndex + monthDaysNum - 1, 0, 7) + 1;
     for (var i = 0; i < this.ctor.ROWS_NUM; i++) {
       this._days.setRowVisible(i, i < rowsNum);
     }
-    this._days.updateHead(artjs.ArrayUtils.build(7, this._eachHeadData, this));
+    this._days.updateHead(artjs.Array.build(7, this._eachHeadData, this));
     this._days.iterate(this._onEachDay.delegate);
   },
   _eachHeadData: function(idx) {
-    var index = artjs.MathUtils.sawtooth(this.firstDay + idx, 0, 7);
+    var index = artjs.Math.sawtooth(this.firstDay + idx, 0, 7);
     return artjs.Lang.t("datepicker", "days")[index];
   },
   _onEachDay: function(item, idx) {
@@ -3246,22 +3249,22 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
     date.setDate(idx - this.startIndex + 1);
     var value = date.getDate();
     var valid = date.getMonth() == this.currentDate.getMonth();
-    var weekend = artjs.ArrayUtils.includes(this.ctor.WEEKEND_DAYS, (idx + this.firstDay) % 7);
+    var weekend = artjs.Array.includes(this.ctor.WEEKEND_DAYS, (idx + this.firstDay) % 7);
     var selected = date.getTime() == this.selectedDate.getTime();
     item.style.background = this.ctor.CELL_BG[valid ? weekend ? "weekend" : "valid" : "invalid"];
-    artjs.ElementUtils.setClass(item, "selected", selected);
-    artjs.ElementUtils.setClass(item, "invalid", !valid);
-    artjs.ElementUtils.setContent(item, value);
+    artjs.Element.setClass(item, "selected", selected);
+    artjs.Element.setClass(item, "invalid", !valid);
+    artjs.Element.setContent(item, value);
   },
   _onItem: function(item) {
-    var value = artjs.ElementUtils.getContent(item);
-    var valid = !artjs.ElementUtils.hasClass(item, "invalid");
+    var value = artjs.Element.getContent(item);
+    var valid = !artjs.Element.hasClass(item, "invalid");
     if (valid) {
       this.selectedDate.setFullYear(this.currentDate.getFullYear());
       this.selectedDate.setMonth(this.currentDate.getMonth());
       this.selectedDate.setDate(parseInt(value, 10));
       this._update();
-      this._source.getElement().value = artjs.DateUtils.toYMD(this.selectedDate, this.ctor.SEPARATOR);
+      this._source.getElement().value = artjs.Date.toYMD(this.selectedDate, this.ctor.SEPARATOR);
       this._hide();
     }
     return false;
@@ -3288,7 +3291,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
   },
   _setYearSpan: function(span) {
     this.yearSpan = span;
-    this.years = artjs.ArrayUtils.build(this.yearSpan.y - this.yearSpan.x + 1, this._buildYearSpan);
+    this.years = artjs.Array.build(this.yearSpan.y - this.yearSpan.x + 1, this._buildYearSpan);
   },
   _buildYearSpan: function(i) {
     return this.yearSpan.x + i;
@@ -3353,7 +3356,7 @@ artjs.Select = artjs.component.Select = artjs.Class(function(element) {
     return this._element.value;
   },
   _update: function() {
-    artjs.ElementUtils.setContent(this._element, artjs.TemplateHelpers.renderOptions(this._options));
+    artjs.Element.setContent(this._element, artjs.TemplateHelpers.renderOptions(this._options));
   },
   _onChange: function(e) {
     this.onChange.fire(this);
@@ -3371,19 +3374,19 @@ artjs.Table = artjs.component.Table = artjs.Class(function(element) {
     this._update();
   },
   updateHead: function(data) {
-    artjs.ArrayUtils.each(data, this._updateHead, this);
+    artjs.Array.each(data, this._updateHead, this);
   },
   iterate: function(delegate) {
-    artjs.ArrayUtils.each(this._items, delegate.method, delegate.object);
+    artjs.Array.each(this._items, delegate.method, delegate.object);
   },
   setRowVisible: function(i, visible) {
-    artjs.ElementUtils.setVisible(this._rows[i], visible);
+    artjs.Element.setVisible(this._rows[i], visible);
   },
   _updateHead: function(i, idx) {
-    artjs.ElementUtils.setContent(this._headCells[idx], i);
+    artjs.Element.setContent(this._headCells[idx], i);
   },
   _update: function() {
-    artjs.ElementUtils.setContent(this._element, artjs.TemplateHelpers.renderTable(this._data));
+    artjs.Element.setContent(this._element, artjs.TemplateHelpers.renderTable(this._data));
     var head = artjs.$find(this._element, "thead");
     var body = artjs.$find(this._element, "tbody");
     this._headCells = artjs.$findAll(head, "th");
@@ -3404,22 +3407,22 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
 }, {
   setData: function(data) {
     var content = artjs.$P(this._renderNode(data));
-    artjs.ElementUtils.insert(this.getElement(), content);
-    artjs.ArrayUtils.each(artjs.Selector.findAll(this.getElement(), "li"), this._eachElement, this);
+    artjs.Element.insert(this.getElement(), content);
+    artjs.Array.each(artjs.Selector.findAll(this.getElement(), "li"), this._eachElement, this);
   },
   clickAt: function() {
     this._openingNode = this.getElement();
-    artjs.ArrayUtils.each(artjs.$A(arguments), this._openAt, this);
+    artjs.Array.each(artjs.$A(arguments), this._openAt, this);
   },
   getCurrent: function() {
     return this._current;
   },
   _openAt: function(i) {
-    this._openingNode = artjs.ElementUtils.elementAt(artjs.Selector.find(this._openingNode, "ul"), i);
-    this._handleClick(artjs.ElementUtils.firstElement(this._openingNode));
+    this._openingNode = artjs.Element.elementAt(artjs.Selector.find(this._openingNode, "ul"), i);
+    this._handleClick(artjs.Element.firstElement(this._openingNode));
   },
   _renderNode: function(node) {
-    return artjs.$B("ul", null, artjs.ObjectUtils.map(node, this._mapNode, this).join("")).toString();
+    return artjs.$B("ul", null, artjs.Object.map(node, this._mapNode, this).join("")).toString();
   },
   _mapNode: function(k, v) {
     var leaf = typeof v == "string";
@@ -3430,11 +3433,11 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
     return artjs.$B("li", null, value).toString();
   },
   _eachElement: function(i) {
-    var a = artjs.ElementUtils.firstElement(i);
+    var a = artjs.Element.firstElement(i);
     if (this._isNode(a)) {
-      artjs.ElementUtils.hide(artjs.$find(i, "ul"));
+      artjs.Element.hide(artjs.$find(i, "ul"));
     } else {
-      artjs.ElementUtils.addClass(i, "leaf");
+      artjs.Element.addClass(i, "leaf");
     }
   },
   _onElement: function(e) {
@@ -3450,16 +3453,16 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
     }
   },
   _isNode: function(a) {
-    var li = artjs.ElementUtils.parent(a);
-    return artjs.ArrayUtils.isNotEmpty(artjs.Selector.findAll(li, "ul"));
+    var li = artjs.Element.parent(a);
+    return artjs.Array.isNotEmpty(artjs.Selector.findAll(li, "ul"));
   },
   _toggleNode: function() {
-    var ul = artjs.ElementUtils.next(this._current);
-    artjs.ElementUtils.toggle(ul);
-    artjs.ElementUtils.setClass(artjs.$parent(this._current), "expanded", !artjs.ElementUtils.isHidden(ul));
+    var ul = artjs.Element.next(this._current);
+    artjs.Element.toggle(ul);
+    artjs.Element.setClass(artjs.$parent(this._current), "expanded", !artjs.Element.isHidden(ul));
   },
   _leafAction: function() {
-    this._leafClassToggler.toggle(artjs.ElementUtils.parent(this._current));
+    this._leafClassToggler.toggle(artjs.Element.parent(this._current));
     this.onLeaf.fire(this);
   }
 }, null, artjs.Component);
@@ -3473,7 +3476,7 @@ artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
   _onMouseMove: function(e, ee) {
     var targets = ee.getTargets(e);
     var origin = targets.origin;
-    var eu = artjs.ElementUtils;
+    var eu = artjs.Element;
     if (eu.children(origin).any(eu.isText)) {
       this._toggler.toggle(origin);
     }
@@ -3481,13 +3484,13 @@ artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
   _onActivate: function(toggler) {
     var current = toggler.current;
     if (current) {
-      artjs.ElementUtils.addClass(current, "inspected");
+      artjs.Element.addClass(current, "inspected");
     }
   },
   _onDeactivate: function(toggler) {
     var current = toggler.current;
     if (current) {
-      artjs.ElementUtils.removeClass(current, "inspected");
+      artjs.Element.removeClass(current, "inspected");
     }
   }
 });
@@ -3500,7 +3503,7 @@ artjs.$put = artjs.Delegate.callback(artjs.Ajax, "put");
 
 artjs.$del = artjs.Delegate.callback(artjs.Ajax, "del");
 
-artjs.$A = artjs.Delegate.callback(artjs.ArrayUtils, "arrify");
+artjs.$A = artjs.Delegate.callback(artjs.Array, "arrify");
 
 artjs.$DC = artjs.Delegate.callback(artjs.Delegate, "callback");
 
@@ -3512,7 +3515,7 @@ artjs.$BA = artjs.Delegate.callback(artjs.Delegate, "bindAll");
 
 artjs.$DT = artjs.Delegate.callback(artjs.Delegate, "delegateTo");
 
-artjs.$I = artjs.Delegate.callback(artjs.ElementUtils, "insert");
+artjs.$I = artjs.Delegate.callback(artjs.Element, "insert");
 
 artjs.$B = artjs.Delegate.callback(artjs.ElementBuilder, "build");
 
@@ -3530,9 +3533,9 @@ artjs.$findAll = artjs.Delegate.callback(artjs.Selector, "findAll");
 
 artjs.$parent = artjs.Delegate.callback(artjs.Selector, "parent");
 
-artjs.ArrayUtils.contains = artjs.ArrayUtils.includes;
+artjs.Array.contains = artjs.Array.includes;
 
-artjs.ArrayUtils.containsAll = artjs.ArrayUtils.includesAll;
+artjs.Array.containsAll = artjs.Array.includesAll;
 
 artjs.onDocumentLoad = new artjs.Event("document:load");
 
