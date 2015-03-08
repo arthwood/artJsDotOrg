@@ -17,18 +17,18 @@ window.project = {
   }
 };</pre>
   <p>
-    Withing the package you can define the classes that belong to the same domain. Lets create few models.
+    Within the package you can define the classes that belong to the same domain. Lets create few models.
   </p>
 </div>
 <h2>Classes</h2>
 <div class="section">
   <p>
-    In ArtJs class can be defined using <span class="code">artjs.Class</span>; it has following signature:
+    In ArtJs, class can be defined using <span class="code">artjs.Class</span>. It has following signature:
   </p>
   <pre>
 artjs.Class(&lt;Function constructor&gt;, &lt;Object prototype&gt;, &lt;Object static&gt;, &lt;Function superclass&gt;);
   </pre>
-  <p>Here's the example of how we can create <span class="code">Shape</span> class:</p>
+  <p>Here's the example of how we can create <span class="code">Phone</span> class:</p>
   <pre>
 project.models.Phone = artjs.Class(
   function(name) {
@@ -83,7 +83,7 @@ project.models.Phone = artjs.Class(
   </ul>
   
   <p>
-    To instantiate this class use classic way:
+    To instantiate this class, use classic way:
   </p>
   <pre>
 var phone = new project.models.Phone('Bell Labs');
@@ -117,14 +117,14 @@ project.models.MobilePhone = artjs.Class(
   project.models.Phone
 );</pre>
   <p>
-    Now we have a mobile phone class that contains implementation specific to that type of phone.
+    Now we have a <span class="code">MobilePhone</span> class that contains implementation specific to that type of phone.
     Notice the third arguments points to <span class="code">Phone</span> super class.
     Another thing to notice is <span class="code">this.super</span> which calls a super method. 
     Can also be used in constructor and even in static methods which can also be overriden.
     Pass <span class="code">null</span> to any argument of <span class="code">artjs.Class</span> that you don't need.
   </p>
   <p>
-    To instantiate MobilePhone class:
+    To instantiate <span class="code">MobilePhone</span> class:
   </p>
   <pre>
 var mobilePhone = new project.models.MobilePhone('iPhone 4s');
