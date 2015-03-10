@@ -1,6 +1,5 @@
 var art = {
   component: {},
-  model: {},
   events: {
     ON_SIDEBAR: 'Sidebar::onClick'
   }
@@ -12,7 +11,7 @@ artjs.TemplateLibrary.config.TEMPLATES = [
   'content/components',
   'content/introduction', 
   'content/templates', 
-  'content/testing', 
+  'content/testing',
   'disqus',
   'doc', 
   'ga', 

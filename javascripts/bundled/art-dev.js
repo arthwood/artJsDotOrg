@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.1.6",
+  VERSION: "0.2.0",
   component: {},
   data: {},
   dom: {},
@@ -1349,6 +1349,9 @@ artjs.Element = artjs.utils.Element = {
     var data = artjs.Object.select(attrs, this._isDataAttribute, this);
     return artjs.Object.mapKey(data, this._removeDataPrefix, this);
   },
+  getDataValue: function(e, name) {
+    return this.getData(e)[name];
+  },
   _isDataAttribute: function(v, k) {
     return artjs.String.startsWith(k, "data-");
   },
@@ -1574,7 +1577,7 @@ artjs.Point.prototype = {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   },
   dot: function(p) {
-    return null;
+    return this.x * p.x + this.y * p.y;
   },
   add: function(p) {
     return new artjs.Point(this.x + p.x, this.y + p.y);
@@ -1999,7 +2002,45 @@ artjs.List = artjs.data.List = artjs.Class(function(items) {
   }
 });
 
-artjs.Model = artjs.data.Model = artjs.Class();
+artjs.Model = artjs.data.Model = artjs.Class(function() {
+  this.onChange = new artjs.Event("Model::onChange");
+}, {
+  addProperties: function() {
+    var properties = artjs.Object.fromArray(artjs.Array.map(artjs.$A(arguments), this._toPropertyPair, this));
+    Object.defineProperties(this, properties);
+  },
+  addProperty: function(prop) {
+    Object.defineProperty(this, prop, this._toProperty(prop));
+  },
+  onPropertyChange: function(prop, value, oldValue) {
+    this.onChange.fire(prop, value, oldValue);
+  },
+  _toPropertyPair: function(prop) {
+    return [ prop, this._toProperty(prop) ];
+  },
+  _toProperty: function(name) {
+    var set = function(value) {
+      var prop = arguments.callee.prop;
+      var privateName = "_" + prop;
+      var oldValue = this[privateName];
+      this[privateName] = value;
+      this.onPropertyChange(prop, value, oldValue);
+    };
+    set.prop = name;
+    var get = function() {
+      var prop = arguments.callee.prop;
+      var privateName = "_" + prop;
+      return this[privateName];
+    };
+    get.prop = name;
+    return {
+      configurable: false,
+      enumerable: true,
+      set: set,
+      get: get
+    };
+  }
+});
 
 artjs.Queue = artjs.data.Queue = artjs.Class(function(data) {
   this.onChange = new artjs.Event("Queue::onChange");
@@ -2896,7 +2937,7 @@ artjs.TemplateBase = artjs.template.Base = {
 };
 
 artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content, scope) {
-  this._tagRegEx = /\{\{.+\}\}/g;
+  this._tagRegEx = /\{\{[^{}]+\}\}/g;
   this._methodRegEx = /^(\w+)\((.*)\)$/;
   this._content = content;
   this._scope = scope;
@@ -3470,6 +3511,23 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
   _leafAction: function() {
     this._leafClassToggler.toggle(artjs.Element.parent(this._current));
     this.onLeaf.fire(this);
+  }
+}, null, artjs.Component);
+
+artjs.View = artjs.component.View = artjs.Class(function(element) {
+  this.super(element);
+  this._templateId = artjs.Element.getDataValue(this._element, "template");
+  artjs.$BA(this);
+  this._model = new artjs.Model;
+  this._model.onChange.add(this._onModelChange.delegate);
+  this.onUpdate = new artjs.Event("View::onUpdate");
+}, {
+  getModel: function() {
+    return this._model;
+  },
+  _onModelChange: function(property, newValue, oldValue) {
+    artjs.TemplateHelpers.renderInto(this._element, this._templateId, this._model);
+    this.onUpdate.fire(this, property, newValue, oldValue);
   }
 }, null, artjs.Component);
 

@@ -593,7 +593,7 @@ art.DB = {
         {
           name: 'Usage',
           members: [
-            new art.model.Member(
+            new art.Member(
               'Class(ctor:Function = null, proto:Object = null, stat:Object = null, superclass:Function = null):Function',
               'Creates a new class. Returns decorated constructor function passed as a first argument. ' +
               'If no constructor is passed a default one is created.',
@@ -627,7 +627,7 @@ art.DB = {
         {
           name: 'Instance properties',
           members: [
-            new art.model.Member(
+            new art.Member(
               'ctor:Function',
               'Reference to constructor function.'
             )
@@ -636,11 +636,11 @@ art.DB = {
         {
           name: 'Static properties',
           members: [
-            new art.model.Member(
+            new art.Member(
               'superclass:Function',
               'Reference to constructor function of the parent class.'
             ),
-            new art.model.Member(
+            new art.Member(
               'subclasses:Array',
               'Stores all subclasses of given class.'
             )
@@ -649,7 +649,7 @@ art.DB = {
         {
           name: 'Hooks',
           members: [
-            new art.model.Member(
+            new art.Member(
               '_onCreated():Void',
               'Invoked as a static method when class construction has completed.<br/>' +
               'Useful for class initialization. Some of class properties are set at this point.<br/>' +
@@ -662,7 +662,7 @@ art.DB = {
                 '}'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '_onExtended():Void',
               'Invoked as a static method when subclass construction has completed.<br/>' +
               'Useful for class initialization. Some of class properties are set at this point.<br/>' +
@@ -855,7 +855,7 @@ art.DB = {
         {
           name: 'Static methods',
           members: [
-            new art.model.Member(
+            new art.Member(
               'copy(date:Date):Date',
               'Returns <span class="param">date</span> copy',
               [
@@ -870,7 +870,7 @@ art.DB = {
                 'copy; // Tue Jun 04 2010 15:41:32 GMT+0200 {}'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'firstDay(date:Date):Number',
               "Returns week day of first day in <span class=\"param\">date</span>'s month (1 means Monday)",
               [
@@ -881,14 +881,14 @@ art.DB = {
                 '// date.firstDay();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               "fromDMY(dmy:String, separator:String = '/'):Date",
               "Parses <span class=\"param\">dmy</span> (&lt;day&gt;/&lt;month&gt;/&lt;year&gt;) expression and returns Date object",
               [
                 "var date = artjs.Date.fromDMY('7/10/2003'); // Tue Oct 07 2003 00:00:00 GMT+0200 {}"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'getDateShifted(date:Date, days:Number):Date',
               "Returns date <span class=\"param\">days</span> after (before if negative) <span class=\"param\">date</span>",
               [
@@ -899,21 +899,21 @@ art.DB = {
                 '// var shifted = date.getDateShifted(-3);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               "hmToMinutes(hm:String, separator:String = ':'):Number",
               'Parses <span class="param">hm</span> (&lt;hours&gt;:&lt;minutes&gt;) expression and returns Number of minutes',
               [
                 "var date = artjs.Date.hmToMinutes('2:15'); // 135"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               "minutesToHM(minutes:Number, separator:String = ':'):String",
               'Returns &lt;hours&gt;:&lt;minutes&gt; format for given amount of <span class="param">minutes</span>',
               [
                 "var date = artjs.Date.minutesToHM(135); // '2:15'"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'monthDaysNum(date:Date):Number',
               "Returns number of days in <span class=\"param\">date</span>'s month",
               [
@@ -924,28 +924,28 @@ art.DB = {
                 '// date.monthDaysNum();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               "msToSeconds(ms:String, separator:String = ':'):Number",
               'Parses <span class="param">ms</span> (&lt;minutes&gt;:&lt;seconds&gt;) expression and returns Number of seconds',
               [
                 "var date = artjs.Date.msToSeconds('02:15'); // 135"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               "secondsToHMS(seconds:Number, separator:String = ':'):String",
               'Returns &lt;hours&gt;:&lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="param">seconds</span>',
               [
                 "var date = artjs.Date.secondsToMS(4350); // '1:12:30'"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               "secondsToMS(seconds:Number, separator:String = ':'):String",
               'Returns &lt;minutes&gt;:&lt;seconds&gt; format for given amount of <span class="param">seconds</span>',
               [
                 "var date = artjs.Date.secondsToMS(135); // '02:15'"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'stripDayTime(date:Date):Date',
               'Returns date without time part',
               [
@@ -956,7 +956,7 @@ art.DB = {
                 '// var stripped = date.stripDayTime();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               "toDMY(date:Date, separator:String = '/'):String",
               "Returns <span class=\"param\">date</span>'s string representation of day, month, year",
               [
@@ -967,7 +967,7 @@ art.DB = {
                 '// date.toDMY();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               "toHMS(date:Date, separator:String = ':'):String",
               "Returns <span class=\"param\">date</span>'s string representation of hour, minute, second",
               [
@@ -978,7 +978,7 @@ art.DB = {
                 '// date.toHMS();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               "toYMD(date:Date, separator:String = '/'):String",
               "Returns <span class=\"param\">date</span>'s string representation of year, month, day",
               [
@@ -1141,7 +1141,7 @@ art.DB = {
         {
           name: 'Static methods',
           members: [
-            new art.model.Member(
+            new art.Member(
               'addClass(element:Element, name:String):Void',
               "Adds class identified by <span class=\"param\">name</span> to <span class=\"param\">element</span>" +
                 "(only if it doesn't already have this class)",
@@ -1152,7 +1152,7 @@ art.DB = {
                 "// element.addClass('nav');"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'center(element:Element):Void',
               'Centers <span class="param">element</span> on the screen.' +
                 'This action takes effect only for elements with absolute position.',
@@ -1163,7 +1163,7 @@ art.DB = {
                 '// element.center();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'centerH(element:Element):Void',
               'Centers <span class="param">element</span> horizontally on the screen.' +
                 'This action takes effect only for elements with absolute position.',
@@ -1174,7 +1174,7 @@ art.DB = {
                 '// element.centerH();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'centerV(element:Element):Void',
               'Centers <span class="param">element</span> vertically on the screen.' +
                 'This action takes effect only for elements with absolute position',
@@ -1185,7 +1185,7 @@ art.DB = {
                 '// element.centerV();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'clone(element:Element, deep:Boolean):Node',
               'Alias for Node.cloneNode(deep).',
               [
@@ -1195,7 +1195,7 @@ art.DB = {
                 '// element.clone(true);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'disable(element:Element):Void',
               'Disables the <span class="param">element</span>.',
               [
@@ -1205,7 +1205,7 @@ art.DB = {
                 '// element.disable();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'elements(element:Element):Array',
               'Returns array of immediate descendants (Elements) of <span class="param">element</span>',
               [
@@ -1215,7 +1215,7 @@ art.DB = {
                 '// element.elements();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'enable(element:Element):Void',
               'Enables the <span class="param">element</span>',
               [
@@ -1225,7 +1225,7 @@ art.DB = {
                 '// element.enable();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'firstElement(element:Element):Element',
               "Returns <span class=\"param\">element</span>'s first child (Element)",
               [
@@ -1235,7 +1235,7 @@ art.DB = {
                 '// element.firstElement();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'getAttributes(element:Element):Object',
               'Returns attributes as an Object',
               [
@@ -1245,7 +1245,7 @@ art.DB = {
                 '// element.getAttributes();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'getBounds(element:Element, real:Boolean, withoutScroll:Boolean):Rectangle',
               'Returns position and size of <span class="param">element</span> as a (x, y, width, height) Rectangle.',
               [
@@ -1260,7 +1260,7 @@ art.DB = {
                 'If <span class="param">withoutScroll</span> is set to true posision is calculated relative to' +
                 "current view's origin; otherwise to document's origin."
             ),
-            new art.model.Member(
+            new art.Member(
               'getCenteredPosition(element:Element):Point',
               'Returns position of <span class="param">element</span> as if it was centered on the screen',
               [
@@ -1270,7 +1270,7 @@ art.DB = {
                 '// element.getCenteredPosition();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'getClasses(element:Element):Array',
               "Returns array of <span class=\"param\">element</span>'s classes",
               [
@@ -1280,7 +1280,7 @@ art.DB = {
                 '// element.getClasses();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'getContent(element:Element):String',
               'Returns content (like innerHTML) of <span class="param">element</span>',
               [
@@ -1290,14 +1290,14 @@ art.DB = {
                 '// element.getContent();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'getDocumentSize():Point',
               'Returns document size',
               [
                 'artjs.Element.getDocumentSize();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'getPosition(element:Element, withoutScroll:Boolean):Point',
               'Returns position of the <span class="param">element</span> on the screen.',
               [
@@ -1310,14 +1310,14 @@ art.DB = {
               'If <span class="param">withoutScroll</span> is set to true posision is calculated relative to' +
                 "current view's origin; otherwise to document's origin"
             ),
-            new art.model.Member(
+            new art.Member(
               'getScrollPosition():Point',
               'Returns scroll (x, y) values as a Point',
               [
                 'artjs.Element.getScrollPosition();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'getSize(element:Element):Point',
               'Returns size of the <span class="param">element</span> as a artjs.math.Point object' +
                 'which x property is width and y property is height',
@@ -1328,14 +1328,14 @@ art.DB = {
                 '// element.getSize();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'getWindowSize():Point',
               'Returns window size',
               [
                 'artjs.Element.getWindowSize();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'hasClass(element:Element, name:String):Boolean',
               'Returns true if <span class="param">element</span> has class <span class="param">name</span>;' +
                 'false otherwise',
@@ -1346,7 +1346,7 @@ art.DB = {
                 "// element.hasClass('nav');"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'hide(element:Element):Void',
               'Hides the <span class="param">element</span>',
               [
@@ -1356,7 +1356,7 @@ art.DB = {
                 '// element.hide();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'isElement(element:Element):Boolean',
               'Returns true if <span class="param">element</span> is Element; false otherwise',
               [
@@ -1366,7 +1366,7 @@ art.DB = {
                 '// element.isElement();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'isHidden(element:Element):Boolean',
               'Returns true if the <span class="param">element</span> is hidden; true otherwise',
               [
@@ -1376,7 +1376,7 @@ art.DB = {
                 '// element.isHidden();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'next(element:Element):Node',
               "Returns <span class=\"param\">element</span>'s next sibling (Element)",
               [
@@ -1386,7 +1386,7 @@ art.DB = {
                 '// element.next();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'parent(element:Element):Element',
               "Returns <span class=\"param\">element</span>'s parent element",
               [
@@ -1396,7 +1396,7 @@ art.DB = {
                 '// element.parent();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'prev(element:Element):Node',
               "Returns <span class=\"param\">element</span>'s previous sibling (Element)",
               [
@@ -1406,7 +1406,7 @@ art.DB = {
                 '// element.prev();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'putAfter(element:Element, ref:Node):Node',
               'Inserts clone of the <span class="param">element</span> as next sibling of <span class="param">ref</span> node',
               [
@@ -1416,7 +1416,7 @@ art.DB = {
                 '// element.putAfter(child);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'putAtBottom(element:Element, ref:Node):Node',
               'Inserts clone of the <span class="param">element</span> as the last child of <span class="param">ref</span> node',
               [
@@ -1426,7 +1426,7 @@ art.DB = {
                 '// element.putAtBottom(container);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'putAtTop(element:Element, ref:Node):Node',
               'Inserts clone of the <span class="param">element</span> as the first child of <span class="param">ref</span> node',
               [
@@ -1436,7 +1436,7 @@ art.DB = {
                 '// element.putAtTop(container);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'putBefore(element:Element, ref:Node):Node',
               'Inserts clone of the <span class="param">element</span> as previous sibling of <span class="param">ref</span> node',
               [
@@ -1446,7 +1446,7 @@ art.DB = {
                 '// element.putBefore(child);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'remove(element:Element):Node',
               'Removes the <span class="param">element</span>',
               [
@@ -1456,7 +1456,7 @@ art.DB = {
                 '// element.remove();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'removeClass(element:Element, name:String):Void',
               'Removes class identified by <span class="param">name</span> from <span class="param">element</span> (only if it have this class)',
               [
@@ -1466,7 +1466,7 @@ art.DB = {
                 "// element.removeClass('nav');"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'replace(element:Element, ref:Node, clone:Boolean):Node',
               'Replaces <span class="param">ref</span> with an <span class="param">element</span> ' +
                 '(or its clone if <span class="param">clone</span> is set to true)',
@@ -1477,7 +1477,7 @@ art.DB = {
                 '// element.replace(oldElement, true);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'serialize(element:Element):Object',
               'Serializes content of <span class="param">element</span> (usually form) and returns its data as Object',
               [
@@ -1487,7 +1487,7 @@ art.DB = {
                 '// element.serialize();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'setAlpha(element:Element, value:Number):Void',
               "Sets <span class=\"param\">element</span>'s transparency; <span class=\"param\">value</span> 0 means transparent, 1 means opaque",
               [
@@ -1497,7 +1497,7 @@ art.DB = {
                 '// element.setAlpha(0.4);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'setClass(element:Element, name:String, add:Boolean):Void',
               'If <span class="param">add</span> is true it adds, otherwise removes class identified by' +
                 '<span class="param">name</span> to <span class="param">element</span>',
@@ -1508,7 +1508,7 @@ art.DB = {
                 "// element.setClass('nav', true);"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'setContent(element:Element, content:String):Void',
               'Sets the content (like innerHTML) of <span class="param">element</span>',
               [
@@ -1518,7 +1518,7 @@ art.DB = {
                 "// element.setContent('hello &lt;span&gt;world&lt;/span&gt;!');"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'setEnabled(element:Element, enabled:Boolean):Void',
               'Enables <span class="param">element</span> if <span class="param">enabled</span> is true; disables otherwise',
               [
@@ -1528,7 +1528,7 @@ art.DB = {
                 '// element.setEnabled(true);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'setPosition(element:Element, position:Point):Void',
               'Sets the position of <span class="param">element</span> on the screen. ' +
                 'This action has effect for elements with absolute position',
@@ -1539,7 +1539,7 @@ art.DB = {
                 '// element.setPosition(point);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'setVisible(element:Element, visible:Boolean):Void',
               'Shows the <span class="param">element</span> if <span class="param">visible</span> argument is set to true; hides otherwise',
               [
@@ -1549,7 +1549,7 @@ art.DB = {
                 '// element.setVisible(true);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'setX(element:Element, value:Number):Void',
               'Sets x position of <span class="param">element</span> on the screen. ' +
                 'This action has effect for elements with absolute position',
@@ -1560,7 +1560,7 @@ art.DB = {
                 '// element.setX(130);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'setY(element:Element, value:Number):Void',
               'Sets y position of <span class="param">element</span> on the screen. ' +
                 'This action has effect for elements with absolute position',
@@ -1571,7 +1571,7 @@ art.DB = {
                 '// element.setY(130);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'show(element:Element):Void',
               'Shows the <span class="param">element</span>',
               [
@@ -1581,7 +1581,7 @@ art.DB = {
                 '// element.show();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'toggle(element:Element):Void',
               "Shows the <span class=\"param\">element</span> if it's hidden; hides otherwise",
               [
@@ -1591,7 +1591,7 @@ art.DB = {
                 '// element.toggle();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'toggleClass(element:Element, name:String):Void',
               'Toggles class identified by <span class="param">name</span> of <span class="param">element</span>',
               [
@@ -2186,11 +2186,11 @@ art.DB = {
         {
           name: 'Static methods',
           members: [
-            new art.model.Member(
+            new art.Member(
               'log(args...:*):Void',
               'Uses internally console.log to display messages.'
             ),
-            new art.model.Member(
+            new art.Member(
               'p(args...:*):Void',
               'Alias method for log().'
             )
@@ -2206,7 +2206,7 @@ art.DB = {
         {
           name: 'Constants',
           members: [
-            new art.model.Member(
+            new art.Member(
               'VERSION:String',
               'Current version of framework'
             )
@@ -2215,35 +2215,35 @@ art.DB = {
         {
           name: 'Methods',
           members: [
-            new art.model.Member(
+            new art.Member(
               '$():Element',
               'Alias for artjs.Element.getElements()',
               [
                 "var nav = artjs.$('.main p.item span');"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '$D():Delegate',
               'Alias for Delegate.create()',
               [
                 'var delegate = artjs.$D(this, this.onClick);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '$DC():Function',
               'Alias for Delegate.callback()',
               [
                 'var callback = artjs.$DC(this, this.onClick, true);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '$del():Ajax',
               'Alias for Ajax.del()',
               [
                 "var ajax = artjs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '$find():Element',
               'Alias for artjs.Element.find()',
               [
@@ -2251,7 +2251,7 @@ art.DB = {
                 "var item = artjs.$find(nav, '.item');"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '$findAll():Array',
               'Alias for artjs.Element.findAll()',
               [
@@ -2259,42 +2259,42 @@ art.DB = {
                 "var items = artjs.$findAll(nav, '.item');"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '$get():Ajax',
               'Alias for Ajax.get()',
               [
                 "var ajax = artjs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'p():Void',
               'Debug info. If debug console is accessible output to the console; uses alert() otherwise.',
               [
                 "p('myVariable: ' +  myVariable);"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '$P():Element',
               'Alias for ElementBuilder.parse()',
               [
                 "var element = artjs.$P('<span class=\"desc\">Blue t-shirt</span>');"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '$post():Ajax',
               'Alias for Ajax.post()',
               [
                 "var ajax = artjs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '$put():Ajax',
               'Alias for Ajax.$put()',
               [
                 "var ajax = artjs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               '$up():Element',
               'Alias for artjs.Element.up()',
               [
@@ -2307,15 +2307,15 @@ art.DB = {
         {
           name: 'Events',
           members: [
-            new art.model.Member(
+            new art.Member(
               'onDocumentLoad',
               'Triggered when DOM is loaded.'
             ),
-            new art.model.Member(
+            new art.Member(
               'onWindowLoad',
               'Triggered when whole window is loaded (executes after onDocumentLoad).'
             ),
-            new art.model.Member(
+            new art.Member(
               'onLibraryLoad',
               'Triggered when all library templates are loaded (executes after onWindowLoad).'
             )
@@ -2331,7 +2331,7 @@ art.DB = {
         {
           name: 'Static methods',
           members: [
-            new art.model.Member(
+            new art.Member(
               'limit(x:Number, a:Number, b:Number):Number',
               'Returns <span class="param">x</span> value limited to [<span class="param">a</span>, <span class="param">b</span>] range',
               [
@@ -2340,7 +2340,7 @@ art.DB = {
                 'artjs.Math.limit(6, -2, 3); // 3'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'sawtooth(x:Number, a:Number, b:Number):Number',
               'Returns <span class="param">x</span> value periodically limited to ' +
                 '[<span class="param">a</span>, <span class="param">b</span>] range',
@@ -2350,7 +2350,7 @@ art.DB = {
                 'artjs.Math.sawtooth(6, -2, 3); // 1'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'sgn(x:Number):Number',
               'Signum function of <span class="param">x</span>',
               [
@@ -2359,7 +2359,7 @@ art.DB = {
                 'artjs.Math.sgn(15); // 1'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'stairs(x:Number, a:Number, b:Number):Number',
               '"stairs" function of <span class="param">x</span>',
               [
@@ -2382,7 +2382,7 @@ art.DB = {
         {
           name: 'Static methods',
           members: [
-            new art.model.Member(
+            new art.Member(
               'all(object:Object, callback:Function):Boolean',
               'Returns true if for all values <span class="code">callback</span> returns true; false otherwise',
               [
@@ -2405,7 +2405,7 @@ art.DB = {
                 '});'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'copy(object:Object):Object',
               'Creates a copy of an <span class="param">object</span>.',
               [
@@ -2420,7 +2420,7 @@ art.DB = {
                 'copy.id; // 4'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'copyProps(source:Object, target:Object):Void',
               'Copies properties from <span class="param">source</span> object to <span class="param">target</span> object.',
               [
@@ -2436,7 +2436,7 @@ art.DB = {
                 'target; // {active: true, id: 4}'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'each(object:Object, callback:Function):Void',
               'Iterates over properties and passes value to <span class="param">callback</span>',
               [
@@ -2451,7 +2451,7 @@ art.DB = {
                 '// });'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'eachKey(object:Object, callback:Function):Void',
               'Iterates over properties and passes key to <span class="param">callback</span>',
               [
@@ -2466,7 +2466,7 @@ art.DB = {
                 '// });'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'eachPair(object:Object, callback:Function):Void',
               'Iterates over properties and passes key and value to <span class="code">callback</span>',
               [
@@ -2481,7 +2481,7 @@ art.DB = {
                 '// });'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'isEmpty(object:Object):Boolean',
               'Returns true if <span class="code">object</span> has no properties; false otherwise',
               [
@@ -2497,7 +2497,7 @@ art.DB = {
                 '// empty.isEmpty();'  
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'extend(target:Object, base:Object):Void',
               'Copies properties from <span class="param">base</span> object to <span class="param">target</span> object.' 
                 + 'In fact it works the same as <span class="code">copyProps()</span>, the only difference is arguments order.',
@@ -2514,7 +2514,7 @@ art.DB = {
                 'target; // {active: true, id: 4}'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'fromArray(array:Array):Object',
               'Transforms 2-dim <span class="code">array</span> into object',
               [
@@ -2523,7 +2523,7 @@ art.DB = {
                 "artjs.Object.fromArray(array); // {color: 'white', id: 5}"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'include(object:Object, item:Object):Boolean',
               'Returns true if any <span class="code">object</span> value is equal to <span class="code">item</span>; false otherwise',
               [
@@ -2538,7 +2538,7 @@ art.DB = {
                 '// object.include(true);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'includeAll(object:Object, subset:Object):Boolean',
               "Returns true if all <span class=\"code\">subset</span> values can be found among <span class=\"code\">object</span>'s values; false otherwise",
               [
@@ -2553,7 +2553,7 @@ art.DB = {
                 "// object.includeAll({id: 5, name: 'Mike'});"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'map(object:Object, callback:Function):Array',
               'Maps key and value to Array item using <span class="param">callback</span> function',
               [
@@ -2566,7 +2566,7 @@ art.DB = {
                 "mapped; // ['id:4', 'active:true', 'project_id:4', 'status:4']"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'mapKey(object:Object, callback:Function):Object',
               'Transforms key using <span class="param">callback</span> function',
               [
@@ -2583,7 +2583,7 @@ art.DB = {
                 'mapped; // {Id: 8, Active: 2, ProjectId: 8, Status: 8}'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'mapValue(object:Object, callback:Function):Object',
               'Transforms value using <span class="param">callback</span> function',
               [
@@ -2596,7 +2596,7 @@ art.DB = {
                 'mapped; // {id: 8, active: 2, project_id: 8, status: 8}'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'merge(target:Object, base:Object):Object',
               'Works the same as extend() but returns modified <span class="param">target</span> object.',
               [
@@ -2612,7 +2612,7 @@ art.DB = {
                 'target; // {active: true, id: 4}'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'reject(object:Object, callback:Function):Object',
               'Returns copy of <span class="code">object</span> without properties for which <span class="code">callback</span> returns true',
               [
@@ -2629,7 +2629,7 @@ art.DB = {
                 "filtered; // {id: 4, project_id: 4, status: '4'}"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'removeValue(object:Object, value:Object):Void',
               "Removes all <span class=\"param\">object</span>'s properties with value equal to <span class=\"param\">value</span> param",
               [
@@ -2643,7 +2643,7 @@ art.DB = {
                 "object; // {active: true, status: '4'}"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'removeValues(object:Object, values:Array):Void',
               'Works the same as removeValue but you can remove many <span class="param">values</span> by passing them in array',
               [
@@ -2657,7 +2657,7 @@ art.DB = {
                 'object; // {active: true}'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'select(object:Object, callback:Function):Object',
               'Returns copy of <span class="code">object</span> containing only properties for which <span class="code">callback</span> returns true',
               [
@@ -2674,7 +2674,7 @@ art.DB = {
                 "filtered; // {id: 4, project_id: 4, status: '4'}"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'toArray(object:Object):Array',
               'Transforms <span class="code">object</span> into array',
               [
@@ -2685,7 +2685,7 @@ art.DB = {
                 '// object.toArray();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'toQueryString(object:Object):String',
               'Returns query string representation of <span class="code">object</span>',
               [
@@ -3230,7 +3230,7 @@ art.DB = {
         {
           name: 'Static methods',
           members: [
-            new art.model.Member(
+            new art.Member(
               'align(string:String, length:Number, char:String, left:Boolean):String',
               'Extends length of the <span class="code">string</span> to <span class="code">length</span> value by filling' +
                 'the gap with <span class="code">char</span> characters on the side determined by ' +
@@ -3243,7 +3243,7 @@ art.DB = {
                 "// string.align(10, '-', true);"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'isBlank(string:String):Boolean',
               'Returns true if <span class="code">string</span> is null or empty; false otherwise',
               [
@@ -3262,7 +3262,7 @@ art.DB = {
                 'artjs.String.isBlank(nullValue); // true'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'capitalize(string:String):String',
               'Upcase each word in <span class="code">string</span>',
               [
@@ -3273,7 +3273,7 @@ art.DB = {
                 '// string.capitalize();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'countPattern(string:String, pattern:String):Number',
               'Returns number of <span class="code">pattern</span> occurences in <span class="code">string</span>',
               [
@@ -3284,7 +3284,7 @@ art.DB = {
                 "// string.countPattern('an');"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'isEmpty(string:String):Boolean',
               'Returns true if <span class="code">string</span> is empty; false otherwise',
               [
@@ -3301,7 +3301,7 @@ art.DB = {
 
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'first(string:String):String',
               'Returns first letter of a <span class="code">string</span>',
               [
@@ -3312,7 +3312,7 @@ art.DB = {
                 '// string.first();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'formatPrice(value:Number):String',
               'Returns price formatted string',
               [
@@ -3321,7 +3321,7 @@ art.DB = {
                 'artjs.String.formatPrice(price); // 3.70'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'getMultiPattern(pattern:String, n:Number):String',
               'Returns string containing of <span class="code">pattern</span> concatenated <span class="code">n</span> times',
               [
@@ -3332,7 +3332,7 @@ art.DB = {
                 '// string.getMultiPattern(3);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'last(string:String):String',
               'Returns last letter of a <span class="code">string</span>',
               [
@@ -3343,7 +3343,7 @@ art.DB = {
                 '// string.last();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'nullifyEmpty(string:String):Object',
               'Returns null if <span class="code">string</span> is empty; <span class="code">string</span> otherwise',
               [
@@ -3359,7 +3359,7 @@ art.DB = {
                 '// emptyString.nullifyEmpty();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'singularOrPlural(string:String, n:Number):String',
               'Returns plural version of <span class="code">string</span> if <span class="code">n</span> is other than 1',
               [
@@ -3374,7 +3374,7 @@ art.DB = {
                 '// string.singularOrPlural(5);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'strip(string:String):String',
               'Removes whitespaces from <span class="code">string</span> and returns the result',
               [
@@ -3385,7 +3385,7 @@ art.DB = {
                 '// string.strip();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'sub(string:String, start:Number, end:Number):String',
               'Periodic version of String.substring()',
               [
@@ -3396,7 +3396,7 @@ art.DB = {
                 '// string.sub(-2, 4);'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'toJson(string:String):Object',
               'Converts <span class="code">string</span> JSON format to Object',
               [
@@ -3407,7 +3407,7 @@ art.DB = {
                 '// string.toJson();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'toS(string:String):String',
               'Returns empty string if <span class="code">string</span> is null; <span class="code">string</span> otherwise',
               [
@@ -3418,7 +3418,7 @@ art.DB = {
                 'artjs.String.toS(nullValue); // (empty string)'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'trim(string:String):String',
               'Remove all the whitespaces from the begining and the end of the <span class="code">string</span>',
               [
@@ -3429,7 +3429,7 @@ art.DB = {
                 '// string.trim();'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               "truncate(string:String, n:Number, end:String = '...'):String",
               'Truncates <span class="code">string</span> to length <span class="code">n</span> and appends <span class="code">end</span>',
               [
@@ -3533,7 +3533,7 @@ art.DB = {
         {
           name: 'Constructor',
           members: [
-            new art.model.Member(
+            new art.Member(
               'Toggler(unique:Boolean = nil)',
               null,
               null,
@@ -3546,11 +3546,11 @@ art.DB = {
         {
           name: 'Properties',
           members: [
-            new art.model.Member(
+            new art.Member(
               'unique:Boolean',
               'The same as in constructor.'
             ),
-            new art.model.Member(
+            new art.Member(
               'current:Object',
               'Returns current element.'
             )
@@ -3559,7 +3559,7 @@ art.DB = {
         {
           name: 'Methods',
           members: [
-            new art.model.Member(
+            new art.Member(
               'toggle(element:Object):Void',
               'Puts a new object into container. The previous one pops out.'
             )
@@ -3568,11 +3568,11 @@ art.DB = {
         {
           name: 'Events',
           members: [
-            new art.model.Member(
+            new art.Member(
               'onActivate()',
               'Triggered when new element has been put into the container.'
             ),
-            new art.model.Member(
+            new art.Member(
               'onDeactivate()',
               'Triggered when element pops out from the container.'
             )
@@ -3589,7 +3589,7 @@ art.DB = {
         {
           name: 'Static methods',
           members: [
-            new art.model.Member(
+            new art.Member(
               'render(templateId:String, scope:Object):String',
               'Returns content on template identified by <span class="param">templateId</span> with template data ' +
                 'substituded with data from <span class="param">scope</span> object.',
@@ -3606,11 +3606,11 @@ art.DB = {
               null, 
               'To read more about templates, navigate to artjs.template.Library section.'
             ),
-            new art.model.Member(
+            new art.Member(
               'renderInto(element:Element, templateId:String, scope:Object):Void',
               "Does the same job as render() but instead of returning a content, puts it directly to element's body."
             ),
-            new art.model.Member(
+            new art.Member(
               'renderCollection(templateId:String, collection:Array):String',
               'For each scope in <span class=""param"">collection</span> renders a template and returns the result.',
               [
@@ -3621,7 +3621,7 @@ art.DB = {
                 '// &lt;li>1&lt;/li>&lt;li&gt;2&lt;/li&gt;'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'renderIf(value:Object, method:String):String',
               'Returns result of <span>method</span> call on a Helper but only if <span>value</span> is present.' +
                 "Otherwise returns empty string. It's useful when you have your custom helper methods " +
@@ -3640,7 +3640,7 @@ art.DB = {
                 "renderIf(value, 'renderDescription'); // ''"
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'register(name:String, method:Function):Void',
               'Allows you to register custom helper methods that can be used within templates.',
               [
@@ -3652,7 +3652,7 @@ art.DB = {
                 '// &lt;p class="description"&gt;Hello artjs!&lt;/p&gt;'
               ]
             ),
-            new art.model.Member(
+            new art.Member(
               'registerAll(helpers:Object):Void',
               'Allows you to register set of helper methods that can be used within templates at once.',
               [
@@ -3683,7 +3683,7 @@ art.DB = {
         {
           name: 'Static properties',
           members: [
-            new art.model.Member(
+            new art.Member(
               'config:Object',
               'Consists of two configuration parameters:<br/>' +
               'PATH - remote path to template directory<br/>' +
@@ -3707,11 +3707,11 @@ art.DB = {
         {
           name: 'Static methods',
           members: [
-            new art.model.Member(
+            new art.Member(
               'blindTo(e:Element, value:Integer, duration:Number = 0.4, type:String = EASE_IN_OUT, delay:Number = 0):Void',
               'Smoothly changes the height of element to that given by <span class="param">value</span>.'
             ),
-            new art.model.Member(
+            new art.Member(
               'blindToggle(e:Element, value:Integer, duration:Number = 0.4, type:String = EASE_IN_OUT, delay:Number = 0):Void',
               'Does the same as blindTo but only if current element height is zero. ' +
                 'Otherwise it makes transition to zero height.'
@@ -3721,7 +3721,7 @@ art.DB = {
         {
           name: 'Static properties',
           members: [
-            new art.model.Member(
+            new art.Member(
               'EASE_IN_OUT:String',
               'Used for defining blind effect type.'
             )
