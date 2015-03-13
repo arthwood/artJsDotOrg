@@ -9,6 +9,7 @@ artjs.TemplateLibrary.config.PATH = 'templates';
 artjs.TemplateLibrary.config.TEMPLATES = [
   'content/classes',
   'content/components',
+  'content/events',
   'content/introduction', 
   'content/templates', 
   'content/testing',

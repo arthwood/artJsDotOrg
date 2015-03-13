@@ -5,6 +5,7 @@ art.DB = {
     'Classes': 'classes',
     'Components': 'components',
     'Templates': 'templates',
+    'Events': 'events',
     'Reference': {
       'Global': {
         'artjs': 'main'
@@ -1856,6 +1857,7 @@ art.DB = {
         }
       ]
     },
+    events: {template: 'events'},
     introduction: {template: 'introduction'},
     list: {
       name: 'List',

@@ -1,0 +1,87 @@
+<h1>Events</h1>
+<h2>Creating event</h2>
+<div class="section">
+  <p>
+    In ArtJs any of the objects that you build is capable of triggering events. 
+  In this chapter I'll present event model used in ArtJs.
+  </p>
+  <p>
+    An event in ArtJs is an instance on <span class="code">artjs.Event</span> class.
+    Here's an example of declaring the event:
+  </p>
+  <pre>
+var Broadcaster = artjs.Class(
+  function() {
+    this.onChange = new artjs.Event('Broadcaster::onChange');
+  }
+);</pre>
+  <p>
+    <span class="code">artjs.Event</span> accepts one optional argument which is the name of event.
+  </p>
+</div>
+<h2>Registering listener</h2>
+<div class="section">
+  Let's register listener for the event we just created:
+  <pre>
+var broadcaster = new Broadcaster();
+
+broadcaster.onChange.add(artjs.$F(function(source, info) {
+  console.log(source.enabled, info);
+}));</pre>
+  <p>
+    In order to register for an event use its <span class="code">add()</span> method. 
+    It accept one argument which is an instance of <span class="code">Delegate</span> class.
+    Above we use a shortcut method <span class="code">$F</span> which returns delegate with 
+    <span content="code">null</span> as a context object.
+    This means that <span class="code">this</span> inside the function will point to <span class="code">window</span>.
+  </p>
+</div>
+<h2>Firing event</h2>
+<div class="section">
+  <p>
+    By default firing the event does not pass any arguments to a handler. Since we expect <span class="code">source</span>
+    and <span class="code">info</span> arguments we need to specify them when we fire the event.
+    Here's how to do that:
+  </p>
+  <pre>
+Broadcaster.prototype.fire = function(info) {
+  this.onChange.fire(this, info);
+};
+broadcaster.enabled = true;
+broadcaster.fire('hello');</pre>
+  <p>
+    Last line will cause to call the handler and display <span class="code">true "hello"</span> in the console.
+  </p>
+</div> 
+<h2>Broadcaster</h2>
+<div class="section">
+  <p>
+    There is one special object in ArtJs that can be used as a central unit for registering and firing events.
+    It is <span class="code">artjs.Broadcaster</span> and is useful in cases when you need to register for an event,
+    but the source of event doesn't exist yet. You can then use <span class="code">artjs.Broadcaster</span> to register 
+    for event and once the source object is created it can fire the event on <span class="code">artjs.Broadcaster</span>.<br/>
+    Here's an example:
+  </p>
+  <pre>
+var ON_SOURCE_LOAD = 'Source::onLoad';
+var listener = artjs.$F(
+  function(source) { 
+    console.log('Happy to see you', source.toString()); 
+  }
+);
+
+artjs.Broadcaster.register(ON_SOURCE_LOAD);
+artjs.Broadcaster.addListener(ON_SOURCE_LOAD, listener);
+
+var source = {
+  toString: function() {
+    return 'Source';
+  },
+
+  load: function() {
+    artjs.Broadcaster.fire(ON_SOURCE_LOAD, this);
+  }
+};
+
+source.load();</pre>
+</div>

@@ -7,7 +7,7 @@ var art = {
 
 artjs.TemplateLibrary.config.PATH = "templates";
 
-artjs.TemplateLibrary.config.TEMPLATES = [ "content/classes", "content/components", "content/introduction", "content/templates", "content/testing", "disqus", "doc", "ga", "member", "section" ];
+artjs.TemplateLibrary.config.TEMPLATES = [ "content/classes", "content/components", "content/events", "content/introduction", "content/templates", "content/testing", "disqus", "doc", "ga", "member", "section" ];
 
 artjs.Broadcaster.register(art.events.ON_SIDEBAR);
 
@@ -26,6 +26,7 @@ art.DB = {
     Classes: "classes",
     Components: "components",
     Templates: "templates",
+    Events: "events",
     Reference: {
       Global: {
         artjs: "main"
@@ -646,6 +647,9 @@ art.DB = {
           example: [ "var myEvent = new Event('MyClass::myEvent');", "var delegateOne = new Delegate(null, function(msg) {", "  console.log('event says to delegate 1: ' + msg);", "});", "var delegateTwo = new Delegate(null, function(msg) {", "  console.log('event says to delegate 2: ' + msg);", "});", "", "myEvent.add(delegateOne);", "myEvent.add(delegateTwo);", "myEvent.fire('hello!'); // delegates handle event", "myEvent.removeAll();", "myEvent.fire('hello!');// nothing happens" ]
         } ]
       } ]
+    },
+    events: {
+      template: "events"
     },
     introduction: {
       template: "introduction"
