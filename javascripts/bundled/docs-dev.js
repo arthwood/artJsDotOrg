@@ -7,7 +7,7 @@ var art = {
 
 artjs.TemplateLibrary.config.PATH = "templates";
 
-artjs.TemplateLibrary.config.TEMPLATES = [ "content/classes", "content/components", "content/events", "content/introduction", "content/templates", "content/testing", "disqus", "doc", "ga", "member", "section" ];
+artjs.TemplateLibrary.config.TEMPLATES = [ "content/classes", "content/components", "content/delegate", "content/events", "content/introduction", "content/templates", "content/testing", "disqus", "doc", "ga", "member", "section" ];
 
 artjs.Broadcaster.register(art.events.ON_SIDEBAR);
 
@@ -26,6 +26,7 @@ art.DB = {
     Classes: "classes",
     Components: "components",
     Templates: "templates",
+    Delegate: "bind",
     Events: "events",
     Reference: {
       Global: {
@@ -354,6 +355,9 @@ art.DB = {
           description: "Returns new array with items cast to String."
         } ]
       } ]
+    },
+    bind: {
+      template: "delegate"
     },
     "class": {
       name: "Class",

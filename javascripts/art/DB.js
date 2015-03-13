@@ -5,6 +5,7 @@ art.DB = {
     'Classes': 'classes',
     'Components': 'components',
     'Templates': 'templates',
+    'Delegate': 'bind',
     'Events': 'events',
     'Reference': {
       'Global': {
@@ -586,6 +587,7 @@ art.DB = {
         }
       ]
     },
+    bind: {template: 'delegate'},
     class: {
       name: 'Class',
       package: 'artjs.utils',
