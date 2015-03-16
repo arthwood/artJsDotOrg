@@ -1,14 +1,14 @@
-<h1>Classes</h1>
+<h1>Class</h1>
 <p>
-  ArtJs has a full support for building OOP code. 
-  In this section you'll learn how to create the class using ArtJs.
+  <span class="artjs">ArtJs</span> has a full support for building OOP code.<br/>
+  In this section you'll learn how to create the class using <span class="artjs">ArtJs</span>.
 </p>
 <h2>Packages</h2>
 <div class="section">
   <p>
     It highly recommended to keep your code well organized. 
     One of the way to achieve this is group your classes into packages/modules.
-    ArtJs doesn't enforce you to use specific way to achieve this.<br/>
+    <span class="artjs">ArtJs</span> doesn't enforce you to use specific way to achieve this.<br/>
     In JS the simplest way is to create tree structure by defining one global generic object:
   </p>
   <pre>
@@ -23,11 +23,15 @@ window.project = {
 <h2>Classes</h2>
 <div class="section">
   <p>
-    In ArtJs, class can be defined using <span class="code">artjs.Class</span>. It has following signature:
+    In <span class="artjs">ArtJs</span>, class can be defined using <span class="code">artjs.Class</span>. It has following signature:
   </p>
   <pre>
-artjs.Class(&lt;Function constructor&gt;, &lt;Object prototype&gt;, &lt;Object static&gt;, &lt;Function superclass&gt;);
-  </pre>
+artjs.Class(
+  Function &lt;constructor&gt;, 
+  Object &lt;prototype&gt;, 
+  Object &lt;static&gt;, 
+  Function &lt;superclass&gt;
+);</pre>
   <p>Here's the example of how we can create <span class="code">Phone</span> class:</p>
   <pre>
 project.models.Phone = artjs.Class(

@@ -1,0 +1,34 @@
+<h1>View</h1>
+<p>
+  <span class="code">View</span> is a <span class="code">Component</span> that couples data in 
+  <span class="code">Model</span> with the <span class="code">Template</span>.
+</p>
+<h2>Definition</h2>
+<div class="section">
+  <p>
+    You define <span class="code">View</span> as a class attached to html element:
+  </p>
+  <pre>&lt;div class="art artjs-View"&gt;&lt;/div&gt;</pre>
+  <p>
+    <span class="code">View</span> will try to render content of the element (will treat it as a template).<br/>
+    Optionally with <span class="code">data-template="&lt;template_id&gt;"</span> attribute you can provide 
+    template id to render as content.
+    Another option is <span class="code">data-replace="true"</span> so the rendered template will replace the element.
+  </p>
+  <p>In most cases you will create own class that extends <span class="code">View</span> and declare it in HTML:</p>
+  <pre>&lt;div class="art artjs-CustomView" data-template="template_id" &gt;&lt;/div&gt;</pre>
+</div>
+<h2>Model</h2>
+<div class="section">
+  <p>
+    Each <span class="code">View</span> class instance has its private <span class="code">_model</span> property which is
+    an instance of <span class="code">artjs.data.Model</span> class.<br/>
+    The main feature of a view is the fact that whenever you make a change to model, associated template is automatically re-rendered.
+    Only specific properties of a model will trigger re-rendering the template, namely the ones that you register: 
+  </p>
+  <pre>
+this._model.addProperty('myProp');</pre>
+  <p>
+    It's also possible to assign another model to view using <span class="code">setModel()</span> method.
+  </p>
+</div>

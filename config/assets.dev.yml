@@ -80,7 +80,7 @@ javascripts:
     - 'art/component/Content'
     - 'art/component/Member'
     - 'art/component/Test'
-    - 'art/component/Version'
+    - 'art/view/Version'
   main-dev: 'Main'
 stylesheets:
   shared-dev: 'css/shared'

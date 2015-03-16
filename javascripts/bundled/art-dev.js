@@ -941,6 +941,9 @@ artjs.String = artjs.utils.String = {
   startsWith: function(str, substr) {
     var re = new RegExp("^" + substr);
     return re.test(str);
+  },
+  toBoolean: function(str) {
+    return str === "true";
   }
 };
 
@@ -2235,12 +2238,12 @@ artjs.Timeline = artjs.events.Timeline = artjs.Class(null, {
 });
 
 artjs.Timeout = artjs.events.Timeout = artjs.Class(function(delay) {
+  artjs.Delegate.bindAll(this);
   this._delay = delay;
-  this._onTimeoutDC = artjs.$DC(this, this._onTimeout);
   this.onComplete = new artjs.Event("Timeout:onComplete");
 }, {
   start: function() {
-    this._id = setTimeout(this._onTimeoutDC, this._delay);
+    this._id = setTimeout(this._onTimeout, this._delay);
   },
   isRunning: function() {
     return this._id !== null;
@@ -2265,6 +2268,7 @@ artjs.Timeout = artjs.events.Timeout = artjs.Class(function(delay) {
 });
 
 artjs.TransitionBase = artjs.transition.Base = artjs.Class(function(property, element, value, duration, type, delay, from) {
+  artjs.$BA(this);
   this.property = property;
   this.element = element;
   this.duration = artjs.Object.getDefault(duration, 1);
@@ -2272,16 +2276,15 @@ artjs.TransitionBase = artjs.transition.Base = artjs.Class(function(property, el
   this.type = type || this.ctor.LINEAR;
   this.delay = delay || 0;
   this.from = from;
-  this._deferredD = artjs.$D(this, "_deferred");
 }, {
   run: function() {
     if (artjs.Object.isPresent(this.from)) {
-      this._setStyle(this.from);
       this._setEffectStyle("none");
+      this._setStyle(this.from);
     }
-    artjs.Timeout.defer(this._deferredD);
+    artjs.Timeout.fire(this._onDeferred.delegate, 100);
   },
-  _deferred: function() {
+  _onDeferred: function() {
     this._setEffectStyle(this.property);
     this._setStyle(this.value);
   },
@@ -2917,7 +2920,14 @@ artjs.TemplateBase = artjs.template.Base = {
     return compiler.compile();
   },
   renderInto: function(element, content, scope) {
-    artjs.Element.setContent(element, this.render(content, scope));
+    content = this.render(content, scope);
+    artjs.Element.setContent(element, content);
+    this.evalScripts(element);
+    artjs.ComponentScanner.scan(element);
+  },
+  renderOnto: function(element, content, scope) {
+    content = this.render(content, scope);
+    element = artjs.Element.replace(artjs.ElementBuilder.parse(content), element);
     this.evalScripts(element);
     artjs.ComponentScanner.scan(element);
   },
@@ -3066,7 +3076,6 @@ artjs.TemplateLibrary = artjs.template.Library = {
   init: function() {
     artjs.$BA(this);
     this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
-    artjs.Element.hide(document.body);
     artjs.Array.each(this._templatesToLoad, this._load, this);
     this._loadCheck();
   },
@@ -3085,9 +3094,8 @@ artjs.TemplateLibrary = artjs.template.Library = {
   },
   _onAllLoaded: function() {
     var body = document.body;
-    artjs.Element.show(body);
-    artjs.TemplateBase.renderElement(body, window);
-    this._templatesContainer = artjs.Element.insert(document.body, artjs.$E("div", {
+    artjs.ComponentScanner.scan(body);
+    this._templatesContainer = artjs.Element.insert(body, artjs.$E("div", {
       id: "artjs-Templates"
     }));
     artjs.onLibraryLoad.fire(this);
@@ -3516,18 +3524,31 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
 
 artjs.View = artjs.component.View = artjs.Class(function(element) {
   this.super(element);
-  this._templateId = artjs.Element.getDataValue(this._element, "template");
   artjs.$BA(this);
-  this._model = new artjs.Model;
-  this._model.onChange.add(this._onModelChange.delegate);
+  var replace = artjs.String.toBoolean(artjs.Element.getDataValue(this._element, "replace"));
+  this._renderMethod = replace ? "renderOnto" : "renderInto";
+  this._template = this._getTemplate();
+  this.setModel(new artjs.Model);
   this.onUpdate = new artjs.Event("View::onUpdate");
 }, {
   getModel: function() {
     return this._model;
   },
+  setModel: function(model) {
+    this._model = model;
+    this._model.onChange.add(this._onModelChange.delegate);
+    this._render();
+  },
   _onModelChange: function(property, newValue, oldValue) {
-    artjs.TemplateHelpers.renderInto(this._element, this._templateId, this._model);
+    this._render();
     this.onUpdate.fire(this, property, newValue, oldValue);
+  },
+  _render: function() {
+    artjs.TemplateBase[this._renderMethod](this._element, this._template, this._model);
+  },
+  _getTemplate: function() {
+    var templateId = artjs.Element.getDataValue(this._element, "template");
+    return templateId ? artjs.TemplateLibrary.getTemplate(templateId) : artjs.Element.getContent(this._element);
   }
 }, null, artjs.Component);
 

@@ -2,18 +2,20 @@ var art = {
   component: {},
   events: {
     ON_SIDEBAR: 'Sidebar::onClick'
-  }
+  },
+  view: {}
 };
 
 artjs.TemplateLibrary.config.PATH = 'templates';
 artjs.TemplateLibrary.config.TEMPLATES = [
-  'content/classes',
-  'content/components',
+  'content/class',
+  'content/component',
   'content/delegate',
-  'content/events',
+  'content/event',
   'content/introduction', 
-  'content/templates', 
+  'content/template', 
   'content/testing',
+  'content/view',
   'disqus',
   'doc', 
   'ga', 

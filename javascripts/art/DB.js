@@ -2,11 +2,12 @@ art.DB = {
   tree: {
     'Introduction': 'introduction',
     'Testing': 'testing',
-    'Classes': 'classes',
-    'Components': 'components',
-    'Templates': 'templates',
-    'Delegate': 'bind',
-    'Events': 'events',
+    'Class': 'class2',
+    'Component': 'component2',
+    'View': 'view',
+    'Template': 'template',
+    'Delegate': 'delegate2',
+    'Event': 'event',
     'Reference': {
       'Global': {
         'artjs': 'main'
@@ -587,7 +588,6 @@ art.DB = {
         }
       ]
     },
-    bind: {template: 'delegate'},
     class: {
       name: 'Class',
       package: 'artjs.utils',
@@ -682,7 +682,7 @@ art.DB = {
         }
       ]
     },
-    classes: {template: 'classes'},
+    class2: {template: 'class'},
     clock: {
       name: 'Clock',
       package: 'artjs.events',
@@ -849,7 +849,7 @@ art.DB = {
         }
       ]
     },
-    components: {template: 'components'},
+    component2: {template: 'component'},
     date: {
       name: 'artjs.Date',
       package: 'artjs.utils',
@@ -1136,6 +1136,7 @@ art.DB = {
         }
       ]
     },
+    delegate2: {template: 'delegate'},
     element: {
       name: 'artjs.Element',
       package: 'artjs.utils',
@@ -3448,7 +3449,7 @@ art.DB = {
         }
       ]
     },
-    templates: {template: 'templates'},
+    template: {template: 'template'},
     testing: {template: 'testing'},
     timeline: {
       name: 'Timeline',
@@ -3732,6 +3733,7 @@ art.DB = {
           ]
         }
       ]
-    }
+    },
+    view: {template: 'view'}
   }
 };

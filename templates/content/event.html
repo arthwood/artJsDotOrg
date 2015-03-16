@@ -1,12 +1,12 @@
-<h1>Events</h1>
+<h1>Event</h1>
 <h2>Creating event</h2>
 <div class="section">
   <p>
-    In ArtJs any of the objects that you build is capable of triggering events. 
-  In this chapter I'll present event model used in ArtJs.
+    In <span class="artjs">ArtJs</span> any of the objects that you build is capable of triggering events. 
+  In this chapter I'll present event model used in <span class="artjs">ArtJs</span>.
   </p>
   <p>
-    An event in ArtJs is an instance on <span class="code">artjs.Event</span> class.
+    An event in <span class="artjs">ArtJs</span> is an instance on <span class="code">artjs.Event</span> class.
     Here's an example of declaring the event:
   </p>
   <pre>
@@ -56,7 +56,7 @@ broadcaster.fire('hello');</pre>
 <h2>Broadcaster</h2>
 <div class="section">
   <p>
-    There is one special object in ArtJs that can be used as a central unit for registering and firing events.
+    There is one special object in <span class="artjs">ArtJs</span> that can be used as a central unit for registering and firing events.
     It is <span class="code">artjs.Broadcaster</span> and is useful in cases when you need to register for an event,
     but the source of event doesn't exist yet. You can then use <span class="code">artjs.Broadcaster</span> to register 
     for event and once the source object is created it can fire the event on <span class="code">artjs.Broadcaster</span>.<br/>

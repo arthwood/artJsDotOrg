@@ -17,7 +17,7 @@
     <div class="main">
       <div class="header">
         <a href="index.html">ArtJs <span>docs</span></a>
-        <span class="art art-component-Version" id="version"></span>
+        <span class="art art-view-Version" id="version">({{version}})</span>
       </div>
       <div class="clearfix">
         <div class="art art-component-Content" id="content"></div>
@@ -26,6 +26,6 @@
         </div>
       </div>
     </div>
-    {{render('ga')}}
+    <div class="art artjs-View" id="ga" data-template="ga" data-replace="true"></div>
   </body>
 </html>

@@ -1,4 +1,4 @@
-<h1>Components</h1>
+<h1>Component</h1>
 <p>
   Components allow you to create visual element with encapsulated functionality.
 </p>
@@ -7,13 +7,17 @@
 </h2>
 <div class="section">
   <p>
-    In order to define a component, assign to any HTML element css class <span class="code">art</span>.<br/>
-    However this wont do much. It will only allow the framework to recognize that this element is an component.
-    In order to define a behaviour just assign another css class that corresponds to js class defined in your code.<br/>
-    For example: <span class="code">app-components-MyComponent</span>. Framework will search for a class
-    <span class="code">app.components.MyComponent</span> and instantiate it whenever that element appears in UI.<br/>
-    That class must extend artjs.Component (see class definition) and you must call <span class="code">super()</span> 
-    in the constructor. Doing that will give you access to <span class="code">element</span> property which keeps
+    In order to define a component, assign to any HTML element css class <span class="code">"art"</span>.<br/>
+    However this wont do much. It will only allow the framework to recognize the fact that this element is an component.
+    In order to define a behaviour just assign another css class that corresponds to js class defined in your code, e.g.:
+  </p>
+<pre>&lt;div class="art app-components-MyComponent"&gt;&lt;/div&gt;</pre>
+  <p>
+    Here, framework will search for a class <span class="code">app.components.MyComponent</span> and instantiate it 
+    whenever that element appears in UI.<br/>
+    That class must extend <span class="code">artjs.Component</span> (see class definition) and you must call 
+    <span class="code">super()</span> in the constructor. 
+    Doing that will give you access to <span class="code">element</span> property which keeps
     a reference to the main element (the one with assigned css class).
   </p>
 </div>

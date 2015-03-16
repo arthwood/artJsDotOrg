@@ -2,12 +2,13 @@ var art = {
   component: {},
   events: {
     ON_SIDEBAR: "Sidebar::onClick"
-  }
+  },
+  view: {}
 };
 
 artjs.TemplateLibrary.config.PATH = "templates";
 
-artjs.TemplateLibrary.config.TEMPLATES = [ "content/classes", "content/components", "content/delegate", "content/events", "content/introduction", "content/templates", "content/testing", "disqus", "doc", "ga", "member", "section" ];
+artjs.TemplateLibrary.config.TEMPLATES = [ "content/class", "content/component", "content/delegate", "content/event", "content/introduction", "content/template", "content/testing", "content/view", "disqus", "doc", "ga", "member", "section" ];
 
 artjs.Broadcaster.register(art.events.ON_SIDEBAR);
 
@@ -23,11 +24,12 @@ art.DB = {
   tree: {
     Introduction: "introduction",
     Testing: "testing",
-    Classes: "classes",
-    Components: "components",
-    Templates: "templates",
-    Delegate: "bind",
-    Events: "events",
+    Class: "class2",
+    Component: "component2",
+    View: "view",
+    Template: "template",
+    Delegate: "delegate2",
+    Event: "event",
     Reference: {
       Global: {
         artjs: "main"
@@ -356,9 +358,6 @@ art.DB = {
         } ]
       } ]
     },
-    bind: {
-      template: "delegate"
-    },
     "class": {
       name: "Class",
       "package": "artjs.utils",
@@ -382,8 +381,8 @@ art.DB = {
         members: [ new art.Member("_onCreated():Void", "Invoked as a static method when class construction has completed.<br/>" + "Useful for class initialization. Some of class properties are set at this point.<br/>" + "You must always call super when implementing this hook.", [ "_onCreated: function() {", "  this.super();", "", "  console.log(this.subclasses);", "}" ]), new art.Member("_onExtended():Void", "Invoked as a static method when subclass construction has completed.<br/>" + "Useful for class initialization. Some of class properties are set at this point.<br/>" + "You must always call super when implementing this hook.", [ "_onExtended: function() {", "  this.super();", "", "  console.log(this.superclass + ' has been extended by ' + this);", "}" ]) ]
       } ]
     },
-    classes: {
-      template: "classes"
+    class2: {
+      template: "class"
     },
     clock: {
       name: "Clock",
@@ -460,8 +459,8 @@ art.DB = {
         } ]
       } ]
     },
-    components: {
-      template: "components"
+    component2: {
+      template: "component"
     },
     date: {
       name: "artjs.Date",
@@ -527,6 +526,9 @@ art.DB = {
           example: [ "var obj = {id: 4};", "", "function meth(source, name, greeting) {", "  console.log('source: ' + source + ', id: ' + this.id + ': ' + greeting + \", it's \" + name);", "}", "", "var delegate = Delegate.create(obj, meth, 'hello');", "var callback = delegate.callback(true);", "", "callback('Steve');" ]
         } ]
       } ]
+    },
+    delegate2: {
+      template: "delegate"
     },
     element: {
       name: "artjs.Element",
@@ -1113,8 +1115,8 @@ art.DB = {
         members: [ new art.Member("align(string:String, length:Number, char:String, left:Boolean):String", 'Extends length of the <span class="code">string</span> to <span class="code">length</span> value by filling' + 'the gap with <span class="code">char</span> characters on the side determined by ' + '<span class="code">left</span> argument', [ "var string = 'color';", "", "artjs.String.align(string, 10, '-', true); // color-----", "// or", "// string.align(10, '-', true);" ]), new art.Member("isBlank(string:String):Boolean", 'Returns true if <span class="code">string</span> is null or empty; false otherwise', [ "var string = 'quantum mechanics';", "var emptyString = '      ';", "var nullValue = null;", "", "artjs.String.isBlank(string); // false", "// or", "// string.isBlank();", "", "artjs.String.isBlank(emptyString); // true", "// or", "// emptyString.isBlank();", "", "artjs.String.isBlank(nullValue); // true" ]), new art.Member("capitalize(string:String):String", 'Upcase each word in <span class="code">string</span>', [ "var string = 'advanced quantum mechanics';", "", "artjs.String.capitalize(string); // Advanced Quantum Mechanics", "// or", "// string.capitalize();" ]), new art.Member("countPattern(string:String, pattern:String):Number", 'Returns number of <span class="code">pattern</span> occurences in <span class="code">string</span>', [ "var string = 'advanced quantum mechanics';", "", "artjs.String.countPattern(string, 'an'); // 3", "// or", "// string.countPattern('an');" ]), new art.Member("isEmpty(string:String):Boolean", 'Returns true if <span class="code">string</span> is empty; false otherwise', [ "var string = 'quantum mechanics';", "var emptyString = '      ';", "", "artjs.String.isEmpty(string); // false", "// or", "// string.isEmpty();", "", "artjs.String.isEmpty(emptyString); // true", "// or", "// emptyString.isEmpty();" ]), new art.Member("first(string:String):String", 'Returns first letter of a <span class="code">string</span>', [ "var string = 'quantum mechanics';", "", "artjs.String.first(string); // q", "// or", "// string.first();" ]), new art.Member("formatPrice(value:Number):String", "Returns price formatted string", [ "var price = 3.7;", "", "artjs.String.formatPrice(price); // 3.70" ]), new art.Member("getMultiPattern(pattern:String, n:Number):String", 'Returns string containing of <span class="code">pattern</span> concatenated <span class="code">n</span> times', [ "var string = 'yes, ';", "", "artjs.String.getMultiPattern(string, 3); // yes, yes, yes,", "// or", "// string.getMultiPattern(3);" ]), new art.Member("last(string:String):String", 'Returns last letter of a <span class="code">string</span>', [ "var string = 'quantum mechanics';", "", "artjs.String.last(string); // s", "// or", "// string.last();" ]), new art.Member("nullifyEmpty(string:String):Object", 'Returns null if <span class="code">string</span> is empty; <span class="code">string</span> otherwise', [ "var string = 'quantum mechanics';", "var emptyString = '      ';", "", "artjs.String.nullifyEmpty(string); // quantum mechanics", "// or", "// string.nullifyEmpty();", "", "artjs.String.nullifyEmpty(emptyString); // null", "// or", "// emptyString.nullifyEmpty();" ]), new art.Member("singularOrPlural(string:String, n:Number):String", 'Returns plural version of <span class="code">string</span> if <span class="code">n</span> is other than 1', [ "var string = 'chicken';", "", "artjs.String.singularOrPlural(string, 1); // chicken", "// or", "// string.singularOrPlural(1);", "", "artjs.String.singularOrPlural(string, 5); // chickens", "// or", "// string.singularOrPlural(5);" ]), new art.Member("strip(string:String):String", 'Removes whitespaces from <span class="code">string</span> and returns the result', [ "var string = 'quantum mechanics';", "", "artjs.String.strip(string); // quantummechanics", "// or", "// string.strip();" ]), new art.Member("sub(string:String, start:Number, end:Number):String", "Periodic version of String.substring()", [ "var string = 'quantum mechanics';", "", "artjs.String.sub(string, -2, 4); // csquan", "// or", "// string.sub(-2, 4);" ]), new art.Member("toJson(string:String):Object", 'Converts <span class="code">string</span> JSON format to Object', [ "var string = \"{id: 5, name: 'Mike'}\";", "", "artjs.String.toJson(string); // {id: 5, name: 'Mike'}", "// or", "// string.toJson();" ]), new art.Member("toS(string:String):String", 'Returns empty string if <span class="code">string</span> is null; <span class="code">string</span> otherwise', [ "var string = 'quantum mechanics';", "var nullValue = null;", "", "artjs.String.toS(string); // quantum mechanics", "artjs.String.toS(nullValue); // (empty string)" ]), new art.Member("trim(string:String):String", 'Remove all the whitespaces from the begining and the end of the <span class="code">string</span>', [ "var string = '    quantum mechanics  ';", "", "artjs.String.trim(string); // quantum mechanics", "// or", "// string.trim();" ]), new art.Member("truncate(string:String, n:Number, end:String = '...'):String", 'Truncates <span class="code">string</span> to length <span class="code">n</span> and appends <span class="code">end</span>', [ "var string = 'quantum field theory';", "", "artjs.String.truncate(string, 8); // quantum...", "// or", "// string.truncate(8);" ]) ]
       } ]
     },
-    templates: {
-      template: "templates"
+    template: {
+      template: "template"
     },
     testing: {
       template: "testing"
@@ -1223,6 +1225,9 @@ art.DB = {
         name: "Static properties",
         members: [ new art.Member("EASE_IN_OUT:String", "Used for defining blind effect type.") ]
       } ]
+    },
+    view: {
+      template: "view"
     }
   }
 };
@@ -1325,9 +1330,10 @@ art.component.Member = artjs.Class(function(element) {
   _name: "art.component.Member"
 }, artjs.Component);
 
-art.component.Version = artjs.Class(function(element) {
+art.view.Version = artjs.Class(function(element) {
   this.super(element);
-  artjs.Element.setContent(this._element, "(" + artjs.VERSION + ")");
+  this._model.addProperty("version");
+  this._model.version = artjs.VERSION;
 }, null, {
-  _name: "art.component.Version"
-}, artjs.Component);
+  _name: "art.view.Version"
+}, artjs.View);
