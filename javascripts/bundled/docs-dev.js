@@ -29,7 +29,7 @@ art.DB = {
     View: "view",
     Template: "template",
     Delegate: "delegate2",
-    Event: "event",
+    Event: "event2",
     Reference: {
       Global: {
         artjs: "main"
@@ -654,8 +654,8 @@ art.DB = {
         } ]
       } ]
     },
-    events: {
-      template: "events"
+    event2: {
+      template: "event"
     },
     introduction: {
       template: "introduction"
