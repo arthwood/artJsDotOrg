@@ -13,8 +13,6 @@ javascripts:
     - 'artJs/utils/Lang'
     - 'artJs/utils/Toggler'
     - 'artJs/utils/ClassToggler'
-    - 'artJs/module/Locator'
-    - 'artJs/events/DelegateCollection' 
     - 'artJs/events/Event'
     - 'artJs/math/Point'
     - 'artJs/math/Rectangle'

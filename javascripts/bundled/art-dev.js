@@ -1506,67 +1506,31 @@ artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(function(className) 
   }
 });
 
-artjs.Locator = artjs.module.Locator = {
-  register: function(object) {
-    object.instances = [];
-    artjs.Object.extend(object, this.extensions);
-  },
-  extensions: {
-    find: function(i) {
-      this.identifier = i;
-      return artjs.Array.detect(this.instances, this.found, this);
-    },
-    found: function(i) {
-      return i.getIdentifier() == this.identifier;
-    }
-  }
-};
-
-artjs.DelegateCollection = artjs.events.DelegateCollection = artjs.Class(function(items) {
-  this._items = items || [];
+artjs.Event = artjs.events.Event = artjs.Class(function(name) {
+  this._name = name;
+  this._items = [];
 }, {
-  invoke: function() {
+  fire: function() {
     this._args = artjs.$A(arguments);
     return artjs.Array.map(this._items, this._delegateToResult, this);
   },
   add: function(delegate) {
     this._items.push(delegate);
   },
-  removeAt: function(i) {
-    artjs.Array.removeAt(this._items, i);
-  },
   remove: function(delegate) {
     artjs.Array.removeItem(this._items, delegate);
   },
-  clear: function() {
+  removeAll: function() {
     this._items.splice(0);
   },
   getLength: function() {
     return this._items.length;
   },
+  getName: function() {
+    return this._name;
+  },
   _delegateToResult: function(i, idx, arr) {
     return i.invoke.apply(i, this._args);
-  }
-});
-
-artjs.Event = artjs.events.Event = artjs.Class(function(name) {
-  this.name = name;
-  this.collection = new artjs.DelegateCollection;
-}, {
-  fire: function() {
-    return this.collection.invoke.apply(this.collection, artjs.$A(arguments));
-  },
-  add: function(delegate) {
-    this.collection.add(delegate);
-  },
-  remove: function(delegate) {
-    this.collection.remove(delegate);
-  },
-  removeAll: function() {
-    this.collection.clear();
-  },
-  getLength: function() {
-    return this.collection.getLength();
   }
 });
 
@@ -2022,33 +1986,40 @@ artjs.Model = artjs.data.Model = artjs.Class(function() {
     return [ prop, this._toProperty(prop) ];
   },
   _toProperty: function(name) {
-    var set = function(value) {
+    return {
+      configurable: false,
+      enumerable: true,
+      get: this._createGetter(name),
+      set: this._createSetter(name)
+    };
+  },
+  _createGetter: function(name) {
+    var result = function() {
+      var prop = arguments.callee.prop;
+      var privateName = "_" + prop;
+      return this[privateName];
+    };
+    result.prop = name;
+    return result;
+  },
+  _createSetter: function(name) {
+    var result = function(value) {
       var prop = arguments.callee.prop;
       var privateName = "_" + prop;
       var oldValue = this[privateName];
       this[privateName] = value;
       this.onPropertyChange(prop, value, oldValue);
     };
-    set.prop = name;
-    var get = function() {
-      var prop = arguments.callee.prop;
-      var privateName = "_" + prop;
-      return this[privateName];
-    };
-    get.prop = name;
-    return {
-      configurable: false,
-      enumerable: true,
-      set: set,
-      get: get
-    };
+    result.prop = name;
+    return result;
   }
 });
 
 artjs.Queue = artjs.data.Queue = artjs.Class(function(data) {
+  artjs.$BA(this);
   this.onChange = new artjs.Event("Queue::onChange");
   this.list = new artjs.List(data);
-  this.list.onChange.add(artjs.$D(this, this._onChange));
+  this.list.onChange.add(this._onChange.delegate);
 }, {
   _onChange: function() {
     this.onChange.fire(this);
@@ -3553,16 +3524,16 @@ artjs.View = artjs.component.View = artjs.Class(function(element) {
 }, null, artjs.Component);
 
 artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
-  artjs.on("mousemove", document, artjs.$D(this, this._onMouseMove));
+  artjs.$BA(this);
+  artjs.on("mousemove", document, this._onMouseMove.delegate);
   this._toggler = new artjs.Toggler(true);
-  this._toggler.onActivate.add(artjs.$D(this, this._onActivate));
-  this._toggler.onDeactivate.add(artjs.$D(this, this._onDeactivate));
+  this._toggler.onActivate.add(this._onActivate.delegate);
+  this._toggler.onDeactivate.add(this._onDeactivate.delegate);
 }, {
   _onMouseMove: function(e, ee) {
     var targets = ee.getTargets(e);
     var origin = targets.origin;
-    var eu = artjs.Element;
-    if (eu.children(origin).any(eu.isText)) {
+    if (artjs.Array.any(artjs.Element.children(origin), artjs.Element.isText)) {
       this._toggler.toggle(origin);
     }
   },
