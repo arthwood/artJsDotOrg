@@ -10,5 +10,8 @@
     padding: 0 6px; }
     .artjs-Calendar table td.selected {
       font-weight: bold; }
+    .artjs-Calendar table td.weekend {
+      background-color: #cfffdf; }
     .artjs-Calendar table td.invalid {
-      cursor: default; }
+      cursor: default;
+      background-color: #aaaaaa; }

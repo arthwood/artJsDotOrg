@@ -8,5 +8,5 @@ art.view.Version = artjs.Class(
   },
   null,
   {_name: 'art.view.Version'},
-  artjs.View
+  artjs.TemplateView
 );

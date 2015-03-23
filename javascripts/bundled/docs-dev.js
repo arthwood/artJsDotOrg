@@ -1336,4 +1336,4 @@ art.view.Version = artjs.Class(function(element) {
   this._model.version = artjs.VERSION;
 }, null, {
   _name: "art.view.Version"
-}, artjs.View);
+}, artjs.TemplateView);
