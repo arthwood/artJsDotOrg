@@ -2927,7 +2927,11 @@ artjs.TemplateBase = artjs.template.Base = {
   renderOnto: function(element, content, scope) {
     content = this.render(content, scope);
     element = artjs.Element.replace(artjs.ElementBuilder.parse(content), element);
-    this.evalScripts(element);
+    if (artjs.Element.toTagString(element) == "script") {
+      this.evalScript(element);
+    } else {
+      this.evalScripts(element);
+    }
     artjs.ComponentScanner.scan(element);
   },
   renderElement: function(element, scope) {
