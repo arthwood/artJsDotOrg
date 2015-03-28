@@ -30,7 +30,6 @@ module.exports = function(config) {
       'javascripts/artJs/component/*.js',
       'javascripts/artJs/data/*.js',
       'javascripts/artJs/dom/*.js',
-      'javascripts/artJs/module/*.js',
       'javascripts/artJs/net/*.js',
       'javascripts/artJs/spec/matcher/Base.js',
       'javascripts/artJs/spec/node/Base.js',
