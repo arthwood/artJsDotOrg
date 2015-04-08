@@ -2396,18 +2396,10 @@ art.DB = {
                 'artjs.Object.all(object, function(i) {', 
                 '  return i !== false;',  
                 '}); // true ',
-                '// or ',
-                '// object.all(function(i) {', 
-                '  return i !== false;',
-                '});',
                 '',
                 'artjs.Object.all(object, function(i) {', 
                 '  return !isNaN(parseInt(i));',
-                '}); // false',
-                '// or',
-                '// object.all(function(i) {', 
-                '  return !isNaN(parseInt(i));',  
-                '});'
+                '}); // false'
               ]
             ),
             new art.Member(
@@ -2416,9 +2408,6 @@ art.DB = {
               [
                 'var object = {id: 4};', 
                 'var copy = artjs.Object.copy(object);',  
-                '',
-                '// or', 
-                '// var copy = object.copy();',  
                 '',
                 'object.id = 5;', 
                 'object.id; // 5',
@@ -2434,9 +2423,6 @@ art.DB = {
                 '',
                 'artjs.Object.copyProps(source, target);',  
                 '',
-                '// or' ,
-                '// source.copyProps(target);',  
-                '',
                 'source; // {id: 4}',
                 'target; // {active: true, id: 4}'
               ]
@@ -2448,12 +2434,7 @@ art.DB = {
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
                 'artjs.Object.each(object, function(i) {', 
                 '  alert(i);',
-                '});',  
-                '',
-                '// or',
-                '// object.each(function(i) {', 
-                '//   alert(i);', 
-                '// });'
+                '});'
               ]
             ),
             new art.Member(
@@ -2463,12 +2444,7 @@ art.DB = {
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",
                 'artjs.Object.eachKey(object, function(i) {',
                 '  alert(i);',
-                '});',
-                '',
-                '// or', 
-                '// object.eachKey(function(i) {', 
-                '//   alert(i);',
-                '// });'
+                '});'
               ]
             ),
             new art.Member(
@@ -2478,12 +2454,7 @@ art.DB = {
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
                 'artjs.Object.eachPair(object, function(k, v) {', 
                 "  alert(k + ' -> ' + v);", 
-                '});',
-                '',
-                '// or',
-                '// object.eachPair(function(k, v) {', 
-                "//   alert(k + ' -> ' + v);", 
-                '// });'
+                '});'
               ]
             ),
             new art.Member(
@@ -2493,13 +2464,8 @@ art.DB = {
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
                 'var empty = {};',
                 '',
-                'artjs.Object.isEmpty(object); // false', 
-                '// or',
-                '// object.isEmpty();',  
-                '',
-                'artjs.Object.isEmpty(empty); // true', 
-                '// or',
-                '// empty.isEmpty();'  
+                'artjs.Object.isEmpty(object); // false',
+                'artjs.Object.isEmpty(empty); // true'
               ]
             ),
             new art.Member(
@@ -2511,9 +2477,6 @@ art.DB = {
                 'var target = {active: true};',  
                 '',
                 'artjs.Object.extend(target, base);',  
-                '',
-                '// or', 
-                '// target.extend(base);',  
                 '',
                 'base; // {id: 4}',
                 'target; // {active: true, id: 4}'
@@ -2534,13 +2497,8 @@ art.DB = {
               [
                 "var object = {color: 'white', id: 5};",  
                 '',
-                'artjs.Object.include(object, 5); // true', 
-                '// or',
-                '// object.include(5);',  
-                '',
-                'artjs.Object.include(object, true); // false', 
-                '// or',
-                '// object.include(true);'
+                'artjs.Object.include(object, 5); // true',
+                'artjs.Object.include(object, true); // false'
               ]
             ),
             new art.Member(
@@ -2549,13 +2507,8 @@ art.DB = {
               [
                 "var object = {color: 'white', id: 5};",  
                 '',
-                "artjs.Object.includeAll(object, {color: 'white', id: 5}); // true", 
-                '// or',
-                "// object.includeAll({color: 'white', id: 5});",  
-                '',
-                "artjs.Object.includeAll(object, {id: 5, name: 'Mike'}); // false", 
-                '// or',
-                "// object.includeAll({id: 5, name: 'Mike'});"
+                "artjs.Object.includeAll(object, {color: 'white', id: 5}); // true",
+                "artjs.Object.includeAll(object, {id: 5, name: 'Mike'}); // false"
               ]
             ),
             new art.Member(
@@ -2564,9 +2517,6 @@ art.DB = {
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};", 
                 "var mapped = artjs.Object.map(object, function(k, v) {return k + ':' + v});",  
-                '',
-                '// or',
-                "// var mapped = object.map(function(k, v) {return k + ':' + v});",  
                 '',
                 "mapped; // ['id:4', 'active:true', 'project_id:4', 'status:4']"
               ]
@@ -2580,11 +2530,6 @@ art.DB = {
                 '  return artjs.String.capitalizeUnderscored(k);',
                 '});',
                 '',
-                '// or',
-                '// var mapped = object.mapKey(function(k) {',
-                '//   return artjs.String.capitalizeUnderscored(k);', 
-                '// });',
-                '',
                 'mapped; // {Id: 8, Active: 2, ProjectId: 8, Status: 8}'
               ]
             ),
@@ -2593,10 +2538,7 @@ art.DB = {
               'Transforms value using <span class="param">callback</span> function',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",
-                'var mapped = artjs.Object.mapValue(object, function(v) {return v * 2});',  
-                '',
-                '// or',
-                '// var mapped = object.mapValue(function(v) {return v * 2});',  
+                'var mapped = artjs.Object.mapValue(object, function(v) {return v * 2});',
                 '',
                 'mapped; // {id: 8, active: 2, project_id: 8, status: 8}'
               ]
@@ -2610,8 +2552,6 @@ art.DB = {
                 '',
                 'artjs.Object.merge(target, base); // {active: true, id: 4}',  
                 '',
-                '// or', 
-                '// target.merge(base);',  
                 '',
                 'base; // {id: 4}',
                 'target; // {active: true, id: 4}'
@@ -2626,11 +2566,6 @@ art.DB = {
                 '  return i === true;',
                 '});',  
                 '',
-                '// or' ,
-                '// object.reject(function(i) {', 
-                '//   return i === true;', 
-                '// });',  
-                '',
                 "filtered; // {id: 4, project_id: 4, status: '4'}"
               ]
             ),
@@ -2642,9 +2577,6 @@ art.DB = {
                 '',
                 'artjs.Object.removeValue(object, 4);',  
                 '',
-                '// or',
-                '// object.removeValue(4);',  
-                '',
                 "object; // {active: true, status: '4'}"
               ]
             ),
@@ -2655,9 +2587,6 @@ art.DB = {
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
                 '',
                 "artjs.Object.removeValues(object, [4, '4']);",  
-                '',
-                '// or' ,
-                "// object.removeValues([4, '4']);",  
                 '',
                 'object; // {active: true}'
               ]
@@ -2671,11 +2600,6 @@ art.DB = {
                 '  return !isNaN(parseFloat(v));', 
                 '});',
                 '',
-                '// or',
-                '// object.select(function(v, k) {',
-                '//   return !isNaN(parseFloat(v));', 
-                '// });',
-                '',
                 "filtered; // {id: 4, project_id: 4, status: '4'}"
               ]
             ),
@@ -2685,9 +2609,7 @@ art.DB = {
               [
                 "var object = {color: 'white', id: 5};",  
                 '',
-                "artjs.Object.toArray(object); // [['color', 'white'], ['id', 5]]", 
-                '// or',
-                '// object.toArray();'
+                "artjs.Object.toArray(object); // [['color', 'white'], ['id', 5]]"
               ]
             ),
             new art.Member(
@@ -2696,9 +2618,7 @@ art.DB = {
               [
                 "var object = {color: 'white', id: 5, user: {name: 'Andy', id: 3}};",  
                 '',
-                'artjs.Object.toQueryString(object);// color=white&id=5&user[name]=Andy&user[id]=3', 
-                '// or',
-                '// object.toQueryString()'
+                'artjs.Object.toQueryString(object);// color=white&id=5&user[name]=Andy&user[id]=3'
               ]
             )
           ]
