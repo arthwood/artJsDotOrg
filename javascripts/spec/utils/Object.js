@@ -35,32 +35,15 @@ spec(artjs.Object, function() {
   });
 
   describe('#merge', function() {
-    it('should extend the object and return it', function() {
+    it('should extend copy of the object and return it', function() {
       var source = mock();
       var target = mock();
-
-      expect(subject()).to(receive('extend')).withArgs(target, source);
-
       var result = subject().merge(target, source);
       
       expect(result).to(eq(target));
     });
   });
-
-  describe('#update', function() {
-    it('should be alias of merge', function() {
-      var source = mock();
-      var target = mock();
-      var returnValue = mock();
-      
-      expect(subject()).to(receive('merge')).withArgs(target, source).andReturn(returnValue);
-
-      var result = subject().update(target, source);
-      
-      expect(result).to(eq(returnValue));
-    });
-  });
-
+  
   describe('#removeValue', function() {
     it('should remove keys with given value', function() {
       var obj = {a: 5, b: 7, c: 5};
