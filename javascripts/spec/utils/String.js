@@ -91,7 +91,7 @@ spec(artjs.String, function() {
 
   describe('#toS', function() {
     context('when argument is falsy', function() {
-      artjs.Array.each([null, undefined, '', false], function(i) {
+      artjs.Array.each([null, undefined, ''], function(i) {
         it('should return empty string', function() {
           expect(subject().toS(i)).to(eq(''));
         });

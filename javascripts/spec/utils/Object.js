@@ -36,11 +36,12 @@ spec(artjs.Object, function() {
 
   describe('#merge', function() {
     it('should extend copy of the object and return it', function() {
-      var source = mock();
-      var target = mock();
+      var source = {a: 1};
+      var target = {b: 2};
       var result = subject().merge(target, source);
       
-      expect(result).to(eq(target));
+      expect(result.a).to(eq(source.a));
+      expect(result.b).to(eq(target.b));
     });
   });
   
