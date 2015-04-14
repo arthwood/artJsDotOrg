@@ -2538,7 +2538,7 @@ art.DB = {
               'Transforms value using <span class="param">callback</span> function',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",
-                'var mapped = artjs.Object.mapValue(object, function(v) {return v * 2});',
+                'var mapped = artjs.Object.mapValue(object, function(k, v) {return v * 2});',
                 '',
                 'mapped; // {id: 8, active: 2, project_id: 8, status: 8}'
               ]

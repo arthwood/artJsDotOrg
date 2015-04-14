@@ -1,10 +1,11 @@
 var artjs = {
-  VERSION: "0.2.3",
+  VERSION: "0.2.4",
   component: {},
   data: {},
   dom: {},
   events: {},
   math: {},
+  model: {},
   net: {},
   spec: {
     matcher: {},
@@ -21,7 +22,7 @@ var artjs = {
 
 artjs.log = function() {
   if (typeof console === "object") {
-    console.log(artjs.$A(arguments));
+    console.log.apply(console, arguments);
   }
 };
 
@@ -182,7 +183,7 @@ artjs.Array = artjs.utils.Array = {
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
-        if (func.call(context, item, parseInt(i, 10), arr)) {
+        if (test.call(context, item, parseInt(i, 10), arr)) {
           result.push(item);
         }
       }
@@ -451,7 +452,7 @@ artjs.Object = artjs.utils.Object = {
     var result = {};
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
-        result[i] = func.call(context, obj[i]);
+        result[i] = func.call(context, i, obj[i]);
       }
     }
     return result;
@@ -460,7 +461,7 @@ artjs.Object = artjs.utils.Object = {
     var result = {};
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
-        result[func.call(context, i)] = obj[i];
+        result[func.call(context, i, obj[i])] = obj[i];
       }
     }
     return result;
@@ -1999,75 +2000,6 @@ artjs.List = artjs.data.List = artjs.Class(function(items) {
   }
 });
 
-artjs.Model = artjs.data.Model = artjs.Class(function() {
-  this.onChange = new artjs.Event("Model::onChange");
-  this._channel = new artjs.Channel("Model channel");
-}, {
-  addProperties: function() {
-    var properties = artjs.Object.fromArray(artjs.Array.map(artjs.$A(arguments), this._toPropertyPair, this));
-    Object.defineProperties(this, properties);
-  },
-  addProperty: function(prop, value) {
-    this.setProperty(prop, value);
-    Object.defineProperty(this, prop, this._toProperty(prop));
-  },
-  setProperties: function(props) {
-    artjs.Object.eachPair(props, this.setProperty, this);
-  },
-  setProperty: function(prop, value) {
-    var privateName = "_" + prop;
-    this[privateName] = value;
-  },
-  getProperty: function(prop) {
-    return this["_" + prop];
-  },
-  addPropertyListener: function(prop, delegate) {
-    this._channel.addListener(prop, delegate);
-    this._firePropertyChange(prop, this.getProperty(prop));
-  },
-  onPropertyChange: function(prop, value, oldValue) {
-    this._firePropertyChange(prop, value, oldValue);
-    this._fireModelChange(prop, value, oldValue);
-  },
-  _firePropertyChange: function(prop, value, oldValue) {
-    this._channel.fire(prop, {
-      newValue: value,
-      oldValue: oldValue
-    });
-  },
-  _fireModelChange: function(prop, value, oldValue) {
-    this.onChange.fire(prop, value, oldValue);
-  },
-  _toPropertyPair: function(prop) {
-    return [ prop, this._toProperty(prop) ];
-  },
-  _toProperty: function(name) {
-    return {
-      configurable: false,
-      enumerable: true,
-      get: this._createGetter(name),
-      set: this._createSetter(name)
-    };
-  },
-  _createGetter: function(name) {
-    var result = function() {
-      return this.getProperty(arguments.callee.prop);
-    };
-    result.prop = name;
-    return result;
-  },
-  _createSetter: function(name) {
-    var result = function(value) {
-      var prop = arguments.callee.prop;
-      var oldValue = this.getProperty(prop);
-      this.setProperty(prop, value);
-      this.onPropertyChange(prop, value, oldValue);
-    };
-    result.prop = name;
-    return result;
-  }
-});
-
 artjs.Queue = artjs.data.Queue = artjs.Class(function(data) {
   artjs.$BA(this);
   this.onChange = new artjs.Event("Queue::onChange");
@@ -2175,11 +2107,7 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, 
   this._element = element;
   this._delegate = delegate;
   artjs.$BA(this);
-  if (element.addEventListener) {
-    element.addEventListener(name, this._onEvent, false);
-  } else {
-    element.attachEvent("on" + name, this._onEvent);
-  }
+  element.addEventListener(name, this._onEvent, false);
 }, {
   getElement: function() {
     return this._element;
@@ -2227,8 +2155,8 @@ artjs.MouseEvent = artjs.events.Mouse = artjs.Class(function(element, name, dele
   }
 }, null, artjs.ElementEvent);
 
-artjs.ClickEvent = artjs.events.Click = artjs.Class(function(element, delegate, selector) {
-  this.super(element, "click", delegate);
+artjs.AbstractClickEvent = artjs.events.AbstractClick = artjs.Class(function(element, name, delegate, selector) {
+  this.super(element, name, delegate);
   this._selector = selector;
 }, {
   _onEvent: function(e) {
@@ -2241,6 +2169,14 @@ artjs.ClickEvent = artjs.events.Click = artjs.Class(function(element, delegate, 
     return artjs.Array.contains(elements, e.target);
   }
 }, null, artjs.ElementEvent);
+
+artjs.ClickEvent = artjs.events.Click = artjs.Class(function(element, delegate, selector) {
+  this.super(element, "click", delegate, selector);
+}, null, null, artjs.AbstractClickEvent);
+
+artjs.DoubleClickEvent = artjs.events.DoubleClick = artjs.Class(function(element, delegate, selector) {
+  this.super(element, "dblclick", delegate, selector);
+}, null, null, artjs.AbstractClickEvent);
 
 artjs.KeyEvent = artjs.events.Key = artjs.Class(function(element, delegate, key) {
   this.super(element, "keydown", delegate);
@@ -2279,6 +2215,7 @@ artjs.EventMapping = {
   mouseover: "MouseOverEvent",
   mouseout: "MouseOutEvent",
   click: "ClickEvent",
+  dblclick: "DoubleClickEvent",
   change: "ChangeEvent",
   keydown: "KeyEvent",
   blur: "BlurEvent"
@@ -2326,6 +2263,92 @@ artjs.Timeout = artjs.events.Timeout = artjs.Class(function(delay) {
     return this.fire(delegate, 0);
   }
 });
+
+artjs.Model = artjs.model.Base = artjs.Class(function() {
+  this._onChange = new artjs.Event("Model::onChange");
+  this._channel = new artjs.Channel("Model channel");
+  this._properties = [];
+}, {
+  addProperties: function(props) {
+    var properties = artjs.Object.mapValue(props, this._toProperty, this);
+    Object.defineProperties(this, properties);
+    artjs.Object.eachPair(props, this._setProperty, this);
+  },
+  addProperty: function(prop, value) {
+    Object.defineProperty(this, prop, this._toProperty(prop));
+    this._setProperty(prop, value);
+  },
+  setProperties: function(props) {
+    artjs.Object.eachPair(props, this.setProperty, this);
+  },
+  setProperty: function(prop, value) {
+    this._setProperty(this.ctor.toPrivate(prop), value);
+  },
+  getProperty: function(prop) {
+    return this[this.ctor.toPrivate(prop)];
+  },
+  addListener: function(delegate) {
+    this._onChange.add(delegate);
+  },
+  removeListener: function(delegate) {
+    this._onChange.remove(delegate);
+  },
+  addPropertyListener: function(prop, delegate) {
+    this._channel.addListener(prop, delegate);
+    this._firePropertyChange(prop, this.getProperty(prop));
+  },
+  onPropertyChange: function(prop, value, oldValue) {
+    this._firePropertyChange(prop, value, oldValue);
+    this._fireChange(prop, value, oldValue);
+  },
+  _setProperty: function(prop, value) {
+    this[prop] = value;
+  },
+  _firePropertyChange: function(prop, newValue, oldValue) {
+    this._channel.fire(prop, {
+      newValue: newValue,
+      oldValue: oldValue
+    });
+  },
+  _fireChange: function(prop, value, oldValue) {
+    this._onChange.fire(prop, value, oldValue);
+  },
+  _toProperty: function(name) {
+    this._properties.push(name);
+    return {
+      configurable: false,
+      enumerable: true,
+      get: this._createGetter(name),
+      set: this._createSetter(name)
+    };
+  },
+  _createGetter: function(name) {
+    var result = function() {
+      return this.getProperty(arguments.callee.prop);
+    };
+    result.prop = name;
+    return result;
+  },
+  _createSetter: function(name) {
+    var result = function(value) {
+      var prop = arguments.callee.prop;
+      var oldValue = this.getProperty(prop);
+      this.setProperty(prop, value);
+      this.onPropertyChange(prop, value, oldValue);
+    };
+    result.prop = name;
+    return result;
+  }
+}, {
+  toPrivate: function(i) {
+    return "_" + i;
+  }
+});
+
+artjs.ListItemModel = artjs.model.ListItem = artjs.Class(function() {
+  this.super();
+  this.addProperty("index");
+}, null, null, artjs.Model);
 
 artjs.TransitionBase = artjs.transition.Base = artjs.Class(function(property, element, value, duration, type, delay, from) {
   artjs.$BA(this);
@@ -3104,6 +3127,9 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   register: function(name, method) {
     this[name] = method;
   },
+  renderChecked: function(checked) {
+    return checked ? "checked" : artjs.String.blank();
+  },
   _map: function(coll, func) {
     return artjs.Array.map(coll, func, this).join("");
   },
@@ -3213,13 +3239,16 @@ artjs.Component = artjs.component.Base = artjs.Class(function(element) {
   }
 }, {
   _name: "Component",
-  idToComponent: {},
+  _idToComponent: {},
   _onExtended: function() {
     this.super();
     this.instances = [];
   },
+  register: function(id, instance) {
+    this._idToComponent[id] = instance;
+  },
   find: function(id) {
-    return this.idToComponent[id];
+    return this._idToComponent[id];
   },
   onLoad: function(id, delegate) {
     var component = this.find(id);
@@ -3231,6 +3260,20 @@ artjs.Component = artjs.component.Base = artjs.Class(function(element) {
   },
   toString: function() {
     return this._name;
+  }
+});
+
+artjs.ListListener = artjs.Class(function(component, id, delegate) {
+  artjs.$BA(this);
+  this._delegate = delegate;
+  artjs.Component.onLoad(id, this._onLoad.delegate);
+}, {
+  _onLoad: function(list) {
+    list.getModel().addPropertyListener("items", this._delegate);
+  }
+}, {
+  create: function(component, id, delegate) {
+    return new this(component, id, delegate);
   }
 });
 
@@ -3263,7 +3306,7 @@ artjs.ComponentScanner = {
       instance.ctor.instances.push(instance);
       var id = artjs.Element.getAttributes(instance.getElement()).id;
       if (id) {
-        artjs.Component.idToComponent[id] = instance;
+        artjs.Component.register(id, instance);
       }
       this._channel.fire(id, instance);
     }
@@ -3511,6 +3554,34 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(function(element) {
   }
 }, artjs.Component);
 
+artjs.CheckBox = artjs.component.CheckBox = artjs.Class(function(element) {
+  this.super(element);
+  this._eventId = artjs.Element.getDataValue(this._element, "event");
+  this.onClick = new artjs.Event("artjs.CheckBox::onClick");
+  artjs.on("click", this._element, artjs.$D(this, "_onClick"));
+}, {
+  isChecked: function() {
+    return this._element.checked;
+  },
+  setChecked: function(checked) {
+    this._element.checked = checked;
+  },
+  setValue: function(value) {
+    this._element.value = value;
+  },
+  getValue: function() {
+    return this._element.value;
+  },
+  _onClick: function(e) {
+    this.onClick.fire(e);
+    if (this._eventId) {
+      this._fire(this._eventId);
+    }
+  }
+}, {
+  _name: "artjs.CheckBox"
+}, artjs.Component);
+
 artjs.Link = artjs.component.Link = artjs.Class(function(element) {
   this.super(element);
   this.onClick = new artjs.Event("artjs.Link::onClick");
@@ -3703,21 +3774,16 @@ artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(function() {
   }
 });
 
-artjs.View = artjs.view.Base = artjs.Class(function(element, model) {
-  this.super(element);
-  this.setModel(model || new artjs.Model);
-  this.onUpdate = new artjs.Event("View::onUpdate");
-}, {
+artjs.View = artjs.view.Base = artjs.Class(null, {
   getModel: function() {
     return this._model;
   },
   setModel: function(model) {
     this._model = model;
-    this._model.onChange.add(this._onModelChange.delegate);
+    this._model.addListener(this._onModelChange.delegate);
     this._render();
   },
-  _onModelChange: function(property, newValue, oldValue) {
-    this.onUpdate.fire(this, property, newValue, oldValue);
+  _onModelChange: function() {
     this._render();
   },
   _render: function() {}
@@ -3727,8 +3793,7 @@ artjs.View = artjs.view.Base = artjs.Class(function(element, model) {
 
 artjs.Input = artjs.view.Input = artjs.Class(function(element) {
   this.super(element);
-  this._model.addProperty("value");
-  this._model.value = element.value;
+  this._model.addProperty("value", element.value);
   this._model.addPropertyListener("value", this._onModelValueChange.delegate);
   artjs.on("change", element, this._onUiValueChange);
 }, {
@@ -3750,37 +3815,50 @@ artjs.Input = artjs.view.Input = artjs.Class(function(element) {
 }, artjs.View);
 
 artjs.ListView = artjs.view.List = artjs.Class(function(element) {
+  this.super(element);
   var model = new artjs.Model;
-  model.addProperty("items", []);
-  this.super(element, model);
+  model.addProperty("items");
+  this.setModel(model);
   var data = artjs.Element.getData(element);
   this._itemTemplate = data.template;
   this._itemClass = data["item-class"];
 }, {
-  add: function(model) {
+  setItems: function(items) {
+    artjs.Array.each(items, this._listenItem, this);
+    this._model.items = items;
+  },
+  _onItemModelChange: function() {
     var items = this._model.items;
-    var idx = items.push(model);
-    this._renderEach(model, idx - 1);
     this._model.onPropertyChange("items", items, items);
   },
-  remove: function(model) {
+  addItem: function(item) {
     var items = this._model.items;
-    var idx = artjs.Array.removeItem(items, model);
+    var idx = items.push(item);
+    this._renderEach(item, idx - 1);
+    this._listenItem(item);
+    this._model.onPropertyChange("items", items, items);
+  },
+  removeItem: function(item) {
+    var items = this._model.items;
+    var idx = artjs.Array.removeItem(items, item);
     artjs.Element.removeAt(this._element, idx);
+    item.removeListener(this._onItemModelChange.delegate);
     this._model.onPropertyChange("items", items, items);
   },
   _render: function() {
     artjs.Element.clear(this._element);
     artjs.Array.each(this._model.items, this._renderEach, this);
   },
-  _renderEach: function(model, idx) {
+  _renderEach: function(item, index) {
     var element = artjs.$E("li", {
       "data-template": this._itemTemplate
     });
     element = artjs.Element.insert(this._element, element);
-    var instance = artjs.ComponentScanner.instantiateClass(this._itemClass, element);
-    model.setProperty("index", idx);
-    instance.setModel(model);
+    item.setProperty("index", index);
+    artjs.ComponentScanner.instantiateClass(this._itemClass, element).setModel(item);
+  },
+  _listenItem: function(item) {
+    item.addListener(this._onItemModelChange.delegate);
   }
 }, {
   _name: "artjs.ListView"

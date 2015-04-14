@@ -99,7 +99,7 @@ spec(artjs.Object, function() {
     it('should change object values', function() {
       var obj = {a: 5, b: 7, c: 8};
 
-      var result = subject().mapValue(obj, function(v) { return v + 1; });
+      var result = subject().mapValue(obj, function(k, v) { return v + 1; });
 
       expect(artjs.Object.values(result)).to(eq([6, 8, 9]));
     });

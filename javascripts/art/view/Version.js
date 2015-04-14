@@ -2,9 +2,11 @@ art.view.Version = artjs.Class(
   function(element) {
     this.super(element);
     
-    this._model.addProperty('version');
+    var model = new artjs.Model();
     
-    this._model.version = artjs.VERSION;
+    model.addProperty('version', artjs.VERSION);
+    
+    this.setModel(model);
   },
   null,
   {_name: 'art.view.Version'},
