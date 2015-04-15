@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.2.4",
+  VERSION: "0.2.5",
   component: {},
   data: {},
   dom: {},
@@ -76,14 +76,11 @@ artjs.Array = artjs.utils.Array = {
     this._includesAll.arr = arr;
     return this.all(subset, this._includesAll);
   },
-  _includesAll: function(i, idx) {
-    return this.includesInv(i, arguments.callee.arr);
-  },
   insertAt: function(arr, idx, insertion) {
     return arr.slice(0, idx).concat(insertion).concat(arr.slice(idx));
   },
   removeAt: function(arr, idx) {
-    return arr.splice(idx, 1);
+    return this.first(arr.splice(idx, 1));
   },
   removeItem: function(arr, item, onlyFirst) {
     var n = arr.length;
@@ -96,6 +93,14 @@ artjs.Array = artjs.utils.Array = {
       }
     }
     return n + 1;
+  },
+  removeItems: function(arr, items) {
+    this._contains.items = items;
+    return this.reject(arr, this._contains, this);
+  },
+  $removeItems: function(arr, items) {
+    this._contains.items = items;
+    return this.$reject(arr, this._contains, this);
   },
   arrify: function(v, idx) {
     var args = [];
@@ -120,15 +125,9 @@ artjs.Array = artjs.utils.Array = {
     var delegate = artjs.$D(this, "_invoke", meth, this.arrify(arguments, 2));
     return this.map(arr, delegate.callback());
   },
-  _invoke: function(i, idx, arr, meth, args) {
-    return i[meth].apply(i, args);
-  },
   pluck: function(arr, prop) {
     this._pluck.prop = prop;
     return this.map(arr, this._pluck, this);
-  },
-  _pluck: function(i) {
-    return i[arguments.callee.prop];
   },
   each: function(arr, func, context) {
     var item;
@@ -171,10 +170,7 @@ artjs.Array = artjs.utils.Array = {
     return result;
   },
   flatten: function(arr) {
-    return this.inject(arr, [], this._flattenCallback, this);
-  },
-  _flattenCallback: function(mem, i, idx) {
-    mem.splice.apply(mem, [ mem.length, 0 ].concat(i));
+    return this.inject(arr, [], this._flatten, this);
   },
   select: function(arr, func, context) {
     var result = [];
@@ -219,12 +215,14 @@ artjs.Array = artjs.utils.Array = {
     var n = arr.length - 1;
     var test = func || this.identity;
     var item;
+    var result = [];
     for (var i = n; i >= 0; i--) {
       item = arr[i];
       if (test.call(context || this, item, parseInt(i, 10), arr)) {
-        this.removeAt(arr, i);
+        result.push(this.removeAt(arr, i));
       }
     }
+    return result;
   },
   detect: function(arr, func, context) {
     var test = func || this.identity;
@@ -330,13 +328,6 @@ artjs.Array = artjs.utils.Array = {
     this._intersectionSelect.array = arr.slice(1);
     return this.select(arr[0], this._intersectionSelect, this);
   },
-  _intersectionSelect: function(i) {
-    this._intersectionInclude.item = i;
-    return this.all(arguments.callee.array, this._intersectionInclude, this);
-  },
-  _intersectionInclude: function(arr, idx) {
-    return this.includes(arr, arguments.callee.item);
-  },
   selectNonEmpty: function(arr) {
     return this.select(arr, this.isNotEmpty, this);
   },
@@ -350,27 +341,46 @@ artjs.Array = artjs.utils.Array = {
     return !this.isEmpty(arr);
   },
   numerize: function(arr) {
-    return this.map(arr, this._numerizeCallback);
+    return this.map(arr, this._numerize);
   },
   print: function(arr) {
-    this.eachItem(arr, this._printEach, this);
-  },
-  _printEach: function(i) {
-    artjs.p(i);
-  },
-  _numerizeCallback: function(i) {
-    return Number(i);
+    this.eachItem(arr, this._print, this);
   },
   sum: function(arr) {
-    return Number(this.inject(arr, 0, this._sumCallback, this));
-  },
-  _sumCallback: function(sum, i) {
-    return sum + i;
+    return Number(this.inject(arr, 0, this._sum, this));
   },
   stringify: function(arr) {
-    return this.map(arr, this._stringifyCallback, this);
+    return this.map(arr, this._stringify, this);
   },
-  _stringifyCallback: function(i) {
+  _flatten: function(mem, i, idx) {
+    mem.splice.apply(mem, [ mem.length, 0 ].concat(i));
+  },
+  _includesAll: function(i, idx) {
+    return this.includesInv(i, arguments.callee.arr);
+  },
+  _intersectionSelect: function(i) {
+    this._intersectionInclude.item = i;
+    return this.all(arguments.callee.array, this._intersectionInclude, this);
+  },
+  _intersectionInclude: function(arr, idx) {
+    return this.includes(arr, arguments.callee.item);
+  },
+  _invoke: function(i, idx, arr, meth, args) {
+    return i[meth].apply(i, args);
+  },
+  _numerize: function(i) {
+    return Number(i);
+  },
+  _pluck: function(i) {
+    return i[arguments.callee.prop];
+  },
+  _print: function(i) {
+    artjs.p(i);
+  },
+  _sum: function(sum, i) {
+    return sum + i;
+  },
+  _stringify: function(i) {
     return artjs.Object.isNull(i) ? "" : i.toString();
   },
   _indexOf: function(arr, item) {
@@ -380,6 +390,9 @@ artjs.Array = artjs.utils.Array = {
       }
     }
     return -1;
+  },
+  _contains: function(i) {
+    return this.contains(arguments.callee.items, i);
   }
 };
 
@@ -3380,7 +3393,7 @@ artjs.Button = artjs.component.Button = artjs.Class(function(element) {
   this.super(element);
   this._eventId = artjs.Element.getDataValue(this._element, "event");
   this.onClick = new artjs.Event("artjs.Button::onClick");
-  artjs.on("click", this._element, artjs.$D(this, "_onClick"));
+  artjs.on("click", this._element, this._onClick.delegate);
 }, {
   _onClick: function(e) {
     this.onClick.fire(e);
@@ -3793,8 +3806,10 @@ artjs.View = artjs.view.Base = artjs.Class(null, {
 
 artjs.Input = artjs.view.Input = artjs.Class(function(element) {
   this.super(element);
-  this._model.addProperty("value", element.value);
-  this._model.addPropertyListener("value", this._onModelValueChange.delegate);
+  var model = new artjs.Model;
+  model.addProperty("value", element.value);
+  model.addPropertyListener("value", this._onModelValueChange.delegate);
+  this.setModel(model);
   artjs.on("change", element, this._onUiValueChange);
 }, {
   setReadOnly: function(value) {
@@ -3838,11 +3853,20 @@ artjs.ListView = artjs.view.List = artjs.Class(function(element) {
     this._listenItem(item);
     this._model.onPropertyChange("items", items, items);
   },
+  removeItems: function(items) {
+    var removedItems = artjs.Array.$removeItems(this._model.items, items);
+    artjs.Array.each(removedItems, this._removeItemListener, this);
+    items = this._model.items;
+    this._model.onPropertyChange("items", items, items);
+  },
+  _removeItemListener: function(item) {
+    item.removeListener(this._onItemModelChange.delegate);
+  },
   removeItem: function(item) {
     var items = this._model.items;
     var idx = artjs.Array.removeItem(items, item);
     artjs.Element.removeAt(this._element, idx);
-    item.removeListener(this._onItemModelChange.delegate);
+    this._removeItemListener(item);
     this._model.onPropertyChange("items", items, items);
   },
   _render: function() {

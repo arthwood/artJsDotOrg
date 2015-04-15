@@ -119,6 +119,25 @@ spec(artjs.Array, function() {
     });
   });
 
+  describe('#removeItems', function() {
+    it('should remove elements from given array', function() {
+      var value = [6, 3, 2, 8];
+      var result = subject().removeItems(value, [2, 1]);
+      
+      expect(result).to(eq([6, 3, 8]));
+    });
+  });
+  
+  describe('#$removeItems', function() {
+    it('should remove elements from given array', function() {
+      var value = [6, 3, 2, 8];
+      var result = subject().$removeItems(value, [2, 1]);
+      
+      expect(value).to(eq([6, 3, 8]));
+      expect(result).to(eq([2]));
+    });
+  });
+  
   describe('#arrify', function() {
     it('should turn any iteratable object into array', function() {
       var testFunction = function() {
