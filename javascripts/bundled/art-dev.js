@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.2.5",
+  VERSION: "0.2.6",
   component: {},
   data: {},
   dom: {},
@@ -16,7 +16,9 @@ var artjs = {
   template: {},
   transition: {},
   ui: {},
-  utils: {},
+  utils: {
+    component: {}
+  },
   view: {}
 };
 
@@ -834,17 +836,43 @@ artjs.Math = artjs.utils.Math = {
 
 artjs.String = artjs.utils.String = {
   _name: "String",
-  toString: function() {
-    return this._name;
+  addZeros: function(str, n, left) {
+    return this.align(str, n, "0", left);
+  },
+  align: function(str, n, char, left) {
+    var c = this.getMultiPattern(char, n - str.length);
+    return left ? str + c : c + str;
+  },
+  blank: function() {
+    return "";
+  },
+  capitalize: function(str) {
+    return artjs.Array.map(str.split(" "), this.capitalizeWord).join(" ");
+  },
+  capitalizeWord: function(str) {
+    return str.charAt(0).toUpperCase() + str.substr(1);
+  },
+  capitalizeUnderscored: function(str) {
+    return this.strip(this.capitalize(str.replace(new RegExp("_", "g"), " ")));
+  },
+  countPattern: function(str, pattern) {
+    return str.match(new RegExp(pattern, "g")).length;
   },
   first: function(str) {
     return str.substr(0, 1);
   },
-  last: function(str) {
-    return str.substr(str.length - 1, 1);
+  formatPrice: function(price) {
+    var parts = price.toString().split(".");
+    var integer = parts[0];
+    var decimal = parts[1];
+    return integer + "." + (decimal ? this.addZeros(decimal, 2, true) : "00");
   },
-  strip: function(str) {
-    return str.replace(/\s/g, this.blank());
+  getMultiPattern: function(pattern, n) {
+    var str = this.blank();
+    while (n-- > 0) {
+      str += pattern;
+    }
+    return str;
   },
   isBlank: function(str) {
     return artjs.Object.isNull(str) || this.isEmpty(str);
@@ -855,37 +883,15 @@ artjs.String = artjs.utils.String = {
   isPresent: function(str) {
     return !this.isBlank(str);
   },
+  last: function(str) {
+    return str.substr(str.length - 1, 1);
+  },
+  match: function(str, re) {
+    var result = re.exec(str);
+    return result && artjs.Array.last(result);
+  },
   nullifyEmpty: function(str) {
     return this.isEmpty(str) ? null : str;
-  },
-  toS: function(str) {
-    return artjs.Object.isNull(str) ? this.blank() : str;
-  },
-  blank: function() {
-    return "";
-  },
-  countPattern: function(str, pattern) {
-    return str.match(new RegExp(pattern, "g")).length;
-  },
-  align: function(str, n, char, left) {
-    var c = this.getMultiPattern(char, n - str.length);
-    return left ? str + c : c + str;
-  },
-  getMultiPattern: function(pattern, n) {
-    var str = this.blank();
-    while (n-- > 0) {
-      str += pattern;
-    }
-    return str;
-  },
-  formatPrice: function(price) {
-    var parts = price.toString().split(".");
-    var integer = parts[0];
-    var decimal = parts[1];
-    return integer + "." + (decimal ? this.addZeros(decimal, 2, true) : "00");
-  },
-  addZeros: function(str, n, left) {
-    return this.align(str, n, "0", left);
   },
   truncate: function(text, length, onlyWords, end) {
     if (text.length > length) {
@@ -908,28 +914,15 @@ artjs.String = artjs.utils.String = {
       return text;
     }
   },
-  _subtruncation: function(text, index, end) {
-    return this._truncation(text.substr(0, index), end);
-  },
-  _truncation: function(text, end) {
-    return text + (end || "...");
-  },
   singularOrPlural: function(text, n) {
     return text + (n == 1 ? this.blank() : "s");
   },
-  capitalize: function(str) {
-    return artjs.Array.map(str.split(" "), this.capitalizeWord).join(" ");
+  startsWith: function(str, substr) {
+    var re = new RegExp("^" + substr);
+    return re.test(str);
   },
-  capitalizeWord: function(str) {
-    return str.charAt(0).toUpperCase() + str.substr(1);
-  },
-  capitalizeUnderscored: function(str) {
-    return this.strip(this.capitalize(str.replace(new RegExp("_", "g"), " ")));
-  },
-  trim: function(str, character, replacement) {
-    var c = character || " ";
-    var r = replacement || "";
-    return str.replace(new RegExp("^" + c + "+"), r).replace(new RegExp(c + "+$"), r);
+  strip: function(str) {
+    return str.replace(/\s/g, this.blank());
   },
   sub: function(str, i, j) {
     var n = str.length;
@@ -951,15 +944,28 @@ artjs.String = artjs.utils.String = {
     }
     return str.substring(i, j);
   },
+  toBoolean: function(str) {
+    return str === "true";
+  },
   toJson: function(str) {
     return JSON.parse(str);
   },
-  startsWith: function(str, substr) {
-    var re = new RegExp("^" + substr);
-    return re.test(str);
+  toS: function(str) {
+    return artjs.Object.isNull(str) ? this.blank() : str;
   },
-  toBoolean: function(str) {
-    return str === "true";
+  toString: function() {
+    return this._name;
+  },
+  trim: function(str, character, replacement) {
+    var c = character || " ";
+    var r = replacement || "";
+    return str.replace(new RegExp("^" + c + "+"), r).replace(new RegExp(c + "+$"), r);
+  },
+  _subtruncation: function(text, index, end) {
+    return this._truncation(text.substr(0, index), end);
+  },
+  _truncation: function(text, end) {
+    return text + (end || "...");
   }
 };
 
@@ -1894,6 +1900,33 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(function(url, data, method) {
 });
 
 artjs.Ajax.SupportedMethods = [ artjs.Ajax.Methods.GET, artjs.Ajax.Methods.POST ];
+
+artjs.Router = artjs.net.Router = {
+  ROUTE_RE: new RegExp("#/(.*)"),
+  defaultController: null,
+  mapping: {},
+  navigateTo: function(hash) {
+    var path = artjs.String.match(hash, this.ROUTE_RE);
+    if (!artjs.Object.isNull(path)) {
+      this._navigateTo(path);
+    }
+  },
+  _navigateTo: function(path) {
+    var fragments = path.split("/");
+    var controllerId = fragments.shift();
+    var action = fragments.shift();
+    var declaredController = this.mapping[controllerId];
+    var controller = declaredController || this.defaultController;
+    if (controller) {
+      var delegate = new artjs.Delegate(controller, action || "index");
+      delegate.args = fragments;
+      if (!declaredController) {
+        delegate.args.unshift(controllerId);
+      }
+      delegate.invoke();
+    }
+  }
+};
 
 artjs.List = artjs.data.List = artjs.Class(function(items) {
   this.items = items || {};
@@ -2832,7 +2865,7 @@ function expect(value) {
 }
 
 function mock() {
-  return new artjs.Mock;
+  return new artjs.Mock(artjs.$A(arguments));
 }
 
 function subject() {
@@ -2855,7 +2888,12 @@ function iit(facet, body, focus) {
   return it(facet, body, true);
 }
 
-artjs.Mock = artjs.spec.Mock = artjs.Class(function() {}, {
+artjs.Mock = artjs.spec.Mock = artjs.Class(function(stubs) {
+  artjs.Array.each(stubs, this.extend, this);
+}, {
+  extend: function(stub) {
+    this[stub] = function() {};
+  },
   toString: function() {
     return "mock";
   }
@@ -2866,9 +2904,9 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(function(matcher, actual)
   this._actual = actual;
   var actualValue = this._actual.value;
   var expected = this._matcher.expected;
-  var dc = artjs.$DC(this, this.resolve);
+  var dc = artjs.$DC(this, "resolve");
   if (!this._isForMock()) {
-    this._original = artjs.$D(actualValue, actualValue[expected]);
+    this._original = artjs.$D(actualValue, expected);
   }
   actualValue[expected] = dc;
   this._successCounter = 0;
@@ -3218,65 +3256,41 @@ artjs.TemplateLibrary = artjs.template.Library = {
   }
 };
 
-artjs.Component = artjs.component.Base = artjs.Class(function(element) {
-  this._element = element;
-  this._eventHandlers = [];
+artjs.utils.component.EventHandler = artjs.ComponentEventHandler = artjs.Class(function(component, eventId, delegate, type) {
   artjs.$BA(this);
+  this._component = component;
+  this._eventId = eventId;
+  this._delegate = delegate;
+  this._type = type;
+  artjs.Broadcaster.addListener(eventId, this._onEvent.delegate);
 }, {
-  getElement: function() {
-    return this._element;
+  remove: function() {
+    artjs.Broadcaster.removeListener(this._eventId, this._onEvent.delegate);
   },
-  _fire: function(id) {
-    artjs.Broadcaster.fire(id, this);
-  },
-  _handle: function(id, method) {
-    this._handleEvent(id, method);
-  },
-  _handleEmit: function(id, method) {
-    this._handleEvent(id, method, artjs.ComponentEventHandler.UP);
-  },
-  _handleBroadcast: function(id, method) {
-    this._handleEvent(id, method, artjs.ComponentEventHandler.DOWN);
-  },
-  _handleEvent: function(id, method, type) {
-    this._eventHandlers.push(new artjs.ComponentEventHandler(this, id, this[method].delegate, type));
-  },
-  _destroy: function() {
-    artjs.Array.invoke(this._eventHandlers, "remove");
-  },
-  _register: function(map) {
-    artjs.Object.eachPair(map, this._registerEach, this);
-  },
-  _registerEach: function(k, v) {
-    this.ctor.onLoad(k, this[v].delegate);
-  }
-}, {
-  _name: "Component",
-  _idToComponent: {},
-  _onExtended: function() {
-    this.super();
-    this.instances = [];
-  },
-  register: function(id, instance) {
-    this._idToComponent[id] = instance;
-  },
-  find: function(id) {
-    return this._idToComponent[id];
-  },
-  onLoad: function(id, delegate) {
-    var component = this.find(id);
-    if (component) {
-      delegate.invoke(component);
-    } else {
-      artjs.ComponentScanner.addListener(id, delegate);
+  _onEvent: function(component) {
+    var source = component.getElement();
+    var target = this._component.getElement();
+    var fire;
+    switch (this._type) {
+     case this.ctor.DOWN:
+      fire = artjs.Selector.isDescendantOf(target, source);
+      break;
+     case this.ctor.UP:
+      fire = artjs.Selector.isDescendantOf(source, target);
+      break;
+     default:
+      fire = true;
     }
-  },
-  toString: function() {
-    return this._name;
+    if (fire) {
+      this._delegate.invoke(component);
+    }
   }
+}, {
+  UP: "UP",
+  DOWN: "DOWN"
 });
 
-artjs.ListListener = artjs.Class(function(component, id, delegate) {
+artjs.utils.component.ListListener = artjs.ListListener = artjs.Class(function(component, id, delegate) {
   artjs.$BA(this);
   this._delegate = delegate;
   artjs.Component.onLoad(id, this._onLoad.delegate);
@@ -3290,7 +3304,7 @@ artjs.ListListener = artjs.Class(function(component, id, delegate) {
   }
 });
 
-artjs.ComponentScanner = {
+artjs.utils.component.Scanner = artjs.ComponentScanner = {
   _channel: new artjs.Channel("ComponentScanner"),
   scan: function(element) {
     artjs.Array.each(artjs.$findAll(element, ".art"), this._onFound, this);
@@ -3330,40 +3344,7 @@ artjs.ComponentScanner = {
   }
 };
 
-artjs.ComponentEventHandler = artjs.Class(function(component, eventId, delegate, type) {
-  this._component = component;
-  this._eventId = eventId;
-  this._delegate = delegate;
-  this._type = type;
-  artjs.Broadcaster.addListener(eventId, artjs.$D(this, "_onEvent"));
-}, {
-  remove: function() {
-    artjs.Broadcaster.removeListener(this._eventId, this._onEvent.delegate);
-  },
-  _onEvent: function(component) {
-    var source = component.getElement();
-    var target = this._component.getElement();
-    var fire;
-    switch (this._type) {
-     case this.ctor.DOWN:
-      fire = artjs.Selector.isDescendantOf(target, source);
-      break;
-     case this.ctor.UP:
-      fire = artjs.Selector.isDescendantOf(source, target);
-      break;
-     default:
-      fire = true;
-    }
-    if (fire) {
-      this._delegate.invoke(component);
-    }
-  }
-}, {
-  UP: "UP",
-  DOWN: "DOWN"
-});
-
-artjs.ComponentSweeper = {
+artjs.utils.component.Sweeper = artjs.ComponentSweeper = {
   INTERVAL: 1e3,
   init: function() {
     var sweep = artjs.$D(this, "_onSweep");
@@ -3388,6 +3369,65 @@ artjs.ComponentSweeper = {
     return artjs.Selector.isOnStage(i.getElement());
   }
 };
+
+artjs.Component = artjs.component.Base = artjs.Class(function(element) {
+  this._element = element;
+  this._eventHandlers = [];
+  artjs.$BA(this);
+}, {
+  getElement: function() {
+    return this._element;
+  },
+  _fire: function(id) {
+    artjs.Broadcaster.fire(id, this);
+  },
+  _handle: function(id, method) {
+    this._handleEvent(id, method);
+  },
+  _handleEmit: function(id, method) {
+    this._handleEvent(id, method, artjs.ComponentEventHandler.UP);
+  },
+  _handleBroadcast: function(id, method) {
+    this._handleEvent(id, method, artjs.ComponentEventHandler.DOWN);
+  },
+  _handleEvent: function(id, method, type) {
+    this._eventHandlers.push(new artjs.ComponentEventHandler(this, id, this[method].delegate, type));
+  },
+  _destroy: function() {
+    artjs.Array.invoke(this._eventHandlers, "remove");
+    delete this._eventHandlers;
+  },
+  _register: function(map) {
+    artjs.Object.eachPair(map, this._registerEach, this);
+  },
+  _registerEach: function(k, v) {
+    this.ctor.onLoad(k, this[v].delegate);
+  }
+}, {
+  _name: "Component",
+  _idToComponent: {},
+  _onExtended: function() {
+    this.super();
+    this.instances = [];
+  },
+  register: function(id, instance) {
+    this._idToComponent[id] = instance;
+  },
+  find: function(id) {
+    return this._idToComponent[id];
+  },
+  onLoad: function(id, delegate) {
+    var component = this.find(id);
+    if (component) {
+      delegate.invoke(component);
+    } else {
+      artjs.ComponentScanner.addListener(id, delegate);
+    }
+  },
+  toString: function() {
+    return this._name;
+  }
+});
 
 artjs.Button = artjs.component.Button = artjs.Class(function(element) {
   this.super(element);
@@ -3600,8 +3640,10 @@ artjs.Link = artjs.component.Link = artjs.Class(function(element) {
   this.onClick = new artjs.Event("artjs.Link::onClick");
   artjs.on("click", this._element, artjs.$D(this, "_onClick"));
 }, {
-  _onClick: function(e) {
+  _onClick: function(e, ee) {
     this.onClick.fire(e);
+    var href = artjs.Element.getAttributes(ee.getElement()).href;
+    artjs.Router.navigateTo(href);
   }
 }, {
   _name: "artjs.Link"
@@ -3985,6 +4027,7 @@ document.addEventListener("DOMContentLoaded", function() {
   artjs.TemplateLibrary.init();
   artjs.Calendar.init();
   artjs.ComponentSweeper.init();
+  artjs.Router.navigateTo(location.hash);
 }, false);
 
 window.addEventListener("load", function() {
