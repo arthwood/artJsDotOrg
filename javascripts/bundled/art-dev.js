@@ -1090,13 +1090,13 @@ artjs.Element = artjs.utils.Element = {
     return this._name;
   },
   show: function(e) {
-    var hidden = this.getHidden(e);
+    var hidden = this._getHidden(e);
     artjs.Array.removeItem(this.HIDDEN_ELEMENTS, hidden);
     var display = hidden && hidden.display || e.style.display;
     e.style.display = display == "none" ? this.DEFAULT_DISPLAY : display;
   },
   hide: function(e) {
-    var hidden = this.getHidden(e);
+    var hidden = this._getHidden(e);
     if (!hidden) {
       this.HIDDEN_ELEMENTS.push({
         element: e,
@@ -1116,14 +1116,14 @@ artjs.Element = artjs.utils.Element = {
     }
   },
   isHidden: function(e) {
-    var hidden = this.getHidden(e);
+    var hidden = this._getHidden(e);
     return hidden || e.style.display == "none";
   },
-  getHidden: function(e) {
-    var delegate = artjs.$D(this, "detectHiddenElement", e);
+  _getHidden: function(e) {
+    var delegate = artjs.$D(this, "_detectHiddenElement", e);
     return artjs.Array.detect(this.HIDDEN_ELEMENTS, delegate.callback(), this);
   },
-  detectHiddenElement: function(i, e) {
+  _detectHiddenElement: function(i, idx, arr, e) {
     return i.element == e;
   },
   getSize: function(e, real) {
@@ -2462,7 +2462,11 @@ artjs.BaseMatcher = artjs.spec.matcher.Base = artjs.Class(function(expected, toT
     return actual.value === this.expected;
   },
   _failureData: function(actual) {
-    return [ actual.value, "expected to", this.toText, String(this.expected) ];
+    var result = [ actual.value, "expected to", this.toText, String(this.expected) ];
+    if (actual.not) {
+      result.splice(2, 0, "not");
+    }
+    return result;
   },
   failureText: function(actual) {
     return this._failureData(actual).join(" ");
@@ -2474,6 +2478,14 @@ artjs.AMatcher = artjs.spec.matcher.A = artjs.Class(function(expected) {
 }, {
   resolve: function(actual) {
     return typeof actual.value === this.expected;
+  }
+}, null, artjs.BaseMatcher);
+
+artjs.ContainMatcher = artjs.spec.matcher.Contain = artjs.Class(function(expected) {
+  this.super(expected, "contain");
+}, {
+  resolve: function(actual) {
+    return artjs.Array.contains(actual.value, this.expected);
   }
 }, null, artjs.BaseMatcher);
 
@@ -2502,7 +2514,6 @@ artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(function(expecte
 }, {
   resolve: function(actual) {
     this.receiver = new artjs.SpecReceiver(this, actual);
-    artjs.Spec.pushReceiver(this.receiver);
     return this.receiver;
   },
   _failureData: function(actual) {
@@ -2798,13 +2809,20 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function(container
 
 artjs.Actual = artjs.spec.Actual = artjs.Class(function(value) {
   this.value = value;
+  this.not = false;
 }, {
   to: function(matcher) {
     var value = matcher.resolve(this);
     if (typeof value == "boolean") {
-      artjs.Spec.pushResult(new artjs.SpecResult(this, matcher, value));
+      artjs.Spec.pushResult(new artjs.SpecResult(this, matcher, Boolean(this.not ^ value)));
+    } else {
+      artjs.Spec.pushReceiver(matcher.receiver);
     }
     return value;
+  },
+  toNot: function(matcher) {
+    this.not = true;
+    return this.to(matcher);
   }
 });
 
@@ -2854,6 +2872,10 @@ function beFalse() {
 
 function beNull() {
   return new artjs.NullMatcher;
+}
+
+function contain(value) {
+  return new artjs.ContainMatcher(value);
 }
 
 function receive(expected) {
@@ -2989,7 +3011,7 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(function(matcher, actual)
     var times = this._inSeries ? this._args.length : this._times;
     var n = this._successCounter;
     var value = times == null ? n > 0 : n == times;
-    return new artjs.SpecResult(this._actual, this._matcher, value);
+    return new artjs.SpecResult(this._actual, this._matcher, Boolean(this._actual.not ^ value));
   },
   rollback: function() {
     if (!this._isForMock()) {
@@ -3395,7 +3417,6 @@ artjs.Component = artjs.component.Base = artjs.Class(function(element) {
   },
   _destroy: function() {
     artjs.Array.invoke(this._eventHandlers, "remove");
-    delete this._eventHandlers;
   },
   _register: function(map) {
     artjs.Object.eachPair(map, this._registerEach, this);

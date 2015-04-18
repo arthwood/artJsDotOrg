@@ -33,6 +33,7 @@ javascripts:
     - 'artJs/transition/Fade'
     - 'artJs/spec/matcher/Base'
     - 'artJs/spec/matcher/A'
+    - 'artJs/spec/matcher/Contain'
     - 'artJs/spec/matcher/Eq'
     - 'artJs/spec/matcher/False'
     - 'artJs/spec/matcher/Null'
