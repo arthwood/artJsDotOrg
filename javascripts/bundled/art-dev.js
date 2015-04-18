@@ -3312,20 +3312,6 @@ artjs.utils.component.EventHandler = artjs.ComponentEventHandler = artjs.Class(f
   DOWN: "DOWN"
 });
 
-artjs.utils.component.ListListener = artjs.ListListener = artjs.Class(function(component, id, delegate) {
-  artjs.$BA(this);
-  this._delegate = delegate;
-  artjs.Component.onLoad(id, this._onLoad.delegate);
-}, {
-  _onLoad: function(list) {
-    list.getModel().addPropertyListener("items", this._delegate);
-  }
-}, {
-  create: function(component, id, delegate) {
-    return new this(component, id, delegate);
-  }
-});
-
 artjs.utils.component.Scanner = artjs.ComponentScanner = {
   _channel: new artjs.Channel("ComponentScanner"),
   scan: function(element) {
@@ -3352,43 +3338,16 @@ artjs.utils.component.Scanner = artjs.ComponentScanner = {
     var instance = null;
     if (_class instanceof Function) {
       instance = new _class(element);
-      instance.ctor.instances.push(instance);
       var id = artjs.Element.getAttributes(instance.getElement()).id;
       if (id) {
         artjs.Component.register(id, instance);
+        this._channel.fire(id, instance);
       }
-      this._channel.fire(id, instance);
     }
     return instance;
   },
   _injectPathChunk: function(result, i) {
     return result && result[i];
-  }
-};
-
-artjs.utils.component.Sweeper = artjs.ComponentSweeper = {
-  INTERVAL: 1e3,
-  init: function() {
-    var sweep = artjs.$D(this, "_onSweep");
-    var clock = new artjs.Clock(this.INTERVAL);
-    clock.onChange.add(sweep);
-    clock.start();
-    artjs.$T(sweep, 100);
-  },
-  _onSweep: function() {
-    this._sweepSubclasses(artjs.Component);
-  },
-  _sweepSubclasses: function(componentClass) {
-    artjs.Array.each(componentClass.subclasses, this._sweep, this);
-  },
-  _sweep: function(i) {
-    var instances = artjs.Array.partition(i.instances, this._isOnStage, this);
-    artjs.Array.invoke(instances.y, "_destroy");
-    i.instances = instances.x;
-    this._sweepSubclasses(i);
-  },
-  _isOnStage: function(i) {
-    return artjs.Selector.isOnStage(i.getElement());
   }
 };
 
@@ -3429,7 +3388,6 @@ artjs.Component = artjs.component.Base = artjs.Class(function(element) {
   _idToComponent: {},
   _onExtended: function() {
     this.super();
-    this.instances = [];
   },
   register: function(id, instance) {
     this._idToComponent[id] = instance;
@@ -4047,7 +4005,6 @@ document.addEventListener("DOMContentLoaded", function() {
   artjs.onDocumentLoad.fire();
   artjs.TemplateLibrary.init();
   artjs.Calendar.init();
-  artjs.ComponentSweeper.init();
   artjs.Router.navigateTo(location.hash);
 }, false);
 
