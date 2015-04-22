@@ -1281,7 +1281,7 @@ artjs.TemplateHelpers.registerAll({
 art.component.Sidebar = artjs.Class(function(element) {
   this.super(element);
   this.setData(art.DB.tree);
-  this.onLeaf.add(this._onLeafHandler.delegate);
+  this.onLeaf.add(artjs.$D(this, "_onLeafHandler"));
   artjs.Component.onLoad("content", artjs.$D(this, "_onContentLoad"));
 }, {
   _onContentLoad: function() {

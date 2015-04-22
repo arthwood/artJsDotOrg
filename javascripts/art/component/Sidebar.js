@@ -4,7 +4,7 @@ art.component.Sidebar = artjs.Class(
     
     this.setData(art.DB.tree);
 
-    this.onLeaf.add(this._onLeafHandler.delegate);
+    this.onLeaf.add(artjs.$D(this, '_onLeafHandler'));
     
     artjs.Component.onLoad('content', artjs.$D(this, '_onContentLoad'));
   },
