@@ -2157,8 +2157,7 @@ artjs.Clock = artjs.events.Clock = artjs.Class(function(interval, repeat) {
 artjs.ElementEvent = artjs.events.Element = artjs.Class(function(element, name, delegate) {
   this._element = element;
   this._delegate = delegate;
-  artjs.$BA(this);
-  element.addEventListener(name, this._onEvent, false);
+  element.addEventListener(name, artjs.$DC(this, "_onEvent"), false);
 }, {
   getElement: function() {
     return this._element;
