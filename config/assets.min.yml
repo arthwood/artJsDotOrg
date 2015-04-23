@@ -63,6 +63,7 @@ javascripts:
     - 'artJs/template/Library'
     - 'artJs/utils/component/EventHandler'
     - 'artJs/utils/component/Scanner'
+    - 'artJs/utils/component/Sweeper'
     - 'artJs/component/Base'
     - 'artJs/component/Button'
     - 'artJs/component/Calendar'

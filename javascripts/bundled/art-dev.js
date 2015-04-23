@@ -2317,7 +2317,6 @@ artjs.Timeout = artjs.events.Timeout = artjs.Class(function(delay) {
 artjs.Model = artjs.model.Base = artjs.Class(function() {
   this._onChange = new artjs.Event("Model::onChange");
   this._channel = new artjs.Channel("Model channel");
-  this._properties = [];
 }, {
   addProperties: function(props) {
     var properties = artjs.Object.mapValue(props, this._toProperty, this);
@@ -2347,6 +2346,9 @@ artjs.Model = artjs.model.Base = artjs.Class(function() {
     this._channel.addListener(prop, delegate);
     this._firePropertyChange(prop, this.getProperty(prop));
   },
+  removePropertyListener: function(prop, delegate) {
+    this._channel.removeListener(prop, delegate);
+  },
   onPropertyChange: function(prop, value, oldValue) {
     this._firePropertyChange(prop, value, oldValue);
     this._fireChange(prop, value, oldValue);
@@ -2364,7 +2366,6 @@ artjs.Model = artjs.model.Base = artjs.Class(function() {
     this._onChange.fire(prop, value, oldValue);
   },
   _toProperty: function(name) {
-    this._properties.push(name);
     return {
       configurable: false,
       enumerable: true,
@@ -3287,10 +3288,11 @@ artjs.utils.component.EventHandler = artjs.ComponentEventHandler = artjs.Class(f
   this._eventId = eventId;
   this._delegate = delegate;
   this._type = type;
-  artjs.Broadcaster.addListener(eventId, artjs.$D(this, "_onEvent"));
+  this._onEventDelegate = artjs.$D(this, "_onEvent");
+  artjs.Broadcaster.addListener(this._eventId, this._onEventDelegate);
 }, {
-  getComponent: function() {
-    return this._component;
+  _destroy: function() {
+    artjs.Broadcaster.removeListener(this._eventId, this._onEventDelegate);
   },
   _onEvent: function(component) {
     var source = component.getElement();
@@ -3312,23 +3314,7 @@ artjs.utils.component.EventHandler = artjs.ComponentEventHandler = artjs.Class(f
   }
 }, {
   UP: "UP",
-  DOWN: "DOWN",
-  SWEEP_INTERVAL: 2e3,
-  init: function() {
-    var clock = new artjs.Clock(this.SWEEP_INTERVAL);
-    clock.onChange.add(artjs.$D(this, "_onTick"));
-    clock.start();
-  },
-  _onTick: function() {
-    artjs.Array.each(artjs.Object.values(artjs.Broadcaster.getEvents()), this._checkEvent, this);
-  },
-  _checkEvent: function(event) {
-    artjs.Array.$select(event.getItems(), this._isValidDelegate, this);
-  },
-  _isValidDelegate: function(delegate) {
-    var instance = delegate.object;
-    return instance.ctor != this || artjs.Selector.isOnStage(instance.getComponent().getElement());
-  }
+  DOWN: "DOWN"
 });
 
 artjs.utils.component.Scanner = artjs.ComponentScanner = {
@@ -3357,6 +3343,7 @@ artjs.utils.component.Scanner = artjs.ComponentScanner = {
     var instance = null;
     if (_class instanceof Function) {
       instance = new _class(element);
+      artjs.Component.instances.push(instance);
       var id = artjs.Element.getAttributes(instance.getElement()).id;
       if (id) {
         artjs.Component.register(id, instance);
@@ -3370,8 +3357,28 @@ artjs.utils.component.Scanner = artjs.ComponentScanner = {
   }
 };
 
+artjs.utils.component.Sweeper = artjs.ComponentSweeper = {
+  INTERVAL: 1e3,
+  init: function() {
+    var sweep = artjs.$D(this, "_onSweep");
+    var clock = new artjs.Clock(this.INTERVAL);
+    clock.onChange.add(sweep);
+    clock.start();
+    artjs.$T(sweep, 100);
+  },
+  _onSweep: function() {
+    var instances = artjs.Array.partition(artjs.Component.instances, this._isOnStage, this);
+    artjs.Array.invoke(instances.y, "_destroy");
+    artjs.Component.instances = instances.x;
+  },
+  _isOnStage: function(i) {
+    return artjs.Selector.isOnStage(i.getElement());
+  }
+};
+
 artjs.Component = artjs.component.Base = artjs.Class(function(element) {
   this._element = element;
+  this._handlers = [];
 }, {
   getElement: function() {
     return this._element;
@@ -3389,20 +3396,24 @@ artjs.Component = artjs.component.Base = artjs.Class(function(element) {
     return this._handleEvent(id, method, artjs.ComponentEventHandler.DOWN);
   },
   _handleEvent: function(id, method, type) {
-    return new artjs.ComponentEventHandler(this, id, artjs.$D(this, method), type);
+    var handler = new artjs.ComponentEventHandler(this, id, artjs.$D(this, method), type);
+    this._handlers.push(handler);
+    return handler;
   },
   _register: function(map) {
     artjs.Object.eachPair(map, this._registerEach, this);
   },
   _registerEach: function(k, v) {
     this.ctor.onLoad(k, artjs.$D(this, v));
+  },
+  _destroy: function() {
+    artjs.Array.invoke(this._handlers, "_destroy");
+    delete this._handlers;
   }
 }, {
   _name: "Component",
   _idToComponent: {},
-  _onExtended: function() {
-    this.super();
-  },
+  instances: [],
   register: function(id, instance) {
     this._idToComponent[id] = instance;
   },
@@ -3842,7 +3853,11 @@ artjs.View = artjs.view.Base = artjs.Class(function(element) {
   _onModelChange: function() {
     this._render();
   },
-  _render: function() {}
+  _render: function() {},
+  _destroy: function() {
+    this.super();
+    this._model.removeListener(this._onModelChangeDelegate);
+  }
 }, {
   _name: "artjs.View"
 }, artjs.Component);
@@ -4027,7 +4042,7 @@ artjs.onLibraryLoad = new artjs.Event("library:load");
 document.addEventListener("DOMContentLoaded", function() {
   artjs.onDocumentLoad.fire();
   artjs.TemplateLibrary.init();
-  artjs.ComponentEventHandler.init();
+  artjs.ComponentSweeper.init();
   artjs.Calendar.init();
   artjs.Router.navigateTo(location.hash);
 }, false);
