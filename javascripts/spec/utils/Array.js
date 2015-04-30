@@ -93,10 +93,10 @@ spec(artjs.Array, function() {
 
   describe('#removeAt', function() {
     it('should remove element from given position', function() {
-      var value = [6, 3, 2, 8];
+      var value = [6, 3, 7, 8];
       var result = subject().removeAt(value, 2);
       
-      expect(result).to(eq(2));
+      expect(result).to(eq(7));
       expect(value).to(eq([6, 3, 8]));
     });
   });
@@ -107,6 +107,7 @@ spec(artjs.Array, function() {
       var result = subject().removeItem(value, 3);
 
       expect(value).to(eq([6, 2, 8]));
+      expect(result).to(eq([1, 4]));
     });
     
     context('with onlyFirst flag set to true', function() {
@@ -115,6 +116,7 @@ spec(artjs.Array, function() {
         var result = subject().removeItem(value, 3, true);
 
         expect(value).to(eq([6, 3, 2, 8]));
+        expect(result).to(eq([4]));
       });
     });
   });

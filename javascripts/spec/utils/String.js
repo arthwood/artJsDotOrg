@@ -196,16 +196,16 @@ spec(artjs.String, function() {
     });
   });
   
-  describe('#singularOrPlural', function() {
+  describe('#pluralize', function() {
     context('when singular', function() {
       it('should return unchanged word', function() {
-        expect(subject().singularOrPlural('horse', 1)).to(eq('horse'));
+        expect(subject().pluralize(1, 'horse')).to(eq('horse'));
       });
     });
 
     context('when plural', function() {
       it('should return plural version of word', function() {
-        expect(subject().singularOrPlural('horse', 4)).to(eq('horses'));
+        expect(subject().pluralize(4, 'horse')).to(eq('horses'));
       });
     });
   });

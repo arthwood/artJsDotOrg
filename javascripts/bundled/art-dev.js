@@ -85,16 +85,18 @@ artjs.Array = artjs.utils.Array = {
     return this.first(arr.splice(idx, 1));
   },
   removeItem: function(arr, item, onlyFirst) {
+    var result = [];
     var n = arr.length;
     while (n-- > 0) {
       if (arr[n] === item) {
+        result.push(n);
         this.removeAt(arr, n);
         if (onlyFirst) {
           break;
         }
       }
     }
-    return n + 1;
+    return result.reverse();
   },
   removeItems: function(arr, items) {
     this._contains.items = items;
@@ -914,8 +916,8 @@ artjs.String = artjs.utils.String = {
       return text;
     }
   },
-  singularOrPlural: function(text, n) {
-    return text + (n == 1 ? this.blank() : "s");
+  pluralize: function(n, str) {
+    return str + (n == 1 ? this.blank() : "s");
   },
   startsWith: function(str, substr) {
     var re = new RegExp("^" + substr);
@@ -1905,7 +1907,7 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(function(url, data, method) {
 artjs.Ajax.SupportedMethods = [ artjs.Ajax.Methods.GET, artjs.Ajax.Methods.POST ];
 
 artjs.Router = artjs.net.Router = {
-  ROUTE_RE: new RegExp("#/(.*)"),
+  ROUTE_RE: new RegExp("#!?/(.*)"),
   defaultController: null,
   mapping: {},
   _name: "Router",
@@ -2318,11 +2320,8 @@ artjs.Timeout = artjs.events.Timeout = artjs.Class(function(delay) {
 
 artjs.Model = artjs.model.Base = artjs.Class(function() {
   this._channel = new artjs.Channel("Model channel");
-  this._onChange = new artjs.Event("Model::onChange");
+  this.onChange = new artjs.Event("Model::onChange");
 }, {
-  addListener: function(delegate) {
-    this._onChange.add(delegate);
-  },
   addProperties: function(props) {
     var properties = artjs.Object.mapValue(props, this._toProperty, this);
     Object.defineProperties(this, properties);
@@ -2332,9 +2331,13 @@ artjs.Model = artjs.model.Base = artjs.Class(function() {
     Object.defineProperty(this, prop, this._toProperty(prop));
     this._setProperty(prop, value);
   },
-  addPropertyListener: function(prop, delegate) {
+  addPropertyListener: function(prop, delegate, fire) {
     this._channel.addListener(prop, delegate);
-    this._firePropertyChange(prop, this.getProperty(prop));
+    if (fire) {
+      this._channel.fire(prop, {
+        newValue: this.getProperty(prop)
+      });
+    }
   },
   getChannel: function() {
     return this._channel;
@@ -2343,11 +2346,11 @@ artjs.Model = artjs.model.Base = artjs.Class(function() {
     return this[this.ctor.toPrivate(prop)];
   },
   onPropertyChange: function(prop, value, oldValue) {
-    this._firePropertyChange(prop, value, oldValue);
-    this._fireChange(prop, value, oldValue);
-  },
-  removeListener: function(delegate) {
-    this._onChange.remove(delegate);
+    this._channel.fire(prop, {
+      newValue: value,
+      oldValue: oldValue
+    });
+    this.onChange.fire(this, prop, value, oldValue);
   },
   removePropertyListener: function(prop, delegate) {
     this._channel.removeListener(prop, delegate);
@@ -2375,15 +2378,6 @@ artjs.Model = artjs.model.Base = artjs.Class(function() {
     result.prop = name;
     return result;
   },
-  _fireChange: function(prop, value, oldValue) {
-    this._onChange.fire(prop, value, oldValue);
-  },
-  _firePropertyChange: function(prop, newValue, oldValue) {
-    this._channel.fire(prop, {
-      newValue: newValue,
-      oldValue: oldValue
-    });
-  },
   _setProperty: function(prop, value) {
     this[prop] = value;
   },
@@ -2401,10 +2395,59 @@ artjs.Model = artjs.model.Base = artjs.Class(function() {
   }
 });
 
+artjs.ListModel = artjs.model.List = artjs.Class(function() {
+  this.super();
+  this.addProperty("items");
+  this.addPropertyListener("items", artjs.$D(this, "_onItemsChange"));
+  this._onItemChangeDelegate = artjs.$D(this, "_onItemChange");
+  this.onItemChange = new artjs.Event("ListModel::onItemChange");
+}, {
+  addItem: function(item) {
+    this._listenItem(item);
+    return this.items.push(item);
+  },
+  removeItem: function(item) {
+    item.onChange.remove(this._onItemChangeDelegate);
+    return artjs.Array.removeItem(this.items, item, true);
+  },
+  _listenItem: function(item) {
+    item.onChange.add(this._onItemChangeDelegate);
+  },
+  _onItemChange: function(item) {
+    this.onItemChange.fire(this, item);
+  },
+  _onItemsChange: function() {
+    artjs.Array.each(this.items, this._listenItem, this);
+  }
+}, null, artjs.Model);
+
 artjs.ListItemModel = artjs.model.ListItem = artjs.Class(function() {
   this.super();
   this.addProperty("index");
 }, null, null, artjs.Model);
+
+artjs.LocalStorage = artjs.model.LocalStorage = artjs.Class(function(namespace) {
+  this._namespace = namespace;
+}, {
+  getItem: function(name) {
+    var key = this._getKey(name);
+    return JSON.parse(localStorage.getItem(key));
+  },
+  getNamespace: function() {
+    return this._namespace;
+  },
+  setItem: function(name, value) {
+    var key = this._getKey(name);
+    if (artjs.Object.isNull(value)) {
+      localStorage.removeItem(key);
+    } else {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  },
+  _getKey: function(name) {
+    return this.getNamespace() + ":" + name;
+  }
+});
 
 artjs.TransitionBase = artjs.transition.Base = artjs.Class(function(property, element, value, duration, type, delay, from) {
   this._onDeferredDelegate = artjs.$D(this, "_onDeferred");
@@ -2826,7 +2869,7 @@ artjs.Actual = artjs.spec.Actual = artjs.Class(function(value) {
     if (typeof value == "boolean") {
       artjs.Spec.pushResult(new artjs.SpecResult(this, matcher, Boolean(this.not ^ value)));
     } else {
-      artjs.Spec.pushReceiver(matcher.receiver);
+      artjs.Spec.pushReceiver(value);
     }
     return value;
   },
@@ -2927,7 +2970,12 @@ artjs.Mock = artjs.spec.Mock = artjs.Class(function(stubs) {
     this[stub] = function() {};
   },
   toString: function() {
-    return "mock";
+    return this.ctor.toString();
+  }
+}, {
+  _name: "Mock",
+  toString: function() {
+    return this._name;
   }
 });
 
@@ -3216,6 +3264,9 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   },
   renderChecked: function(checked) {
     return checked ? "checked" : artjs.String.blank();
+  },
+  pluralize: function(n, str) {
+    return artjs.String.pluralize(n, str);
   },
   _map: function(coll, func) {
     return artjs.Array.map(coll, func, this).join("");
@@ -3856,7 +3907,7 @@ artjs.View = artjs.view.Base = artjs.Class(function(element) {
   },
   setModel: function(model) {
     this._model = model;
-    this._model.addListener(this._onModelChangeDelegate);
+    this._model.onChange.add(this._onModelChangeDelegate);
     this._render();
   },
   _onModelChange: function() {
@@ -3865,7 +3916,7 @@ artjs.View = artjs.view.Base = artjs.Class(function(element) {
   _render: function() {},
   _destroy: function() {
     this.super();
-    this._model.removeListener(this._onModelChangeDelegate);
+    this._model.onChange.remove(this._onModelChangeDelegate);
     this._cleanupChannel(this._model.getChannel());
     this._cleanupChannel(artjs.Broadcaster);
   },
@@ -3911,59 +3962,38 @@ artjs.Input = artjs.view.Input = artjs.Class(function(element) {
 
 artjs.ListView = artjs.view.List = artjs.Class(function(element) {
   this.super(element);
-  var model = new artjs.Model;
-  model.addProperty("items");
-  this.setModel(model);
+  this.setModel(new artjs.ListModel);
   var data = artjs.Element.getData(element);
   this._itemTemplate = data.template;
   this._itemClass = data["item-class"];
-  this._onItemModelChangeDelegate = artjs.$D(this, "_onItemModelChange");
 }, {
-  setItems: function(items) {
-    artjs.Array.each(items, this._listenItem, this);
-    this._model.items = items;
-  },
-  _onItemModelChange: function() {
-    var items = this._model.items;
-    this._model.onPropertyChange("items", items, items);
-  },
   addItem: function(item) {
-    var items = this._model.items;
-    var idx = items.push(item);
-    this._renderEach(item, idx - 1);
-    this._listenItem(item);
-    this._model.onPropertyChange("items", items, items);
-  },
-  removeItems: function(items) {
-    var removedItems = artjs.Array.$removeItems(this._model.items, items);
-    artjs.Array.each(removedItems, this._removeItemListener, this);
-    items = this._model.items;
-    this._model.onPropertyChange("items", items, items);
-  },
-  _removeItemListener: function(item) {
-    item.removeListener(this._onItemModelChangeDelegate);
+    var index = this._model.addItem(item);
+    this._renderItem(item, index - 1);
+    return index;
   },
   removeItem: function(item) {
-    var items = this._model.items;
-    var idx = artjs.Array.removeItem(items, item);
-    artjs.Element.removeAt(this._element, idx);
-    this._removeItemListener(item);
-    this._model.onPropertyChange("items", items, items);
+    var index = artjs.Array.first(this._model.removeItem(item));
+    artjs.Element.removeAt(this._element, index);
+    return index;
+  },
+  removeItems: function(items) {
+    return artjs.Array.map(items, this.removeItem, this);
+  },
+  setItems: function(items) {
+    this._model.items = items;
   },
   _render: function() {
     artjs.Element.clear(this._element);
-    artjs.Array.each(this._model.items, this._renderEach, this);
+    artjs.Array.each(this._model.items, this._renderItem, this);
   },
-  _renderEach: function(item, index) {
+  _renderItem: function(item, index) {
     var element = artjs.$E("li", {
       "data-template": this._itemTemplate
     });
     element = artjs.Element.insert(this._element, element);
     item.setProperty("index", index);
     artjs.ComponentScanner.instantiateClass(this._itemClass, element).setModel(item);
-  },
-  _listenItem: function(item) {
-    item.addListener(this._onItemModelChangeDelegate);
   }
 }, {
   _name: "artjs.ListView"
