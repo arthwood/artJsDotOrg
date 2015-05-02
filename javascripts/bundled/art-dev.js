@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.3.1",
+  VERSION: "0.3.2",
   component: {
     utils: {}
   },
@@ -1911,12 +1911,19 @@ artjs.Router = artjs.net.Router = {
   defaultController: null,
   mapping: {},
   _name: "Router",
-  toString: function() {
-    return this._name;
+  init: function() {
+    this._update();
+    addEventListener("popstate", artjs.$DC(this, "_onPopState"));
   },
   navigateTo: function(hash) {
     var path = artjs.String.match(hash, this.ROUTE_RE);
     this._navigateTo(artjs.String.toS(path));
+  },
+  toString: function() {
+    return this._name;
+  },
+  _onPopState: function() {
+    this._update();
   },
   _navigateTo: function(path) {
     var fragments = path.split("/");
@@ -1932,6 +1939,9 @@ artjs.Router = artjs.net.Router = {
       }
       delegate.invoke();
     }
+  },
+  _update: function() {
+    this.navigateTo(location.hash);
   }
 };
 
@@ -2401,30 +2411,31 @@ artjs.ListModel = artjs.model.List = artjs.Class(function() {
   this.addPropertyListener("items", artjs.$D(this, "_onItemsChange"));
   this._onItemChangeDelegate = artjs.$D(this, "_onItemChange");
   this.onItemChange = new artjs.Event("ListModel::onItemChange");
+  this.onItemAdd = new artjs.Event("ListModel::onItemAdd");
+  this.onItemRemove = new artjs.Event("ListModel::onItemRemove");
 }, {
   addItem: function(item) {
     this._listenItem(item);
-    return this.items.push(item);
+    var result = this.items.push(item);
+    this.onItemAdd.fire(this, item);
+    return result;
   },
   removeItem: function(item) {
     item.onChange.remove(this._onItemChangeDelegate);
-    return artjs.Array.removeItem(this.items, item, true);
+    var result = artjs.Array.removeItem(this.items, item, true);
+    this.onItemRemove.fire(this, item);
+    return result;
   },
   _listenItem: function(item) {
     item.onChange.add(this._onItemChangeDelegate);
   },
-  _onItemChange: function(item) {
-    this.onItemChange.fire(this, item);
+  _onItemChange: function(item, property) {
+    this.onItemChange.fire(this, item, property);
   },
   _onItemsChange: function() {
     artjs.Array.each(this.items, this._listenItem, this);
   }
 }, null, artjs.Model);
-
-artjs.ListItemModel = artjs.model.ListItem = artjs.Class(function() {
-  this.super();
-  this.addProperty("index");
-}, null, null, artjs.Model);
 
 artjs.LocalStorage = artjs.model.LocalStorage = artjs.Class(function(namespace) {
   this._namespace = namespace;
@@ -3302,9 +3313,9 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
 };
 
 artjs.TemplateLibrary = artjs.template.Library = {
-  BASE_TEMPLATES: [ "artjs/calendar" ],
   config: {
     PATH: "/templates",
+    BASE_TEMPLATES: [ "artjs/calendar" ],
     TEMPLATES: []
   },
   _templates: {},
@@ -3316,7 +3327,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
   },
   init: function() {
     this._onLoadSuccessDelegate = artjs.$D(this, "_onLoadSuccess");
-    this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
+    this._templatesToLoad = this.config.BASE_TEMPLATES.concat(this.config.TEMPLATES);
     artjs.Array.each(this._templatesToLoad, this._load, this);
     this._loadCheck();
   },
@@ -3617,10 +3628,12 @@ artjs.Link = artjs.component.Link = artjs.Class(function(element) {
   this.onClick = new artjs.Event("artjs.Link::onClick");
   artjs.on("click", this._element, artjs.$D(this, "_onClick"));
 }, {
-  _onClick: function(e, ee) {
+  getHref: function() {
+    return artjs.Element.getAttributes(this._element).href;
+  },
+  _onClick: function(e) {
     this.onClick.fire(e);
-    var href = artjs.Element.getAttributes(ee.getElement()).href;
-    artjs.Router.navigateTo(href);
+    artjs.Router.navigateTo(this.getHref());
   }
 }, {
   _name: "artjs.Link"
@@ -3987,12 +4000,11 @@ artjs.ListView = artjs.view.List = artjs.Class(function(element) {
     artjs.Element.clear(this._element);
     artjs.Array.each(this._model.items, this._renderItem, this);
   },
-  _renderItem: function(item, index) {
+  _renderItem: function(item) {
     var element = artjs.$E("li", {
       "data-template": this._itemTemplate
     });
     element = artjs.Element.insert(this._element, element);
-    item.setProperty("index", index);
     artjs.ComponentScanner.instantiateClass(this._itemClass, element).setModel(item);
   }
 }, {
@@ -4103,5 +4115,5 @@ window.addEventListener("load", function() {
 }, false);
 
 artjs.onLibraryLoad.add(artjs.$F(function() {
-  artjs.Router.navigateTo(location.hash);
+  artjs.Router.init();
 }));

@@ -29,7 +29,6 @@ javascripts:
     - 'artJs/events/Timeout'
     - 'artJs/model/Base'
     - 'artJs/model/List'
-    - 'artJs/model/ListItem'
     - 'artJs/model/LocalStorage'
     - 'artJs/transition/Base'
     - 'artJs/transition/Blind'
