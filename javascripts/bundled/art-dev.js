@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.3.2",
+  VERSION: "0.3.3",
   component: {
     utils: {}
   },
@@ -537,7 +537,7 @@ artjs.Object = artjs.utils.Object = {
     return this.is(obj, String);
   },
   is: function(obj, type) {
-    return obj.constructor === type;
+    return this.isPresent(obj) && obj.constructor === type;
   },
   isEmpty: function(obj) {
     for (var i in obj) {
@@ -2407,7 +2407,7 @@ artjs.Model = artjs.model.Base = artjs.Class(function() {
 
 artjs.ListModel = artjs.model.List = artjs.Class(function() {
   this.super();
-  this.addProperty("items");
+  this.addProperty("items", []);
   this.addPropertyListener("items", artjs.$D(this, "_onItemsChange"));
   this._onItemChangeDelegate = artjs.$D(this, "_onItemChange");
   this.onItemChange = new artjs.Event("ListModel::onItemChange");
@@ -2526,7 +2526,7 @@ artjs.BaseMatcher = artjs.spec.matcher.Base = artjs.Class(function(expected, toT
     return actual.value === this.expected;
   },
   _failureData: function(actual) {
-    var result = [ actual.value, "expected to", this.toText, String(this.expected) ];
+    var result = [ String(actual.value), "expected to", this.toText, String(this.expected) ];
     if (actual.not) {
       result.splice(2, 0, "not");
     }
@@ -2580,15 +2580,20 @@ artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(function(expecte
     this.receiver = new artjs.SpecReceiver(this, actual);
     return this.receiver;
   },
+  _isFailed: function(result) {
+    return !result.success;
+  },
   _failureData: function(actual) {
     var result = this.super(actual);
-    var expectedArgs = this.receiver.args();
-    if (expectedArgs) {
-      var actualArgs = this.receiver.actualArgs();
-      result.push("with");
-      result.push(this._argsString(expectedArgs));
-      if (actualArgs) {
-        result.push("but was " + this._argsString(actualArgs));
+    var results = this.receiver.getResults();
+    var times = this.receiver.getTimes();
+    if (artjs.Object.isPresent(times)) {
+      var success = artjs.Array.reject(results, this._isFailed);
+      result.push(times + " times, but was " + success.length);
+    } else {
+      var failure = artjs.Array.detect(results, this._isFailed);
+      if (failure) {
+        result.push("with" + this._argsString(failure.args.expected) + ", but was " + this._argsString(failure.args.actual));
       }
     }
     return result;
@@ -3000,53 +3005,12 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(function(matcher, actual)
     this._original = artjs.$D(actualValue, expected);
   }
   actualValue[expected] = dc;
-  this._successCounter = 0;
-  this._callCounter = 0;
+  this._results = [];
   this._times = null;
   this._args = null;
   this._callOriginal = null;
   this._inSeries = null;
 }, {
-  resolve: function() {
-    var args = artjs.$A(arguments);
-    var returnValue;
-    if (this._callOriginal) {
-      this._original.args = args;
-      returnValue = this._original.invoke();
-    } else {
-      returnValue = this._returnValue;
-    }
-    if (this._args == null) {
-      this._successCounter++;
-    } else {
-      var expectedArgs = this._inSeries ? this._args[this._callCounter] : this._args;
-      if (artjs.Array.equal([ args, expectedArgs ])) {
-        this._successCounter++;
-      }
-    }
-    if (this._inSeries) {
-      if (!this._actualArgs) {
-        this._actualArgs = [];
-      }
-      this._actualArgs.push(args);
-    } else {
-      this._actualArgs = args;
-    }
-    this._callCounter++;
-    return returnValue;
-  },
-  inSeries: function() {
-    this._inSeries = true;
-    return this;
-  },
-  withArgs: function() {
-    this._args = artjs.$A(arguments);
-    return this;
-  },
-  andReturn: function(returnValue) {
-    this._returnValue = returnValue;
-    return this;
-  },
   andCallOriginal: function() {
     var forMock = this._isForMock();
     if (forMock) {
@@ -3055,9 +3019,67 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(function(matcher, actual)
     this._callOriginal = !forMock;
     return this;
   },
+  andReturn: function(returnValue) {
+    this._returnValue = returnValue;
+    return this;
+  },
+  getResult: function() {
+    var successfulResults = artjs.Array.select(artjs.Array.pluck(this._results, "success"));
+    var value = this._times == null ? artjs.Array.isNotEmpty(successfulResults) : this._times == successfulResults.length;
+    return new artjs.SpecResult(this._actual, this._matcher, Boolean(this._actual.not ^ value));
+  },
+  getResults: function() {
+    return this._results;
+  },
+  getTimes: function() {
+    return this._times;
+  },
+  inSeries: function() {
+    this._inSeries = true;
+    return this;
+  },
+  isInSeries: function() {
+    return this._inSeries;
+  },
   once: function() {
     this.times(1);
     return this;
+  },
+  resolve: function() {
+    var args = artjs.$A(arguments);
+    if (this._args == null) {
+      this._results.push({
+        success: true
+      });
+    } else {
+      var expectedArgs = this._inSeries ? this._args[this._results.length] : this._args;
+      if (artjs.Array.equal([ args, expectedArgs ])) {
+        this._results.push({
+          success: true
+        });
+      } else {
+        this._results.push({
+          success: false,
+          args: {
+            actual: args,
+            expected: expectedArgs
+          }
+        });
+      }
+    }
+    var result;
+    if (this._callOriginal) {
+      this._original.args = args;
+      result = this._original.invoke();
+    } else {
+      result = this._returnValue;
+    }
+    return result;
+  },
+  rollback: function() {
+    if (!this._isForMock()) {
+      this._actual.value[this._matcher.expected] = this._original.method;
+    }
   },
   twice: function() {
     this.times(2);
@@ -3067,25 +3089,9 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(function(matcher, actual)
     this._times = n;
     return this;
   },
-  args: function() {
-    return this._args;
-  },
-  actualArgs: function() {
-    return this._actualArgs;
-  },
-  isInSeries: function() {
-    return this._inSeries;
-  },
-  getResult: function() {
-    var times = this._inSeries ? this._args.length : this._times;
-    var n = this._successCounter;
-    var value = times == null ? n > 0 : n == times;
-    return new artjs.SpecResult(this._actual, this._matcher, Boolean(this._actual.not ^ value));
-  },
-  rollback: function() {
-    if (!this._isForMock()) {
-      this._actual.value[this._matcher.expected] = this._original.method;
-    }
+  withArgs: function() {
+    this._args = artjs.$A(arguments);
+    return this;
   },
   _isForMock: function() {
     return this._actual.value instanceof artjs.Mock;
@@ -4005,7 +4011,9 @@ artjs.ListView = artjs.view.List = artjs.Class(function(element) {
       "data-template": this._itemTemplate
     });
     element = artjs.Element.insert(this._element, element);
-    artjs.ComponentScanner.instantiateClass(this._itemClass, element).setModel(item);
+    if (this._itemClass) {
+      artjs.ComponentScanner.instantiateClass(this._itemClass, element).setModel(item);
+    }
   }
 }, {
   _name: "artjs.ListView"
