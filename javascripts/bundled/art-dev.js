@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.3.3",
+  VERSION: "0.3.4",
   component: {
     utils: {}
   },
@@ -3797,11 +3797,12 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element) {
   _name: "artjs.Tree"
 }, artjs.Component);
 
-artjs.component.utils.EventHandler = artjs.ComponentEventHandler = artjs.Class(function(component, eventId, delegate, type) {
+artjs.component.utils.EventHandler = artjs.ComponentEventHandler = artjs.Class(function(component, eventId, delegate, type, allowSelf) {
   this._component = component;
   this._eventId = eventId;
   this._delegate = delegate;
   this._type = type;
+  this._allowSelf = Boolean(allowSelf);
   this._onEventDelegate = artjs.$D(this, "_onEvent");
   artjs.Broadcaster.addListener(this._eventId, this._onEventDelegate);
 }, {
@@ -3811,7 +3812,7 @@ artjs.component.utils.EventHandler = artjs.ComponentEventHandler = artjs.Class(f
   _onEvent: function(component) {
     var source = component.getElement();
     var target = this._component.getElement();
-    var fire;
+    var fire = false;
     switch (this._type) {
      case this.ctor.DOWN:
       fire = artjs.Selector.isDescendantOf(target, source);
@@ -3820,7 +3821,9 @@ artjs.component.utils.EventHandler = artjs.ComponentEventHandler = artjs.Class(f
       fire = artjs.Selector.isDescendantOf(source, target);
       break;
      default:
-      fire = true;
+      if (source != target || this._allowSelf) {
+        fire = true;
+      }
     }
     if (fire) {
       this._delegate.invoke(component);
