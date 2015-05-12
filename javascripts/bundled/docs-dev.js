@@ -1,10 +1,13 @@
 var art = {
   component: {},
+  controller: {},
   events: {
     ON_SIDEBAR: "Sidebar::onClick"
   },
   view: {}
 };
+
+artjs.TemplateLibrary.config.BASE_TEMPLATES = [];
 
 artjs.TemplateLibrary.config.PATH = "templates";
 
@@ -1279,17 +1282,13 @@ artjs.TemplateHelpers.registerAll({
 });
 
 art.component.Sidebar = artjs.Class(function(element) {
-  this.super(element);
+  this.super(element, true);
   this.setData(art.DB.tree);
-  this.onLeaf.add(artjs.$D(this, "_onLeafHandler"));
   artjs.Component.onLoad("content", artjs.$D(this, "_onContentLoad"));
 }, {
   _onContentLoad: function() {
-    this.clickAt(0);
-  },
-  _onLeafHandler: function(tree) {
-    var data = art.DB.content[artjs.Element.getAttributes(tree.getCurrent()).href];
-    artjs.Broadcaster.fire(art.events.ON_SIDEBAR, data);
+    var paths = artjs.TreeCrawler.find(this, artjs.Router.getCurrentPath());
+    this.clickAt(artjs.Array.first(paths));
   }
 }, {
   _name: "art.component.Sidebar"
@@ -1310,10 +1309,9 @@ art.component.Content = artjs.Class(function(element) {
 
 art.component.Member = artjs.Class(function(element) {
   this.super(element);
-  var s = artjs.Selector;
-  var a = s.find(s.find(element, "h4"), "a");
-  artjs.Element.onClick(a, artjs.$D(this, this._onAnchor));
-  this.more = s.find(element, ".more");
+  var a = artjs.Selector.find(artjs.Selector.find(element, "h4"), "a");
+  artjs.Element.onClick(a, artjs.$D(this, "_onAnchor"));
+  this.more = artjs.Selector.find(element, ".more");
   if (this.more) {
     artjs.Element.addClass(a, "active");
     this.height = artjs.Element.getSize(this.more).y;
@@ -1329,6 +1327,15 @@ art.component.Member = artjs.Class(function(element) {
 }, {
   _name: "art.component.Member"
 }, artjs.Component);
+
+art.controller.Default = artjs.Class(null, {
+  index: function(id) {
+    var data = art.DB.content[id];
+    artjs.Broadcaster.fire(art.events.ON_SIDEBAR, data);
+  }
+});
+
+artjs.Router.defaultController = new art.controller.Default;
 
 art.view.Version = artjs.Class(function(element) {
   this.super(element);

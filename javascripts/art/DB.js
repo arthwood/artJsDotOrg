@@ -36,22 +36,6 @@ art.DB = {
       'artjs.net': {
         'Ajax': 'ajax'
       },
-  //    'artjs.spec': {
-  //      'artjs.matchers': {
-  //        'A': 'matchers/a',
-  //        'Eq': 'matchers/eq',
-  //        'False': 'matchers/false',
-  //        'Null': 'matchers/null',
-  //        'Receive': 'matchers/receive',
-  //        'True': 'matchers/true'
-  //      },
-  //      'Actual': 'actual',
-  //      'Mock': 'mock',
-  //      'Nodes': 'nodes',
-  //      'Receiver': 'receiver',
-  //      'Runner': 'runner',
-  //      'Subject': 'subject'
-  //    },
       'artjs.template': {
         'Helpers': 'template/helpers',
         'Library': 'template/library'
@@ -61,17 +45,10 @@ art.DB = {
       },
       'artjs.ui': {
         'DatePicker': 'date_picker'
-  //      'ElementInspector': 'element_inspector',
-  //      'Flash': 'flash',
-  //      'ModalBox': 'modal_box',
-  //      'ScreenManager': 'screen_manager',
-  //      'Tabs': 'tabs',
-  //      'Tree': 'tree'
       },
       'artjs.utils': {
         'Array': 'array',
         'Class': 'class',
-  //      'ClassToggler': 'class_toggler',
         'Date': 'date',
         'Element': 'element',
         'Log': 'log',

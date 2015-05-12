@@ -1,11 +1,13 @@
 var art = {
   component: {},
+  controller: {},
   events: {
     ON_SIDEBAR: 'Sidebar::onClick'
   },
   view: {}
 };
 
+artjs.TemplateLibrary.config.BASE_TEMPLATES = [];
 artjs.TemplateLibrary.config.PATH = 'templates';
 artjs.TemplateLibrary.config.TEMPLATES = [
   'content/class',

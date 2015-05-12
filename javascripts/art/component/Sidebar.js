@@ -1,24 +1,20 @@
 art.component.Sidebar = artjs.Class(
   function(element) {
-    this.super(element);
+    this.super(element, true);
     
     this.setData(art.DB.tree);
 
-    this.onLeaf.add(artjs.$D(this, '_onLeafHandler'));
-    
     artjs.Component.onLoad('content', artjs.$D(this, '_onContentLoad'));
   },
   {
     _onContentLoad: function() {
-      this.clickAt(0);
-    },
-    
-    _onLeafHandler: function(tree) {
-      var data = art.DB.content[artjs.Element.getAttributes(tree.getCurrent()).href];
+      var paths = artjs.TreeCrawler.find(this, artjs.Router.getCurrentPath())
       
-      artjs.Broadcaster.fire(art.events.ON_SIDEBAR, data);
+      this.clickAt(artjs.Array.first(paths));
     }
   }, 
-  {_name: 'art.component.Sidebar'}, 
+  {
+    _name: 'art.component.Sidebar'
+  }, 
   artjs.Tree
 );

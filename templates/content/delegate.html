@@ -3,7 +3,7 @@
 <div class="section">
   <p>
     One of the most important aspects of OOP in JS is <span class="code">this</span> keyword.<br/>
-    However, in often confuses people who start learning JavaScript. This is because when used within a function, 
+    However, it often confuses people who start learning JavaScript. This is because when used within a function, 
     it changes its identity depending on how you call that function. 
     And here we get to another aspect of OOP in JavaScript: there are no methods in JavaScript - only functions.
     Because of that, we need to figure out the way to force <span class="code">this</span> to point always 
@@ -53,9 +53,12 @@ var obj = {
     console.log(this.id, info, status);
   }
 };
-    
+
 var delegate = new artjs.Delegate(obj, obj.meth, 200);
-    
+
+// or use shortcut:
+// var delegate = new artjs.Delegate(obj, 'meth', 200);
+
 delegate.invoke('greetings!');</pre>
   <p>
     Method will get direct call arguments first, followed by arguments declared during Delegate creation.

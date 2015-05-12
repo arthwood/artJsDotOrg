@@ -75,6 +75,7 @@ javascripts:
     - 'artJs/component/utils/EventHandler'
     - 'artJs/component/utils/Scanner'
     - 'artJs/component/utils/Sweeper'
+    - 'artJs/component/utils/TreeCrawler'
     - 'artJs/ui/ElementInspector'
     - 'artJs/view/Base'
     - 'artJs/view/Input'
@@ -92,6 +93,7 @@ javascripts:
     - 'art/component/Content'
     - 'art/component/Member'
     - 'art/component/Test'
+    - 'art/controller/Default'
     - 'art/view/Version'
   main-dev: 'Main'
 stylesheets:
