@@ -97,7 +97,7 @@ art.DB = {
                 'ajax.onFailure.add(new Delegate(null, onAjaxFailure));',
                 '',
                 'function onAjaxFailure(ajax) {',
-                "  alert('failure...');",
+                "  console.log('failure...');",
                 '}',
                 '',
                 'ajax.request();'
@@ -112,7 +112,7 @@ art.DB = {
                 'ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));',
                 '',
                 'function onAjaxSuccess(ajax) {',
-                "  alert('success!');",
+                "  console.log('success!');",
                 '}',
                 '',
                 'ajax.request();'
@@ -203,7 +203,7 @@ art.DB = {
                 'ajax.onSuccess.add(new Delegate(null, onAjaxSuccess));',
                 '',
                 'function onAjaxSuccess(ajax) {',
-                '  alert(ajax.getResponseText());',
+                '  console.log(ajax.getResponseText());',
                 '}',
                 '',
                 'ajax.request();'
@@ -1010,7 +1010,7 @@ art.DB = {
                 '- optional arguments (...rest) passed to delegate when creating the instance',
               example: [
                 'function onClick(link, e, msg) {',
-                "  alert('Link clicked! ' + msg);",
+                "  console.log('Link clicked! ' + msg);",
                 '  return false;',
                 '}',
                 '',
@@ -1065,7 +1065,7 @@ art.DB = {
               description: 'Calls the delegate method with object as a context',
               example: [
                 'function method(value, message) {',
-                "  alert('method called! value:' + value + ', message: ' + message);",
+                "  console.log('method called! value:' + value + ', message: ' + message);",
                 '  return true;',
                 '}',
                 '',
@@ -1868,7 +1868,7 @@ art.DB = {
                 'list.onChange.add(new artjs.Delegate(this, this.onChange));',
                 '',
                 'function onChange(list) {',
-                "  'alert('list has changed!');'",
+                "  'console.log('list has changed!');'",
                 '}'
               ]
             }
@@ -2250,7 +2250,7 @@ art.DB = {
             ),
             new art.Member(
               'p():Void',
-              'Debug info. If debug console is accessible output to the console; uses alert() otherwise.',
+              'Debug info. If debug console is accessible output to the console; uses console.log() otherwise.',
               [
                 "p('myVariable: ' +  myVariable);"
               ]
@@ -2406,11 +2406,11 @@ art.DB = {
             ),
             new art.Member(
               'each(object:Object, callback:Function):Void',
-              'Iterates over properties and passes value to <span class="param">callback</span>',
+              'Iterates over properties and passes key and value to <span class="param">callback</span>',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
-                'artjs.Object.each(object, function(i) {', 
-                '  alert(i);',
+                'artjs.Object.each(object, function(k, v) {', 
+                '  console.log(k, v);',
                 '});'
               ]
             ),
@@ -2420,17 +2420,17 @@ art.DB = {
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",
                 'artjs.Object.eachKey(object, function(i) {',
-                '  alert(i);',
+                '  console.log(i);',
                 '});'
               ]
             ),
             new art.Member(
-              'eachPair(object:Object, callback:Function):Void',
-              'Iterates over properties and passes key and value to <span class="code">callback</span>',
+              'eachValue(object:Object, callback:Function):Void',
+              'Iterates over properties and passes value to <span class="code">callback</span>',
               [
                 "var object = {id: 4, active: true, project_id: 4, status: '4'};",  
-                'artjs.Object.eachPair(object, function(k, v) {', 
-                "  alert(k + ' -> ' + v);", 
+                'artjs.Object.eachValue(object, function(v) {', 
+                '  console.log(v);', 
                 '});'
               ]
             ),
@@ -2789,7 +2789,7 @@ art.DB = {
                 'queue.onChange.add(new artjs.Delegate(this, this.onChange));',
                 '',
                 'function onChange(queue) {',
-                "'  alert('queue has changed!');'",
+                "'  console.log('queue has changed!');'",
                 '}'
               ]
             }

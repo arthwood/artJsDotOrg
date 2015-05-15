@@ -115,12 +115,12 @@ spec(artjs.Object, function() {
     });
   });
 
-  describe('#each', function() {
+  describe('#eachValue', function() {
     it('should iterate over items', function() {
       var obj = {a: 5, b: 7, c: -8};
       var result = 0;
 
-      subject().each(obj, function(i) { result += i; });
+      subject().eachValue(obj, function(i) { result += i; });
 
       expect(result).to(eq(4));
     });
@@ -137,12 +137,12 @@ spec(artjs.Object, function() {
     });
   });
 
-  describe('#eachPair', function() {
+  describe('#each', function() {
     it('should iterate over (key, value) pair', function() {
       var obj = {a: 5, b: 7, c: -8};
       var result = '';
 
-      subject().eachPair(obj, function(k, v) { result += (k + v); });
+      subject().each(obj, function(k, v) { result += (k + v); });
 
       expect(result).to(eq('a5b7c-8'));
     });
