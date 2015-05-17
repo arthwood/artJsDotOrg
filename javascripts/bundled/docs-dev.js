@@ -62,11 +62,11 @@ art.DB = {
         Ajax: "ajax"
       },
       "artjs.template": {
-        Helpers: "template/helpers",
-        Library: "template/library"
+        Helpers: "template-helpers",
+        Library: "template-library"
       },
       "artjs.transition": {
-        Blind: "transition/blind"
+        Blind: "transition-blind"
       },
       "artjs.ui": {
         DatePicker: "date_picker"
@@ -1199,7 +1199,7 @@ art.DB = {
         members: [ new art.Member("onActivate()", "Triggered when new element has been put into the container."), new art.Member("onDeactivate()", "Triggered when element pops out from the container.") ]
       } ]
     },
-    "template/helpers": {
+    "template-helpers": {
       name: "Helpers, artjs.TemplateHelpers",
       "package": "artjs.template",
       description: "This class can be used both in regular JS and in html templates." + "Defines set of methods that allows to generate dynamic content.",
@@ -1208,7 +1208,7 @@ art.DB = {
         members: [ new art.Member("render(templateId:String, scope:Object):String", 'Returns content on template identified by <span class="param">templateId</span> with template data ' + 'substituded with data from <span class="param">scope</span> object.', [ "/*", " * Suppose that there is a template named myTemplate.html with content:", ' * &lt;p class="title"&gt;{title}&lt;/p&gt;', " */", "", "var content = artjs.TemplateHelpers.render('myTemplate', {title: 'Hello');", "", '// &lt;p class="container"&gt;Hello&lt;/p&gt;' ], null, "To read more about templates, navigate to artjs.template.Library section."), new art.Member("renderInto(element:Element, templateId:String, scope:Object):Void", "Does the same job as render() but instead of returning a content, puts it directly to element's body."), new art.Member("renderCollection(templateId:String, collection:Array):String", 'For each scope in <span class=""param"">collection</span> renders a template and returns the result.', [ "// myTemplate.html: &lt;li&gt;{id}&lt;/li&gt;", "var collection = [{id: 1}, {id: 2}];", "var content = artjs.TemplateHelpers.renderCollection('myTemplate', collection);", "", "// &lt;li>1&lt;/li>&lt;li&gt;2&lt;/li&gt;" ]), new art.Member("renderIf(value:Object, method:String):String", "Returns result of <span>method</span> call on a Helper but only if <span>value</span> is present." + "Otherwise returns empty string. It's useful when you have your custom helper methods " + "and they may be used in templates for null values", [ "// Suppose you have following custom helper method:", "// renderDescription: function(v) {", "//   return $B('p', null, v).toString();", "// }", "var value;", "", "value = 'Hi there!';", "renderIf(value, 'renderDescription'); // '&lt;p&gt;Hi There!&lt;/p&gt;'", "", "value = null;", "renderIf(value, 'renderDescription'); // ''" ]), new art.Member("register(name:String, method:Function):Void", "Allows you to register custom helper methods that can be used within templates.", [ "register('renderDescription', function(v) {", "  return artjs.$B('p', {className: 'description'}, v).toString();", "});", "// in the template:", "{renderDescription('Hello artjs!')}", '// &lt;p class="description"&gt;Hello artjs!&lt;/p&gt;' ]), new art.Member("registerAll(helpers:Object):Void", "Allows you to register set of helper methods that can be used within templates at once.", [ "registerAll({", "  renderDescription: function(v) {", "    return artjs.$B('p', {className: 'description'}, v).toString();", "  }", "", "  renderTitle: function(v) {", "    return artjs.$B('h1', {className: 'title'}, v).toString();", "  }", "});", "// in the template:", "{renderTitle('Welcome')}{renderDescription('Hello artjs!')}", '// &lt;h1 class="title"&gt;Welcome&lt;/h1&gt;&lt;p class="description"&gt;Hello artjs!&lt;/p&gt;' ]) ]
       } ]
     },
-    "template/library": {
+    "template-library": {
       name: "Library, artjs.TemplateLibrary",
       "package": "artjs.template",
       description: "Loads template files to your application using AJAX. " + "Triggers artjs.onLibraryLoad upon completion.",
@@ -1217,7 +1217,7 @@ art.DB = {
         members: [ new art.Member("config:Object", "Consists of two configuration parameters:<br/>" + "PATH - remote path to template directory<br/>" + "TEMPLATES - list of template files to be loaded", [ "artjs.TemplateLibrary.config = {", "  PATH: 'templates',", "  TEMPLATES: ['doc', 'member', 'section', 'ga']", "};" ]) ]
       } ]
     },
-    "transition/blind": {
+    "transition-blind": {
       name: "Blind",
       "package": "artjs.transition",
       description: 'Allows to apply "Blind" visual effect.',

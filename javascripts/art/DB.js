@@ -37,11 +37,11 @@ art.DB = {
         'Ajax': 'ajax'
       },
       'artjs.template': {
-        'Helpers': 'template/helpers',
-        'Library': 'template/library'
+        'Helpers': 'template-helpers',
+        'Library': 'template-library'
       },
       'artjs.transition': {
-        'Blind': 'transition/blind'
+        'Blind': 'transition-blind'
       },
       'artjs.ui': {
         'DatePicker': 'date_picker'
@@ -3482,7 +3482,7 @@ art.DB = {
         }
       ]
     },
-    'template/helpers': {
+    'template-helpers': {
       name: 'Helpers, artjs.TemplateHelpers',
       package: 'artjs.template',
       description: 'This class can be used both in regular JS and in html templates.' +
@@ -3576,7 +3576,7 @@ art.DB = {
         }
       ]
     },
-    'template/library': {
+    'template-library': {
       name: 'Library, artjs.TemplateLibrary',
       package: 'artjs.template',
       description: 'Loads template files to your application using AJAX. ' +
@@ -3601,7 +3601,7 @@ art.DB = {
         }
       ]
     },
-    'transition/blind': {
+    'transition-blind': {
       name: 'Blind',
       package: 'artjs.transition',
       description: 'Allows to apply "Blind" visual effect.',
