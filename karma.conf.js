@@ -17,31 +17,14 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'javascripts/artJs/Initialize.js',
-      'javascripts/artJs/utils/Log.js',
-      'javascripts/artJs/utils/Object.js',
-      'javascripts/artJs/utils/Array.js',
-      'javascripts/artJs/utils/Class.js',
-      'javascripts/artJs/events/Delegate.js',
-      'javascripts/artJs/utils/Math.js',
-      'javascripts/artJs/utils/*.js',
-      'javascripts/artJs/events/*.js',
-      'javascripts/artJs/math/*.js',
-      'javascripts/artJs/component/*.js',
-      'javascripts/artJs/data/*.js',
-      'javascripts/artJs/dom/*.js',
-      'javascripts/artJs/net/*.js',
-      'javascripts/artJs/spec/matcher/Base.js',
-      'javascripts/artJs/spec/node/Base.js',
-      'javascripts/artJs/spec/**/*.js',
-      'javascripts/artJs/template/*.js',
-      'javascripts/artJs/transition/*.js',
-      'javascripts/artJs/ui/*.js',
-      'javascripts/artJs/Shortcuts.js',
-      'javascripts/spec/**/*.js'
+      {pattern: 'templates/**/*.html', included: false, served: true, watched: true},
+      {pattern: 'javascripts/spec/**/*.js', included: true, served: true, watched: true}
     ],
 
-
+    proxies: {
+      '/templates': '/templates'
+    },
+    
     // list of files to exclude
     exclude: [
     ],
