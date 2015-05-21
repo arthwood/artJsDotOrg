@@ -1912,47 +1912,66 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(function(url, data, method) {
 
 artjs.Ajax.SupportedMethods = [ artjs.Ajax.Methods.GET, artjs.Ajax.Methods.POST ];
 
+artjs.Controller = artjs.net.Controller = artjs.Class(null, {
+  load: function() {},
+  index: function() {}
+});
+
+artjs.Route = artjs.net.Route = artjs.Class(function(options) {
+  var path = artjs.String.toS(artjs.String.match(location.hash, this.ctor.RE));
+  var fragments = path.split("/");
+  var controllerId = artjs.String.nullifyEmpty(fragments.shift());
+  var controller = artjs.Router.mapping[controllerId];
+  var action = fragments.shift();
+  var request = {
+    params: fragments
+  };
+  if (!controller) {
+    controller = artjs.Router.defaultController;
+    request.controllerId = controllerId;
+  }
+  this._delegate = artjs.$D(controller, options && options.action || action || "index");
+  this._request = request;
+}, {
+  go: function() {
+    this._delegate.invoke(this._request);
+  },
+  getRequest: function() {
+    return this._request;
+  }
+}, {
+  RE: new RegExp("#!?/(.*)")
+}, artjs.Delegate);
+
 artjs.Router = artjs.net.Router = {
-  ROUTE_RE: new RegExp("#!?/(.*)"),
-  defaultController: null,
+  defaultController: new artjs.Controller,
   mapping: {},
   _name: "Router",
-  getCurrentPath: function() {
-    return this.getPath(location.hash);
-  },
-  getPath: function(hash) {
-    return artjs.String.match(hash, this.ROUTE_RE);
-  },
-  getRoute: function() {
-    return this._route;
-  },
   init: function() {
-    this.navigateTo(null, true);
+    this.onNavigate = new artjs.Event("Router:onNavigate");
     addEventListener("popstate", artjs.$DC(this, "_onPopState"));
-  },
-  navigateTo: function(hash, first) {
-    var path = artjs.String.toS(this.getPath(hash || location.hash));
-    var fragments = path.split("/");
-    var controllerId = artjs.String.nullifyEmpty(fragments.shift());
-    var action = fragments.shift();
-    var declaredController = this.mapping[controllerId];
-    var controller = declaredController || this.defaultController;
-    var delegate;
-    if (controller) {
-      delegate = new artjs.Delegate(controller, action || "index");
-      if (controller == this.defaultController) {
-        delegate.args.push(controllerId);
-      }
-      delegate.args.push(first);
-      delegate.invoke();
-    }
-    this._route = delegate;
+    artjs.TemplateLibrary.onLoad.add(artjs.$D(this, "_onLibraryLoad"));
   },
   toString: function() {
     return this._name;
   },
+  _navigateTo: function(route) {
+    this.onNavigate.fire(route);
+    route.go();
+  },
+  _reload: function() {
+    var route = new artjs.Route;
+    this._navigateTo(route);
+  },
+  _onLibraryLoad: function() {
+    var route = new artjs.Route({
+      action: "load"
+    });
+    this._navigateTo(route);
+    this._reload();
+  },
   _onPopState: function() {
-    this.navigateTo();
+    this._reload();
   }
 };
 
@@ -3254,6 +3273,11 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
 });
 
 artjs.TemplateHelpers = artjs.template.Helpers = {
+  linkTo: function(caption, path) {
+    return this.renderElement("a", {
+      href: "#/" + path
+    }, caption);
+  },
   render: function(templateId, scope) {
     var template = artjs.TemplateLibrary.getTemplate(templateId);
     return artjs.TemplateBase.render(template, scope);
@@ -3651,9 +3675,8 @@ artjs.Link = artjs.component.Link = artjs.Class(function(element) {
   getHref: function() {
     return artjs.Element.getAttributes(this._element).href;
   },
-  _onClick: function(e) {
+  _onClick: function(e, ee) {
     this.onClick.fire(e);
-    artjs.Router.navigateTo(this.getHref());
   }
 }, {
   _name: "artjs.Link"
@@ -3744,7 +3767,6 @@ artjs.Text = artjs.component.Text = artjs.Class(function(element) {
 artjs.Tree = artjs.component.Tree = artjs.Class(function(element, hash) {
   this.super(element);
   this._hash = Boolean(hash);
-  this._leafClassToggler = new artjs.ClassToggler("selected");
   this._noAction = false;
   this.onNode = new artjs.Event("artjs.Tree::onNode");
   this.onLeaf = new artjs.Event("artjs.Tree::onLeaf");
@@ -3817,7 +3839,6 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element, hash) {
     this.onNode.fire(this, e);
   },
   _onLeaf: function(e) {
-    this._leafClassToggler.toggle(artjs.Element.parent(this._current));
     if (!this._noAction) {
       this.onLeaf.fire(this, e);
     }
@@ -4168,7 +4189,7 @@ document.addEventListener("DOMContentLoaded", function() {
   artjs.TemplateLibrary.init();
   artjs.ComponentSweeper.init();
   artjs.Calendar.init();
-  artjs.TemplateLibrary.onLoad.add(artjs.$D(artjs.Router, "init"));
+  artjs.Router.init();
   artjs.onDocumentLoad.fire();
 }, false);
 

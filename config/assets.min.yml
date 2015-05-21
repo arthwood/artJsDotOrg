@@ -19,6 +19,8 @@ javascripts:
     - 'artJs/dom/ElementBuilder'
     - 'artJs/dom/Selector'
     - 'artJs/net/Ajax'
+    - 'artJs/net/Controller'
+    - 'artJs/net/Route'
     - 'artJs/net/Router'
     - 'artJs/data/List'
     - 'artJs/data/Queue'
@@ -94,7 +96,6 @@ javascripts:
     - 'art/component/Content'
     - 'art/component/Member'
     - 'art/component/Test'
-    - 'art/controller/Default'
     - 'art/view/Version'
   main-min: 'Main'
 stylesheets:

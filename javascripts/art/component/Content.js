@@ -2,10 +2,10 @@ art.component.Content = artjs.Class(
   function(element) {
     this.super(element);
     
-    artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, '_onLeaf'));
+    artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, '_onSidebar'));
   },
   {
-    _onLeaf: function(data) {
+    _onSidebar: function(data) {
       var template = data.template;
       
       artjs.TemplateHelpers.renderInto(this._element, template && ('content/' + template) || 'doc', data);

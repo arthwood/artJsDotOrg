@@ -1283,16 +1283,31 @@ artjs.TemplateHelpers.registerAll({
 
 art.component.Sidebar = artjs.Class(function(element) {
   this.super(element, true);
+  this._leafClassToggler = new artjs.ClassToggler("selected");
+  artjs.Router.onNavigate.add(artjs.$D(this, "_onNavigate"));
   this.setData(art.DB.tree);
-}, null, {
+}, {
+  _onNavigate: function(route) {
+    var id = artjs.Object.getDefault(route.getRequest().controllerId, "introduction");
+    this._select(id);
+    var data = art.DB.content[id];
+    artjs.Broadcaster.fire(art.events.ON_SIDEBAR, data);
+  },
+  _select: function(id) {
+    var paths = artjs.TreeCrawler.find(this, id);
+    var path = artjs.Array.first(paths);
+    this.clickAt(path, true);
+    this._leafClassToggler.toggle(artjs.Element.parent(this._current));
+  }
+}, {
   _name: "art.component.Sidebar"
 }, artjs.Tree);
 
 art.component.Content = artjs.Class(function(element) {
   this.super(element);
-  artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, "_onLeaf"));
+  artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, "_onSidebar"));
 }, {
-  _onLeaf: function(data) {
+  _onSidebar: function(data) {
     var template = data.template;
     artjs.TemplateHelpers.renderInto(this._element, template && "content/" + template || "doc", data);
     artjs.Fade.run(this._element, 1, .2, null, null, 0);
@@ -1321,22 +1336,6 @@ art.component.Member = artjs.Class(function(element) {
 }, {
   _name: "art.component.Member"
 }, artjs.Component);
-
-art.controller.Default = artjs.Class(null, {
-  index: function(id, first) {
-    id = artjs.Object.getDefault(id, "introduction");
-    if (first) {
-      var sidebar = artjs.Component.find("sidebar");
-      var paths = artjs.TreeCrawler.find(sidebar, id);
-      var path = artjs.Array.first(paths);
-      sidebar.clickAt(path, true);
-    }
-    var data = art.DB.content[id];
-    artjs.Broadcaster.fire(art.events.ON_SIDEBAR, data);
-  }
-});
-
-artjs.Router.defaultController = new art.controller.Default;
 
 art.view.Version = artjs.Class(function(element) {
   this.super(element);
