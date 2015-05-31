@@ -96,7 +96,7 @@ art.component.Sidebar = artjs.Class(function(element) {
   this.super(element, true);
   this._leafClassToggler = new artjs.ClassToggler("selected");
   artjs.Router.onNavigate.add(artjs.$D(this, "_onNavigate"));
-  var ajax = artjs.$get("tree.yml");
+  var ajax = artjs.$get("data/tree");
   ajax.onSuccess.add(artjs.$D(this, "_onSuccess"));
 }, {
   _onNavigate: function(route) {
@@ -125,7 +125,7 @@ art.component.Sidebar = artjs.Class(function(element) {
 art.component.Content = artjs.Class(function(element) {
   this.super(element);
   artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, "_onSidebar"));
-  var ajax = artjs.$get("docs.yml");
+  var ajax = artjs.$get("data/docs");
   ajax.onSuccess.add(artjs.$D(this, "_onSuccess"));
 }, {
   _onSidebar: function(section) {

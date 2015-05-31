@@ -6,7 +6,7 @@ art.component.Sidebar = artjs.Class(
     
     artjs.Router.onNavigate.add(artjs.$D(this, '_onNavigate'));
     
-    var ajax = artjs.$get('tree.yml');
+    var ajax = artjs.$get('data/tree');
     
     ajax.onSuccess.add(artjs.$D(this, '_onSuccess'));
   },

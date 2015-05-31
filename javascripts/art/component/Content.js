@@ -4,7 +4,7 @@ art.component.Content = artjs.Class(
     
     artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, '_onSidebar'));
     
-    var ajax = artjs.$get('docs.yml');
+    var ajax = artjs.$get('data/docs');
     
     ajax.onSuccess.add(artjs.$D(this, '_onSuccess'));
   },
