@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.3.11",
+  VERSION: "0.3.12",
   component: {
     utils: {}
   },
@@ -1778,19 +1778,19 @@ artjs.Selector = artjs.dom.Selector = {
   isSelfOrDescendantOf: function(element, ref) {
     return element == ref || this.isDescendantOf(element, ref);
   },
-  getElementById: function(v) {
-    return document.getElementById(v);
+  getElementById: function(id) {
+    return document.getElementById(id);
   },
-  getElementsByTagName: function(v) {
-    return artjs.$A(document.getElementsByTagName(v));
+  getElementsByTagName: function(tagName) {
+    return artjs.$A(document.getElementsByTagName(tagName));
   },
-  isOnStage: function(e) {
-    return this.isDescendantOf(e);
+  isOnStage: function(element) {
+    return this.isDescendantOf(element);
   },
-  getAncestors: function(e, ref) {
+  getAncestors: function(element, ref) {
     var result = [];
-    while (e = this.parent(e)) {
-      result.push(e);
+    while (element = this.parent(element)) {
+      result.push(element);
     }
     var index = result.indexOf(ref || document.body);
     return index == -1 ? null : result.slice(0, index);
