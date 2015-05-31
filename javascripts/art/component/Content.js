@@ -3,9 +3,30 @@ art.component.Content = artjs.Class(
     this.super(element);
     
     artjs.Broadcaster.addListener(art.events.ON_SIDEBAR, artjs.$D(this, '_onSidebar'));
+    
+    var ajax = artjs.$get('docs.yml');
+    
+    ajax.onSuccess.add(artjs.$D(this, '_onSuccess'));
   },
   {
-    _onSidebar: function(data) {
+    _onSidebar: function(section) {
+      this._section = section;
+      
+      if (this._content) {
+        this._update();
+      }
+    },
+    
+    _onSuccess: function(ajax) {
+      this._content = YAML.parse(ajax.getResponseText());
+      
+      if (this._section) {
+        this._update();
+      }
+    },
+    
+    _update: function() {
+      var data = this._content[this._section];
       var template = data.template;
       
       artjs.TemplateHelpers.renderInto(this._element, template && ('content/' + template) || 'doc', data);

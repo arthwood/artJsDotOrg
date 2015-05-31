@@ -63,10 +63,10 @@
       font-size: 14px;
       padding: 2px 4px 2px 16px;
       background: url(../../images/collapsed.png) no-repeat left center;
-      line-height: 28px;
+      line-height: 22px;
       display: block; }
 
-pre, span.code {
+pre, span.code, span.param {
   font-family: Menlo, Monaco, Consolas, Courier New;
   font-size: 12px;
   line-height: 18px;

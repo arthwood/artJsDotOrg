@@ -1,9 +1,14 @@
 artjs.TemplateHelpers.registerAll({
-  _renderExample: function(v) {
-    var exampleElement = this.renderElement('p', {className: 'example'}, 'Example:');
-    var codeElement = this.renderElement('pre', {className: 'block'}, v.join('<br />'));
-    
-    return exampleElement + codeElement;
+  code: function(value) {
+    return this._renderSpan('code', value);
+  },
+  
+  param: function(value) {
+    return this._renderSpan('param', value);
+  },
+  
+  artjs: function() {
+    return this._renderSpan('artjs', 'ArtJs');
   },
   
   renderMore: function(example, more) {
@@ -25,12 +30,23 @@ artjs.TemplateHelpers.registerAll({
     return this.renderIf(v, '_renderParams');
   },
   
+  _renderExample: function(v) {
+    var exampleElement = this.renderElement('p', {className: 'example'}, 'Example:');
+    var codeElement = this.renderElement('pre', {className: 'block'}, this._evaluate(v));
+    
+    return exampleElement + codeElement;
+  },
+  
+  _renderSpan: function(className, value) {
+    return this.renderElement('span', {className: className}, value);
+  },
+  
   _renderMore: function(v) {
-    return this.renderElement('p', {className: 'container'}, v);
+    return this.renderElement('p', {className: 'container'}, this._evaluate(v), true);
   },
   
   _renderDescription: function(v) {
-    return this.renderElement('p', null, v);
+    return this.renderElement('p', null, this._evaluate(v), true);
   },
   
   _renderParams: function(v) {
@@ -43,5 +59,17 @@ artjs.TemplateHelpers.registerAll({
     var content = this.renderElement('span', null, k) + ' - ' + v;
     
     return this.renderElement('p', null, content);
+  },
+  
+  _evaluate: function(v) {
+    if (!artjs.Object.isArray(v)) {
+      v = [v];
+    }
+    
+    return artjs.Array.map(v, this._escapeHtml, this).join('<br/>');
+  },
+  
+  _escapeHtml: function(v) {
+    return artjs.String.escapeHtml(artjs.String.toS(v));
   }
 });

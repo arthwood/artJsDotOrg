@@ -1,16 +1,18 @@
 art.DB = {
   tree: {
     'Introduction': 'introduction',
-    'Testing': 'testing',
+    'Utils': 'utils',
     'Class': 'class2',
     'Component': 'component2',
     'View': 'view',
     'Template': 'template',
+    'Routing': 'routing',
+    'Testing': 'testing',
     'Delegate': 'delegate2',
     'Event': 'event2',
     'Reference': {
       'Global': {
-        'artjs': 'main'
+        'artjs': 'artjs'
       },
       'artjs.data': {
         'List': 'list',
@@ -561,6 +563,106 @@ art.DB = {
               header: 'stringify():Array',
               description: 'Returns new array with items cast to String.'
             }
+          ]
+        }
+      ]
+    },
+    artjs: {
+      name: 'artjs',
+      package: 'artjs',
+      description: 'This is top level object that stores information about framework and few methods that allows you to select the framework mode.',
+      sections: [
+        {
+          name: 'Constants',
+          members: [
+            new art.Member(
+              'VERSION:String',
+              'Current version of framework'
+            )
+          ]
+        },
+        {
+          name: 'Globals',
+          members: [
+            new art.Member(
+              'Broadcaster',
+              "Global {{code('artjs.Channel')}} instance. See \"Broadcaster\" section in {{linkTo('Event', 'event2')}}"
+            )
+          ]
+        },
+        {
+          name: 'Aliases',
+          members: [
+            new art.Member(
+              '$() -> artjs.Selector.getElements()'
+            ),
+            new art.Member(
+              '$A() -> artjs.Array.arrify()'
+            ),
+            new art.Member(
+              '$B() -> artjs.ElementBuilder.build()'
+            ),
+            new art.Member(
+              '$BA() -> artjs.Delegate.bindAll()'
+            ),
+            new art.Member(
+              '$C() -> artjs.ElementBuilder.create()'
+            ),
+            new art.Member(
+              '$D() -> artjs.Delegate.create()'
+            ),
+            new art.Member(
+              '$DC() -> artjs.Delegate.callback()'
+            ),
+            new art.Member(
+              '$E() -> artjs.ElementBuilder.getElement()'
+            ),
+            new art.Member(
+              '$F() -> artjs.Delegate.func()'
+            ),
+            new art.Member(
+              '$I() -> artjs.Element.insert()'
+            ),
+            new art.Member(
+              '$P() -> artjs.ElementBuilder.parse()'
+            ),
+            new art.Member(
+              '$T() -> artjs.Timeout.fire()'
+            ),
+            new art.Member(
+              '$find() -> artjs.Selector.find()'
+            ),
+            new art.Member(
+              '$findAll() -> artjs.Selector.findAll()'
+            ),
+            new art.Member(
+              '$get() -> artjs.Ajax.get()'
+            ),
+            new art.Member(
+              '$del() -> artjs.Ajax.del()'
+            ),
+            new art.Member(
+              '$parent() -> artjs.Selector.parent()'
+            ),
+            new art.Member(
+              '$post() -> artjs.Ajax.post()'
+            ),
+            new art.Member(
+              '$put() -> artjs.Ajax.put()'
+            )
+          ]
+        },
+        {
+          name: 'Events',
+          members: [
+            new art.Member(
+              'onDocumentLoad',
+              'Triggered when DOM is loaded.'
+            ),
+            new art.Member(
+              'onWindowLoad',
+              'Triggered when whole window is loaded (executes after onDocumentLoad).'
+            )
           ]
         }
       ]
@@ -2180,131 +2282,6 @@ art.DB = {
         }
       ]
     },
-    main: {
-      name: 'artjs',
-      package: 'artjs',
-      description: 'This is top level object that stores information about framework and few methods that allows you to select the framework mode.',
-      sections: [
-        {
-          name: 'Constants',
-          members: [
-            new art.Member(
-              'VERSION:String',
-              'Current version of framework'
-            )
-          ]
-        },
-        {
-          name: 'Methods',
-          members: [
-            new art.Member(
-              '$():Element',
-              'Alias for artjs.Element.getElements()',
-              [
-                "var nav = artjs.$('.main p.item span');"
-              ]
-            ),
-            new art.Member(
-              '$D():Delegate',
-              'Alias for Delegate.create()',
-              [
-                'var delegate = artjs.$D(this, this.onClick);'
-              ]
-            ),
-            new art.Member(
-              '$DC():Function',
-              'Alias for Delegate.callback()',
-              [
-                'var callback = artjs.$DC(this, this.onClick, true);'
-              ]
-            ),
-            new art.Member(
-              '$del():Ajax',
-              'Alias for Ajax.del()',
-              [
-                "var ajax = artjs.$del('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
-              ]
-            ),
-            new art.Member(
-              '$find():Element',
-              'Alias for artjs.Element.find()',
-              [
-                "var nav = artjs.$('navigation');",
-                "var item = artjs.$find(nav, '.item');"
-              ]
-            ),
-            new art.Member(
-              '$findAll():Array',
-              'Alias for artjs.Element.findAll()',
-              [
-                "var nav = artjs.$('navigation');",
-                "var items = artjs.$findAll(nav, '.item');"
-              ]
-            ),
-            new art.Member(
-              '$get():Ajax',
-              'Alias for Ajax.get()',
-              [
-                "var ajax = artjs.$get('http://mydomain.com', null, new Delegate(this, this.onAjaxSuccess));"
-              ]
-            ),
-            new art.Member(
-              'p():Void',
-              'Debug info. If debug console is accessible output to the console; uses console.log() otherwise.',
-              [
-                "p('myVariable: ' +  myVariable);"
-              ]
-            ),
-            new art.Member(
-              '$P():Element',
-              'Alias for ElementBuilder.parse()',
-              [
-                "var element = artjs.$P('<span class=\"desc\">Blue t-shirt</span>');"
-              ]
-            ),
-            new art.Member(
-              '$post():Ajax',
-              'Alias for Ajax.post()',
-              [
-                "var ajax = artjs.$post('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
-              ]
-            ),
-            new art.Member(
-              '$put():Ajax',
-              'Alias for Ajax.$put()',
-              [
-                "var ajax = artjs.$put('http://mydomain.com', {id: 4}, new Delegate(this, this.onAjaxSuccess));"
-              ]
-            ),
-            new art.Member(
-              '$up():Element',
-              'Alias for artjs.Element.up()',
-              [
-                "var nav = artjs.$('navigation');",
-                'var parent = artjs.$up(nav);'
-              ]
-            )
-          ]
-        },
-        {
-          name: 'Events',
-          members: [
-            new art.Member(
-              'onDocumentLoad',
-              'Triggered when DOM is loaded.'
-            ),
-            new art.Member(
-              'onWindowLoad',
-              'Triggered when whole window is loaded (executes after onDocumentLoad).'
-            ),
-            new art.Member(
-              'onLibraryLoad',
-              'Triggered when all library templates are loaded (executes after onWindowLoad).'
-            )
-          ]
-        }
-      ]
-    },
     math: {
       name: 'artjs.Math',
       package: 'artjs.utils',
@@ -3631,6 +3608,7 @@ art.DB = {
         }
       ]
     },
+    utils: {template: 'utils'},
     view: {template: 'view'}
   }
 };

@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.3.6",
+  VERSION: "0.3.11",
   component: {
     utils: {}
   },
@@ -789,6 +789,9 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
     delegate.args = artjs.Array.arrify(arguments, 2);
     return delegate;
   },
+  bind: function(object, methodName) {
+    this._bind(object, object, methodName);
+  },
   bindAll: function(context) {
     var container = context.ctor ? context.ctor.prototype : context;
     var callbacks = artjs.Object.keys(artjs.Object.select(container, this._isCallback, this));
@@ -797,14 +800,11 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
     this._bindTarget = context;
     artjs.Array.each(all, this._bindEach, this);
   },
-  delegateTo: function(source, target) {
-    var functions = artjs.Object.keys(artjs.Object.select(source, this._isPublicMethod, this));
-    this._bindSource = source;
-    this._bindTarget = target;
-    artjs.Array.each(functions, this._bindEach, this);
+  func: function(method) {
+    return this.create.apply(this, [ null, method ].concat(artjs.Array.arrify(arguments, 1)));
   },
-  func: function(method, withSource) {
-    return this.create(null, method, withSource);
+  _bind: function(target, object, methodName) {
+    target[methodName] = this.callback(object, methodName);
   },
   _isCallback: function(v, k) {
     return artjs.String.startsWith(k, "_on") && this._isFunction(v, k);
@@ -816,7 +816,7 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(function(object, method) {
     return v instanceof Function;
   },
   _bindEach: function(i) {
-    this._bindTarget[i] = this.callback(this._bindSource, i);
+    this._bind(this._bindTarget, this._bindSource, i);
   }
 });
 
@@ -865,6 +865,9 @@ artjs.String = artjs.utils.String = {
   },
   countPattern: function(str, pattern) {
     return str.match(new RegExp(pattern, "g")).length;
+  },
+  escapeHtml: function(str) {
+    return str.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, '"');
   },
   first: function(str) {
     return str.substr(0, 1);
@@ -3223,7 +3226,7 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
   this._tagRegEx = /\{\{[^{}]+\}\}/g;
   this._methodRegEx = /^(\w+)\((.*)\)$/;
   this._content = content;
-  this._scope = scope;
+  this._scope = scope || {};
 }, {
   compile: function() {
     var tags = this._content.match(this._tagRegEx);
@@ -3246,8 +3249,12 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
     var argsStr = artjs.Array.first(exec);
     var args = artjs.Array.map(argsStr.split(","), this._stripArg, this);
     var argsValues = artjs.Array.map(args, this._parseArg, this);
-    var helpers = artjs.TemplateHelpers;
-    return helpers[action].apply(helpers, argsValues.concat(this._scope));
+    var delegate = artjs.$D(artjs.TemplateHelpers, action);
+    if (!delegate.method) {
+      throw 'Trying to call unregistered "' + action + '" helper';
+    }
+    delegate.args = argsValues.concat(this._scope);
+    return delegate.invoke();
   },
   _parseArg: function(i) {
     var str = i;
@@ -3305,7 +3312,10 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     var body = data.body ? this.renderElement("tbody", null, this._map(data.body || [], this._renderTableRow)) : "";
     return this.renderElement("table", null, head + foot + body);
   },
-  renderElement: function(name, attrs, value) {
+  renderElement: function(name, attrs, value, compile) {
+    if (compile) {
+      value = artjs.TemplateBase.render(value);
+    }
     return artjs.$B(name, attrs, value).toString();
   },
   registerAll: function(helpers) {
@@ -3772,10 +3782,10 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element, hash) {
   this.onLeaf = new artjs.Event("artjs.Tree::onLeaf");
   artjs.on("click", this._element, artjs.$D(this, "_onClick"), "li a");
 }, {
-  clickAt: function(path, noAction) {
-    this._noAction = Boolean(noAction);
+  openAt: function(path) {
     this._openingNode = this.getElement();
     artjs.Array.each(path, this._openAt, this);
+    this._openingNode = null;
     this._noAction = false;
   },
   getCurrent: function() {
@@ -3834,12 +3844,13 @@ artjs.Tree = artjs.component.Tree = artjs.Class(function(element, hash) {
       e.preventDefault();
     }
     var ul = artjs.Element.next(this._current);
-    artjs.Element.toggle(ul);
+    var action = this._openingNode ? "show" : "toggle";
+    artjs.Element[action](ul);
     artjs.Element.setClass(artjs.$parent(this._current), "expanded", !artjs.Element.isHidden(ul));
     this.onNode.fire(this, e);
   },
   _onLeaf: function(e) {
-    if (!this._noAction) {
+    if (!this._openingNode) {
       this.onLeaf.fire(this, e);
     }
   }
@@ -4145,15 +4156,13 @@ artjs.$del = artjs.Delegate.callback(artjs.Ajax, "del");
 
 artjs.$A = artjs.Delegate.callback(artjs.Array, "arrify");
 
-artjs.$DC = artjs.Delegate.callback(artjs.Delegate, "callback");
-
-artjs.$F = artjs.Delegate.callback(artjs.Delegate, "func");
+artjs.$BA = artjs.Delegate.callback(artjs.Delegate, "bindAll");
 
 artjs.$D = artjs.Delegate.callback(artjs.Delegate, "create");
 
-artjs.$BA = artjs.Delegate.callback(artjs.Delegate, "bindAll");
+artjs.$DC = artjs.Delegate.callback(artjs.Delegate, "callback");
 
-artjs.$DT = artjs.Delegate.callback(artjs.Delegate, "delegateTo");
+artjs.$F = artjs.Delegate.callback(artjs.Delegate, "func");
 
 artjs.$I = artjs.Delegate.callback(artjs.Element, "insert");
 
@@ -4179,7 +4188,7 @@ artjs.Array.contains = artjs.Array.includes;
 
 artjs.Array.containsAll = artjs.Array.includesAll;
 
-artjs.Broadcaster = artjs.events.Broadcaster = new artjs.Channel("Broadcaster");
+artjs.Broadcaster = new artjs.Channel("Broadcaster");
 
 artjs.onDocumentLoad = new artjs.Event("document:load");
 

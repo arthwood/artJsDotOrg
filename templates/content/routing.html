@@ -1,0 +1,30 @@
+<h1>Routing</h1>
+<p>
+  Routing allows you to map url to specific action.
+</p>
+<h2>URL</h2>
+<div class="section">
+  <p>
+    In ArtJs everything that is after "#" in URL is treated as route path. Once the page is loaded or user navigates 
+    between URLs ArtJs will parse the URL and assume the format: 
+  </p>
+<pre>/&lt;controller&gt;/&lt;action&gt; (with optional "!" after leading "/")</pre>
+</div>
+<h2>Controllers</h2>
+<div class="section">
+  <p>
+    By default ArtJs does not respond to navigation between URLs - it uses default controller with empty implementation 
+    {{code('artjs.Controller')}}. You can define you own default controller by extending 
+    {{code('artjs.Controller')}} and implementing any methods that you expect to occur in URL.<br/>
+    If no matching method can be found in controller then {{code('index')}} is used.<br/>
+    If no matching controller can be found then {{code('artjs.Router.defaultController')}} is used.<br/>
+  </p>
+  <p>
+    Every action receive {{code('request')}} argument, which is a generic object with two properties:<br/>
+  </p>
+  <ul class="simple">
+    <li>fragments - {{code('Array&lt;String&gt;')}} containing any extra parts of URL splitted by '/'</li>
+    <li>controllerId - {{code('String')}} optional, exists only if default controller is used. 
+      Contains name of controller that couldn't be found.</li>
+  </ul>
+</div>

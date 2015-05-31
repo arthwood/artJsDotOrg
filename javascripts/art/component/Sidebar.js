@@ -6,24 +6,34 @@ art.component.Sidebar = artjs.Class(
     
     artjs.Router.onNavigate.add(artjs.$D(this, '_onNavigate'));
     
-    this.setData(art.DB.tree);
+    var ajax = artjs.$get('tree.yml');
+    
+    ajax.onSuccess.add(artjs.$D(this, '_onSuccess'));
   },
   {
     _onNavigate: function(route) {
-      var id = artjs.Object.getDefault(route.getRequest().controllerId, 'introduction');
+      this._section = artjs.Object.getDefault(route.getRequest().controllerId, 'introduction');
       
-      this._select(id);
+      if (this._data) {
+        this._select();
+      }
       
-      var data = art.DB.content[id];
-      
-      artjs.Broadcaster.fire(art.events.ON_SIDEBAR, data);
+      artjs.Broadcaster.fire(art.events.ON_SIDEBAR, this._section);
     },
     
-    _select: function(id) {
-      var paths = artjs.TreeCrawler.find(this, id);
+    _onSuccess: function(ajax) {
+      this.setData(YAML.parse(ajax.getResponseText()));
+      
+      if (this._section) {
+        this._select();
+      }
+    },
+    
+    _select: function() {
+      var paths = artjs.TreeCrawler.find(this, this._section);
       var path = artjs.Array.first(paths);
       
-      this.clickAt(path, true);
+      this.openAt(path, true);
       
       this._leafClassToggler.toggle(artjs.Element.parent(this._current));
     }

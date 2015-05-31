@@ -1,0 +1,49 @@
+Introduction: introduction
+Class: class2
+Component: component2
+View: view
+Template: template
+Delegate: delegate2
+Event: event2
+Utils: utils
+Routing: routing
+Testing: testing
+Reference:
+  Global:
+    artjs: artjs
+  artjs.data:
+    List: list
+    Queue: queue
+  artjs.dom:
+    Component: component
+    ElementBuilder: element_builder
+    Selector: selector
+  artjs.events:
+    Clock: clock
+    Event: event
+    Delegate: delegate
+    QueuedClock: queued_clock
+    Timeline: timeline
+    Timeout: timeout
+  artjs.math:
+    Point: point
+    Rectangle: rectangle
+  artjs.net:
+    Ajax: ajax
+  artjs.template:
+    Helpers: template-helpers
+    Library: template-library
+  artjs.transition:
+    Blind: transition-blind
+  artjs.ui:
+    DatePicker: date_picker
+  artjs.utils:
+    Array: array
+    Class: class
+    Date: date
+    Element: element
+    Log: log
+    Math: math
+    Object: object
+    String: string
+    Toggler: toggler

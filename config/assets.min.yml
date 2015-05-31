@@ -90,7 +90,6 @@ javascripts:
   docs-min: 
     - 'Docs'
     - 'art/Member'
-    - 'art/DB'
     - 'art/Helpers'
     - 'art/component/Sidebar'
     - 'art/component/Content'

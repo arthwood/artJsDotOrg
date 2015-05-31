@@ -89,7 +89,6 @@ javascripts:
   docs-dev: 
     - 'Docs'
     - 'art/Member'
-    - 'art/DB'
     - 'art/Helpers'
     - 'art/component/Sidebar'
     - 'art/component/Content'
