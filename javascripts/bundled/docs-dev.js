@@ -11,7 +11,7 @@ artjs.TemplateLibrary.config.BASE_TEMPLATES = [];
 
 artjs.TemplateLibrary.config.PATH = "templates";
 
-artjs.TemplateLibrary.config.TEMPLATES = [ "content/class", "content/component", "content/delegate", "content/event", "content/introduction", "content/routing", "content/template", "content/testing", "content/utils", "content/view", "disqus", "doc", "ga", "member", "section" ];
+artjs.TemplateLibrary.config.TEMPLATES = [ "content/class", "content/component", "content/delegate", "content/event", "content/introduction", "content/routing", "content/template", "content/template_view", "content/testing", "content/utils", "content/view", "disqus", "doc", "ga", "member", "section" ];
 
 artjs.Broadcaster.register(art.events.ON_SIDEBAR);
 
@@ -113,7 +113,7 @@ art.component.Sidebar = artjs.Class(function(element) {
     }
   },
   _select: function() {
-    var paths = artjs.TreeCrawler.find(this, this._section);
+    var paths = artjs.TreeCrawler.find(this.getData(), this._section);
     var path = artjs.Array.first(paths);
     this.openAt(path, true);
     this._leafClassToggler.toggle(artjs.Element.parent(this._current));

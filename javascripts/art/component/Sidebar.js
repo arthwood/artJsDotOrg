@@ -30,7 +30,7 @@ art.component.Sidebar = artjs.Class(
     },
     
     _select: function() {
-      var paths = artjs.TreeCrawler.find(this, this._section);
+      var paths = artjs.TreeCrawler.find(this.getData(), this._section);
       var path = artjs.Array.first(paths);
       
       this.openAt(path, true);

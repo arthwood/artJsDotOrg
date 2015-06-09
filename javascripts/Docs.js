@@ -17,6 +17,7 @@ artjs.TemplateLibrary.config.TEMPLATES = [
   'content/introduction', 
   'content/routing', 
   'content/template', 
+  'content/template_view', 
   'content/testing',
   'content/utils',
   'content/view',

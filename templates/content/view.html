@@ -1,34 +1,21 @@
 <h1>View</h1>
 <p>
-  <span class="code">View</span> is a <span class="code">Component</span> that couples data in 
-  <span class="code">Model</span> with the <span class="code">Template</span>.
+  {{code('View')}} is an abstract class based of {{linkTo('Component', 'component2')}} class that encapsulates data used in order to 
+  render the view.
 </p>
-<h2>Definition</h2>
-<div class="section">
-  <p>
-    You define <span class="code">View</span> as a class attached to html element:
-  </p>
-  <pre>&lt;div class="art artjs-View"&gt;&lt;/div&gt;</pre>
-  <p>
-    <span class="code">View</span> will try to render content of the element (will treat it as a template).<br/>
-    Optionally with <span class="code">data-template="&lt;template_id&gt;"</span> attribute you can provide 
-    template id to render as content.
-    Another option is <span class="code">data-replace="true"</span> so the rendered template will replace the element.
-  </p>
-  <p>In most cases you will create own class that extends <span class="code">View</span> and declare it in HTML:</p>
-  <pre>&lt;div class="art artjs-CustomView" data-template="template_id" &gt;&lt;/div&gt;</pre>
-</div>
 <h2>Model</h2>
 <div class="section">
   <p>
-    Each <span class="code">View</span> class instance has its private <span class="code">_model</span> property which is
-    an instance of <span class="code">artjs.data.Model</span> class.<br/>
-    The main feature of a view is the fact that whenever you make a change to model, associated template is automatically re-rendered.
-    Only specific properties of a model will trigger re-rendering the template, namely the ones that you register: 
+    Each {{code('View')}} class instance has its private {{code('_model')}} field which is an instance of 
+    {{code('artjs.data.Model')}} class. You can either build your model and assign it to the field, or use public 
+    {{code('setModel()')}} method. The latter will cause the view to render.<br/>
+    The main feature of a {{code('View')}} is the fact that whenever you make a change to model, an abstract protected 
+    {{code('_render()')}} method is being called.
+    Only specific properties of a model will trigger rendering the view, namely the ones that you register: 
   </p>
   <pre>
 this._model.addProperty('myProp');</pre>
   <p>
-    It's also possible to assign another model to view using <span class="code">setModel()</span> method.
+    One of simple {{code('View')}} implementations is {{linkTo('TemplateView', 'template_view')}}.
   </p>
 </div>

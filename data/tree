@@ -2,6 +2,7 @@ Introduction: introduction
 Class: class2
 Component: component2
 View: view
+TemplateView: template_view
 Template: template
 Delegate: delegate2
 Event: event2
@@ -11,11 +12,12 @@ Testing: testing
 Reference:
   Global:
     artjs: artjs
+  artjs.component:
+    Base: component
   artjs.data:
     List: list
     Queue: queue
   artjs.dom:
-    Component: component
     ElementBuilder: element_builder
     Selector: selector
   artjs.events:

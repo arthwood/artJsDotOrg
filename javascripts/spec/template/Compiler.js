@@ -1,15 +1,29 @@
 spec(artjs.TemplateCompiler, function() {
-  var instance;
+  var instance, klass;
   
   before(function() {
-    var klass = subject();
-    
-    instance = new klass('{{renderChecked(checked)}}', {checked: true});
+    klass = subject();
   });
   
   describe('#compile', function() {
-    it('should return expected result', function() {
-      expect(instance.compile()).to(eq('checked'));
+    context('simple value', function() {
+      it('should return expected result', function() {
+        instance = new klass('{{value}}', {value: true});
+      
+        expect(instance.compile()).to(eq('true'));
+      });
+    });
+    
+    context('action', function() {
+      it('should return expected result', function() {
+        artjs.TemplateHelpers.register('code', function(str, value) {
+          return str + ':' + value;
+        });
+        
+        instance = new klass("{{code('<key, value>', '52')}}");
+        
+        expect(instance.compile()).to(eq('<key, value>:52'));
+      });
     });
   });
 });

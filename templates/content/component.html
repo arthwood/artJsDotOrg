@@ -7,17 +7,17 @@
 </h2>
 <div class="section">
   <p>
-    In order to define a component, assign to any HTML element css class <span class="code">"art"</span>.<br/>
+    In order to define a component, assign to any HTML element css class {{code('art')}}.<br/>
     However this wont do much. It will only allow the framework to recognize the fact that this element is an component.
     In order to define a behaviour just assign another css class that corresponds to js class defined in your code, e.g.:
   </p>
 <pre>&lt;div class="art app-components-MyComponent"&gt;&lt;/div&gt;</pre>
   <p>
-    Here, framework will search for a class <span class="code">app.components.MyComponent</span> and instantiate it 
+    Here, framework will search for a class {{code('app.components.MyComponent')}} and instantiate it 
     whenever that element appears in UI.<br/>
-    That class must extend <span class="code">artjs.Component</span> (see class definition) and you must call 
-    <span class="code">super()</span> in the constructor. 
-    Doing that will give you access to <span class="code">element</span> property which keeps
+    That class must extend {{code('artjs.Component')}} (see class definition) and you must call 
+    {{code('super()')}} in the constructor. 
+    Doing that will give you access to {{code('element')}} property which keeps
     a reference to the main element (the one with assigned css class).
   </p>
 </div>
@@ -26,8 +26,8 @@
 </h2>
 <div class="section">
   <p>
-    Keep in mind that framework will remove any components that are not on stage every 2 seconds. You may change it
-    through <span class="code">artjs.ComponentSweeper.INTERVAL</span> setting. This is obviously for performance reasons.
+    Keep in mind that framework will remove any components that are not on stage every 1 second. You may change it
+    through {{code('artjs.ComponentSweeper.INTERVAL')}} setting. This is obviously for performance reasons.
   </p>
 </div>
 <h2>
@@ -35,9 +35,8 @@
 </h2>
 <div class="section">
   <p>
-    If you know that your component is going to be unique you may want to assign its element an 
-    <span class="code">id</span> attribute.<br/>
-    Each element with <span class="code">id</span> can be referenced using <span class="code">onLoad()</span> hook.
+    If you know that your component is going to be unique you may want to assign its element an {{code('id')}} attribute.<br/>
+    Each element with {{code('id')}} can be referenced using {{code('onLoad()')}} hook.
     If component is already instantiated and you call:
   </p>
   <pre>
@@ -45,9 +44,9 @@ artjs.Component.onLoad('myId', delegate);</pre>
   <p>
     delegate will be called immediately and will receive reference to component instance.<br/>
     Otherwise it will be called as soon as HTML element is found and component is instantiated.<br/>
-    You can always try to reference you component by <span class="code">id</span> using:
+    You can always try to reference your component by {{code('id')}} using:
   </p>
   <pre>
 artjs.Component.find('myId');</pre>
-  <p>This will return reference to component if it has been already instantiated and false otherwise.</p>
+  <p>This will return reference to component if it has been already instantiated or null otherwise.</p>
 </div>

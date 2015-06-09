@@ -597,16 +597,49 @@ clock:
             - "clock.stop();"
             - "clock.counter; // 0"
 component:
-  name: Component
-  package: artjs.dom
-  description: Components allow you to attach your own view class to element node. In order to do this simply assign "art" class to your element along with class name of your custom class e.g. com-domain-Navigation and define com.domain.Navigation class.
+  name: Base
+  package: artjs.component
+  description:
+    - Components allow you to attach your own view class to element node. 
+    - In order to do this simply assign "art" class to your element along with class name of your custom class e.g. {{code('com-domain-Navigation')}} and define {{code('com.domain.Navigation')}} class.
+    - For more information see {{linkTo('Component', 'component2')}}.
   sections:
+    -
+      name: Public methods
+      members:
+        -
+          header: getElement():Element
+          description: Returns associated {{code('Element')}}.
+    -
+      name: Protected methods
+      members:
+        - 
+          header: _fire(id:String):void
+          description: Fires {{code('Event')}} identified by {{param('id')}}.
+        - 
+          header: _handle(id:String, method:String):void
+          description: Sets up a listener for {{code('Event')}} identified by {{param('id')}}.
+        - 
+          header: _handleEmit(id:String, method:String):void
+          description: Sets up a listener for {{code('Event')}} identified by {{param('id')}} but only if it has been emited from any of the descendants.
+        - 
+          header: _handleBroadcast(id:String, method:String):void
+          description: Sets up a listener for {{code('Event')}} identified by {{param('id')}} but only if it has been broadcasted by any of the ancestors.
+        -
+          header: _register(id:String, method:String):void
+          description: Registers for {{code('Component')}} load identified by {{param('id')}}. Works the same way as static {{code('onLoad')}} method while delegate is build from current component and {{param('method')}}.
+        -
+          header: _registerAll(map:Object<String, String>):void
+          description: Shorthand method used to call {{code('_register()')}} multiple times. Every {{code('<key, value>')}} pair of {{param('map')}} constitutes argument passed to {{code('_register()')}}. 
     -
       name: Static methods
       members:
         -
           header: find(id:String):artjs.Component
-          description: Returns component by {{param('id')}}
+          description: Returns component by {{param('id')}}.
+        -
+          header: onLoad(id:String, delegate:artjs.Delegate):void
+          description: Invokes {{param('delegate')}} immediately if {{code('Component')}} with {{param('id')}} is already instantiated or asynchronically otherwise. In both cases {{param('delegate')}} always receives target {{code('Component')}} as an argument. 
 component2:
   template: component
 date:
@@ -996,7 +1029,7 @@ element_builder:
           header: name:String
           description: The same property as in constructor
         -
-          header: value:Object'
+          header: value:Object
           description: The same property as in constructor
     -
       name: Methods
@@ -2204,6 +2237,8 @@ string:
             - "artjs.String.truncate(string, 8); // quantum..."
 template:
   template: template
+template_view:
+  template: template_view
 testing:
   template: testing
 timeline:

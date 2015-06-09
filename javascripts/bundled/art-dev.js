@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: "0.3.12",
+  VERSION: "0.4",
   component: {
     utils: {}
   },
@@ -937,23 +937,10 @@ artjs.String = artjs.utils.String = {
   },
   sub: function(str, i, j) {
     var n = str.length;
-    var jZero = j === 0;
-    str += str;
-    i = i % n;
-    j = j % n;
-    if (i < 0) {
-      i += n;
-    }
-    if (j < 0) {
-      j += n;
-    }
-    if (jZero) {
-      j = n;
-    }
-    if (j < i) {
-      j += n;
-    }
-    return str.substring(i, j);
+    var start = (i % n + n) % n;
+    var end = (j % n + n) % n;
+    if (end < start || end == start && i != j) end += n;
+    return (str + str).substring(start, end);
   },
   toBoolean: function(str) {
     return str === "true";
@@ -982,17 +969,8 @@ artjs.String = artjs.utils.String = {
 
 artjs.Date = artjs.utils.Date = {
   _name: "Date",
-  toString: function() {
-    return this._name;
-  },
-  getTime: function() {
-    return (new Date).getTime();
-  },
-  monthDaysNum: function(date) {
-    var d = this.copy(date);
-    d.setMonth(d.getMonth() + 1);
-    d.setDate(0);
-    return d.getDate();
+  copy: function(date) {
+    return new Date(date);
   },
   firstDate: function(date) {
     var d = this.copy(date);
@@ -1002,22 +980,11 @@ artjs.Date = artjs.utils.Date = {
   firstDay: function(date) {
     return this.firstDate(date).getDay();
   },
-  toHMS: function(date, separator) {
-    var su = artjs.String;
-    separator = separator || ":";
-    return su.addZeros(date.getHours().toString(), 2, false) + separator + su.addZeros(date.getMinutes().toString(), 2, false) + separator + su.addZeros(date.getSeconds().toString(), 2, false);
-  },
-  toYMD: function(date, separator) {
-    var su = artjs.String;
+  fromDMY: function(str, separator) {
     separator = separator || "-";
-    return date.getFullYear() + separator + su.addZeros((date.getMonth() + 1).toString(), 2, false) + separator + su.addZeros(date.getDate().toString(), 2, false);
-  },
-  toDMY: function(date, separator) {
-    separator = separator || "-";
-    var ymd = this.toYMD(date, separator);
-    var arr = ymd.split(separator);
-    arr.reverse();
-    return arr.join(separator);
+    var arr = str.split(separator);
+    var au = artjs.Array;
+    return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
   },
   fromYMD: function(str, separator) {
     separator = separator || "-";
@@ -1025,27 +992,46 @@ artjs.Date = artjs.utils.Date = {
     var au = artjs.Array;
     return new Date(parseInt(au.first(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.third(arr), 10));
   },
-  fromDMY: function(str, separator) {
-    separator = separator || "-";
-    var arr = str.split(separator);
-    var au = artjs.Array;
-    return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
+  getDateShifted: function(date, days) {
+    var dateCopy = this.copy(date);
+    dateCopy.setDate(date.getDate() + days);
+    return dateCopy;
   },
-  minutesToHM: function(minutes, separator) {
-    separator = separator || ":";
-    return Math.floor(minutes / 60) + separator + artjs.String.addZeros((minutes % 60).toString(), 2);
+  getTime: function() {
+    return (new Date).getTime();
   },
   hmToMinutes: function(hm, separator) {
     separator = separator || ":";
     var arr = hm.split(separator);
     return 60 * parseInt(arr[0], 10) + parseInt(arr[1], 10);
   },
-  secondsToMS: function(s, separator) {
-    var seconds = s % 60;
-    var minutes = (s - seconds) / 60;
-    var su = artjs.String;
+  minutesToHM: function(minutes, separator) {
     separator = separator || ":";
-    return su.addZeros(minutes.toString(), 2) + separator + su.addZeros(seconds.toString(), 2);
+    return Math.floor(minutes / 60) + separator + artjs.String.addZeros((minutes % 60).toString(), 2);
+  },
+  monthDaysNum: function(date) {
+    var d = this.copy(date);
+    d.setMonth(d.getMonth() + 1);
+    d.setDate(0);
+    return d.getDate();
+  },
+  msToHMSM: function(v) {
+    var mili = v % 1e3;
+    var totalSeconds = (v - mili) / 1e3;
+    var seconds = totalSeconds % 60;
+    var totalMinutes = (totalSeconds - seconds) / 60;
+    var minutes = totalMinutes % 60;
+    var totalHours = (totalMinutes - minutes) / 60;
+    var hours = totalHours;
+    return hours.toString() + ":" + artjs.String.addZeros(minutes.toString(), 2) + ":" + artjs.String.addZeros(seconds.toString(), 2) + "." + artjs.String.addZeros(mili.toString(), 3);
+  },
+  msToMSM: function(v) {
+    var mili = v % 1e3;
+    var totalSeconds = (v - mili) / 1e3;
+    var seconds = totalSeconds % 60;
+    var totalMinutes = (totalSeconds - seconds) / 60;
+    var minutes = totalMinutes;
+    return minutes.toString() + ":" + artjs.String.addZeros(seconds.toString(), 2) + "." + artjs.String.addZeros(mili.toString(), 3);
   },
   msToSeconds: function(ms, separator) {
     separator = separator || ":";
@@ -1058,34 +1044,35 @@ artjs.Date = artjs.utils.Date = {
     separator = separator || ":";
     return this.minutesToHM(minutes, separator) + separator + artjs.String.addZeros(seconds.toString(), 2);
   },
-  miliToHMSM: function(v) {
-    var mili = v % 1e3;
-    var totalSeconds = (v - mili) / 1e3;
-    var seconds = totalSeconds % 60;
-    var totalMinutes = (totalSeconds - seconds) / 60;
-    var minutes = totalMinutes % 60;
-    var totalHours = (totalMinutes - minutes) / 60;
-    var hours = totalHours;
-    return hours.toString() + ":" + artjs.String.addZeros(minutes.toString(), 2) + ":" + artjs.String.addZeros(seconds.toString(), 2) + "." + artjs.String.addZeros(mili.toString(), 3);
-  },
-  miliToMSM: function(v) {
-    var mili = v % 1e3;
-    var totalSeconds = (v - mili) / 1e3;
-    var seconds = totalSeconds % 60;
-    var totalMinutes = (totalSeconds - seconds) / 60;
-    var minutes = totalMinutes;
-    return minutes.toString() + ":" + artjs.String.addZeros(seconds.toString(), 2) + "." + artjs.String.addZeros(mili.toString(), 3);
-  },
-  copy: function(date) {
-    return new Date(date);
-  },
-  getDateShifted: function(date, days) {
-    var dateCopy = this.copy(date);
-    dateCopy.setDate(date.getDate() + days);
-    return dateCopy;
+  secondsToMS: function(s, separator) {
+    var seconds = s % 60;
+    var minutes = (s - seconds) / 60;
+    var su = artjs.String;
+    separator = separator || ":";
+    return su.addZeros(minutes.toString(), 2) + separator + su.addZeros(seconds.toString(), 2);
   },
   stripDayTime: function(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  },
+  toDMY: function(date, separator) {
+    separator = separator || "-";
+    var ymd = this.toYMD(date, separator);
+    var arr = ymd.split(separator);
+    arr.reverse();
+    return arr.join(separator);
+  },
+  toHMS: function(date, separator) {
+    var su = artjs.String;
+    separator = separator || ":";
+    return su.addZeros(date.getHours().toString(), 2, false) + separator + su.addZeros(date.getMinutes().toString(), 2, false) + separator + su.addZeros(date.getSeconds().toString(), 2, false);
+  },
+  toString: function() {
+    return this._name;
+  },
+  toYMD: function(date, separator) {
+    var su = artjs.String;
+    separator = separator || "-";
+    return date.getFullYear() + separator + su.addZeros((date.getMonth() + 1).toString(), 2, false) + separator + su.addZeros(date.getDate().toString(), 2, false);
   }
 };
 
@@ -1530,6 +1517,29 @@ artjs.Toggler = artjs.utils.Toggler = artjs.Class(function(unique) {
   }
 });
 
+artjs.utils.TreeCrawler = artjs.TreeCrawler = {
+  find: function(data, value) {
+    var result = [];
+    this._value = value;
+    this._result = result;
+    this._path = [];
+    this._traverse(data);
+    return result;
+  },
+  _each: function(v, idx) {
+    this._path.push(idx);
+    if (artjs.Object.isObject(v)) {
+      this._traverse(v);
+    } else if (v == this._value) {
+      this._result.push(artjs.Array.clone(this._path));
+    }
+    this._path.pop();
+  },
+  _traverse: function(obj) {
+    artjs.Array.each(artjs.Object.values(obj), this._each, this);
+  }
+};
+
 artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(function(className) {
   this._className = className;
   this._toggler = new artjs.Toggler;
@@ -1688,7 +1698,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(function(name, att
   this.isEmpty = Boolean(isEmpty);
 }, {
   toString: function() {
-    var attributes = this.attributes && artjs.Object.isNotEmpty(this.attributes) ? " " + this.ctor._attributesString(this.attributes) + " " : "";
+    var attributes = this.attributes && artjs.Object.isNotEmpty(this.attributes) ? " " + this.ctor._attributesString(this.attributes) : "";
     var part;
     if (this.value) {
       part = ">" + this.value + "</" + this.name + ">";
@@ -2756,6 +2766,9 @@ artjs.It = artjs.spec.node.It = artjs.Class(function(facet, body, focus) {
   instancesWithFocus: function() {
     return artjs.Array.select(this.instances, this._hasFocus, this);
   },
+  getRunInstances: function() {
+    return artjs.Spec.hasFocus() ? this.instancesWithFocus() : this.instances;
+  },
   _hasFocus: function(instance) {
     return instance.hasFocus();
   },
@@ -2853,7 +2866,7 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function(container
     artjs.Element.insert(this._element, this._testTemplate);
   },
   onComplete: function(runner) {
-    var its = artjs.It.instances;
+    var its = artjs.It.getRunInstances();
     var duration = runner.getDuration();
     var failures = artjs.Array.reject(its, this._isSuccess);
     var success = artjs.Array.isEmpty(failures);
@@ -2864,7 +2877,7 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(function(container
     this._resultsTemplate.className = classNames.join(" ");
     var resultText = success ? "Success!" : "Failure!";
     var statsText = success ? n + " tests in total." : k + " tests failed of " + n + " total.";
-    var durationText = "Duration: " + artjs.Date.miliToHMSM(duration);
+    var durationText = "Duration: " + artjs.Date.msToHMSM(duration);
     var resultElement = artjs.$E("p", {
       className: "result"
     }, resultText);
@@ -3233,10 +3246,39 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
     artjs.Array.each(tags, this._eachTag, this);
     return this._content;
   },
+  _eachChar: function(char, idx) {
+    var inOpening = artjs.Object.isPresent(this._openingQuoteIndex);
+    if (char == "'") {
+      this._openingQuoteIndex = inOpening ? null : idx;
+    } else if (char == "," && !inOpening) {
+      this._pushToArguments(this._argumentIndex, idx);
+      this._argumentIndex = idx + 1;
+    }
+  },
   _eachTag: function(i) {
     var expression = artjs.String.sub(i, 2, -2);
     var result = this._parseExpression(expression);
     this._content = this._content.replace(i, result);
+  },
+  _parseArguments: function(argsStr) {
+    this._argsStr = argsStr;
+    this._arguments = [];
+    this._argumentIndex = 0;
+    for (var i = 0; i < argsStr.length; i++) {
+      this._eachChar(argsStr[i], i);
+    }
+    this._pushToArguments(this._argumentIndex, i);
+    var args = artjs.Array.map(this._arguments, this._trimArg, this);
+    return artjs.Array.map(args, this._parseArgument, this);
+  },
+  _parseArgument: function(i) {
+    var first = artjs.String.first(i);
+    var last = artjs.String.last(i);
+    if (first == "'" && last == "'" || first == '"' && last == '"') {
+      return i.substr(1, i.length - 2);
+    } else {
+      return this._parseExpression(i);
+    }
   },
   _parseExpression: function(expression) {
     this._methodRegEx.lastIndex = 0;
@@ -3246,27 +3288,23 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
   _parseMethod: function(exec) {
     exec.shift();
     var action = exec.shift();
-    var argsStr = artjs.Array.first(exec);
-    var args = artjs.Array.map(argsStr.split(","), this._stripArg, this);
-    var argsValues = artjs.Array.map(args, this._parseArg, this);
     var delegate = artjs.$D(artjs.TemplateHelpers, action);
     if (!delegate.method) {
       throw 'Trying to call unregistered "' + action + '" helper';
     }
+    var argsStr = artjs.Array.first(exec);
+    var argsValues = this._parseArguments(argsStr);
     delegate.args = argsValues.concat(this._scope);
     return delegate.invoke();
   },
-  _parseArg: function(i) {
-    var str = i;
-    str = artjs.String.trim(str, "'");
-    str = artjs.String.trim(str, '"');
-    return str == i ? this._parseExpression(i) : str;
+  _pushToArguments: function(i, j) {
+    this._arguments.push(this._argsStr.substring(i, j));
   },
   _fromScope: function(i) {
     return artjs.String.toS(this._scope[i]);
   },
-  _stripArg: function(i) {
-    return artjs.String.strip(i);
+  _trimArg: function(i) {
+    return artjs.String.trim(i);
   }
 }, {
   _name: "Compiler",
@@ -3951,29 +3989,6 @@ artjs.component.utils.Sweeper = artjs.ComponentSweeper = {
   },
   _isOnStage: function(i) {
     return artjs.Selector.isOnStage(i.getElement());
-  }
-};
-
-artjs.component.utils.TreeCrawler = artjs.TreeCrawler = {
-  find: function(tree, value) {
-    var result = [];
-    this._value = value;
-    this._result = result;
-    this._path = [];
-    this._traverse(tree.getData());
-    return result;
-  },
-  _each: function(v, idx) {
-    this._path.push(idx);
-    if (artjs.Object.isObject(v)) {
-      this._traverse(v);
-    } else if (v == this._value) {
-      this._result.push(artjs.Array.clone(this._path));
-    }
-    this._path.pop();
-  },
-  _traverse: function(obj) {
-    artjs.Array.each(artjs.Object.values(obj), this._each, this);
   }
 };
 

@@ -6,18 +6,18 @@
 <div class="section">
   <p>
     Templates are can be stored anywhere in your project but default location is "templates" folder at the root.
-    You can specify the location by setting <span class="code">artjs.TemplateLibrary.config.PATH</span>.
+    You can specify the location by setting {{code('artjs.TemplateLibrary.config.PATH')}}.
   </p>
 </div>
 <h2>Loading templates</h2>
 <div class="section">
   <p>
     Templates are loaded automatically by the framework.
-    You can specify the list of templates to load by setting <span class="code">artjs.TemplateLibrary.config.TEMPLATES</span>.
+    You can specify the list of templates to load by setting {{code('artjs.TemplateLibrary.config.TEMPLATES')}}.
     What frameword does is it hides body until all templates are loaded. 
     That's because whole body is treated as a template and you may use placeholders there as well.
     It prevents from displaying them as a text before template is actually rendered.
-    After that is fires <span class="code">artjs.onLibraryLoad</span> event.
+    After that is fires {{code('artjs.onLibraryLoad')}} event.
   </p>
 </div>
 <h2>Creating templates</h2>
@@ -35,8 +35,8 @@
 <h2>Accessing templates</h2>
 <div class="section">
   <p>
-    In order to get loaded template use <span class="code">artjs.TemplateLibrary.getTemplate(id)</span> 
-    where <span class="code">id</span> is path to your template (e.g. 'list/item')
+    In order to get loaded template use {{code('artjs.TemplateLibrary.getTemplate(id)')}} 
+    where {{code('id')}} is path to your template (e.g. 'list/item')
   </p>
 </div>
 <h2>Rendering templates</h2>
@@ -44,23 +44,23 @@
   <h3>render</h3>
   <p>
     Once you have a template you can populate it with the content. The process is called rendering and
-    can be performed using <span class="code">artjs.TemplateBase.render(template, scope)</span> 
-    where <span class="code">template</span> is raw template as a String and <span class="code">scope</span> 
+    can be performed using {{code('artjs.TemplateBase.render(template, scope)')}} 
+    where {{code('template')}} is raw template as a String and {{code('scope')}} 
     is an object that will be used to provide the content.
   </p>
   <h3>renderInto</h3>
   <p>
-    With <span class="code">artjs.TemplateBase.renderInto(element, template, scope)</span> you can render the template 
+    With {{code('artjs.TemplateBase.renderInto(element, template, scope)')}} you can render the template 
     directly into an element. In Addition it will evaluate any scripts in the template and scan for any Components. 
   </p>
   <h3>renderElement</h3>
   <p>
-    <span class="code">artjs.TemplateBase.renderElement(element, scope)</span> will render inner html of the element 
+    {{code('artjs.TemplateBase.renderElement(element, scope)')}} will render inner html of the element 
     and update its content.
   </p>
   <h3>renderTemplateInto</h3>
   <p>
-    <span class="code">artjs.TemplateBase.renderElement(element, templateId, scope)</span> is the same as 
-    <span class="code">artjs.TemplateBase.renderInto</span> but you can provide templateId instead of raw template.
+    {{code('artjs.TemplateBase.renderElement(element, templateId, scope)')}} is the same as 
+    {{code('artjs.TemplateBase.renderInto')}} but you can provide templateId instead of raw template.
   </p>
 </div>

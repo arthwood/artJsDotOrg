@@ -1,0 +1,19 @@
+<h1>TemplateView</h1>
+<p>
+  {{code('TemplateView')}} is a class based of {{linkTo('View', 'view')}} that responds to render by rendering a template.
+</p>
+<h2>Definition</h2>
+<div class="section">
+  <p>
+    You define {{code('TemplateView')}} as a class attached to html element:
+  </p>
+  <pre>&lt;div class="art artjs-TemplateView"&gt;&lt;/div&gt;</pre>
+  <p>
+    {{code('TemplateView')}} will try to render content of the element (will treat it as a template).<br/>
+    Optionally with {{code('data-template="&lt;template_id&gt;"')}} attribute you can provide 
+    template id to render as content.
+    Another option is {{code('data-replace="true"')}} so the rendered template will replace the element.
+  </p>
+  <p>In most cases you create own class that extends {{code('TemplateView')}} and declare it in HTML:</p>
+  <pre>&lt;div class="art artjs-CustomTemplateView" data-template="template_id" &gt;&lt;/div&gt;</pre>
+</div>

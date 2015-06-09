@@ -2,11 +2,11 @@
 <h2>Why we need Delegate?</h2>
 <div class="section">
   <p>
-    One of the most important aspects of OOP in JS is <span class="code">this</span> keyword.<br/>
+    One of the most important aspects of OOP in JS is {{code('this')}} keyword.<br/>
     However, it often confuses people who start learning JavaScript. This is because when used within a function, 
     it changes its identity depending on how you call that function. 
     And here we get to another aspect of OOP in JavaScript: there are no methods in JavaScript - only functions.
-    Because of that, we need to figure out the way to force <span class="code">this</span> to point always 
+    Because of that, we need to figure out the way to force {{code('this')}} to point always 
     at the object you want, no matter how you call the function. In other words - we want to have a function 
     to behave like a method.
     In order to explain why we need this, here's an example:
@@ -26,16 +26,16 @@ var alien = {
   id: 'alien'
 };
 
-obj.meth();
+obj.meth(); // 'object'
 
 var meth = obj.meth;
 
-meth();
+meth(); // 'window'
 
-meth.call(alien);</pre>
+meth.call(alien); // 'alien'</pre>
   <p>
     As you can see all three ways of calling the function give different results and that's because for each of them 
-    we change the context (<span class="code">this</span>).
+    we change the context ({{code('this')}}).
   </p>
 </div>
 <h2>What is Delegate?</h2>
@@ -56,20 +56,17 @@ var obj = {
 
 var delegate = new artjs.Delegate(obj, obj.meth, 200);
 
-// or use shortcut:
-// var delegate = new artjs.Delegate(obj, 'meth', 200);
-
-delegate.invoke('greetings!');</pre>
+delegate.invoke('greetings!'); // object greetings! 200</pre>
   <p>
     Method will get direct call arguments first, followed by arguments declared during Delegate creation.
-    Sometimes you want to be able to just call a function instead of <span class="code">delegate.invoke</span>.
+    Sometimes you want to be able to just call a function instead of {{code('delegate.invoke')}}.
     You can get it from delegate by using:
   </p>
   <pre>
 var callback = delegate.callback(true);</pre>
   <p>
-    Passing <span class="code">true</span> means that we want to know who was the caller of our method. 
-    In other words - what would <span class="code">this</span> point to if we hadn't used delegate.
+    Passing {{code('true')}} means that we want to know who was the caller of our method. 
+    In other words - what would {{code('this')}} point to, if we hadn't used delegate.
     This information will be passed as the very first argument of a method:
   </p>
   <pre>
@@ -83,9 +80,9 @@ var caller = {
   action: callback
 };
 
-caller.action('greetings!');</pre>
+caller.action('greetings!'); // object caller greetings! 200</pre>
   <p>
-    There are number of helper methods that deal with <span class="code">Delegate</span> object. 
-    See reference to find out more. 
+    There are number of helper methods that deal with {{code('Delegate')}} object. 
+    See {{linkTo('reference', 'delegate')}} to find out more. 
   </p>
 </div>

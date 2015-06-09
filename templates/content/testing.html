@@ -1,25 +1,25 @@
 <h1>Testing</h1>
 <h2>
-  Introduction.
+  Introduction
 </h2>
 <div class="section">
   <p>
     In order to write unit tests for your application create test file - lets say at:<br/>
-    <span class="code">/javascripts/spec/my_test.js</span>
+    {{code('/javascripts/spec/my_test.js')}}
   </p>
 </div>
 <h2>
-  Spec nodes.
+  Spec nodes
 </h2>
 <div class="section">
   <p>
     There are four main function that can be used to write any test:
   </p>
   <ul class="simple">
-    <li><span class="code">spec()</span></li>
-    <li><span class="code">describe()</span></li>
-    <li><span class="code">context()</span></li>
-    <li><span class="code">it()</span></li>
+    <li>{{code('spec()')}}</li>
+    <li>{{code('describe()')}}</li>
+    <li>{{code('context()')}}</li>
+    <li>{{code('it()')}}</li>
   </ul>
   <p>
     I call them "spec nodes" since they conform a tree-like structure of every test.<br/>
@@ -30,20 +30,19 @@
   <h3>spec()</h3>
   <p>
     Every test file needs to specify what are you going to test.<br/>
-    You do this by calling <span class="code">spec</span> function:
+    You do this by calling {{code('spec')}} function:
   </p>
   <pre class="block">
 spec(TestObject, function() {
 );</pre>
   <p>
-    The only requirement for <span class="code">TestObject</span> is that it has to respond to 
-    <span class="code">toString</span> method so in basically can be anything (String in the first place). 
-    However, if you specyify your object, then it's recommended to implement <span class="code">toString</span> 
-    to have descriptive output during test run.
+    The only requirement for {{code('TestObject')}} is that it has to respond to {{code('toString')}} method, so it 
+    basically can be anything (String in the first place). However, if you specyify your object, then it's recommended 
+    to implement {{code('toString')}} to have descriptive output during test run.
   </p>
   <h3>describe()</h3>
   <p>
-    Next useful function in spec is <span class="code">describe</span>.<br/>
+    Next useful function in spec is {{code('describe')}}.<br/>
     It's used to indicate what feature of your testing object are you going to test.<br/> 
     This can look like this:
   </p>
@@ -55,7 +54,7 @@ spec(TestObject, function() {
   <h3>context()</h3>
   <p>
     Another aspect of unit tests are contexts which allow you to tell the circumstances under which the test is running.<br/>
-    Here's an example of <span class="code">context</span>:
+    Here's an example of {{code('context')}}:
   </p>
   <pre class="block">
 spec(TestObject, function() {
@@ -66,7 +65,7 @@ spec(TestObject, function() {
 );</pre>
   <h3>it()</h3>
   <p>
-    Finally there is 4th node <span class="code">it</span> that contains actual test which performs action and assertions.
+    Finally there is 4th node {{code('it')}} that contains actual test which performs action and assertions.
     This is how it might look like:
   </p>
   <pre class="block">
@@ -86,16 +85,16 @@ spec(TestObject, function() {
   </p>
 </div>
 <h2>
-  Assertions.
+  Assertions
 </h2>
 <div class="section">
   <p>
-    Every test must contain at least one assertion. In <span class="artjs">ArtJs</span> assertions have following format:
+    Every test must contain at least one assertion. In {{artjs()}} assertions have following format:
   </p>
   <pre class="block">
 expect(&lt;actual&gt;).to(&lt;matcher&gt;(&lt;expected&gt;));</pre>
   <p>
-    Where <span class="code">actual</span> can be any object, while <span class="code">matcher</span> is one of the following:
+    Where {{code('actual')}} can be any object, while {{code('matcher')}} is one of the following:
   </p>
   <ul class="simple">
     <li>eq</li>
@@ -107,37 +106,37 @@ expect(&lt;actual&gt;).to(&lt;matcher&gt;(&lt;expected&gt;));</pre>
   </ul>
   <h3>eq</h3>
   <p>
-    Matches if <span class="code">actual</span> is equal <span class="code">expected</span> using === operator.
+    Matches if {{code('actual')}} is equal {{code('expected')}} using === operator.
     Accepts also Arrays which will use ArrayUtils.equal to resolve.
   </p>
   <h3>beA</h3>
   <p>
-    Matches if <span class="code">typeof</span> <span class="code">actual</span> is equal <span class="code">expected</span>
+    Matches if {{code('typeof')}} {{code('actual')}} is equal {{code('expected')}}
   </p>
   <h3>
     beFalse
   </h3>
   <p>
-    Matches if <span class="code">actual</span> is equal <span class="code">false</span>
+    Matches if {{code('actual')}} is equal {{code('false')}}
   </p>
   <h3>
     beTrue
   </h3>
   <p>
-    Matches if <span class="code">actual</span> is equal <span class="code">true</span>
+    Matches if {{code('actual')}} is equal {{code('true')}}
   </p>
   <h3>
     beNull
   </h3>
   <p>
-    Matches if <span class="code">actual</span> is equal <span class="code">null</span>
+    Matches if {{code('actual')}} is equal {{code('null')}}
   </p>
   <h3>
     receive
   </h3>
   <p>
-    Matches if <span class="code">actual</span> will receive function call. 
-    By default mocks <span class="code">actual</span>.
+    Matches if {{code('actual')}} will receive function call. 
+    By default mocks {{code('actual')}}.
     Examples of usage:
   </p>
   <pre class="block">
@@ -146,17 +145,17 @@ expect(actual).to(receive('method')).withArgs(1, 2).once().andReturn(true);
 expect(actual).to(receive('method')).twice().andCallOriginal();</pre>
   <ul>
     <li>
-      inSeries - matches against multiple calls, should be used only with <span class="code">withArgs</span> (see below). 
+      inSeries - matches against multiple calls, should be used only with {{code('withArgs')}} (see below). 
     </li>
     <li>
       withArgs - allows to pass arguments to match - for single call expects list of arguments.<br/> 
-      For multiple calls using <span class="code">inSeries</span> expects list of arguments as arrays.
+      For multiple calls using {{code('inSeries')}} expects list of arguments as arrays.
     </li>
     <li>
       once, twice, times(n) - matches agains exact number of calls with the same set of arguments
     </li>
     <li>
-      andCallOriginal - passes call through to <span class="code">actual</span>
+      andCallOriginal - passes call through to {{code('actual')}}
     </li>
     <li>
       andReturn - mocks returned value. Will be the same for multiple calls.
@@ -164,19 +163,19 @@ expect(actual).to(receive('method')).twice().andCallOriginal();</pre>
   </ul>
 </div>
 <h2>
-  Subject.
+  Subject
 </h2>
 <div class="section">
   <p>
-    By using <span class="code">subject()</span> within your testsuite you have access to whatever is set 
-    as a first argument of <span class="code">spec()</span>
+    By using {{code('subject()')}} within your testsuite you have access to whatever is set 
+    as a first argument of {{code('spec()')}}
   </p>
 </div>
 <h2>
-  Focus.
+  Focus
 </h2>
 <div class="section">
-  <p>You can specify which tests should be run by the runner. You can pass <span class="code">true</span> as a third
+  <p>You can specify which tests should be run by the runner. You can pass {{code('true')}} as a third
     argument to any of spec nodes. This is however not very comfortable way of setting the focus. 
     You may prefer to use a shortcut methods for that:
   </p>
@@ -188,17 +187,17 @@ expect(actual).to(receive('method')).twice().andCallOriginal();</pre>
   </ul>
 </div>
 <h2>
-  Before hook.
+  Before hook
 </h2>
 <div class="section">
   <p>
-    By using <span class="code">before()</span> you can make any arbitrary code to be executed before every test.
+    By using {{code('before()')}} you can make any arbitrary code to be executed before every test.
     It accepts Function object to be executed.
-    All <span class="code">before</span>s are executed from top to bottom of the spec nodes tree.
+    All {{code('before')}}s are executed from top to bottom of the spec nodes tree.
   </p>
 </div>
 <h2>
-  Running tests.
+  Running tests
 </h2>
 <div class="section">
   <p>
@@ -239,15 +238,15 @@ artjs.onWindowLoad.add(artjs.$F(function() {
     <li>install artjs</li>
   </ul>
   <p>
-    In <span class="code">karma.conf.js</span> specify <span class="code">artjs</span> as frameworks.
+    In {{code('karma.conf.js')}} specify {{code('artjs')}} as frameworks.
   </p>
 </div>
 <h2>
-  NOTE.
+  NOTE
 </h2>
 <div class="section">
   <p>
-    It's worth mentioning that <span class="artjs">ArtJs</span> runs tests in two steps.<br/>
+    It's worth mentioning that {{artjs()}} runs tests in two steps.<br/>
     First run is a dry run to get the test statistics. It doesn't run any code within before() hooks and it() body.<br/> 
     Therefore it's not recommended to put any code outside of this blocks (except variable declaration) 
     since it may slow down the tests.

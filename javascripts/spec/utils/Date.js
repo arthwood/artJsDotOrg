@@ -164,17 +164,17 @@ spec(artjs.Date, function() {
     });
   });
 
-  describe('#miliToHMSM', function() {
+  describe('#msToHMSM', function() {
     it('should convert miliseconds to hours, minutes, seconds, miliseconds format', function() {
-      var result = subject().miliToHMSM(3982123);
+      var result = subject().msToHMSM(3982123);
 
       expect(result).to(eq('1:06:22.123'));
     });
   });
 
-  describe('#miliToMSM', function() {
+  describe('#msToMSM', function() {
     it('should convert miliseconds to minutes, seconds, miliseconds format', function() {
-      var result = subject().miliToMSM(3982123);
+      var result = subject().msToMSM(3982123);
 
       expect(result).to(eq('66:22.123'));
     });

@@ -2,7 +2,7 @@
 <h2>Creating event</h2>
 <div class="section">
   <p>
-    In {{artjs()}} any of the objects that you build is capable of triggering events. 
+    In {{artjs()}} any object that you build is capable of triggering events. 
   In this chapter I'll present event model used in {{artjs()}}.
   </p>
   <p>
@@ -30,7 +30,7 @@ broadcaster.onChange.add(artjs.$F(function(source, info) {
 }));</pre>
   <p>
     In order to register for an event use its {{code('add()')}} method. 
-    It accept one argument which is an instance of {{code('Delegate')}} class.
+    It accepts one argument which is an instance of {{linkTo('Delegate', 'delegate')}} class.
     Above we use a shortcut method {{code('$F')}} which returns delegate with 
     {{code('null')}} as a context object.
     This means that {{code('this')}} inside the function will point to {{code('window')}}.
@@ -39,7 +39,7 @@ broadcaster.onChange.add(artjs.$F(function(source, info) {
 <h2>Firing event</h2>
 <div class="section">
   <p>
-    By default firing the event does not pass any arguments to a handler. Since we expect <span class="code">source</span>
+    By default firing the event does not pass any arguments to a handler. Since we expect {{code('source')}}
     and {{code('info')}} arguments we need to specify them when we fire the event.
     Here's how to do that:
   </p>
