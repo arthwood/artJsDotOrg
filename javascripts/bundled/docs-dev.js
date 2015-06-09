@@ -171,6 +171,14 @@ art.component.Member = artjs.Class(function(element) {
   _name: "art.component.Member"
 }, artjs.Component);
 
+art.view.GA = artjs.Class(function(element) {
+  this.super(element);
+  var model = new artjs.Model;
+  this.setModel(model);
+}, null, {
+  _name: "art.view.GA"
+}, artjs.TemplateView);
+
 art.view.Version = artjs.Class(function(element) {
   this.super(element);
   var model = new artjs.Model;

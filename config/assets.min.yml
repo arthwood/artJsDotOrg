@@ -95,6 +95,7 @@ javascripts:
     - 'art/component/Content'
     - 'art/component/Member'
     - 'art/component/Test'
+    - 'art/view/GA'
     - 'art/view/Version'
   main-min: 'Main'
 stylesheets:
