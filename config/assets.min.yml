@@ -97,7 +97,12 @@ javascripts:
     - 'art/component/Test'
     - 'art/view/GA'
     - 'art/view/Version'
-  main-min: 'Main'
+  main-min: 
+    - 'Main'
+    - 'art/view/GA'
+  spec-min: 
+    - 'Spec'
+    - 'art/view/GA'
 stylesheets:
   shared-min: 'css/shared'
   docs-min: 'css/docs'

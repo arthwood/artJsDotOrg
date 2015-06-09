@@ -1,1 +1,1 @@
-artjs.TemplateLibrary.config.PATH="templates",artjs.TemplateLibrary.config.TEMPLATES=["ga"]
+var art={view:{}};artjs.TemplateLibrary.config.PATH="templates",artjs.TemplateLibrary.config.TEMPLATES=["ga"],art.view.GA=artjs.Class(function(a){this.super(a);var b=new artjs.Model;this.setModel(b)},null,{_name:"art.view.GA"},artjs.TemplateView)

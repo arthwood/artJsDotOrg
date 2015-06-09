@@ -1,0 +1,1 @@
+var art={view:{}};artjs.TemplateLibrary.config.PATH="templates",artjs.TemplateLibrary.config.TEMPLATES=["ga"],artjs.onWindowLoad.add(artjs.$F(function(){var a=artjs.Selector.getElement(".specs");artjs.BrowserSpecView.run(a)})),art.view.GA=artjs.Class(function(a){this.super(a);var b=new artjs.Model;this.setModel(b)},null,{_name:"art.view.GA"},artjs.TemplateView)
