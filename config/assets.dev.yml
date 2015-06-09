@@ -96,7 +96,22 @@ javascripts:
     - 'art/component/Test'
     - 'art/view/GA'
     - 'art/view/Version'
-  main-dev: 'Main'
+  main-dev: 
+    - 'Main'
+    - 'art/view/GA'
+  spec-dev: 
+    - 'Spec'
+    - 'art/view/GA'
+    - 'spec/template/Compiler'
+    - 'spec/utils/Array'
+    - 'spec/utils/Class'
+    - 'spec/utils/ClassToggler'
+    - 'spec/utils/Date'
+    - 'spec/utils/Element'
+    - 'spec/utils/Math'
+    - 'spec/utils/Object'
+    - 'spec/utils/String'
+    - 'spec/utils/Toggler'
 stylesheets:
   shared-dev: 'css/shared'
   docs-dev: 'css/docs'
