@@ -3293,8 +3293,7 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
       throw 'Trying to call unregistered "' + action + '" helper';
     }
     var argsStr = artjs.Array.first(exec);
-    var argsValues = this._parseArguments(argsStr);
-    delegate.args = argsValues.concat(this._scope);
+    delegate.args = this._parseArguments(argsStr);
     return delegate.invoke();
   },
   _pushToArguments: function(i, j) {
@@ -3319,8 +3318,10 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(function(content,
 
 artjs.TemplateHelpers = artjs.template.Helpers = {
   linkTo: function(caption, path) {
+    path = artjs.Object.getDefault(path, caption);
+    var href = (artjs.String.startsWith(path, "http") ? "" : "#/") + path;
     return this.renderElement("a", {
-      href: "#/" + path
+      href: href
     }, caption);
   },
   render: function(templateId, scope) {

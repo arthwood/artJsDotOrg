@@ -14,6 +14,7 @@ Reference:
     artjs: artjs
   artjs.component:
     Base: component
+    DatePicker: date_picker
   artjs.data:
     List: list
     Queue: queue
@@ -37,8 +38,6 @@ Reference:
     Library: template-library
   artjs.transition:
     Blind: transition-blind
-  artjs.ui:
-    DatePicker: date_picker
   artjs.utils:
     Array: array
     Class: class

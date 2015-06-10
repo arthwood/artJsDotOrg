@@ -14,7 +14,7 @@
   <p>
     Templates are loaded automatically by the framework.
     You can specify the list of templates to load by setting {{code('artjs.TemplateLibrary.config.TEMPLATES')}}.
-    What frameword does is it hides body until all templates are loaded. 
+    What framework does is it hides body until all templates are loaded. 
     That's because whole body is treated as a template and you may use placeholders there as well.
     It prevents from displaying them as a text before template is actually rendered.
     After that is fires {{code('artjs.onLibraryLoad')}} event.
