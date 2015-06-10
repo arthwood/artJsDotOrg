@@ -1,15 +1,15 @@
 <h1>Class</h1>
 <p>
-  {{artjs()}} has a full support for building OOP code.<br/>
-  In this section you'll learn how to create the class using {{artjs()}}.
+  {{artjs()}} has full support for building OOP code.<br/>
+  In this section you'll learn how to create class using {{artjs()}}.
 </p>
 <h2>Packages</h2>
 <div class="section">
   <p>
     It highly recommended to keep your code well organized. 
-    One of the way to achieve this is group your classes into packages/modules.
-    {{artjs()}} doesn't enforce you to use specific way to achieve this.<br/>
-    In JS the simplest way is to create tree structure by defining one global generic object:
+    One of the way to achieve this, is to group your classes into packages/modules.
+    {{artjs()}} doesn't enforce you to use specific way of doing this.<br/>
+    In JavaScript the simplest way is to create tree structure by defining one global generic object:
   </p>
   <pre>
 window.project = {
@@ -80,7 +80,7 @@ project.models.Phone = artjs.Class(
   </p>
   <ul class="simple">
     <li>one private property {{code('_name')}}</li>
-    <li>three public methods: {{code('enterNumber')}}, {{code('call')}}, {{code('getName')}} and {{code('toString')}}</li>
+    <li>four public methods: {{code('enterNumber')}}, {{code('call')}}, {{code('getName')}} and {{code('toString')}}</li>
     <li>one private method {{code('_doCall')}}</li>
     <li>one static property {{code('instances')}}</li>
     <li>one static method {{code('getName')}}</li>
@@ -122,7 +122,7 @@ project.models.MobilePhone = artjs.Class(
 );</pre>
   <p>
     Now we have a {{code('MobilePhone')}} class that contains implementation specific to that type of phone.
-    Notice the third arguments points to {{code('Phone')}} super class.
+    Notice the fourth arguments points to {{code('Phone')}} super class.
     Another thing to notice is {{code('this.super')}} which calls a super method. 
     Can also be used in constructor and even in static methods which can also be overriden.
     Pass {{code('null')}} to any argument of {{code('artjs.Class')}} that you don't need.

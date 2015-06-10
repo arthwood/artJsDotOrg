@@ -739,8 +739,8 @@ date:
             - "artjs.Date.toYMD(date); // '2010/06/04'"
 date_picker:
   name: DatePicker
-  package: artjs.ui
-  description: Allows any text input element to act as a date picker component. Just set it's class to 'art artjs-DatePicker'.
+  package: artjs.component
+  description: Allows any text input element to act as a date picker component. Just set it's class to {{code('art artjs-DatePicker')}}.
 delegate:
   name: Delegate
   package: artjs.events
@@ -1468,33 +1468,29 @@ math:
       members:
         -
           header: limit(x:Number, a:Number, b:Number):Number
-          description: 
-            - Returns {{param('x')}} value limited to [{{param('a')}}, {{param('b')}}] range
-            -
+          description: Returns {{param('x')}} value limited to [{{param('a')}}, {{param('b')}}] range
+          example:
             - artjs.Math.limit(6, 2, 13); // 6
             - artjs.Math.limit(6, 8, 13); // 8
             - artjs.Math.limit(6, -2, 3); // 3
         -
           header: sawtooth(x:Number, a:Number, b:Number):Number
-          description:
-            - Returns {{param('x')}} value periodically limited to [{{param('a')}}, {{param('b')}}] range
-            -
+          description: Returns {{param('x')}} value periodically limited to [{{param('a')}}, {{param('b')}}] range
+          example:
             - artjs.Math.sawtooth(6, 2, 13); // 6
             - artjs.Math.sawtooth(6, 8, 13); // 11
             - artjs.Math.sawtooth(6, -2, 3); // 1
         -
           header: sgn(x:Number):Number
-          description: 
-            - Signum function of {{param('x')}}
-            -
+          description:  Signum function of {{param('x')}}
+          example:
             - artjs.Math.sgn(-2); // -1
             - artjs.Math.sgn(0); // 0
             - artjs.Math.sgn(15); // 1
         -
           header: stairs(x:Number, a:Number, b:Number):Number
-          description: 
-            - "\"stairs\" function of {{param('x')}}"
-            -
+          description: "\"stairs\" function of {{param('x')}}"
+          example:
             - artjs.Math.stairs(6, 2, 4); // 2
             - artjs.Math.stairs(6, 1, 2); // 5
             - artjs.Math.stairs(6, -1, 1); // 3
