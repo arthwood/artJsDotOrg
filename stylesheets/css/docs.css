@@ -12,12 +12,12 @@
   .art-component-Content ul {
     padding: 6px 14px;
     margin-bottom: 20px;
-    border: 1px solid #cccccc;
+    border: 1px solid #ccc;
     background: white;
     list-style: none; }
     .art-component-Content ul li {
       padding: 12px 4px;
-      border-bottom: 1px solid #cccccc; }
+      border-bottom: 1px solid #ccc; }
       .art-component-Content ul li:last-child {
         border-bottom: none; }
       .art-component-Content ul li a {
@@ -54,7 +54,7 @@
       padding: 2px 8px;
       background: none; }
     .art-component-Sidebar ul li.selected {
-      background: #ff0077; }
+      background: #FF0077; }
       .art-component-Sidebar ul li.selected a {
         color: white; }
     .art-component-Sidebar ul li ul {
@@ -71,10 +71,10 @@ pre, span.code, span.param {
   font-size: 12px;
   line-height: 18px;
   padding: 1px 2px;
-  color: #559955; }
+  color: #595; }
 
 pre {
-  background-color: #fcfcfc;
+  background-color: #FCFCFC;
   padding: 4px 8px; }
 
 .more .container {
@@ -84,7 +84,7 @@ pre {
   display: block;
   padding: 10px;
   margin: 10px 0;
-  border: 1px solid #dddddd;
+  border: 1px solid #DDD;
   background: white;
   overflow-x: auto; }
 
@@ -102,4 +102,6 @@ h4.package span {
   margin-bottom: 20px; }
 
 .artjs {
-  color: #ff0077; }
+  color: #FF0077; }
+
+/*# sourceMappingURL=docs.css.map */

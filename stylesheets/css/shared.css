@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  color: #555555;
+  color: #555;
   font-size: 14px;
   overflow-y: scroll;
   background: url(../../images/furley_bg.png); }
@@ -19,7 +19,7 @@ h1 {
 h2 {
   margin: 0 0 10px;
   font-size: 20px;
-  color: #ff0077; }
+  color: #FF0077; }
 
 h3 {
   margin: 0 0 10px;
@@ -31,9 +31,9 @@ h4 {
 
 a {
   text-decoration: none;
-  color: #1166cc; }
+  color: #16c; }
   a:hover {
-    color: #0055bb; }
+    color: #05b; }
 
 img {
   border: none; }
@@ -55,3 +55,5 @@ ul {
   margin: 20px 0; }
   .header a {
     font-size: 46px; }
+
+/*# sourceMappingURL=shared.css.map */
